@@ -409,32 +409,44 @@ public class GameInstance implements Listener {
 							p.sendMessage(Main.codPrefix + "§fReturning to the lobby in " + Integer.toString(t)
 									+ " seconds!");
 							CodScore score = playerScores.get(p);
-							
+
 							float kd = ((float) score.getKills() / (float) score.getDeaths());
-							
-							if (Float.isNaN(kd)) {
-								kd = 0F;
+
+							if (Float.isNaN(kd) || Float.isInfinite(kd)) {
+								kd = score.getKills();
 							}
-							
-							p.sendMessage("§a§lKills: " + score.getKills() + " §c§lDeaths: " + score.getDeaths() + " §f§lKDR: " + kd);
+
+							p.sendMessage("§a§lKills: " + score.getKills() + " §c§lDeaths: " + score.getDeaths()
+									+ " §f§lKDR: " + kd);
 							continue;
 						}
 
 						p.sendMessage(Main.codPrefix + "§fThe " + teamFormat + " §r§fteam won the match!");
 						p.sendMessage(
 								Main.codPrefix + "§fReturning to the lobby in " + Integer.toString(t) + " seconds!");
+						CodScore score = playerScores.get(p);
+
+						float kd = ((float) score.getKills() / (float) score.getDeaths());
+
+						if (Float.isNaN(kd) || Float.isInfinite(kd)) {
+							kd = score.getKills();
+						}
+
+						p.sendMessage("§a§lKills: " + score.getKills() + " §c§lDeaths: " + score.getDeaths()
+								+ " §f§lKDR: " + kd);
 					} else {
 						p.sendMessage(Main.codPrefix + "§e" + getWinningTeam() + " §r§fwon the match!");
 						p.sendMessage(
 								Main.codPrefix + "§fReturning to the lobby in " + Integer.toString(t) + " seconds!");
 						CodScore score = playerScores.get(p);
 						float kd = ((float) score.getKills() / (float) score.getDeaths());
-						
-						if (Float.isNaN(kd)) {
-							kd = 0F;
+
+						if (Float.isNaN(kd) || Float.isInfinite(kd)) {
+							kd = score.getKills();
 						}
-						
-						p.sendMessage("§a§lKills: " + score.getKills() + " §c§lDeaths: " + score.getDeaths() + " §f§lKDR: " + kd);
+
+						p.sendMessage("§a§lKills: " + score.getKills() + " §c§lDeaths: " + score.getDeaths()
+								+ " §f§lKDR: " + kd);
 					}
 				}
 
@@ -698,7 +710,8 @@ public class GameInstance implements Listener {
 					p.setGameMode(GameMode.SPECTATOR);
 					p.setSpectatorTarget(killer);
 
-					p.sendMessage(Main.codPrefix + "§cYou will respawn in " + t + " seconds!");
+					if (t == 3)
+						p.sendMessage(Main.codPrefix + "§cYou will respawn in " + t + " seconds!");
 				} else if (t <= 1) {
 					if (game.state == GameState.INGAME) {
 						if (currentMap.getGamemode() != Gamemode.FFA) {
@@ -865,13 +878,13 @@ public class GameInstance implements Listener {
 			return;
 		}
 	}
-	
+
 	public void updateScores(Player victim, Player killer, RankPerks rank) {
-		
+
 		if (this.playerScores.get(killer) == null) {
 			this.playerScores.put(killer, new CodScore(killer));
 		}
-		
+
 		CodScore killerScore = this.playerScores.get(killer);
 
 		killerScore.addScore(rank.getKillExperience());
