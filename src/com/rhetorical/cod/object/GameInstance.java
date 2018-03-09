@@ -275,8 +275,8 @@ public class GameInstance implements Listener {
 		Loadout loadout = Main.loadManager.getActiveLoadout(p);
 
 		/*
-		 * TODO: - Gather randomized loadout for RSB - Gather loadouts for GunGame,
-		 * Infected, and One in the Chamber
+		 * TODO: - Gather randomized loadout for RSB - Gather loadouts for
+		 * GunGame, Infected, and One in the Chamber
 		 * 
 		 */
 
@@ -408,6 +408,15 @@ public class GameInstance implements Listener {
 							p.sendMessage(Main.codPrefix + "§7Nobody won the match! It was a tie!");
 							p.sendMessage(Main.codPrefix + "§fReturning to the lobby in " + Integer.toString(t)
 									+ " seconds!");
+							CodScore score = playerScores.get(p);
+							
+							float kd = ((float) score.getKills() / (float) score.getDeaths());
+							
+							if (Float.isNaN(kd)) {
+								kd = 0F;
+							}
+							
+							p.sendMessage("§a§lKills: " + score.getKills() + " §c§lDeaths: " + score.getDeaths() + " §f§lKDR: " + kd);
 							continue;
 						}
 
@@ -418,6 +427,14 @@ public class GameInstance implements Listener {
 						p.sendMessage(Main.codPrefix + "§e" + getWinningTeam() + " §r§fwon the match!");
 						p.sendMessage(
 								Main.codPrefix + "§fReturning to the lobby in " + Integer.toString(t) + " seconds!");
+						CodScore score = playerScores.get(p);
+						float kd = ((float) score.getKills() / (float) score.getDeaths());
+						
+						if (Float.isNaN(kd)) {
+							kd = 0F;
+						}
+						
+						p.sendMessage("§a§lKills: " + score.getKills() + " §c§lDeaths: " + score.getDeaths() + " §f§lKDR: " + kd);
 					}
 				}
 
@@ -745,8 +762,9 @@ public class GameInstance implements Listener {
 			}
 
 			CodScore score = this.playerScores.get(p);
-			
-			p.setPlayerListName(teamColor + "[" + Main.progManager.getLevel(p) + "]" + p.getDisplayName() + " K " + score.getKills() + " / D " + score.getDeaths() +" / S " + score.getKillstreak());
+
+			p.setPlayerListName(teamColor + "[" + Main.progManager.getLevel(p) + "]" + p.getDisplayName() + " K "
+					+ score.getKills() + " / D " + score.getDeaths() + " / S " + score.getKillstreak());
 
 		}
 	}
@@ -806,25 +824,27 @@ public class GameInstance implements Listener {
 	}
 
 	public void handleDeath(Player killer, Player victim) {
-		
+
 		RankPerks rank = Main.getRank(killer);
-		
-		/* TODO:
-		 * - Make kill messages show up above action bar
-		 * - Create variables for how much xp and whether or not to give them donator xp, same for credits
-		 * - Create config option to not give credits in game and only per level
+
+		/*
+		 * TODO: - Make kill messages show up above action bar - Create
+		 * variables for how much xp and whether or not to give them donator xp,
+		 * same for credits - Create config option to not give credits in game
+		 * and only per level
 		 * 
-		 * */
+		 */
 		if (this.getGameMode().equals(Gamemode.TDM) || this.getGameMode().equals(Gamemode.RSB)
 				|| this.getGameMode().equals(Gamemode.DOM)) {
 			if (redTeam.contains(killer)) {
 				killer.sendMessage("§c§lYOU §r§f[killed] §r§9§l" + victim.getDisplayName());
 				killer.sendMessage("§e+" + rank.getKillExperience() + "xp");
-				
+
 				Main.progManager.addExperience(killer, rank.getKillExperience());
 				CreditManager.setCredits(killer, CreditManager.getCredits(killer) + rank.getKillCredits());
 				this.kill(victim, killer);
 				this.addRedPoint();
+				this.updateScores(victim, killer, rank);
 				return;
 			} else if (blueTeam.contains(killer)) {
 				killer.sendMessage("§9§lYOU §r§f[killed] §r§c§l" + victim.getDisplayName());
@@ -832,6 +852,7 @@ public class GameInstance implements Listener {
 				Main.progManager.addExperience(killer, rank.getKillExperience());
 				this.kill(victim, killer);
 				this.addBluePoint();
+				this.updateScores(victim, killer, rank);
 				return;
 			}
 		} else if (this.getGameMode().equals(Gamemode.FFA)) {
@@ -840,11 +861,13 @@ public class GameInstance implements Listener {
 			Main.progManager.addExperience(killer, rank.getKillExperience());
 			this.kill(victim, killer);
 			this.addPointForPlayer(killer);
+			this.updateScores(victim, killer, rank);
 			return;
 		}
-
-		// Stat managers
-
+	}
+	
+	public void updateScores(Player victim, Player killer, RankPerks rank) {
+		
 		if (this.playerScores.get(killer) == null) {
 			this.playerScores.put(killer, new CodScore(killer));
 		}
@@ -856,30 +879,29 @@ public class GameInstance implements Listener {
 		killerScore.addKillstreak();
 
 		killerScore.addKill();
-		
+
 		playerScores.put(killer, killerScore);
 
 		if (this.playerScores.get(victim) == null) {
 			this.playerScores.put(killer, new CodScore(victim));
 		}
-		
+
 		CodScore victimScore = this.playerScores.get(victim);
-		
+
 		victimScore.setDeaths(victimScore.getDeaths() + 1);
 
 		victimScore.resetKillstreak();
-		
-		playerScores.put(victim, victimScore);
 
+		playerScores.put(victim, victimScore);
 	}
 
 	/*
 	 * 
 	 * GAMEMODE LISTENERS --------------------
 	 * 
-	 * Gamemode listeners contain all the listeners for each gamemode. What will be
-	 * a part of this: Death listeners per gamemode (and kill), pick up object (for
-	 * CTF and KC).
+	 * Gamemode listeners contain all the listeners for each gamemode. What will
+	 * be a part of this: Death listeners per gamemode (and kill), pick up
+	 * object (for CTF and KC).
 	 * 
 	 * 
 	 * 
@@ -921,12 +943,12 @@ public class GameInstance implements Listener {
 
 		ItemStack heldWeapon = attacker.getInventory().getItemInMainHand();
 
-		if (heldWeapon.getType() != Material.DIAMOND_SWORD || heldWeapon.getType() != Material.GOLD_SWORD
-				|| heldWeapon.getType() != Material.IRON_SWORD || heldWeapon.getType() != Material.STONE_SWORD
-				|| heldWeapon.getType() != Material.WOOD_SWORD) {
-			damage = Math.round(Main.defaultHealth / 2);
-		} else {
+		if (heldWeapon.getType() == Material.DIAMOND_SWORD || heldWeapon.getType() == Material.GOLD_SWORD
+				|| heldWeapon.getType() == Material.IRON_SWORD || heldWeapon.getType() == Material.STONE_SWORD
+				|| heldWeapon.getType() == Material.WOOD_SWORD) {
 			damage = Main.defaultHealth;
+		} else {
+			damage = Math.round(Main.defaultHealth / 4);
 		}
 
 		this.health.damage(victim, damage);
@@ -934,12 +956,14 @@ public class GameInstance implements Listener {
 		/*
 		 * Death handlers per gamemode are handled here
 		 * 
-		 * TODO: - Update statistics on death for players - Send kill notification
-		 * messages to players above action bar - Add gungame support - Add one in the
-		 * chamber support
+		 * TODO: - Update statistics on death for players - Send kill
+		 * notification messages to players above action bar - Add gungame
+		 * support - Add one in the chamber support
 		 */
 
-		this.handleDeath(attacker, victim);
+		if (this.health.isDead(victim)) {
+			this.handleDeath(attacker, victim);
+		}
 
 	}
 

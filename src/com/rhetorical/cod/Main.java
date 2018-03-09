@@ -15,6 +15,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.rhetorical.cod.analytics.CollectAnalytics;
 import com.rhetorical.cod.files.ArenasFile;
 import com.rhetorical.cod.files.CreditsFile;
 import com.rhetorical.cod.files.GunsFile;
@@ -73,6 +74,8 @@ public class Main extends JavaPlugin {
 
 		version = getPlugin().getDescription().getVersion();
 
+		CollectAnalytics.collectPlayerStats();
+		
 		ProgressionFile.setup(getPlugin());
 		ArenasFile.setup(getPlugin());
 		CreditsFile.setup(getPlugin());
