@@ -1,8 +1,0 @@
-name: CallofMinecraftRemastered
-version: 1.9.5_beta
-main: com.rhetorical.cod.Main
-description: Call of Duty Multiplayer in Minecraft!
-commands:
-  cod:
-    description: Main command for COM Warfare
-    usage: /{command}

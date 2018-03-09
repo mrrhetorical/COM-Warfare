@@ -45,7 +45,7 @@ public class Main extends JavaPlugin {
 	private static String sql_api_key;
 	private static String translate_api_key;
 
-	private static String bVersion;
+	public static String bVersion;
 	private static String version;
 
 	public static ProgressionManager progManager;
