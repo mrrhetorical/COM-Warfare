@@ -27,6 +27,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import com.rhetorical.cod.CreditManager;
 import com.rhetorical.cod.GameManager;
 import com.rhetorical.cod.Main;
+import com.rhetorical.cod.StatHandler;
 
 public class GameInstance implements Listener {
 
@@ -55,8 +56,8 @@ public class GameInstance implements Listener {
 	public final int maxScore_DOM;
 	public final int maxScore_CTF;
 	public final int maxScore_KC;
-	// public final int maxScore_GUN;
-	// public final int maxScore_OITC;
+	public final int maxScore_GUN;
+	public final int maxScore_OITC;
 
 	// Score management and game information system for FFA (Free for all)
 	public HashMap<Player, Integer> ffaPlayerScores = new HashMap<Player, Integer>();
@@ -84,6 +85,8 @@ public class GameInstance implements Listener {
 		this.maxScore_FFA = Main.getPlugin().getConfig().getInt("maxScore.FFA");
 		this.maxScore_RSB = Main.getPlugin().getConfig().getInt("maxScore.RSB");
 		this.maxScore_KC = Main.getPlugin().getConfig().getInt("maxScore.KC");
+		this.maxScore_GUN = Main.getPlugin().getConfig().getInt("maxScore.GUN");
+		this.maxScore_OITC = Main.getPlugin().getConfig().getInt("maxScore.OITC");
 
 		this.setState(GameState.WAITING);
 
@@ -380,6 +383,8 @@ public class GameInstance implements Listener {
 			p.getInventory().clear();
 
 			Main.progManager.saveData(p);
+			
+			StatHandler.saveStatData();
 		}
 
 		this.setState(GameState.STOPPING);
@@ -902,6 +907,7 @@ public class GameInstance implements Listener {
 		CodScore victimScore = this.playerScores.get(victim);
 
 		victimScore.setDeaths(victimScore.getDeaths() + 1);
+		StatHandler.addDeath(victim);
 
 		victimScore.resetKillstreak();
 

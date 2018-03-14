@@ -22,6 +22,7 @@ import com.rhetorical.cod.files.GunsFile;
 import com.rhetorical.cod.files.LoadoutsFile;
 import com.rhetorical.cod.files.ProgressionFile;
 import com.rhetorical.cod.files.ShopFile;
+import com.rhetorical.cod.files.StatsFile;
 import com.rhetorical.cod.inventories.InventoryManager;
 import com.rhetorical.cod.object.CodGun;
 import com.rhetorical.cod.object.CodMap;
@@ -82,6 +83,7 @@ public class Main extends JavaPlugin {
 		GunsFile.setup(getPlugin());
 		ShopFile.setup(getPlugin());
 		LoadoutsFile.setup(getPlugin());
+		StatsFile.setup(getPlugin());
 
 		getPlugin().saveDefaultConfig();
 		getPlugin().reloadConfig();
@@ -222,7 +224,20 @@ public class Main extends JavaPlugin {
 			p.openInventory(InventoryManager.mainInventory);
 			return true;
 		} else if (args.length >= 1) {
-			if (args[0].equalsIgnoreCase("join") && hasPerm(p, "com.join")) {
+			if (args[0].equalsIgnoreCase("help") && hasPerm(p, "com.help")) {
+				
+				String cColor = "§a§l";
+				String dColor = "§f§l";
+				
+				//TODO: Create the help command
+				p.sendMessage("§6§lCOM-Warfare Help");
+				p.sendMessage(cColor + "/cod help | " + dColor + "Opens the help menu.");
+				p.sendMessage(cColor + "/cod join | " + dColor + "Joins a game through the matchmaker.");
+				p.sendMessage(Main.codPrefix + "/cod leave | " + dColor + "Leaves the current game.");
+				p.sendMessage(Main.codPrefix + "/cod listMaps | " + dColor + "Lists the avaiable maps.");
+				
+				
+			} else if (args[0].equalsIgnoreCase("join") && hasPerm(p, "com.join")) {
 				boolean b = GameManager.findMatch(p);
 				if (b) {
 					loadManager.load(p);

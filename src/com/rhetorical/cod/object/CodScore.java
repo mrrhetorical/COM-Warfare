@@ -2,6 +2,8 @@ package com.rhetorical.cod.object;
 
 import org.bukkit.entity.Player;
 
+import com.rhetorical.cod.StatHandler;
+
 public class CodScore {
 
 	final Player owner;
@@ -37,6 +39,7 @@ public class CodScore {
 
 	public void addKill() {
 		this.kills++;
+		StatHandler.addKill(owner);
 	}
 	
 	public void setKills(int kills) {
