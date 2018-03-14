@@ -60,7 +60,7 @@ public class Main extends JavaPlugin {
 	public static int maxPlayers = 12;
 
 	public static double defaultHealth = 100D;
-	
+
 	private static ArrayList<RankPerks> serverRanks = new ArrayList<RankPerks>();
 
 	public static Location lobbyLoc;
@@ -76,7 +76,7 @@ public class Main extends JavaPlugin {
 		version = getPlugin().getDescription().getVersion();
 
 		CollectAnalytics.collectPlayerStats();
-		
+
 		ProgressionFile.setup(getPlugin());
 		ArenasFile.setup(getPlugin());
 		CreditsFile.setup(getPlugin());
@@ -112,22 +112,22 @@ public class Main extends JavaPlugin {
 		defaultHealth = getPlugin().getConfig().getDouble("defaultHealth");
 		sql_api_key = getPlugin().getConfig().getString("sql.api_key");
 		translate_api_key = getPlugin().getConfig().getString("translate.api_key");
-		
-		int i = 0; 
-		
+
+		int i = 0;
+
 		while (getPlugin().getConfig().contains("RankTiers." + i)) {
 			String name = getPlugin().getConfig().getString("RankTiers." + i + ".name");
 			int killCredits = getPlugin().getConfig().getInt("RankTiers." + i + ".kill.credits");
 			double killExperience = getPlugin().getConfig().getDouble("RankTiers." + i + ".kill.xp");
-			int levelCredits = getPlugin().getConfig().getInt("RankTiers."+ i + ".levelCredits");
-			
+			int levelCredits = getPlugin().getConfig().getInt("RankTiers." + i + ".levelCredits");
+
 			RankPerks rank = new RankPerks(name, killCredits, killExperience, levelCredits);
-			
+
 			Main.serverRanks.add(rank);
-			
+
 			i++;
 		}
-		
+
 		if (i == 0) {
 			getPlugin().getConfig().set("RankTiers.0.name", "default");
 			getPlugin().getConfig().set("RankTiers.0.kill.credits", 1);
@@ -135,12 +135,17 @@ public class Main extends JavaPlugin {
 			getPlugin().getConfig().set("RankTiers.0.levelCredits", 10);
 			getPlugin().saveConfig();
 			getPlugin().reloadConfig();
+			i++;
 		}
-		
-		
 
 		Main.cs.sendMessage(
 				Main.codPrefix + "§a§lCOM-Warfare version §r§f" + version + "§r§a§l is now up and running!");
+
+		Main.cs.sendMessage(Main.codPrefix + "There are " + i + "ranks registered!");
+		for (RankPerks r : Main.serverRanks) {
+			Main.cs.sendMessage("Rank registered: " + r.getName());
+		}
+
 	}
 
 	@Override
@@ -177,37 +182,51 @@ public class Main extends JavaPlugin {
 
 		Player p = null;
 
-		if (args.length >= 1) {
-			if (args[0].equalsIgnoreCase("help")) {
+		String cColor = "§a§l";
+		String dColor = "§f§l";
 
-			}
-		} else if (args.length >= 3) {
-			if (args[0].equalsIgnoreCase("giveCredits")) {
-				String playerName = args[1];
-				int amount;
-				try {
-					amount = Integer.parseInt(args[1]);
-				} catch (Exception e) {
-					amount = 0;
-					cs.sendMessage(Main.codPrefix + "Incorrect usage! Proper usage: '/cod giveCredits {name} [amount]");
-					return true;
+		if (!(sender instanceof Player)) {
+			if (args.length >= 1) {
+				if (args[0].equalsIgnoreCase("help")) {
+					cs.sendMessage("§6§lCOM-Warfare Help §f[§lPage 1 of 2§r§l]");
+
+					cs.sendMessage("§f§lType the command to see the specifics on how to use it.");
+					cs.sendMessage(cColor + "/cod giveCredits {name} [amount] | " + dColor
+							+ "Gives an amount of credits to a player.");
+					cs.sendMessage(cColor + "/cod setCredits {name} [amount] | " + dColor
+							+ "Sets the credits amount for a player.");
 
 				}
+			} else if (args.length >= 3) {
+				if (args[0].equalsIgnoreCase("giveCredits")) {
+					String playerName = args[1];
+					int amount;
+					try {
+						amount = Integer.parseInt(args[1]);
+					} catch (Exception e) {
+						amount = 0;
+						cs.sendMessage(
+								Main.codPrefix + "Incorrect usage! Proper usage: '/cod giveCredits {name} [amount]");
+						return true;
 
-				CreditManager.setCredits(playerName, CreditManager.getCredits(playerName) + amount);
+					}
 
-			} else if (args[0].equalsIgnoreCase("setCredits")) {
-				String playerName = args[1];
-				int amount;
-				try {
-					amount = Integer.parseInt(args[1]);
-				} catch (Exception e) {
-					amount = 0;
-					cs.sendMessage(Main.codPrefix + "Incorrect usage! Proper usage: '/cod setCredits {name} [amount]'");
-					return true;
+					CreditManager.setCredits(playerName, CreditManager.getCredits(playerName) + amount);
+
+				} else if (args[0].equalsIgnoreCase("setCredits")) {
+					String playerName = args[1];
+					int amount;
+					try {
+						amount = Integer.parseInt(args[1]);
+					} catch (Exception e) {
+						amount = 0;
+						cs.sendMessage(
+								Main.codPrefix + "Incorrect usage! Proper usage: '/cod setCredits {name} [amount]'");
+						return true;
+					}
+
+					CreditManager.setCredits(playerName, amount);
 				}
-
-				CreditManager.setCredits(playerName, amount);
 			}
 		}
 
@@ -225,18 +244,76 @@ public class Main extends JavaPlugin {
 			return true;
 		} else if (args.length >= 1) {
 			if (args[0].equalsIgnoreCase("help") && hasPerm(p, "com.help")) {
-				
-				String cColor = "§a§l";
-				String dColor = "§f§l";
-				
-				//TODO: Create the help command
-				p.sendMessage("§6§lCOM-Warfare Help");
-				p.sendMessage(cColor + "/cod help | " + dColor + "Opens the help menu.");
-				p.sendMessage(cColor + "/cod join | " + dColor + "Joins a game through the matchmaker.");
-				p.sendMessage(Main.codPrefix + "/cod leave | " + dColor + "Leaves the current game.");
-				p.sendMessage(Main.codPrefix + "/cod listMaps | " + dColor + "Lists the avaiable maps.");
-				
-				
+
+				if (args.length == 2) {
+					int page = 0;
+					try {
+						page = Integer.parseInt(args[1]);
+					} catch (Exception e) {
+						p.sendMessage(Main.codPrefix + "§cYou didn't specify a proper page.");
+						return true;
+					}
+
+					if (!(page > 0 && page <= 3)) {
+						p.sendMessage(Main.codPrefix + "§cYou didn't give a proper page number!");
+						return true;
+					}
+
+					// TODO: Create the help command
+					p.sendMessage("-===§6§lCOM-Warfare Help§r===-");
+					p.sendMessage("§f[§lPage " + page + " of 3§r§l]");
+
+					switch (page) {
+					case 1:
+						p.sendMessage("§f§lType the command to see specifics.");
+						p.sendMessage(
+								cColor + "/cod help [page number] | " + dColor + "Opens a help page.");
+						p.sendMessage(cColor + "/cod | " + dColor + "Opens the main menu.");
+						p.sendMessage(cColor + "/cod join | " + dColor + "Joins a game through the matchmaker.");
+						p.sendMessage(cColor + "/cod leave | " + dColor + "Leaves the current game.");
+						p.sendMessage(cColor + "/cod listMaps | " + dColor + "Lists the avaiable maps.");
+						p.sendMessage(
+								cColor + "/cod createMap [args] | " + dColor + "CCreate a map.");
+						p.sendMessage(cColor + "/cod removeMap [name] | " + dColor + "Command to remove a map.");
+						break;
+					case 2:
+						p.sendMessage(cColor + "/cod set [lobby/spawn] | " + dColor + "Opens a page in the help menu.");
+						p.sendMessage(
+								cColor + "/cod credits give | " + dColor + "Gives credits to a person.");
+						p.sendMessage(cColor + "/cod credits set | " + dColor
+								+ "Sets amount of credits for a player.");
+						p.sendMessage(cColor + "/cod lobby | " + dColor + "Teleports you to the lobby.");
+						p.sendMessage(cColor + "/cod createGun [args] | " + dColor
+								+ "Creats a gun.");
+						p.sendMessage(cColor + "/cod shop | " + dColor + "Opens the shop.");
+
+						break;
+					case 3:
+						p.sendMessage(cColor + "/cod class | " + dColor + "Opens the class selection menu.");
+						p.sendMessage(cColor + "/cod start | " + dColor
+								+ "Auto-starts the match if the lobby timer is started.");
+						break;
+					default:
+						break;
+					}
+				} else {
+					p.sendMessage("-===§6§lCOM-Warfare Help§r===-");
+					p.sendMessage("§f[§lPage 1 of 3§r§l]");
+
+					
+					p.sendMessage("§f§lType the command to see specifics.");
+					p.sendMessage(
+							cColor + "/cod help [page number] | " + dColor + "Opens a help page.");
+					p.sendMessage(cColor + "/cod | " + dColor + "Opens the main menu.");
+					p.sendMessage(cColor + "/cod join | " + dColor + "Joins a game through the matchmaker.");
+					p.sendMessage(cColor + "/cod leave | " + dColor + "Leaves the current game.");
+					p.sendMessage(cColor + "/cod listMaps | " + dColor + "Lists the avaiable maps.");
+					p.sendMessage(
+							cColor + "/cod createMap [args] | " + dColor + "CCreate a map.");
+					p.sendMessage(cColor + "/cod removeMap [name] | " + dColor + "Command to remove a map.");
+
+				}
+
 			} else if (args[0].equalsIgnoreCase("join") && hasPerm(p, "com.join")) {
 				boolean b = GameManager.findMatch(p);
 				if (b) {
@@ -411,7 +488,7 @@ public class Main extends JavaPlugin {
 					}
 				}
 
-			} else if (args[0].equalsIgnoreCase("lobby")) {
+			} else if (args[0].equalsIgnoreCase("lobby") && hasPerm(p, "com.lobby")) {
 				if (lobbyLoc != null) {
 					p.teleport(lobbyLoc);
 				} else {
@@ -678,17 +755,16 @@ public class Main extends JavaPlugin {
 				return perk;
 			}
 		}
-		
+
 		for (RankPerks perk : Main.serverRanks) {
 			if (perk.getName().equals("default")) {
 				return perk;
 			}
 		}
-		
+
 		return new RankPerks("default", 1, 100D, 10);
 	}
-	
-	
+
 	public static String getSQLApiKey() {
 		return Main.sql_api_key;
 	}
