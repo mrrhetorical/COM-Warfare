@@ -125,6 +125,7 @@ public class ProgressionManager {
 	public void setExperience(Player p, double experience) {
 		this.experience.put(p, experience);
 		update(p);
+		StatHandler.addExperience(p, experience - StatHandler.getExperience(p.getName()));
 		return;
 	}
 
@@ -141,6 +142,8 @@ public class ProgressionManager {
 			}
 
 		}
+		
+		StatHandler.addExperience(p, experience);
 
 		update(p);
 	}
