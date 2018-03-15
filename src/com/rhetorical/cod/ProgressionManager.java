@@ -1,5 +1,6 @@
 package com.rhetorical.cod;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.bukkit.Bukkit;
@@ -225,6 +226,14 @@ public class ProgressionManager {
 		ProgressionFile.getData().set("Players." + k + ".prestigeLevel", getPrestigeLevel(p));
 		ProgressionFile.saveData();
 		ProgressionFile.reloadData();
+	}
+	
+	public ArrayList<Player> getPlayerRankings() {
+		
+		
+		
+		
+		return new ArrayList<Player>();
 	}
 
 }

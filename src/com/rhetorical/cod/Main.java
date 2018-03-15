@@ -240,7 +240,7 @@ public class Main extends JavaPlugin {
 		p = (Player) sender;
 
 		if (args.length == 0) {
-			p.openInventory(InventoryManager.mainInventory);
+			p.openInventory(invManager.mainInventory);
 			return true;
 		} else if (args.length >= 1) {
 			if (args[0].equalsIgnoreCase("help") && hasPerm(p, "com.help")) {
@@ -568,7 +568,7 @@ public class Main extends JavaPlugin {
 				return true;
 			} else if (args[0].equalsIgnoreCase("shop") && hasPerm(p, "com.openShop")) {
 				p.closeInventory();
-				p.openInventory(InventoryManager.mainShopInventory);
+				p.openInventory(invManager.mainShopInventory);
 				return true;
 			}
 			return true;

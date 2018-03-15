@@ -100,12 +100,14 @@ public class GameManager {
 			p.sendMessage(Main.codPrefix + "§7Could not find a match. . .");
 			p.sendMessage(Main.codPrefix + "§7Creating match. . .");
 
-			if (pickRandomMap() == null) {
+			CodMap map = pickRandomMap();
+			
+			if (map == null) {
 				p.sendMessage(Main.codPrefix + "§7Could not create a match because there are not enough maps!");
 				return false;
 			}
 
-			newGame = new GameInstance(new ArrayList<Player>(), pickRandomMap());
+			newGame = new GameInstance(new ArrayList<Player>(), map);
 
 			RunningGames.add(newGame);
 
