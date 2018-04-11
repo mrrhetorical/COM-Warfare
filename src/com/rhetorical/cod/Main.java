@@ -31,6 +31,7 @@ import com.rhetorical.cod.object.CodWeapon;
 import com.rhetorical.cod.object.GameInstance;
 import com.rhetorical.cod.object.Gamemode;
 import com.rhetorical.cod.object.GunType;
+import com.rhetorical.cod.object.KillStreakManager;
 import com.rhetorical.cod.object.Loadout;
 import com.rhetorical.cod.object.PerkListener;
 import com.rhetorical.cod.object.RankPerks;
@@ -57,8 +58,8 @@ public class Main extends JavaPlugin {
 	public static PerkManager perkManager;
 	public static InventoryManager invManager;
 	public static ShopManager shopManager;
-	public static KillStreakManager killstreakManager;
 	public static PerkListener perkListener;
+	public static KillStreakManager killstreakManager;
 
 	public static int minPlayers = 6;
 	public static int maxPlayers = 12;
@@ -94,8 +95,8 @@ public class Main extends JavaPlugin {
 		perkManager = new PerkManager();
 		invManager = new InventoryManager();
 		shopManager = new ShopManager();
-		killstreakManager = new KillStreakManager();
 		perkListener = new PerkListener();
+		killstreakManager = new KillStreakManager();
 		
 		KillStreakManager.setup();
 
@@ -277,7 +278,6 @@ public class Main extends JavaPlugin {
 						return true;
 					}
 
-					// TODO: Create the help command
 					p.sendMessage("-===§6§lCOM-Warfare Help§r===-");
 					p.sendMessage("§f[§lPage " + page + " of 3§r§l]");
 

@@ -16,7 +16,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import com.rhetorical.cod.CreditManager;
 import com.rhetorical.cod.GameManager;
-import com.rhetorical.cod.KillStreakManager;
 import com.rhetorical.cod.Main;
 import com.rhetorical.cod.StatHandler;
 import com.rhetorical.cod.object.CodGun;
@@ -24,6 +23,7 @@ import com.rhetorical.cod.object.CodPerk;
 import com.rhetorical.cod.object.CodWeapon;
 import com.rhetorical.cod.object.GunType;
 import com.rhetorical.cod.object.KillStreak;
+import com.rhetorical.cod.object.KillStreakManager;
 import com.rhetorical.cod.object.Loadout;
 import com.rhetorical.cod.object.Perk;
 import com.rhetorical.cod.object.PerkSlot;
@@ -92,7 +92,7 @@ public class InventoryManager implements Listener {
 		if (i.equals(Main.shopManager.gunShop.get(p)) || i.equals(Main.shopManager.weaponShop.get(p)) || i.equals(Main.shopManager.perkShop.get(p))) {
 			return true;
 		}
-		
+
 		if (i.equals(this.killStreakInventory.get(p))) {
 			return true;
 		}
@@ -887,9 +887,7 @@ public class InventoryManager implements Listener {
 
 		} else if (e.getInventory().equals(createClassInventory.get(p))) {
 
-			/*
-			 * TODO: - Change class name when clicking class icon on left
-			 */
+			// TODO: - Change class name when clicking class icon on left
 
 			int slot = e.getSlot();
 

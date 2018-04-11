@@ -152,7 +152,7 @@ public class GameInstance implements Listener {
 		Main.progManager.update(p);
 
 		p.getInventory().clear();
-		
+
 		Main.killstreakManager.loadStreaks(p);
 
 		p.setGameMode(GameMode.SURVIVAL);
@@ -275,11 +275,7 @@ public class GameInstance implements Listener {
 		p.teleport(L);
 		p.getInventory().clear();
 		Loadout loadout = Main.loadManager.getActiveLoadout(p);
-
-		/*
-		 * TODO: - Gather randomized loadout for RSB - Gather loadouts for GunGame, Infected, and One in the Chamber
-		 * 
-		 */
+		Main.killstreakManager.streaksAfterDeath(p);
 
 		if (this.getGameMode() == Gamemode.RSB) {
 
@@ -825,10 +821,10 @@ public class GameInstance implements Listener {
 
 		RankPerks rank = Main.getRank(killer);
 
-		/*
-		 * TODO: - Make kill messages show up above action bar - Create variables for how much xp and whether or not to give them donator xp, same for credits - Create config option to not give credits in game and only per level
-		 * 
-		 */
+		// TODO: - Make kill messages show up above action bar
+
+		Main.killstreakManager.kill(victim, killer);
+
 		if (this.getGameMode().equals(Gamemode.TDM) || this.getGameMode().equals(Gamemode.RSB) || this.getGameMode().equals(Gamemode.DOM)) {
 			if (redTeam.contains(killer)) {
 				killer.sendMessage("§c§lYOU §r§f[killed] §r§9§l" + victim.getDisplayName());
@@ -944,11 +940,10 @@ public class GameInstance implements Listener {
 
 		this.health.damage(victim, damage);
 
-		/*
-		 * Death handlers per gamemode are handled here
-		 * 
-		 * TODO: - Update statistics on death for players - Send kill notification messages to players above action bar - Add gungame support - Add one in the chamber support
-		 */
+		//TODO:
+		 //- Send kill notification messages to players above action bar
+		 //- Add gungame support
+		 //- Add one in the chamber support
 
 		if (this.health.isDead(victim)) {
 			if (!Main.loadManager.getCurrentLoadout(victim).hasPerk(Perk.LAST_STAND)) {
@@ -1014,9 +1009,6 @@ public class GameInstance implements Listener {
 		if (!this.health.isDead(victim)) {
 			this.health.damage(victim, damage);
 
-			// Gamemode settings
-			// TODO: Update statistics on death for players
-
 			if (this.health.isDead(victim)) {
 				if (!Main.loadManager.getCurrentLoadout(victim).hasPerk(Perk.LAST_STAND)) {
 					this.handleDeath(shooter, victim);
@@ -1024,8 +1016,6 @@ public class GameInstance implements Listener {
 					Main.perkListener.lastStand(victim, this);
 				}
 			}
-
-			// TODO: Add catches for gungame and other
 		} else {
 			return;
 		}

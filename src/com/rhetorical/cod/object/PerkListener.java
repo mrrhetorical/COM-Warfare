@@ -1,5 +1,7 @@
 package com.rhetorical.cod.object;
 
+import java.util.HashMap;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -150,6 +152,8 @@ public class PerkListener implements Listener {
 		}
 	}
 	
+	public HashMap<Player, BukkitRunnable> lastStandRunnables = new HashMap<Player, BukkitRunnable>();
+	
 	public void lastStand(Player p, GameInstance i) {
 		
 		i.health.reset(p);
@@ -158,7 +162,6 @@ public class PerkListener implements Listener {
 		p.setSneaking(true);
 		
 		p.sendMessage("§fYou are in final stand! Wait 20 seconds to get back up!");
-		
 		BukkitRunnable br = new BukkitRunnable() {
 			
 			private int time = 40;
@@ -170,14 +173,22 @@ public class PerkListener implements Listener {
 					p.setWalkSpeed(1F);
 					i.health.reset(p);
 					p.sendMessage("§fYou are out of final stand!");
-					this.cancel();
+					cancelLastStand(p);
 				}
 				
 				p.setSneaking(true);
 			}
 		};
 		
-		
+		this.lastStandRunnables.put(p, br);
 		br.runTaskTimerAsynchronously(Main.getPlugin(), 0l, 10L);
+	}
+	
+	public void cancelLastStand(Player p) {
+		if (lastStandRunnables.keySet().contains(p)) {
+			lastStandRunnables.get(p).cancel();
+			lastStandRunnables.remove(p);
+			return;
+		}
 	}
 }

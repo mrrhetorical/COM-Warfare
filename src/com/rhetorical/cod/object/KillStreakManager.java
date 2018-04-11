@@ -1,4 +1,4 @@
-package com.rhetorical.cod;
+package com.rhetorical.cod.object;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,8 +9,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import com.rhetorical.cod.Main;
 import com.rhetorical.cod.files.KillstreaksFile;
-import com.rhetorical.cod.object.KillStreak;
 
 public class KillStreakManager {
 
