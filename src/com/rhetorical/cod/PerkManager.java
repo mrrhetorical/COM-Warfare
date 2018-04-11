@@ -30,7 +30,7 @@ public class PerkManager {
 			try {
 				perk = Perk.valueOf(Main.getPlugin().getConfig().getString("Perks." + i + ".name"));
 			} catch (Exception e) {
-				Main.cs.sendMessage(Main.codPrefix + "§cThere was an error reading the perk data from the config. The file may be corrupted!");
+				Main.sendMessage(Main.cs, Main.codPrefix + "§cThere was an error reading the perk data from the config. The file may be corrupted!", Main.lang);
 				continue;
 			}
 
@@ -51,7 +51,7 @@ public class PerkManager {
 				perkSlot = PerkSlot.THREE;
 				break;
 			default:
-				Main.cs.sendMessage(Main.codPrefix + "§cThere was an error reading the perk slot data from the config. The file may be corrupted!");
+				Main.sendMessage(Main.cs, Main.codPrefix + "§cThere was an error reading the perk slot data from the config. The file may be corrupted!", Main.lang);
 				continue;
 			}
 
@@ -111,7 +111,7 @@ public class PerkManager {
 			s = 3;
 			break;
 		default:
-			Main.cs.sendMessage(Main.codPrefix + "§cThere was an error loading the perk slot data from the config.yml! The file may be corrupted!");
+			Main.sendMessage(Main.cs, Main.codPrefix + "§cThere was an error loading the perk slot data from the config.yml! The file may be corrupted!", Main.lang);
 			return null;
 		}
 

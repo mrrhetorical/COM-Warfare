@@ -2,6 +2,7 @@ package com.rhetorical.cod.analytics;
 
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitRunnable;
+
 import com.rhetorical.cod.Main;
 
 public class CollectAnalytics {

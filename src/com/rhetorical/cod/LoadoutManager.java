@@ -162,7 +162,7 @@ public class LoadoutManager {
 
 		if (!GunsFile.getData().contains("Guns.Primary.default")) {
 
-			Main.cs.sendMessage(Main.codPrefix + "§cCan't start COM-Warfare without a default primary weapon!");
+			Main.sendMessage(Main.cs,  Main.codPrefix + "§cCan't start COM-Warfare without a default primary weapon!", Main.lang);
 			return null;
 		}
 
@@ -182,7 +182,7 @@ public class LoadoutManager {
 
 		if (!GunsFile.getData().contains("Guns.Secondary.default")) {
 
-			Main.cs.sendMessage(Main.codPrefix + "§cCan't start COM-Warfare without a default secondary weapon!");
+			Main.sendMessage(Main.cs,  Main.codPrefix + "§cCan't start COM-Warfare without a default secondary weapon!", Main.lang);
 			return null;
 		}
 
@@ -202,7 +202,7 @@ public class LoadoutManager {
 
 		if (!GunsFile.getData().contains("Weapons.LETHAL.default")) {
 
-			Main.cs.sendMessage(Main.codPrefix + "§cCan't start COM-Warfare without a default lethal weapon!");
+			Main.sendMessage(Main.cs,  Main.codPrefix + "§cCan't start COM-Warfare without a default lethal weapon!", Main.lang);
 			return null;
 		}
 
@@ -219,7 +219,7 @@ public class LoadoutManager {
 
 		if (!GunsFile.getData().contains("Weapons.TACTICAL.default")) {
 
-			Main.cs.sendMessage(Main.codPrefix + "§cCan't start COM-Warfare without a default TACTICAL weapon!");
+			Main.sendMessage(Main.cs,  Main.codPrefix + "§cCan't start COM-Warfare without a default TACTICAL weapon!", Main.lang);
 			return null;
 		}
 
@@ -351,7 +351,7 @@ public class LoadoutManager {
 				loadout = new Loadout(p, name, primary, secondary, lethal, tactical, perkOne, perkTwo, perkThree);
 				l.add(loadout);
 			} catch (Exception e) {
-				Main.cs.sendMessage(Main.codPrefix + "§cError loading player loadout from the config.");
+				Main.sendMessage(Main.cs,  Main.codPrefix + "§cError loading player loadout from the config.", Main.lang);
 			}
 
 			k++;

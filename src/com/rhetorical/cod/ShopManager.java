@@ -329,13 +329,13 @@ public class ShopManager {
 
 						Main.shopManager.setPurchasedGuns(purchased);
 
-						p.sendMessage(Main.codPrefix + "§aYou just unlocked the §6" + gun.getName() + "§a!");
-						p.sendMessage(Main.codPrefix + "§aEquip it after the match!");
+						Main.sendMessage(p, Main.codPrefix + "§aYou just unlocked the §6" + gun.getName() + "§a!", Main.lang);
+						Main.sendMessage(p, Main.codPrefix + "§aEquip it after the match!", Main.lang);
 					}
 				}
 			} else if (gun.getType() == UnlockType.BOTH) {
 				if (Main.progManager.getLevel(p) == gun.getLevelUnlock()) {
-					p.sendMessage(Main.codPrefix + "§aThe §6" + gun.getName() + "§a is now available for purchase!");
+					Main.sendMessage(p, Main.codPrefix + "§aThe §6" + gun.getName() + "§a is now available for purchase!", Main.lang);
 				}
 			}
 
@@ -358,13 +358,13 @@ public class ShopManager {
 
 						Main.shopManager.setPurchasedGuns(purchased);
 
-						p.sendMessage(Main.codPrefix + "§aYou just unlocked the §6" + gun.getName() + "§a!");
-						p.sendMessage(Main.codPrefix + "§aEquip it after the match!");
+						Main.sendMessage(p, Main.codPrefix + "§aYou just unlocked the §6" + gun.getName() + "§a!", Main.lang);
+						Main.sendMessage(p, Main.codPrefix + "§aEquip it after the match!", Main.lang);
 					}
 				}
 			} else if (gun.getType() == UnlockType.BOTH) {
 				if (Main.progManager.getLevel(p) == gun.getLevelUnlock()) {
-					p.sendMessage(Main.codPrefix + "§aThe §6" + gun.getName() + "§a is now available for purchase!");
+					Main.sendMessage(p, Main.codPrefix + "§aThe §6" + gun.getName() + "§a is now available for purchase!", Main.lang);
 				}
 			}
 		}
@@ -386,14 +386,14 @@ public class ShopManager {
 
 						Main.shopManager.setPurchasedWeapons(purchased);
 
-						p.sendMessage(Main.codPrefix + "§aYou just unlocked the §6" + grenade.getName() + "§a!");
-						p.sendMessage(Main.codPrefix + "§aEquip it after the match!");
+						Main.sendMessage(p, Main.codPrefix + "§aYou just unlocked the §6" + grenade.getName() + "§a!", Main.lang);
+						Main.sendMessage(p, Main.codPrefix + "§aEquip it after the match!", Main.lang);
 					}
 				}
 			} else if (grenade.getType() == UnlockType.BOTH) {
 				if (Main.progManager.getLevel(p) == grenade.getLevelUnlock()) {
-					p.sendMessage(
-							Main.codPrefix + "§aThe §6" + grenade.getName() + "§a is now available for purchase!");
+					Main.sendMessage(p, 
+							Main.codPrefix + "§aThe §6" + grenade.getName() + "§a is now available for purchase!", Main.lang);
 				}
 			}
 		}
@@ -415,14 +415,14 @@ public class ShopManager {
 
 						Main.shopManager.setPurchasedWeapons(purchased);
 
-						p.sendMessage(Main.codPrefix + "§aYou just unlocked the §6" + grenade.getName() + "§a!");
-						p.sendMessage(Main.codPrefix + "§aEquip it after the match!");
+						Main.sendMessage(p, Main.codPrefix + "§aYou just unlocked the §6" + grenade.getName() + "§a!", Main.lang);
+						Main.sendMessage(p, Main.codPrefix + "§aEquip it after the match!", Main.lang);
 					}
 				}
 			} else if (grenade.getType() == UnlockType.BOTH) {
 				if (Main.progManager.getLevel(p) == grenade.getLevelUnlock()) {
-					p.sendMessage(
-							Main.codPrefix + "§aThe §6" + grenade.getName() + "§a is now available for purchase!");
+					Main.sendMessage(p, 
+							Main.codPrefix + "§aThe §6" + grenade.getName() + "§a is now available for purchase!", Main.lang);
 				}
 			}
 		}

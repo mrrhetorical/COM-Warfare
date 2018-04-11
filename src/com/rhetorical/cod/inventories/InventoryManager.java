@@ -576,7 +576,7 @@ public class InventoryManager implements Listener {
 
 	public boolean openSelectClassInventory(Player p) {
 		if (!GameManager.isInMatch(p)) {
-			p.sendMessage(Main.codPrefix + "§cYou can't select a class while not in a game!");
+			Main.sendMessage(p,Main.codPrefix + "§cYou can't select a class while not in a game!", Main.lang);
 			return false;
 		}
 
@@ -634,7 +634,7 @@ public class InventoryManager implements Listener {
 				lore.add("§5§lKDR: " + (int) kills);
 			}
 
-			Main.cs.sendMessage(item.toString() + " pos : " + pos);
+			Main.sendMessage(Main.cs, item.toString() + " pos : " + pos, Main.lang);
 
 			itemMeta.setLore(lore);
 
@@ -748,7 +748,7 @@ public class InventoryManager implements Listener {
 		if (e.getClickedInventory().equals(mainInventory)) {
 
 			if (e.getCurrentItem().equals(joinGame)) {
-				p.sendMessage(Main.codPrefix + "§7Put in matchmaker queue. . .");
+				Main.sendMessage(p,Main.codPrefix + "§7Put in matchmaker queue. . .", Main.lang);
 				GameManager.findMatch(p);
 				p.closeInventory();
 				return;
@@ -847,7 +847,7 @@ public class InventoryManager implements Listener {
 				if (counterUavStack.getAmount() != 9) {
 					for (int i : usedNumbers) {
 						if (i == counterUavStack.getAmount()) {
-							p.sendMessage(Main.codPrefix + "§cCan't save killstreaks! More than one item has the same killstreak slot number!");
+							Main.sendMessage(p,Main.codPrefix + "§cCan't save killstreaks! More than one item has the same killstreak slot number!", Main.lang);
 							return;
 						}
 					}
@@ -859,7 +859,7 @@ public class InventoryManager implements Listener {
 				if (nukeStack.getAmount() != 9) {
 					for (int i : usedNumbers) {
 						if (i == nukeStack.getAmount()) {
-							p.sendMessage(Main.codPrefix + "§cCan't save killstreaks! More than one item has the same killstreak slot number!");
+							Main.sendMessage(p,Main.codPrefix + "§cCan't save killstreaks! More than one item has the same killstreak slot number!",Main.lang);
 							return;
 						}
 					}
@@ -870,7 +870,7 @@ public class InventoryManager implements Listener {
 				///// FOR ANY NEW KILLSTREAKS, ADD THE ABOVE CODE FOR NEW STREAKS /////
 
 				if (!(usedNumbers[2] != null && usedNumbers[2] != 0 && usedNumbers[2] != 9)) {
-					p.sendMessage(Main.codPrefix + "§cThere were not enough killstreaks set to save!");
+					Main.sendMessage(p,Main.codPrefix + "§cThere were not enough killstreaks set to save!", Main.lang);
 					return;
 				}
 
@@ -1002,7 +1002,7 @@ public class InventoryManager implements Listener {
 			try {
 				slot = e.getSlot();
 			} catch (NullPointerException exception) {
-				Main.cs.sendMessage("Could not select the proper class");
+				Main.sendMessage(Main.cs, "Could not select the proper class", Main.lang);
 				return;
 			}
 
@@ -1017,10 +1017,10 @@ public class InventoryManager implements Listener {
 			p.closeInventory();
 
 			if (!hasOneManArmy) {
-				p.sendMessage(Main.codPrefix + "§fYou changed your class to " + current.getName() + ". It will change when you next spawn.");
+				Main.sendMessage(p, Main.codPrefix + "§fYou changed your class to " + current.getName() + ". It will change when you next spawn.", Main.lang);
 				Main.perkListener.oneManArmy(p);
 			} else {
-				p.sendMessage(Main.codPrefix + "§fyou changed your class to " + current.getName() + ". It will change in 10 seconds if you don't move.");
+				Main.sendMessage(p, Main.codPrefix + "§fyou changed your class to " + current.getName() + ". It will change in 10 seconds if you don't move.", Main.lang);
 			}
 
 			return;

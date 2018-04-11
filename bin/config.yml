@@ -1,5 +1,7 @@
 #Auto download dependencies: Automatically download all required dependencies if this plugin cannot find them on the computer. By having this value set to 'true', you understand and thereby give permission for this application to download files that are required to run features of this plugin onto this computer.
 auto-download-dependency: true
+#Lang: The two letter abbreviation for what language the plugin will be translated to
+lang: EN
 #Lobby Time: The amount of time players should wait in the lobby before the match starts.
 lobbyTime: 70
 #Minimum player count: The amount of players that are required to start a game.

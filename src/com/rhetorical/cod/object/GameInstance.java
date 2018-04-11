@@ -345,10 +345,10 @@ public class GameInstance implements Listener {
 
 				if (redTeam.size() >= blueTeam.size()) {
 					blueTeam.add(p);
-					p.sendMessage(Main.codPrefix + "§9You are on the blue team!");
+					Main.sendMessage(p, Main.codPrefix + "§9You are on the blue team!", Main.lang);
 				} else {
 					redTeam.add(p);
-					p.sendMessage(Main.codPrefix + "§cYou are on the red team!");
+					Main.sendMessage(p, Main.codPrefix + "§cYou are on the red team!", Main.lang);
 				}
 			}
 		} else {
@@ -356,7 +356,7 @@ public class GameInstance implements Listener {
 				if (this.ffaPlayerScores.containsKey(p))
 					continue;
 
-				p.sendMessage(Main.codPrefix + "§dYou are on the pink team!");
+				Main.sendMessage(p, Main.codPrefix + "§dYou are on the pink team!", Main.lang);
 			}
 		}
 
@@ -392,7 +392,7 @@ public class GameInstance implements Listener {
 			public void run() {
 				for (Player p : game.players) {
 					for (int i = 0; i < 100; i++) {
-						p.sendMessage("");
+						Main.sendMessage(p, "", Main.lang);
 					}
 
 					String teamFormat = "";
@@ -403,8 +403,8 @@ public class GameInstance implements Listener {
 						} else if (getWinningTeam().equalsIgnoreCase("blue")) {
 							teamFormat = "§9BLUE";
 						} else if (getWinningTeam().equalsIgnoreCase("nobody") || getWinningTeam().equalsIgnoreCase("tie")) {
-							p.sendMessage(Main.codPrefix + "§7Nobody won the match! It was a tie!");
-							p.sendMessage(Main.codPrefix + "§fReturning to the lobby in " + Integer.toString(t) + " seconds!");
+							Main.sendMessage(p, Main.codPrefix + "§7Nobody won the match! It was a tie!", Main.lang);
+							Main.sendMessage(p, Main.codPrefix + "§fReturning to the lobby in " + Integer.toString(t) + " seconds!", Main.lang);
 							CodScore score = playerScores.get(p);
 
 							float kd = ((float) score.getKills() / (float) score.getDeaths());
@@ -413,12 +413,12 @@ public class GameInstance implements Listener {
 								kd = score.getKills();
 							}
 
-							p.sendMessage("§a§lKills: " + score.getKills() + " §c§lDeaths: " + score.getDeaths() + " §f§lKDR: " + kd);
+							Main.sendMessage(p, "§a§lKills: " + score.getKills() + " §c§lDeaths: " + score.getDeaths() + " §f§lKDR: " + kd, Main.lang);
 							continue;
 						}
 
-						p.sendMessage(Main.codPrefix + "§fThe " + teamFormat + " §r§fteam won the match!");
-						p.sendMessage(Main.codPrefix + "§fReturning to the lobby in " + Integer.toString(t) + " seconds!");
+						Main.sendMessage(p, Main.codPrefix + "§fThe " + teamFormat + " §r§fteam won the match!", Main.lang);
+						Main.sendMessage(p, Main.codPrefix + "§fReturning to the lobby in " + Integer.toString(t) + " seconds!", Main.lang);
 						CodScore score = playerScores.get(p);
 
 						float kd = ((float) score.getKills() / (float) score.getDeaths());
@@ -427,10 +427,10 @@ public class GameInstance implements Listener {
 							kd = score.getKills();
 						}
 
-						p.sendMessage("§a§lKills: " + score.getKills() + " §c§lDeaths: " + score.getDeaths() + " §f§lKDR: " + kd);
+						Main.sendMessage(p, "§a§lKills: " + score.getKills() + " §c§lDeaths: " + score.getDeaths() + " §f§lKDR: " + kd, Main.lang);
 					} else {
-						p.sendMessage(Main.codPrefix + "§e" + getWinningTeam() + " §r§fwon the match!");
-						p.sendMessage(Main.codPrefix + "§fReturning to the lobby in " + Integer.toString(t) + " seconds!");
+						Main.sendMessage(p, Main.codPrefix + "§e" + getWinningTeam() + " §r§fwon the match!", Main.lang);
+						Main.sendMessage(p, Main.codPrefix + "§fReturning to the lobby in " + Integer.toString(t) + " seconds!", Main.lang);
 						CodScore score = playerScores.get(p);
 						float kd = ((float) score.getKills() / (float) score.getDeaths());
 
@@ -438,7 +438,7 @@ public class GameInstance implements Listener {
 							kd = score.getKills();
 						}
 
-						p.sendMessage("§a§lKills: " + score.getKills() + " §c§lDeaths: " + score.getDeaths() + " §f§lKDR: " + kd);
+						Main.sendMessage(p, "§a§lKills: " + score.getKills() + " §c§lDeaths: " + score.getDeaths() + " §f§lKDR: " + kd, Main.lang);
 					}
 				}
 
@@ -491,12 +491,12 @@ public class GameInstance implements Listener {
 					for (Player p : game.players) {
 
 						if (t == 0) {
-							p.sendMessage(Main.codPrefix + "§7Game starting now!");
+							Main.sendMessage(p, Main.codPrefix + "§7Game starting now!", Main.lang);
 							continue;
 						}
 
-						p.sendMessage(Main.codPrefix + "§7Game starting in " + getFancyTime(t) + "!");
-						p.sendMessage(Main.codPrefix + "§7Map: §a" + game.currentMap.getName() + " §r§7Gamemode: §c" + game.currentMap.getGamemode().toString());
+						Main.sendMessage(p, Main.codPrefix + "§7Game starting in " + getFancyTime(t) + "!", Main.lang);
+						Main.sendMessage(p, Main.codPrefix + "§7Map: §a" + game.currentMap.getName() + " §r§7Gamemode: §c" + game.currentMap.getGamemode().toString(), Main.lang);
 					}
 				}
 
@@ -693,7 +693,7 @@ public class GameInstance implements Listener {
 					p.setSpectatorTarget(killer);
 
 					if (t == 3)
-						p.sendMessage(Main.codPrefix + "§cYou will respawn in " + t + " seconds!");
+						Main.sendMessage(p, Main.codPrefix + "§cYou will respawn in " + t + " seconds!", Main.lang);
 				} else if (t <= 1) {
 					if (game.state == GameState.INGAME) {
 						if (currentMap.getGamemode() != Gamemode.FFA) {
@@ -827,8 +827,8 @@ public class GameInstance implements Listener {
 
 		if (this.getGameMode().equals(Gamemode.TDM) || this.getGameMode().equals(Gamemode.RSB) || this.getGameMode().equals(Gamemode.DOM)) {
 			if (redTeam.contains(killer)) {
-				killer.sendMessage("§c§lYOU §r§f[killed] §r§9§l" + victim.getDisplayName());
-				killer.sendMessage("§e+" + rank.getKillExperience() + "xp");
+				Main.sendMessage(killer, "§c§lYOU §r§f[killed] §r§9§l" + victim.getDisplayName(), Main.lang);
+				Main.sendMessage(killer, "§e+" + rank.getKillExperience() + "xp", Main.lang);
 
 				Main.progManager.addExperience(killer, rank.getKillExperience());
 				CreditManager.setCredits(killer, CreditManager.getCredits(killer) + rank.getKillCredits());
@@ -837,8 +837,8 @@ public class GameInstance implements Listener {
 				this.updateScores(victim, killer, rank);
 				return;
 			} else if (blueTeam.contains(killer)) {
-				killer.sendMessage("§9§lYOU §r§f[killed] §r§c§l" + victim.getDisplayName());
-				killer.sendMessage("§e+" + rank.getKillExperience() + "xp");
+				Main.sendMessage(killer, "§9§lYOU §r§f[killed] §r§c§l" + victim.getDisplayName(), Main.lang);
+				Main.sendMessage(killer, "§e+" + rank.getKillExperience() + "xp", Main.lang);
 				Main.progManager.addExperience(killer, rank.getKillExperience());
 				this.kill(victim, killer);
 				this.addBluePoint();
@@ -846,8 +846,8 @@ public class GameInstance implements Listener {
 				return;
 			}
 		} else if (this.getGameMode().equals(Gamemode.FFA)) {
-			killer.sendMessage("§a§lYOU §r§f[killed] §r§6§l" + victim.getDisplayName());
-			killer.sendMessage("§e+" + rank.getKillExperience() + "xp");
+			Main.sendMessage(killer, "§a§lYOU §r§f[killed] §r§6§l" + victim.getDisplayName(), Main.lang);
+			Main.sendMessage(killer, "§e+" + rank.getKillExperience() + "xp", Main.lang);
 			Main.progManager.addExperience(killer, rank.getKillExperience());
 			this.kill(victim, killer);
 			this.addPointForPlayer(killer);

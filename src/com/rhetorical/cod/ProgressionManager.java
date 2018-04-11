@@ -33,16 +33,16 @@ public class ProgressionManager {
 
 		if (maxLevelFromConfig <= 0) {
 			this.maxLevel = 55;
-			Main.cs.sendMessage(
-					Main.codPrefix + "§cMax level set to 55 by default! You must set a maximum level of at least 1!");
+			Main.sendMessage(Main.cs, 
+					Main.codPrefix + "§cMax level set to 55 by default! You must set a maximum level of at least 1!", Main.lang);
 		} else {
 			this.maxLevel = maxLevelFromConfig;
 		}
 
 		if (maxPrestigeLevelFromConfig <= 0) {
 			this.maxPrestigeLevel = 10;
-			Main.cs.sendMessage(Main.codPrefix
-					+ "§cMax prestige level set to 10 by default! You must set a maximum level of at least 1!");
+			Main.sendMessage(Main.cs, Main.codPrefix
+					+ "§cMax prestige level set to 10 by default! You must set a maximum level of at least 1!", Main.lang);
 		} else {
 			this.maxPrestigeLevel = maxPrestigeLevelFromConfig;
 		}
@@ -183,7 +183,7 @@ public class ProgressionManager {
 		try {
 			p.setExp((float) (getExperience(p) / getExperienceForLevel(getLevel(p))));
 		} catch (Exception e) {
-			Main.cs.sendMessage("§cThere was an error setting the player's experience level");
+			Main.sendMessage(Main.cs, "§cThere was an error setting the player's experience level", Main.lang);
 		}
 		return;
 	}
