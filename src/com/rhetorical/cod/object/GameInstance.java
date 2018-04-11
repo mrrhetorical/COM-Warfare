@@ -63,9 +63,7 @@ public class GameInstance implements Listener {
 	public HashMap<Player, Integer> ffaPlayerScores = new HashMap<Player, Integer>();
 	public HashMap<Player, BossBar> freeForAllBar = new HashMap<Player, BossBar>();
 
-	public BossBar scoreBar = Bukkit.createBossBar(
-			"§7«§f" + getFancyTime(Main.getPlugin().getConfig().getInt("lobbyTime")) + "§r§7»", BarColor.PINK,
-			BarStyle.SOLID);
+	public BossBar scoreBar = Bukkit.createBossBar("§7«§f" + getFancyTime(Main.getPlugin().getConfig().getInt("lobbyTime")) + "§r§7»", BarColor.PINK, BarStyle.SOLID);
 
 	public HealthManager health;
 
@@ -100,8 +98,7 @@ public class GameInstance implements Listener {
 
 		System.gc();
 
-		Main.cs.sendMessage(Main.codPrefix + "§7Game lobby with id " + this.getId() + " created with map "
-				+ this.getMap().getName() + " with gamemode " + this.getGameMode() + "!");
+		Main.cs.sendMessage(Main.codPrefix + "§7Game lobby with id " + this.getId() + " created with map " + this.getMap().getName() + " with gamemode " + this.getGameMode() + "!");
 	}
 
 	public void reset() {
@@ -155,6 +152,8 @@ public class GameInstance implements Listener {
 		Main.progManager.update(p);
 
 		p.getInventory().clear();
+		
+		Main.killstreakManager.loadStreaks(p);
 
 		p.setGameMode(GameMode.SURVIVAL);
 		p.setHealth(20D);
@@ -278,8 +277,7 @@ public class GameInstance implements Listener {
 		Loadout loadout = Main.loadManager.getActiveLoadout(p);
 
 		/*
-		 * TODO: - Gather randomized loadout for RSB - Gather loadouts for
-		 * GunGame, Infected, and One in the Chamber
+		 * TODO: - Gather randomized loadout for RSB - Gather loadouts for GunGame, Infected, and One in the Chamber
 		 * 
 		 */
 
@@ -315,8 +313,7 @@ public class GameInstance implements Listener {
 			p.getInventory().setItem(19, primaryAmmo);
 			p.getInventory().setItem(25, secondaryAmmo);
 
-		} else if (this.getGameMode() != Gamemode.RSB && this.getGameMode() != Gamemode.INFECT
-				&& this.getGameMode() != Gamemode.OITC && this.getGameMode() != Gamemode.GUN) {
+		} else if (this.getGameMode() != Gamemode.RSB && this.getGameMode() != Gamemode.INFECT && this.getGameMode() != Gamemode.OITC && this.getGameMode() != Gamemode.GUN) {
 
 			p.getInventory().setItem(0, Main.loadManager.knife);
 			p.getInventory().setItem(1, loadout.getPrimary().getGun());
@@ -329,19 +326,20 @@ public class GameInstance implements Listener {
 			ItemStack primaryAmmo = loadout.getPrimary().getAmmo();
 			primaryAmmo.setAmount(loadout.getPrimary().getAmmoCount());
 
-			ItemStack secondaryAmmo = loadout.getSecondary().getAmmo();
-			secondaryAmmo.setAmount(loadout.getSecondary().getAmmoCount());
+			if (!loadout.hasPerk(Perk.ONE_MAN_ARMY)) {
+				ItemStack secondaryAmmo = loadout.getSecondary().getAmmo();
+				secondaryAmmo.setAmount(loadout.getSecondary().getAmmoCount());
+				p.getInventory().setItem(25, secondaryAmmo);
+			}
 
 			p.getInventory().setItem(19, primaryAmmo);
-			p.getInventory().setItem(25, secondaryAmmo);
 
 		}
 	}
 
 	public void assignTeams() {
 
-		if (this.getGameMode() != Gamemode.FFA && this.getGameMode() != Gamemode.OITC
-				&& this.getGameMode() != Gamemode.GUN) {
+		if (this.getGameMode() != Gamemode.FFA && this.getGameMode() != Gamemode.OITC && this.getGameMode() != Gamemode.GUN) {
 			for (Player p : players) {
 				// check if any players are partied and put them on a team
 				// together
@@ -383,7 +381,7 @@ public class GameInstance implements Listener {
 			p.getInventory().clear();
 
 			Main.progManager.saveData(p);
-			
+
 			StatHandler.saveStatData();
 		}
 
@@ -408,11 +406,9 @@ public class GameInstance implements Listener {
 							teamFormat = "§cRED";
 						} else if (getWinningTeam().equalsIgnoreCase("blue")) {
 							teamFormat = "§9BLUE";
-						} else if (getWinningTeam().equalsIgnoreCase("nobody")
-								|| getWinningTeam().equalsIgnoreCase("tie")) {
+						} else if (getWinningTeam().equalsIgnoreCase("nobody") || getWinningTeam().equalsIgnoreCase("tie")) {
 							p.sendMessage(Main.codPrefix + "§7Nobody won the match! It was a tie!");
-							p.sendMessage(Main.codPrefix + "§fReturning to the lobby in " + Integer.toString(t)
-									+ " seconds!");
+							p.sendMessage(Main.codPrefix + "§fReturning to the lobby in " + Integer.toString(t) + " seconds!");
 							CodScore score = playerScores.get(p);
 
 							float kd = ((float) score.getKills() / (float) score.getDeaths());
@@ -421,14 +417,12 @@ public class GameInstance implements Listener {
 								kd = score.getKills();
 							}
 
-							p.sendMessage("§a§lKills: " + score.getKills() + " §c§lDeaths: " + score.getDeaths()
-									+ " §f§lKDR: " + kd);
+							p.sendMessage("§a§lKills: " + score.getKills() + " §c§lDeaths: " + score.getDeaths() + " §f§lKDR: " + kd);
 							continue;
 						}
 
 						p.sendMessage(Main.codPrefix + "§fThe " + teamFormat + " §r§fteam won the match!");
-						p.sendMessage(
-								Main.codPrefix + "§fReturning to the lobby in " + Integer.toString(t) + " seconds!");
+						p.sendMessage(Main.codPrefix + "§fReturning to the lobby in " + Integer.toString(t) + " seconds!");
 						CodScore score = playerScores.get(p);
 
 						float kd = ((float) score.getKills() / (float) score.getDeaths());
@@ -437,12 +431,10 @@ public class GameInstance implements Listener {
 							kd = score.getKills();
 						}
 
-						p.sendMessage("§a§lKills: " + score.getKills() + " §c§lDeaths: " + score.getDeaths()
-								+ " §f§lKDR: " + kd);
+						p.sendMessage("§a§lKills: " + score.getKills() + " §c§lDeaths: " + score.getDeaths() + " §f§lKDR: " + kd);
 					} else {
 						p.sendMessage(Main.codPrefix + "§e" + getWinningTeam() + " §r§fwon the match!");
-						p.sendMessage(
-								Main.codPrefix + "§fReturning to the lobby in " + Integer.toString(t) + " seconds!");
+						p.sendMessage(Main.codPrefix + "§fReturning to the lobby in " + Integer.toString(t) + " seconds!");
 						CodScore score = playerScores.get(p);
 						float kd = ((float) score.getKills() / (float) score.getDeaths());
 
@@ -450,8 +442,7 @@ public class GameInstance implements Listener {
 							kd = score.getKills();
 						}
 
-						p.sendMessage("§a§lKills: " + score.getKills() + " §c§lDeaths: " + score.getDeaths()
-								+ " §f§lKDR: " + kd);
+						p.sendMessage("§a§lKills: " + score.getKills() + " §c§lDeaths: " + score.getDeaths() + " §f§lKDR: " + kd);
 					}
 				}
 
@@ -509,8 +500,7 @@ public class GameInstance implements Listener {
 						}
 
 						p.sendMessage(Main.codPrefix + "§7Game starting in " + getFancyTime(t) + "!");
-						p.sendMessage(Main.codPrefix + "§7Map: §a" + game.currentMap.getName() + " §r§7Gamemode: §c"
-								+ game.currentMap.getGamemode().toString());
+						p.sendMessage(Main.codPrefix + "§7Map: §a" + game.currentMap.getName() + " §r§7Gamemode: §c" + game.currentMap.getGamemode().toString());
 					}
 				}
 
@@ -538,10 +528,7 @@ public class GameInstance implements Listener {
 			if (!currentMap.getGamemode().equals(Gamemode.FFA)) {
 				scoreBar.addPlayer(p);
 			} else {
-				freeForAllBar.put(p,
-						Bukkit.createBossBar(
-								"§7«§f" + getFancyTime(Main.getPlugin().getConfig().getInt("gameTime.FFA")) + "§r§7»",
-								BarColor.PINK, BarStyle.SOLID));
+				freeForAllBar.put(p, Bukkit.createBossBar("§7«§f" + getFancyTime(Main.getPlugin().getConfig().getInt("gameTime.FFA")) + "§r§7»", BarColor.PINK, BarStyle.SOLID));
 				freeForAllBar.get(p).addPlayer(p);
 			}
 		}
@@ -559,8 +546,7 @@ public class GameInstance implements Listener {
 				String counter = getFancyTime(t);
 
 				if (currentMap.getGamemode() != Gamemode.FFA) {
-					scoreBar.setTitle(
-							"§cRED: " + RedTeamScore + " §7«§f" + counter + "§r§7»" + " §9BLU: " + BlueTeamScore);
+					scoreBar.setTitle("§cRED: " + RedTeamScore + " §7«§f" + counter + "§r§7»" + " §9BLU: " + BlueTeamScore);
 				} else {
 
 					Player highestScorer = Bukkit.getPlayer(getWinningTeam());
@@ -578,10 +564,7 @@ public class GameInstance implements Listener {
 							ffaPlayerScores.put(highestScorer, 0);
 						}
 						Double progress = (((double) t) / ((double) gameTime));
-						freeForAllBar.get(p)
-								.setTitle("§a" + p.getDisplayName() + ": " + ffaPlayerScores.get(p) + " §7«§f" + counter
-										+ "§r§7»" + " §6" + highestScorer.getDisplayName() + ": "
-										+ ffaPlayerScores.get(highestScorer));
+						freeForAllBar.get(p).setTitle("§a" + p.getDisplayName() + ": " + ffaPlayerScores.get(p) + " §7«§f" + counter + "§r§7»" + " §6" + highestScorer.getDisplayName() + ": " + ffaPlayerScores.get(highestScorer));
 						freeForAllBar.get(p).setProgress(progress);
 					}
 				}
@@ -592,9 +575,7 @@ public class GameInstance implements Listener {
 
 				game.updateTabList();
 
-				if (currentMap.getGamemode() == Gamemode.TDM || currentMap.getGamemode() == Gamemode.RSB
-						|| currentMap.getGamemode() == Gamemode.DOM || currentMap.getGamemode() == Gamemode.CTF
-						|| currentMap.getGamemode() == Gamemode.KC) {
+				if (currentMap.getGamemode() == Gamemode.TDM || currentMap.getGamemode() == Gamemode.RSB || currentMap.getGamemode() == Gamemode.DOM || currentMap.getGamemode() == Gamemode.CTF || currentMap.getGamemode() == Gamemode.KC) {
 					if (BlueTeamScore >= maxScore_TDM || RedTeamScore >= maxScore_TDM) {
 						stopGame();
 						this.cancel();
@@ -625,11 +606,9 @@ public class GameInstance implements Listener {
 
 	public void resetScoreBoard() {
 		if (this.getGameMode() != Gamemode.FFA) {
-			this.scoreBar = Bukkit.createBossBar(Color.RED + "RED: 0" + "     " + "«" + this.getFancyTime(gameTime)
-					+ "»" + "     " + Color.BLUE + "BLUE: 0", BarColor.WHITE, BarStyle.SEGMENTED_10);
+			this.scoreBar = Bukkit.createBossBar(Color.RED + "RED: 0" + "     " + "«" + this.getFancyTime(gameTime) + "»" + "     " + Color.BLUE + "BLUE: 0", BarColor.WHITE, BarStyle.SEGMENTED_10);
 		} else {
-			this.scoreBar = Bukkit.createBossBar(Color.RED + "YOU: 0" + "     " + "«" + this.getFancyTime(gameTime)
-					+ "»" + "     " + Color.BLUE + "1ST: 0", BarColor.WHITE, BarStyle.SEGMENTED_10);
+			this.scoreBar = Bukkit.createBossBar(Color.RED + "YOU: 0" + "     " + "«" + this.getFancyTime(gameTime) + "»" + "     " + Color.BLUE + "1ST: 0", BarColor.WHITE, BarStyle.SEGMENTED_10);
 		}
 	}
 
@@ -698,6 +677,8 @@ public class GameInstance implements Listener {
 	}
 
 	public void kill(Player p, Player killer) {
+
+		Main.killstreakManager.kill(p, killer);
 
 		GameInstance game = this;
 
@@ -781,8 +762,7 @@ public class GameInstance implements Listener {
 
 			CodScore score = this.playerScores.get(p);
 
-			p.setPlayerListName(teamColor + "[" + Main.progManager.getLevel(p) + "]" + p.getDisplayName() + " K "
-					+ score.getKills() + " / D " + score.getDeaths() + " / S " + score.getKillstreak());
+			p.setPlayerListName(teamColor + "[" + Main.progManager.getLevel(p) + "]" + p.getDisplayName() + " K " + score.getKills() + " / D " + score.getDeaths() + " / S " + score.getKillstreak());
 
 		}
 	}
@@ -846,14 +826,10 @@ public class GameInstance implements Listener {
 		RankPerks rank = Main.getRank(killer);
 
 		/*
-		 * TODO: - Make kill messages show up above action bar - Create
-		 * variables for how much xp and whether or not to give them donator xp,
-		 * same for credits - Create config option to not give credits in game
-		 * and only per level
+		 * TODO: - Make kill messages show up above action bar - Create variables for how much xp and whether or not to give them donator xp, same for credits - Create config option to not give credits in game and only per level
 		 * 
 		 */
-		if (this.getGameMode().equals(Gamemode.TDM) || this.getGameMode().equals(Gamemode.RSB)
-				|| this.getGameMode().equals(Gamemode.DOM)) {
+		if (this.getGameMode().equals(Gamemode.TDM) || this.getGameMode().equals(Gamemode.RSB) || this.getGameMode().equals(Gamemode.DOM)) {
 			if (redTeam.contains(killer)) {
 				killer.sendMessage("§c§lYOU §r§f[killed] §r§9§l" + victim.getDisplayName());
 				killer.sendMessage("§e+" + rank.getKillExperience() + "xp");
@@ -918,9 +894,7 @@ public class GameInstance implements Listener {
 	 * 
 	 * GAMEMODE LISTENERS --------------------
 	 * 
-	 * Gamemode listeners contain all the listeners for each gamemode. What will
-	 * be a part of this: Death listeners per gamemode (and kill), pick up
-	 * object (for CTF and KC).
+	 * Gamemode listeners contain all the listeners for each gamemode. What will be a part of this: Death listeners per gamemode (and kill), pick up object (for CTF and KC).
 	 * 
 	 * 
 	 * 
@@ -930,7 +904,7 @@ public class GameInstance implements Listener {
 	 * 
 	 */
 
-	@EventHandler
+	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerHit(EntityDamageByEntityEvent e) {
 
 		if (!(e.getEntity() instanceof Player && e.getDamager() instanceof Player))
@@ -962,9 +936,7 @@ public class GameInstance implements Listener {
 
 		ItemStack heldWeapon = attacker.getInventory().getItemInMainHand();
 
-		if (heldWeapon.getType() == Material.DIAMOND_SWORD || heldWeapon.getType() == Material.GOLD_SWORD
-				|| heldWeapon.getType() == Material.IRON_SWORD || heldWeapon.getType() == Material.STONE_SWORD
-				|| heldWeapon.getType() == Material.WOOD_SWORD) {
+		if (heldWeapon.getType() == Material.DIAMOND_SWORD || heldWeapon.getType() == Material.GOLD_SWORD || heldWeapon.getType() == Material.IRON_SWORD || heldWeapon.getType() == Material.STONE_SWORD || heldWeapon.getType() == Material.WOOD_SWORD) {
 			damage = Main.defaultHealth;
 		} else {
 			damage = Math.round(Main.defaultHealth / 4);
@@ -975,13 +947,15 @@ public class GameInstance implements Listener {
 		/*
 		 * Death handlers per gamemode are handled here
 		 * 
-		 * TODO: - Update statistics on death for players - Send kill
-		 * notification messages to players above action bar - Add gungame
-		 * support - Add one in the chamber support
+		 * TODO: - Update statistics on death for players - Send kill notification messages to players above action bar - Add gungame support - Add one in the chamber support
 		 */
 
 		if (this.health.isDead(victim)) {
-			this.handleDeath(attacker, victim);
+			if (!Main.loadManager.getCurrentLoadout(victim).hasPerk(Perk.LAST_STAND)) {
+				this.handleDeath(attacker, victim);
+			} else {
+				Main.perkListener.lastStand(victim, this);
+			}
 		}
 
 	}
@@ -1037,7 +1011,6 @@ public class GameInstance implements Listener {
 			shooter.sendMessage(Main.codPrefix + "§7Try not to attack your teammates!");
 			return;
 		}
-
 		if (!this.health.isDead(victim)) {
 			this.health.damage(victim, damage);
 
@@ -1045,13 +1018,16 @@ public class GameInstance implements Listener {
 			// TODO: Update statistics on death for players
 
 			if (this.health.isDead(victim)) {
-				this.handleDeath(shooter, victim);
+				if (!Main.loadManager.getCurrentLoadout(victim).hasPerk(Perk.LAST_STAND)) {
+					this.handleDeath(shooter, victim);
+				} else {
+					Main.perkListener.lastStand(victim, this);
+				}
 			}
 
 			// TODO: Add catches for gungame and other
 		} else {
 			return;
 		}
-
 	}
 }

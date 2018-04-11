@@ -1,7 +1,15 @@
 package com.rhetorical.cod.object;
 
 public enum Perk {
-	MARATHON("Marathon", PerkSlot.ONE), SLEIGHT_OF_HAND("Sleight of Hand", PerkSlot.ONE), SCAVENGER("Scavenger", PerkSlot.ONE), BLING("Bling", PerkSlot.ONE), ONE_MAN_ARMY("One Man Army", PerkSlot.ONE), /* perk 2*/ STOPPING_POWER("Stopping Power", PerkSlot.TWO), LIGHTWEIGHT("Lightweight", PerkSlot.TWO), HARDLINE("Hardline", PerkSlot.TWO), COLD_BLOODED("Cold Blooded", PerkSlot.TWO), DANGER_CLOSE("Danger Close", PerkSlot.TWO), /* perk 3*/ COMMANDO("Commando", PerkSlot.THREE), STEADY_AIM("Steady Aim", PerkSlot.THREE), SCRAMBLER("Scrambler", PerkSlot.THREE), NINJA("Ninja", PerkSlot.THREE), SITREP("Sitrep", PerkSlot.THREE), LAST_STAND("Last Stand", PerkSlot.THREE);
+	
+	///// PERK SLOT ONE /////
+	MARATHON("Marathon", PerkSlot.ONE), SLEIGHT_OF_HAND("Sleight of Hand", PerkSlot.ONE), SCAVENGER("Scavenger", PerkSlot.ONE), BLING("Bling", PerkSlot.ONE), ONE_MAN_ARMY("One Man Army", PerkSlot.ONE),
+	
+	///// PERK SLOT TWO /////
+	STOPPING_POWER("Stopping Power", PerkSlot.TWO), LIGHTWEIGHT("Lightweight", PerkSlot.TWO), HARDLINE("Hardline", PerkSlot.TWO), COLD_BLOODED("Cold Blooded", PerkSlot.TWO), DANGER_CLOSE("Danger Close", PerkSlot.TWO), JUGGERNAUT("Juggernaut", PerkSlot.TWO),
+	
+	///// PERK SLOT THREE /////
+	COMMANDO("Commando", PerkSlot.THREE), STEADY_AIM("Steady Aim", PerkSlot.THREE), SCRAMBLER("Scrambler", PerkSlot.THREE), NINJA("Ninja", PerkSlot.THREE), SITREP("Sitrep", PerkSlot.THREE), LAST_STAND("Last Stand", PerkSlot.THREE);
 	
 	private String name;
 	private PerkSlot slot;

@@ -16,13 +16,16 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import com.rhetorical.cod.CreditManager;
 import com.rhetorical.cod.GameManager;
+import com.rhetorical.cod.KillStreakManager;
 import com.rhetorical.cod.Main;
 import com.rhetorical.cod.StatHandler;
 import com.rhetorical.cod.object.CodGun;
 import com.rhetorical.cod.object.CodPerk;
 import com.rhetorical.cod.object.CodWeapon;
 import com.rhetorical.cod.object.GunType;
+import com.rhetorical.cod.object.KillStreak;
 import com.rhetorical.cod.object.Loadout;
+import com.rhetorical.cod.object.Perk;
 import com.rhetorical.cod.object.PerkSlot;
 import com.rhetorical.cod.object.UnlockType;
 import com.rhetorical.cod.object.WeaponType;
@@ -38,6 +41,7 @@ public class InventoryManager implements Listener {
 	public HashMap<Player, Inventory> createClassInventory = new HashMap<Player, Inventory>();
 	public HashMap<Player, Inventory> selectClassInventory = new HashMap<Player, Inventory>();
 	public HashMap<Player, Inventory> personalStatistics = new HashMap<Player, Inventory>();
+	public HashMap<Player, Inventory> killStreakInventory = new HashMap<Player, Inventory>();
 
 	public ItemStack joinGame = new ItemStack(Material.EMERALD);
 	public ItemStack createClass = new ItemStack(Material.CHEST);
@@ -65,10 +69,7 @@ public class InventoryManager implements Listener {
 		}
 
 		for (Loadout loadout : Main.loadManager.getLoadouts(p)) {
-			if (loadout.getPrimaryInventory().equals(i) || loadout.getSecondaryInventory().equals(i)
-					|| loadout.getLethalInventory().equals(i) || loadout.getTacticalInventory().equals(i)
-					|| loadout.getPerk1Inventory().equals(i) || loadout.getPerk2Inventory().equals(i)
-					|| loadout.getPerk3Inventory().equals(i)) {
+			if (loadout.getPrimaryInventory().equals(i) || loadout.getSecondaryInventory().equals(i) || loadout.getLethalInventory().equals(i) || loadout.getTacticalInventory().equals(i) || loadout.getPerk1Inventory().equals(i) || loadout.getPerk2Inventory().equals(i) || loadout.getPerk3Inventory().equals(i)) {
 				return true;
 			}
 		}
@@ -88,31 +89,15 @@ public class InventoryManager implements Listener {
 			return true;
 		}
 
-		if (i.equals(Main.shopManager.gunShop.get(p)) || i.equals(Main.shopManager.weaponShop.get(p))
-				|| i.equals(Main.shopManager.perkShop.get(p))) {
+		if (i.equals(Main.shopManager.gunShop.get(p)) || i.equals(Main.shopManager.weaponShop.get(p)) || i.equals(Main.shopManager.perkShop.get(p))) {
+			return true;
+		}
+		
+		if (i.equals(this.killStreakInventory.get(p))) {
 			return true;
 		}
 		return false;
 	}
-
-	/*
-	 * TODO: - Create shop inventory - Create item for primary guns - Create item
-	 * for secondary guns - Create item for weapons (Lethal & Tactical) - Create
-	 * item for killstreaks & scorestreaks - Create item for credit & experience
-	 * boosts
-	 * 
-	 * - Create loadout inventory - Create item for each loadout with lore that
-	 * displays - Loadout name ("Class 1" by default with appropriate numbers for
-	 * names) - Primary weapon name - Secondary weapon name - Lethal & Tactical
-	 * weapon name - Perk names
-	 * 
-	 * - Within loadout screen (When clicked item shows list of available weapons) -
-	 * Display primary - Display secondary - Display lethal - Display tactical -
-	 * Display Perk 1 - Display Perk 2 - Display Perk 3 - Display back button -
-	 * Create Killstreak & Scorestreak inventory - Create item for each killstreak
-	 * or scorestreak that isn't currently bought by the user
-	 * 
-	 */
 
 	public InventoryManager() {
 
@@ -241,7 +226,7 @@ public class InventoryManager implements Listener {
 
 		mainInventory.setItem(9, shopItem);
 
-		ItemStack gunItem = new ItemStack(Main.loadManager.getDefaultPrimary().getGun().getType());
+		ItemStack gunItem = new ItemStack(Material.WOOD_HOE);
 		ItemMeta gunMeta = gunItem.getItemMeta();
 		gunMeta.setDisplayName("§9Gun Shop");
 		ArrayList<String> gunLore = new ArrayList<String>();
@@ -251,7 +236,7 @@ public class InventoryManager implements Listener {
 
 		gunShopItem = gunItem;
 
-		ItemStack grenadeItem = new ItemStack(Main.loadManager.getDefaultLethal().getWeapon().getType());
+		ItemStack grenadeItem = new ItemStack(Material.SLIME_BALL);
 		ItemMeta grenadeMeta = grenadeItem.getItemMeta();
 		grenadeMeta.setDisplayName("§cGrenade Shop");
 		ArrayList<String> grenadeLore = new ArrayList<String>();
@@ -261,7 +246,7 @@ public class InventoryManager implements Listener {
 
 		grenadeShopItem = grenadeItem;
 
-		ItemStack perkItem = new ItemStack(Main.perkManager.getDefaultOne().getItem());
+		ItemStack perkItem = new ItemStack(Material.APPLE);
 		ItemMeta perkMeta = perkItem.getItemMeta();
 		perkMeta.setDisplayName("§aPerk Shop");
 		ArrayList<String> perkLore = new ArrayList<String>();
@@ -289,8 +274,7 @@ public class InventoryManager implements Listener {
 
 		Main.shopManager.loadPurchaseData(p);
 
-		Inventory customClassInventory = Bukkit.createInventory(p, 9 * Main.loadManager.getAllowedClasses(p),
-				"Create-a-Class");
+		Inventory customClassInventory = Bukkit.createInventory(p, 9 * Main.loadManager.getAllowedClasses(p), "Create-a-Class");
 
 		int line;
 
@@ -530,15 +514,11 @@ public class InventoryManager implements Listener {
 		ArrayList<CodPerk> perks = Main.perkManager.getAvailablePerks();
 		for (CodPerk perk : perks) {
 
-			if (perk.getPerk().getName().equals(Main.perkManager.getDefaultOne().getPerk().getName())
-					|| perk.getPerk().getName().equals(Main.perkManager.getDefaultTwo().getPerk().getName())
-					|| perk.getPerk().getName().equals(Main.perkManager.getDefaultThree().getPerk().getName())) {
+			if (perk.getPerk().getName().equals(Main.perkManager.getDefaultOne().getPerk().getName()) || perk.getPerk().getName().equals(Main.perkManager.getDefaultTwo().getPerk().getName()) || perk.getPerk().getName().equals(Main.perkManager.getDefaultThree().getPerk().getName())) {
 				continue;
 			}
 
-			if (!Main.shopManager.purchasedPerks.get(p).contains(perk) && !perk.equals(Main.perkManager.getDefaultOne())
-					&& !perk.equals(Main.perkManager.getDefaultTwo())
-					&& !perk.equals(Main.perkManager.getDefaultThree())) {
+			if (!Main.shopManager.purchasedPerks.get(p).contains(perk) && !perk.equals(Main.perkManager.getDefaultOne()) && !perk.equals(Main.perkManager.getDefaultTwo()) && !perk.equals(Main.perkManager.getDefaultThree())) {
 				ItemStack item = perk.getItem();
 				ItemMeta perkMeta = item.getItemMeta();
 				if (perkMeta.getLore() == null) {
@@ -655,7 +635,7 @@ public class InventoryManager implements Listener {
 			}
 
 			Main.cs.sendMessage(item.toString() + " pos : " + pos);
-			
+
 			itemMeta.setLore(lore);
 
 			item.setItemMeta(itemMeta);
@@ -720,6 +700,28 @@ public class InventoryManager implements Listener {
 		return true;
 	}
 
+	public void setupKillStreaksInventory(Player p) {
+
+		Inventory inv = Bukkit.createInventory(null, 36, "Killstreaks");
+
+		inv.setItem(0, KillStreakManager.uavItem);
+		inv.setItem(2, KillStreakManager.counterUavItem);
+		inv.setItem(4, KillStreakManager.nukeItem);
+
+		inv.setItem(35, closeInv);
+
+		this.killStreakInventory.put(p, inv);
+
+	}
+
+	public boolean openKillStreaksInventory(Player p) {
+
+		setupKillStreaksInventory(p);
+		Inventory inv = killStreakInventory.get(p);
+		p.openInventory(inv);
+		return true;
+	}
+
 	@EventHandler
 	public void inventoryClickListener(InventoryClickEvent e) {
 		if (!(e.getWhoClicked() instanceof Player))
@@ -752,9 +754,7 @@ public class InventoryManager implements Listener {
 				return;
 			} else if (e.getCurrentItem().equals(createClass)) {
 				p.closeInventory();
-
 				this.setupCreateClassInventory(p);
-
 				p.openInventory(createClassInventory.get(p));
 			} else if (e.getCurrentItem().equals(shopItem)) {
 				p.closeInventory();
@@ -768,6 +768,10 @@ public class InventoryManager implements Listener {
 				p.closeInventory();
 				setupLeaderBoard();
 				p.openInventory(leaderboardInventory);
+				return;
+			} else if (e.getCurrentItem().equals(scoreStreaks)) {
+				p.closeInventory();
+				this.openKillStreaksInventory(p);
 				return;
 			} else if (e.getCurrentItem().equals(closeInv)) {
 				p.closeInventory();
@@ -800,6 +804,87 @@ public class InventoryManager implements Listener {
 				p.openInventory(mainShopInventory);
 				return;
 			}
+		} else if (e.getInventory().equals(killStreakInventory.get(p))) {
+			if (e.getCurrentItem() == null || e.getCurrentItem().getType().equals(Material.AIR)) {
+				return;
+			}
+
+			if (e.getCurrentItem().equals(KillStreakManager.uavItem) || e.getCurrentItem().equals(KillStreakManager.counterUavItem) || e.getCurrentItem().equals(KillStreakManager.nukeItem)) {
+				ItemStack i = e.getCurrentItem();
+				switch (i.getAmount()) {
+				case 1:
+					i.setAmount(2);
+					break;
+				case 2:
+					i.setAmount(3);
+					break;
+				case 3:
+					i.setAmount(9);
+					break;
+				case 9:
+					i.setAmount(1);
+					break;
+				default:
+					i.setAmount(9);
+					break;
+				}
+				return;
+			} else if (e.getCurrentItem().getType().equals(Material.CHEST)) {
+
+				ItemStack uavStack = this.killStreakInventory.get(p).getItem(0);
+				ItemStack counterUavStack = this.killStreakInventory.get(p).getItem(2);
+				ItemStack nukeStack = this.killStreakInventory.get(p).getItem(4);
+
+				Integer[] usedNumbers = {};
+
+				HashMap<KillStreak, Integer> numMap = new HashMap<KillStreak, Integer>();
+
+				if (uavStack.getAmount() != 9) {
+					usedNumbers[0] = uavStack.getAmount();
+					numMap.put(KillStreak.UAV, uavStack.getAmount());
+				}
+
+				if (counterUavStack.getAmount() != 9) {
+					for (int i : usedNumbers) {
+						if (i == counterUavStack.getAmount()) {
+							p.sendMessage(Main.codPrefix + "§cCan't save killstreaks! More than one item has the same killstreak slot number!");
+							return;
+						}
+					}
+
+					usedNumbers[usedNumbers.length] = counterUavStack.getAmount();
+					numMap.put(KillStreak.COUNTER_UAV, counterUavStack.getAmount());
+				}
+
+				if (nukeStack.getAmount() != 9) {
+					for (int i : usedNumbers) {
+						if (i == nukeStack.getAmount()) {
+							p.sendMessage(Main.codPrefix + "§cCan't save killstreaks! More than one item has the same killstreak slot number!");
+							return;
+						}
+					}
+
+					usedNumbers[usedNumbers.length] = nukeStack.getAmount();
+					numMap.put(KillStreak.NUKE, nukeStack.getAmount());
+				}
+				///// FOR ANY NEW KILLSTREAKS, ADD THE ABOVE CODE FOR NEW STREAKS /////
+
+				if (!(usedNumbers[2] != null && usedNumbers[2] != 0 && usedNumbers[2] != 9)) {
+					p.sendMessage(Main.codPrefix + "§cThere were not enough killstreaks set to save!");
+					return;
+				}
+
+				KillStreak[] toSet = {};
+
+				for (KillStreak k : numMap.keySet()) {
+					toSet[toSet.length] = k;
+				}
+
+				Main.killstreakManager.setStreaks(p, toSet[0], toSet[1], toSet[2]);
+
+				return;
+			}
+
 		} else if (e.getInventory().equals(createClassInventory.get(p))) {
 
 			/*
@@ -895,8 +980,7 @@ public class InventoryManager implements Listener {
 			ArrayList<CodPerk> perks = Main.perkManager.getAvailablePerks();
 
 			for (CodPerk perk : perks) {
-				if (e.getCurrentItem().getType().equals(perk.getItem().getType())
-						&& e.getCurrentItem().getItemMeta().getDisplayName().equals(perk.getPerk().getName())) {
+				if (e.getCurrentItem().getType().equals(perk.getItem().getType()) && e.getCurrentItem().getItemMeta().getDisplayName().equals(perk.getPerk().getName())) {
 					int cost = perk.getCost();
 					if (CreditManager.purchase(p, cost)) {
 						ArrayList<CodPerk> purchasedPerks = Main.shopManager.purchasedPerks.get(p);
@@ -923,11 +1007,23 @@ public class InventoryManager implements Listener {
 				Main.cs.sendMessage("Could not select the proper class");
 				return;
 			}
+
+			boolean hasOneManArmy = false;
+
+			if (Main.loadManager.getCurrentLoadout(p).hasPerk(Perk.ONE_MAN_ARMY)) {
+				hasOneManArmy = true;
+			}
+
 			Loadout current = Main.loadManager.getLoadouts(p).get(slot);
 			Main.loadManager.setActiveLoadout(p, current);
 			p.closeInventory();
-			p.sendMessage(Main.codPrefix + "§fYou changed your class to " + current.getName()
-					+ ". It will change when you next spawn.");
+
+			if (!hasOneManArmy) {
+				p.sendMessage(Main.codPrefix + "§fYou changed your class to " + current.getName() + ". It will change when you next spawn.");
+				Main.perkListener.oneManArmy(p);
+			} else {
+				p.sendMessage(Main.codPrefix + "§fyou changed your class to " + current.getName() + ". It will change in 10 seconds if you don't move.");
+			}
 
 			return;
 		} else {
@@ -1025,8 +1121,7 @@ public class InventoryManager implements Listener {
 
 				} else if (e.getInventory().equals(loadout.getPerk1Inventory())) {
 					for (CodPerk perk : Main.shopManager.getPerks(p)) {
-						if (perk.getItem().getType().equals(item.getType())
-								&& perk.getPerk().getName().equals(item.getItemMeta().getDisplayName())) {
+						if (perk.getItem().getType().equals(item.getType()) && perk.getPerk().getName().equals(item.getItemMeta().getDisplayName())) {
 							loadout.setPerk(PerkSlot.ONE, perk);
 							Main.invManager.setupCreateClassInventory(p);
 							p.closeInventory();
@@ -1037,8 +1132,7 @@ public class InventoryManager implements Listener {
 
 				} else if (e.getInventory().equals(loadout.getPerk2Inventory())) {
 					for (CodPerk perk : Main.shopManager.getPerks(p)) {
-						if (perk.getItem().getType().equals(item.getType())
-								&& perk.getPerk().getName().equals(item.getItemMeta().getDisplayName())) {
+						if (perk.getItem().getType().equals(item.getType()) && perk.getPerk().getName().equals(item.getItemMeta().getDisplayName())) {
 							loadout.setPerk(PerkSlot.TWO, perk);
 							Main.invManager.setupCreateClassInventory(p);
 							p.closeInventory();
@@ -1049,8 +1143,7 @@ public class InventoryManager implements Listener {
 
 				} else if (e.getInventory().equals(loadout.getPerk3Inventory())) {
 					for (CodPerk perk : Main.shopManager.getPerks(p)) {
-						if (perk.getItem().getType().equals(item.getType())
-								&& perk.getPerk().getName().equals(item.getItemMeta().getDisplayName())) {
+						if (perk.getItem().getType().equals(item.getType()) && perk.getPerk().getName().equals(item.getItemMeta().getDisplayName())) {
 							loadout.setPerk(PerkSlot.THREE, perk);
 							Main.invManager.setupCreateClassInventory(p);
 							p.closeInventory();
@@ -1071,11 +1164,4 @@ public class InventoryManager implements Listener {
 
 	}
 
-	/*
-	 * 1. [Find match] 2. [Create-a-Class] 3. [Scorestreaks] 4. [Prestige] 5.
-	 * [Assignments & Contracts] 6. [Clan Tag] 7. [Combat Record] 8. [Leaderboard]
-	 * 9. [Close]
-	 */
-
-	////////////////////////////////////////////////////////////////////////////////////////////////////
 }

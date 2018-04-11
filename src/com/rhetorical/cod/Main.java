@@ -19,6 +19,7 @@ import com.rhetorical.cod.analytics.CollectAnalytics;
 import com.rhetorical.cod.files.ArenasFile;
 import com.rhetorical.cod.files.CreditsFile;
 import com.rhetorical.cod.files.GunsFile;
+import com.rhetorical.cod.files.KillstreaksFile;
 import com.rhetorical.cod.files.LoadoutsFile;
 import com.rhetorical.cod.files.ProgressionFile;
 import com.rhetorical.cod.files.ShopFile;
@@ -31,6 +32,7 @@ import com.rhetorical.cod.object.GameInstance;
 import com.rhetorical.cod.object.Gamemode;
 import com.rhetorical.cod.object.GunType;
 import com.rhetorical.cod.object.Loadout;
+import com.rhetorical.cod.object.PerkListener;
 import com.rhetorical.cod.object.RankPerks;
 import com.rhetorical.cod.object.UnlockType;
 import com.rhetorical.cod.object.WeaponType;
@@ -42,7 +44,7 @@ public class Main extends JavaPlugin {
 	}
 
 	public static String codPrefix = "§f§l[§r§6COM§f§l]§r ";
-	public static ConsoleCommandSender cs = Bukkit.getServer().getConsoleSender();
+	public static ConsoleCommandSender cs = Bukkit.getConsoleSender();
 
 	private static String sql_api_key;
 	private static String translate_api_key;
@@ -55,6 +57,8 @@ public class Main extends JavaPlugin {
 	public static PerkManager perkManager;
 	public static InventoryManager invManager;
 	public static ShopManager shopManager;
+	public static KillStreakManager killstreakManager;
+	public static PerkListener perkListener;
 
 	public static int minPlayers = 6;
 	public static int maxPlayers = 12;
@@ -65,10 +69,6 @@ public class Main extends JavaPlugin {
 
 	public static Location lobbyLoc;
 	private static HashMap<Player, Location> lastLoc = new HashMap<Player, Location>();
-
-	private String getServerVersionOfBukkit() {
-		return Bukkit.getServer().getBukkitVersion();
-	}
 
 	@Override
 	public void onEnable() {
@@ -84,7 +84,8 @@ public class Main extends JavaPlugin {
 		ShopFile.setup(getPlugin());
 		LoadoutsFile.setup(getPlugin());
 		StatsFile.setup(getPlugin());
-
+		KillstreaksFile.setup(getPlugin());
+		
 		getPlugin().saveDefaultConfig();
 		getPlugin().reloadConfig();
 
@@ -93,6 +94,10 @@ public class Main extends JavaPlugin {
 		perkManager = new PerkManager();
 		invManager = new InventoryManager();
 		shopManager = new ShopManager();
+		killstreakManager = new KillStreakManager();
+		perkListener = new PerkListener();
+		
+		KillStreakManager.setup();
 
 		Bukkit.getServer().getPluginManager().registerEvents(new Listeners(), getPlugin());
 
@@ -105,7 +110,7 @@ public class Main extends JavaPlugin {
 			CreditManager.loadCredits(p);
 		}
 
-		bVersion = getServerVersionOfBukkit();
+		bVersion = Bukkit.getServer().getBukkitVersion();
 
 		minPlayers = getPlugin().getConfig().getInt("minPlayers");
 		lobbyLoc = (Location) getPlugin().getConfig().get("com.lobby");
@@ -127,7 +132,7 @@ public class Main extends JavaPlugin {
 
 			i++;
 		}
-
+		
 		if (i == 0) {
 			getPlugin().getConfig().set("RankTiers.0.name", "default");
 			getPlugin().getConfig().set("RankTiers.0.kill.credits", 1);
@@ -137,11 +142,28 @@ public class Main extends JavaPlugin {
 			getPlugin().reloadConfig();
 			i++;
 		}
+	
+		Main.cs.sendMessage(Main.codPrefix + "§fChecking dependencies...");
 
-		Main.cs.sendMessage(
-				Main.codPrefix + "§a§lCOM-Warfare version §r§f" + version + "§r§a§l is now up and running!");
+		DependencyManager dm = new DependencyManager();
+		if (!dm.checkDependencies()) {
+			if (getPlugin().getConfig().getBoolean("auto-download-dependency") == true) {
+				Main.cs.sendMessage(Main.codPrefix + "§cOne or more dependencies were not found, will attempt to download them.");
+				try {
+					dm.downloadDependencies();
+				} catch (Exception e) {
+					Main.cs.sendMessage(Main.codPrefix + "§cCould not download dependcies! Make sure that the plugins folder can be written to!");
+				}
+			} else {
+				Main.cs.sendMessage(Main.codPrefix + "§cCould not download dependencies! You must set the value for \"auto-download-depenencies\" to 'true' in the config to automatically download them!");
+			}
+		} else {
+			Main.cs.sendMessage(Main.codPrefix + "§aAll dependencies are installed!");
+		}
 
-		Main.cs.sendMessage(Main.codPrefix + "There are " + i + "ranks registered!");
+		Main.cs.sendMessage(Main.codPrefix + "§a§lCOM-Warfare version §r§f" + version + "§r§a§l is now up and running!");
+
+		Main.cs.sendMessage(Main.codPrefix + "There are " + i + " ranks registered!");
 		for (RankPerks r : Main.serverRanks) {
 			Main.cs.sendMessage("Rank registered: " + r.getName());
 		}
@@ -191,10 +213,8 @@ public class Main extends JavaPlugin {
 					cs.sendMessage("§6§lCOM-Warfare Help §f[§lPage 1 of 2§r§l]");
 
 					cs.sendMessage("§f§lType the command to see the specifics on how to use it.");
-					cs.sendMessage(cColor + "/cod giveCredits {name} [amount] | " + dColor
-							+ "Gives an amount of credits to a player.");
-					cs.sendMessage(cColor + "/cod setCredits {name} [amount] | " + dColor
-							+ "Sets the credits amount for a player.");
+					cs.sendMessage(cColor + "/cod giveCredits {name} [amount] | " + dColor + "Gives an amount of credits to a player.");
+					cs.sendMessage(cColor + "/cod setCredits {name} [amount] | " + dColor + "Sets the credits amount for a player.");
 
 				}
 			} else if (args.length >= 3) {
@@ -205,8 +225,7 @@ public class Main extends JavaPlugin {
 						amount = Integer.parseInt(args[1]);
 					} catch (Exception e) {
 						amount = 0;
-						cs.sendMessage(
-								Main.codPrefix + "Incorrect usage! Proper usage: '/cod giveCredits {name} [amount]");
+						cs.sendMessage(Main.codPrefix + "Incorrect usage! Proper usage: '/cod giveCredits {name} [amount]");
 						return true;
 
 					}
@@ -220,8 +239,7 @@ public class Main extends JavaPlugin {
 						amount = Integer.parseInt(args[1]);
 					} catch (Exception e) {
 						amount = 0;
-						cs.sendMessage(
-								Main.codPrefix + "Incorrect usage! Proper usage: '/cod setCredits {name} [amount]'");
+						cs.sendMessage(Main.codPrefix + "Incorrect usage! Proper usage: '/cod setCredits {name} [amount]'");
 						return true;
 					}
 
@@ -266,32 +284,26 @@ public class Main extends JavaPlugin {
 					switch (page) {
 					case 1:
 						p.sendMessage("§f§lType the command to see specifics.");
-						p.sendMessage(
-								cColor + "/cod help [page number] | " + dColor + "Opens a help page.");
+						p.sendMessage(cColor + "/cod help [page number] | " + dColor + "Opens a help page.");
 						p.sendMessage(cColor + "/cod | " + dColor + "Opens the main menu.");
 						p.sendMessage(cColor + "/cod join | " + dColor + "Joins a game through the matchmaker.");
 						p.sendMessage(cColor + "/cod leave | " + dColor + "Leaves the current game.");
 						p.sendMessage(cColor + "/cod listMaps | " + dColor + "Lists the avaiable maps.");
-						p.sendMessage(
-								cColor + "/cod createMap [args] | " + dColor + "CCreate a map.");
+						p.sendMessage(cColor + "/cod createMap [args] | " + dColor + "CCreate a map.");
 						p.sendMessage(cColor + "/cod removeMap [name] | " + dColor + "Command to remove a map.");
 						break;
 					case 2:
 						p.sendMessage(cColor + "/cod set [lobby/spawn] | " + dColor + "Opens a page in the help menu.");
-						p.sendMessage(
-								cColor + "/cod credits give | " + dColor + "Gives credits to a person.");
-						p.sendMessage(cColor + "/cod credits set | " + dColor
-								+ "Sets amount of credits for a player.");
+						p.sendMessage(cColor + "/cod credits give | " + dColor + "Gives credits to a person.");
+						p.sendMessage(cColor + "/cod credits set | " + dColor + "Sets amount of credits for a player.");
 						p.sendMessage(cColor + "/cod lobby | " + dColor + "Teleports you to the lobby.");
-						p.sendMessage(cColor + "/cod createGun [args] | " + dColor
-								+ "Creats a gun.");
+						p.sendMessage(cColor + "/cod createGun [args] | " + dColor + "Creats a gun.");
 						p.sendMessage(cColor + "/cod shop | " + dColor + "Opens the shop.");
 
 						break;
 					case 3:
 						p.sendMessage(cColor + "/cod class | " + dColor + "Opens the class selection menu.");
-						p.sendMessage(cColor + "/cod start | " + dColor
-								+ "Auto-starts the match if the lobby timer is started.");
+						p.sendMessage(cColor + "/cod start | " + dColor + "Auto-starts the match if the lobby timer is started.");
 						break;
 					default:
 						break;
@@ -300,16 +312,13 @@ public class Main extends JavaPlugin {
 					p.sendMessage("-===§6§lCOM-Warfare Help§r===-");
 					p.sendMessage("§f[§lPage 1 of 3§r§l]");
 
-					
 					p.sendMessage("§f§lType the command to see specifics.");
-					p.sendMessage(
-							cColor + "/cod help [page number] | " + dColor + "Opens a help page.");
+					p.sendMessage(cColor + "/cod help [page number] | " + dColor + "Opens a help page.");
 					p.sendMessage(cColor + "/cod | " + dColor + "Opens the main menu.");
 					p.sendMessage(cColor + "/cod join | " + dColor + "Joins a game through the matchmaker.");
 					p.sendMessage(cColor + "/cod leave | " + dColor + "Leaves the current game.");
 					p.sendMessage(cColor + "/cod listMaps | " + dColor + "Lists the avaiable maps.");
-					p.sendMessage(
-							cColor + "/cod createMap [args] | " + dColor + "CCreate a map.");
+					p.sendMessage(cColor + "/cod createMap [args] | " + dColor + "CCreate a map.");
 					p.sendMessage(cColor + "/cod removeMap [name] | " + dColor + "Command to remove a map.");
 
 				}
@@ -339,19 +348,15 @@ public class Main extends JavaPlugin {
 				for (CodMap m : GameManager.AddedMaps) {
 					k++;
 					if (GameManager.UsedMaps.contains(m)) {
-						p.sendMessage(Integer.toString(k) + " - §6§lName: §r§a" + m.getName() + " §r§6§lGamemode: §r§c"
-								+ m.getGamemode().toString() + " §r§6§lStatus: §r§4IN USE");
+						p.sendMessage(Integer.toString(k) + " - §6§lName: §r§a" + m.getName() + " §r§6§lGamemode: §r§c" + m.getGamemode().toString() + " §r§6§lStatus: §r§4IN USE");
 						continue;
 					} else {
 						if (m.isEnabled()) {
-							p.sendMessage(
-									Integer.toString(k) + " - §6§lName: §r§a" + m.getName() + " §r§6§lGamemode: §r§c"
-											+ m.getGamemode().toString() + " §r§6§lStatus: §r§aAVAILABLE");
+							p.sendMessage(Integer.toString(k) + " - §6§lName: §r§a" + m.getName() + " §r§6§lGamemode: §r§c" + m.getGamemode().toString() + " §r§6§lStatus: §r§aAVAILABLE");
 							continue;
 						}
 
-						p.sendMessage(Integer.toString(k) + " - §6§lName: §r§a" + m.getName() + " §r§6§lGamemode: §r§c"
-								+ m.getGamemode().toString() + " §r§6§lStatus: §r§aUNFINISHED");
+						p.sendMessage(Integer.toString(k) + " - §6§lName: §r§a" + m.getName() + " §r§6§lGamemode: §r§c" + m.getGamemode().toString() + " §r§6§lStatus: §r§aUNFINISHED");
 
 						continue;
 					}
@@ -380,13 +385,11 @@ public class Main extends JavaPlugin {
 					newMap = new CodMap(mapName, mapGameMode);
 
 					GameManager.AddedMaps.add(newMap);
-					p.sendMessage(Main.codPrefix + "§aSuccessfully created map " + newMap.getName() + " with gamemode "
-							+ newMap.getGamemode().toString());
+					p.sendMessage(Main.codPrefix + "§aSuccessfully created map " + newMap.getName() + " with gamemode " + newMap.getGamemode().toString());
 					newMap.setEnable();
 					return true;
 				} else {
-					p.sendMessage(
-							Main.codPrefix + "§cIncorrect usage! Correct usage: /cod createMap (name) (gamemode)");
+					p.sendMessage(Main.codPrefix + "§cIncorrect usage! Correct usage: /cod createMap (name) (gamemode)");
 					return true;
 				}
 			} else if (args[0].equalsIgnoreCase("removeMap") && hasPerm(p, "com.map.remove")) {
@@ -439,14 +442,12 @@ public class Main extends JavaPlugin {
 					Main.lobbyLoc = (Location) getPlugin().getConfig().get("com.lobby");
 					getPlugin().saveConfig();
 					getPlugin().reloadConfig();
-					p.sendMessage(Main.codPrefix
-							+ "§aSuccessfully set lobby to your location! (You might want to restart the server for it to take effect)");
+					p.sendMessage(Main.codPrefix + "§aSuccessfully set lobby to your location! (You might want to restart the server for it to take effect)");
 					return true;
 				} else if (args[1].equalsIgnoreCase("spawn") && hasPerm(p, "com.map.addSpawn")) {
 
 					if (!(args.length >= 4)) {
-						p.sendMessage(
-								Main.codPrefix + "§cIncorrect usage! Correct usage: /cod set spawn (map name) (team)");
+						p.sendMessage(Main.codPrefix + "§cIncorrect usage! Correct usage: /cod set spawn (map name) (team)");
 						return true;
 					}
 					CodMap map = null;
@@ -466,20 +467,17 @@ public class Main extends JavaPlugin {
 					switch (spawnTeam.toUpperCase()) {
 					case "RED":
 						map.addRedSpawn(p.getLocation());
-						p.sendMessage(
-								Main.codPrefix + "§aSuccessfully created §cRED §aspawn for map §6" + map.getName());
+						p.sendMessage(Main.codPrefix + "§aSuccessfully created §cRED §aspawn for map §6" + map.getName());
 						map.setEnable();
 						return true;
 					case "BLUE":
 						map.addblueSpawn(p.getLocation());
-						p.sendMessage(
-								Main.codPrefix + "§aSuccessfully created §9BLUE §aspawn for map §6" + map.getName());
+						p.sendMessage(Main.codPrefix + "§aSuccessfully created §9BLUE §aspawn for map §6" + map.getName());
 						map.setEnable();
 						return true;
 					case "PINK":
 						map.addPinkSpawn(p.getLocation());
-						p.sendMessage(
-								Main.codPrefix + "§aSuccessfully created §dPINK §aspawn for map §6" + map.getName());
+						p.sendMessage(Main.codPrefix + "§aSuccessfully created §dPINK §aspawn for map §6" + map.getName());
 						map.setEnable();
 						return true;
 					default:
@@ -496,8 +494,7 @@ public class Main extends JavaPlugin {
 				}
 			} else if (args[0].equalsIgnoreCase("credits")) {
 				if (!(args.length >= 3)) {
-					p.sendMessage(Main.codPrefix
-							+ "§cIncorrect usage! Proper usage: '/cod credits [give/set] {player} (amount)'");
+					p.sendMessage(Main.codPrefix + "§cIncorrect usage! Proper usage: '/cod credits [give/set] {player} (amount)'");
 					return true;
 				}
 				if (args[1].equalsIgnoreCase("give") && hasPerm(p, "com.credits.give")) {
@@ -507,15 +504,13 @@ public class Main extends JavaPlugin {
 						amount = Integer.parseInt(args[3]);
 					} catch (Exception e) {
 						amount = 0;
-						p.sendMessage(Main.codPrefix
-								+ "§cIncorrect usage! Proper usage: '/cod credits give {player} (amount)'");
+						p.sendMessage(Main.codPrefix + "§cIncorrect usage! Proper usage: '/cod credits give {player} (amount)'");
 						return true;
 
 					}
 
 					CreditManager.setCredits(playerName, CreditManager.getCredits(playerName) + amount);
-					p.sendMessage(Main.codPrefix + "§aSuccessfully gave " + playerName + " " + Integer.toString(amount)
-							+ " credits! They now have " + CreditManager.getCredits(playerName) + " credits!");
+					p.sendMessage(Main.codPrefix + "§aSuccessfully gave " + playerName + " " + Integer.toString(amount) + " credits! They now have " + CreditManager.getCredits(playerName) + " credits!");
 					return true;
 				} else if (args[1].equalsIgnoreCase("set") && hasPerm(p, "com.credits.set")) {
 					String playerName = args[2];
@@ -524,14 +519,12 @@ public class Main extends JavaPlugin {
 						amount = Integer.parseInt(args[3]);
 					} catch (Exception e) {
 						amount = 0;
-						p.sendMessage(
-								Main.codPrefix + "§cIncorrect usage! Proper usage: '/cod credits set {name} [amount]'");
+						p.sendMessage(Main.codPrefix + "§cIncorrect usage! Proper usage: '/cod credits set {name} [amount]'");
 						return true;
 					}
 
 					CreditManager.setCredits(playerName, amount);
-					p.sendMessage(Main.codPrefix + "§aSuccessfully set " + playerName + "'s credit count to "
-							+ Integer.toString(amount) + "!");
+					p.sendMessage(Main.codPrefix + "§aSuccessfully set " + playerName + "'s credit count to " + Integer.toString(amount) + "!");
 					return true;
 				}
 			} else if (args[0].equalsIgnoreCase("createGun") && hasPerm(p, "com.createGun")) {
@@ -540,18 +533,15 @@ public class Main extends JavaPlugin {
 					createGun(p, args);
 					return true;
 				} else {
-					p.sendMessage(Main.codPrefix
-							+ "§cIncorrect usage! Correct usage: '/cod createGun (Gun name) (Primary/Secondary) (Unlock type: level/credit/both) (Ammo Amount) (Gun Material) (Ammo Material) (Level Unlock) (Cost)'");
+					p.sendMessage(Main.codPrefix + "§cIncorrect usage! Correct usage: '/cod createGun (Gun name) (Primary/Secondary) (Unlock type: level/credit/both) (Ammo Amount) (Gun Material) (Ammo Material) (Level Unlock) (Cost)'");
 					return true;
 				}
-			} else if ((args[0].equalsIgnoreCase("createWeapon") || args[0].equalsIgnoreCase("createGrenade"))
-					&& hasPerm(p, "com.createWeapon")) {
+			} else if ((args[0].equalsIgnoreCase("createWeapon") || args[0].equalsIgnoreCase("createGrenade")) && hasPerm(p, "com.createWeapon")) {
 				if (args.length >= 7) {
 					createWeapon(p, args);
 					return true;
 				} else {
-					p.sendMessage(Main.codPrefix
-							+ "§cIncorrect usage! Correct usage: '/cod createWeapon (name) (Lethal/Tactical) (Unlock Type: level/credit/both) (Grenade Material) (Level Unlock) (Cost)'");
+					p.sendMessage(Main.codPrefix + "§cIncorrect usage! Correct usage: '/cod createWeapon (name) (Lethal/Tactical) (Unlock Type: level/credit/both) (Grenade Material) (Level Unlock) (Cost)'");
 					return true;
 				}
 			} else if (args[0].equalsIgnoreCase("start") && hasPerm(p, "com.forceStart")) {
@@ -586,15 +576,13 @@ public class Main extends JavaPlugin {
 			try {
 				grenadeType = WeaponType.valueOf(args[2].toUpperCase());
 			} catch (Exception e) {
-				p.sendMessage(Main.codPrefix
-						+ "§cThat weapon type does not exist! 'tactical' and 'lethal' are the two available weapon types.");
+				p.sendMessage(Main.codPrefix + "§cThat weapon type does not exist! 'tactical' and 'lethal' are the two available weapon types.");
 				return;
 			}
 			try {
 				unlockType = UnlockType.valueOf(args[3].toUpperCase());
 			} catch (Exception e) {
-				p.sendMessage(Main.codPrefix
-						+ "§cThat unlock type doesn't exist! 'level', 'credits', and 'both' are the only available options.");
+				p.sendMessage(Main.codPrefix + "§cThat unlock type doesn't exist! 'level', 'credits', and 'both' are the only available options.");
 				return;
 			}
 			ItemStack grenade;
@@ -630,8 +618,7 @@ public class Main extends JavaPlugin {
 
 			grenadeWeapon.save();
 
-			p.sendMessage(codPrefix + "§aSuccessfully created weapon " + name + " as a " + grenadeType.toString()
-					+ " grenade!");
+			p.sendMessage(codPrefix + "§aSuccessfully created weapon " + name + " as a " + grenadeType.toString() + " grenade!");
 
 			switch (grenadeType) {
 			case LETHAL:
@@ -649,8 +636,7 @@ public class Main extends JavaPlugin {
 			}
 
 		} else {
-			p.sendMessage(Main.codPrefix
-					+ "§cIncorrect usage! Correct usage: '/cod createWeapon (name) (Lethal/Tactical) (Unlock Type: level/credit/both) (Grenade Material) (Level Unlock) (Cost)'");
+			p.sendMessage(Main.codPrefix + "§cIncorrect usage! Correct usage: '/cod createWeapon (name) (Lethal/Tactical) (Unlock Type: level/credit/both) (Grenade Material) (Level Unlock) (Cost)'");
 			return;
 		}
 	}
@@ -664,8 +650,7 @@ public class Main extends JavaPlugin {
 			try {
 				gunType = GunType.valueOf(args[2]);
 			} catch (Exception e) {
-				p.sendMessage(Main.codPrefix
-						+ "§cThat gun type doesn't exist! 'Primary' & 'Secondary' are the only two options.");
+				p.sendMessage(Main.codPrefix + "§cThat gun type doesn't exist! 'Primary' & 'Secondary' are the only two options.");
 				return;
 			}
 
@@ -674,8 +659,7 @@ public class Main extends JavaPlugin {
 			try {
 				unlockType = UnlockType.valueOf(args[3].toUpperCase());
 			} catch (Exception e) {
-				p.sendMessage(Main.codPrefix
-						+ "§cThat unlock type doesn't exist! 'level', 'credits', and 'both' are the only available options.");
+				p.sendMessage(Main.codPrefix + "§cThat unlock type doesn't exist! 'level', 'credits', and 'both' are the only available options.");
 				return;
 			}
 
@@ -695,8 +679,7 @@ public class Main extends JavaPlugin {
 				gunItem = new ItemStack(Material.valueOf(args[5].toUpperCase()));
 				ammoItem = new ItemStack(Material.valueOf(args[6].toUpperCase()));
 			} catch (Exception e) {
-				p.sendMessage(
-						Main.codPrefix + "§cEither the, primary, secondary, or both of the gun material do not exist!");
+				p.sendMessage(Main.codPrefix + "§cEither the, primary, secondary, or both of the gun material do not exist!");
 				return;
 			}
 
@@ -724,8 +707,7 @@ public class Main extends JavaPlugin {
 
 			gun.save();
 
-			p.sendMessage(
-					codPrefix + "§aSuccessfully created gun " + name + " as a " + gunType.toString() + " weapon!");
+			p.sendMessage(codPrefix + "§aSuccessfully created gun " + name + " as a " + gunType.toString() + " weapon!");
 
 			switch (gunType) {
 			case Primary:
@@ -742,8 +724,7 @@ public class Main extends JavaPlugin {
 				return;
 			}
 		} else {
-			p.sendMessage(Main.codPrefix
-					+ "§cIncorrect usage! Correct usage: '/cod createGun (Gun name) (Primary/Secondary) (Unlock type: level/credit/both) (Ammo Amount) (Gun Material) (Ammo Material) (Level Unlock) (Cost)'");
+			p.sendMessage(Main.codPrefix + "§cIncorrect usage! Correct usage: '/cod createGun (Gun name) (Primary/Secondary) (Unlock type: level/credit/both) (Ammo Amount) (Gun Material) (Ammo Material) (Level Unlock) (Cost)'");
 			return;
 		}
 

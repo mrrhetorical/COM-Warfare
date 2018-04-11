@@ -75,7 +75,7 @@ public class ProgressionManager {
 		}
 
 		Main.shopManager.checkForNewGuns(p);
-		
+
 		return;
 	}
 
@@ -142,7 +142,7 @@ public class ProgressionManager {
 			}
 
 		}
-		
+
 		StatHandler.addExperience(p, experience);
 
 		update(p);
@@ -179,10 +179,10 @@ public class ProgressionManager {
 	}
 
 	public void update(Player p) {
-		
+
 		try {
-		p.setExp((float) (getExperience(p) / getExperienceForLevel(getLevel(p))));
-		} catch(Exception e) {
+			p.setExp((float) (getExperience(p) / getExperienceForLevel(getLevel(p))));
+		} catch (Exception e) {
 			Main.cs.sendMessage("§cThere was an error setting the player's experience level");
 		}
 		return;
@@ -230,12 +230,9 @@ public class ProgressionManager {
 		ProgressionFile.saveData();
 		ProgressionFile.reloadData();
 	}
-	
+
 	public ArrayList<Player> getPlayerRankings() {
-		
-		
-		
-		
+
 		return new ArrayList<Player>();
 	}
 

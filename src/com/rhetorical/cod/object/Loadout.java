@@ -30,8 +30,7 @@ public class Loadout implements Listener {
 	private Inventory perk2Inventory;
 	private Inventory perk3Inventory;
 
-	public Loadout(Player o, String n, CodGun p, CodGun s, CodWeapon l, CodWeapon t, CodPerk p1, CodPerk p2,
-			CodPerk p3) {
+	public Loadout(Player o, String n, CodGun p, CodGun s, CodWeapon l, CodWeapon t, CodPerk p1, CodPerk p2, CodPerk p3) {
 		this.owner = o;
 		this.name = n;
 		this.primary = p;
@@ -250,10 +249,7 @@ public class Loadout implements Listener {
 		if (e.getCurrentItem() == null)
 			return;
 
-		if (!(e.getInventory().equals(this.getPrimaryInventory())
-				|| e.getInventory().equals(this.getSecondaryInventory())
-				|| e.getInventory().equals(this.getLethalInventory())
-				|| e.getInventory().equals(this.getTacticalInventory()))) {
+		if (!(e.getInventory().equals(this.getPrimaryInventory()) || e.getInventory().equals(this.getSecondaryInventory()) || e.getInventory().equals(this.getLethalInventory()) || e.getInventory().equals(this.getTacticalInventory()))) {
 			return;
 		}
 

@@ -19,11 +19,6 @@ public class CodPerk {
 		this.setLore(lore);
 		this.setCost(cost);
 	}
-	
-//	public void save() {
-//		Main.getPlugin().reloadConfig();
-//		
-//	}
 
 	public Perk getPerk() {
 		return perk;

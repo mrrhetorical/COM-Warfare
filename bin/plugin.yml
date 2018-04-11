@@ -1,5 +1,5 @@
 name: CallofMinecraftRemastered
-version: 1.9.7_beta
+version: 2.0.0
 main: com.rhetorical.cod.Main
 description: Call of Duty Multiplayer in Minecraft!
 commands:
