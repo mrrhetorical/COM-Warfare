@@ -80,7 +80,10 @@ public class Main extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		
-		lang = McLang.FR;
+		lang = McLang.valueOf(getPlugin().getConfig().getString("lang"));
+		
+		if (lang == null)
+			lang = McLang.EN;
 		
 		Main.cs.sendMessage(Main.codPrefix + "§fChecking dependencies...");
 
@@ -241,12 +244,12 @@ public class Main extends JavaPlugin {
 		if (!(sender instanceof Player)) {
 			if (args.length >= 1) {
 				if (args[0].equalsIgnoreCase("help")) {
-					sendMessage(cs, "§6§lCOM-Warfare Help §f[§lPage 1 of 2§r§l]", lang);
+					sendMessage(cs, "§6§lCOM-Warfare Help §f[§lPage 1 of 1§r§l]", lang);
 
-					sendMessage(cs, "§f§lType the command to see the specifics on how to use it.");
+					sendMessage(cs, "§f§lType the command to see the specifics on how to use it.", lang);
 					sendMessage(cs, cColor + "/cod giveCredits {name} [amount] | " + dColor + "Gives an amount of credits to a player.");
 					sendMessage(cs, cColor + "/cod setCredits {name} [amount] | " + dColor + "Sets the credits amount for a player.");
-
+					return true;
 				}
 			} else if (args.length >= 3) {
 				if (args[0].equalsIgnoreCase("giveCredits")) {
@@ -262,7 +265,7 @@ public class Main extends JavaPlugin {
 					}
 
 					CreditManager.setCredits(playerName, CreditManager.getCredits(playerName) + amount);
-
+					return true;
 				} else if (args[0].equalsIgnoreCase("setCredits")) {
 					String playerName = args[1];
 					int amount;
@@ -275,6 +278,7 @@ public class Main extends JavaPlugin {
 					}
 
 					CreditManager.setCredits(playerName, amount);
+					return true;
 				}
 			}
 		}
