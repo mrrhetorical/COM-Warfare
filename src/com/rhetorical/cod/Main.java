@@ -14,6 +14,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import com.rhetorical.cod.analytics.CollectAnalytics;
 import com.rhetorical.cod.files.ArenasFile;
@@ -49,7 +50,6 @@ public class Main extends JavaPlugin {
 	public static String codPrefix = "§f§l[§r§6COM§f§l]§r ";
 	public static ConsoleCommandSender cs = Bukkit.getConsoleSender();
 
-	public static McLang lang;
 	private static String sql_api_key;
 	private static String translate_api_key;
 
@@ -64,6 +64,9 @@ public class Main extends JavaPlugin {
 	public static PerkListener perkListener;
 	public static KillStreakManager killstreakManager;
 
+	public static McLang lang;
+	public static McTranslate translate;
+	
 	public static int minPlayers = 6;
 	public static int maxPlayers = 12;
 
@@ -76,6 +79,26 @@ public class Main extends JavaPlugin {
 
 	@Override
 	public void onEnable() {
+		
+		lang = McLang.FR;
+		
+		Main.cs.sendMessage(Main.codPrefix + "§fChecking dependencies...");
+
+		DependencyManager dm = new DependencyManager();
+		if (!dm.checkDependencies()) {
+			if (getPlugin().getConfig().getBoolean("auto-download-dependency") == true) {
+				Main.cs.sendMessage(Main.codPrefix + "§cOne or more dependencies were not found, will attempt to download them.");
+				try {
+					dm.downloadDependencies();
+				} catch (Exception e) {
+					Main.cs.sendMessage(Main.codPrefix + "§cCould not download dependcies! Make sure that the plugins folder can be written to!");
+				}
+			} else {
+				Main.cs.sendMessage(Main.codPrefix + "§cCould not download dependencies! You must set the value for \"auto-download-depenencies\" to 'true' in the config to automatically download them!");
+			}
+		} else {
+			Main.cs.sendMessage(Main.codPrefix + "§aAll dependencies are installed!");
+		}
 
 		version = getPlugin().getDescription().getVersion();
 
@@ -122,12 +145,6 @@ public class Main extends JavaPlugin {
 		sql_api_key = getPlugin().getConfig().getString("sql.api_key");
 		translate_api_key = getPlugin().getConfig().getString("translate.api_key");
 
-		try {
-			lang = McLang.valueOf(getPlugin().getConfig().getString("lang"));
-		} catch (Exception e) {
-			lang = McLang.EN;
-		}
-
 		int i = 0;
 
 		while (getPlugin().getConfig().contains("RankTiers." + i)) {
@@ -153,33 +170,37 @@ public class Main extends JavaPlugin {
 			i++;
 		}
 
-		sendMessage(cs, Main.codPrefix + "§fChecking dependencies...", lang);
+		Main.cs.sendMessage(Main.codPrefix + "§a§lCOM-Warfare version §r§f" + version + "§r§a§l is now up and running!");
 
-		DependencyManager dm = new DependencyManager();
-		if (!dm.checkDependencies()) {
-			if (getPlugin().getConfig().getBoolean("auto-download-dependency") == true) {
-				sendMessage(cs, Main.codPrefix + "§cOne or more dependencies were not found, will attempt to download them.", lang);
-				try {
-					dm.downloadDependencies();
-				} catch (Exception e) {
-					sendMessage(cs, Main.codPrefix + "§cCould not download dependcies! Make sure that the plugins folder can be written to!", lang);
-				}
-			} else {
-				sendMessage(cs, Main.codPrefix + "§cCould not download dependencies! You must set the value for \"auto-download-depenencies\" to 'true' in the config to automatically download them!", lang);
-			}
-		} else {
-			sendMessage(cs, Main.codPrefix + "§aAll dependencies are installed!", lang);
-		}
-
-		sendMessage(cs, Main.codPrefix + "§a§lCOM-Warfare version §r§f" + version + "§r§a§l is now up and running!", lang);
-
-		sendMessage(cs, Main.codPrefix + "There are " + i + " ranks registered!", lang);
+		Main.cs.sendMessage(Main.codPrefix + "There are " + i + " ranks registered!");
 		for (RankPerks r : Main.serverRanks) {
 			sendMessage(cs, "Rank registered: " + r.getName(), lang);
 		}
+		
+		try {
+			translate = new McTranslate(Main.getPlugin(), Main.translate_api_key);
+		} catch(Exception e) {
+			Main.sendMessage(cs,  Main.codPrefix + "§cCould not start McTranslate++ API!");
+			Main.sendMessage(cs, Main.codPrefix + "§cAttempting to reconnect to McTranslate++ API in 20 seconds!");
+			BukkitRunnable tryTranslateAgain = new BukkitRunnable() {
+				public void run() {
+					try {
+						translate = new McTranslate(Main.getPlugin(), Main.translate_api_key);
+					} catch(Exception e) {
+						Main.sendMessage(Main.cs, Main.codPrefix + "§cCould not start McTranslate++ API!");
+						return;
+					}
+					
+					Main.sendMessage(Main.cs, Main.codPrefix + "§aSuccessfully started McTranslate++ API!");
+					
+				}
+			};
+			
+			tryTranslateAgain.runTaskLater(getPlugin(), 400L);
+		}
 
 	}
-
+	
 	@Override
 	public void onDisable() {
 		if (GameManager.AddedMaps.size() != 0) {
@@ -347,7 +368,9 @@ public class Main extends JavaPlugin {
 					p.teleport(lastLoc.get(p));
 					lastLoc.remove(p);
 				} else {
-					p.teleport(lobbyLoc);
+					if (!(lobbyLoc == null || lobbyLoc.equals(null))) {
+						p.teleport(lobbyLoc);
+					}
 				}
 
 				return true;
@@ -760,19 +783,17 @@ public class Main extends JavaPlugin {
 		return;
 	}
 
-	public static void sendMessage(CommandSender target, String message, McLang targetLang) {
-		
+	public static void sendMessage(CommandSender target, String message, Object targetLang) {
+
 		if (targetLang.equals(McLang.EN)) {
 			sendMessage(target, message);
 			return;
 		}
-		
-		McTranslate translate;
+
 		String translatedMessage;
-		
+
 		try {
-			translate = new McTranslate(Main.getPlugin(), targetLang.toString());
-			translatedMessage = translate.translateRuntime(message, McLang.EN, targetLang);
+			translatedMessage = translate.translateRuntime(message, McLang.EN, (McLang) targetLang);
 		} catch (Exception e) {
 			sendMessage(target, message);
 			return;

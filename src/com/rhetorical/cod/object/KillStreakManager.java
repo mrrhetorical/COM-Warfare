@@ -12,6 +12,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import com.rhetorical.cod.Main;
 import com.rhetorical.cod.files.KillstreaksFile;
 
+
 public class KillStreakManager {
 
 	///// KILLSTREAK ITEMS /////
@@ -35,6 +36,8 @@ public class KillStreakManager {
 		ItemMeta uavMeta = uavItem.getItemMeta();
 		uavMeta.setDisplayName("§6§lUAV");
 		List<String> uavLore = uavMeta.getLore();
+		if (uavLore == null)
+			uavLore = new ArrayList<String>();
 		uavLore.add("§f§lRequired kills: §a" + 3);
 		uavMeta.setLore(uavLore);
 		uavItem.setItemMeta(uavMeta);
@@ -43,6 +46,8 @@ public class KillStreakManager {
 		ItemMeta counterUavMeta = counterUavItem.getItemMeta();
 		counterUavMeta.setDisplayName("§6§lCounter UAV");
 		List<String> counterUavLore = counterUavMeta.getLore();
+		if (counterUavLore == null)
+			counterUavLore = new ArrayList<String>();
 		counterUavLore.add("§f§lRequred kills: §a" + 4);
 		counterUavItem.setItemMeta(counterUavMeta);
 
@@ -50,6 +55,8 @@ public class KillStreakManager {
 		ItemMeta nukeMeta = nukeItem.getItemMeta();
 		nukeMeta.setDisplayName("§6§lNuke");
 		List<String> nukeLore = nukeMeta.getLore();
+		if (nukeLore == null)
+			nukeLore = new ArrayList<String>();
 		nukeLore.add("§f§lRequired kills: §a" + 25);
 		nukeMeta.setLore(nukeLore);
 		nukeItem.setItemMeta(nukeMeta);

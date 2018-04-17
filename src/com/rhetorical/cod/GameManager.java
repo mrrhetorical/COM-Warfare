@@ -136,12 +136,12 @@ public class GameManager {
 				p.getInventory().clear();
 				p.setHealth(20D);
 				p.setFoodLevel(20);
-				Main.sendMessage(Main.cs, Main.codPrefix + "§7You left the lobby!", Main.lang);
+				Main.sendMessage(p, Main.codPrefix + "§7You left the lobby!", Main.lang);
 				return;
 			}
 		}
 
-		Main.sendMessage(Main.cs, Main.codPrefix + "§7You aren't in a lobby!", Main.lang);
+		Main.sendMessage(p, Main.codPrefix + "§7You aren't in a lobby!", Main.lang);
 	}
 
 	public static boolean isInMatch(Player p) {
