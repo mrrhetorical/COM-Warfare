@@ -14,12 +14,12 @@ import com.rhetorical.cod.object.Gamemode;
 
 public class GameManager {
 
-	public static ArrayList<GameInstance> RunningGames = new ArrayList<GameInstance>();
-	public static ArrayList<CodMap> AddedMaps = new ArrayList<CodMap>();
-	public static ArrayList<CodMap> UsedMaps = new ArrayList<CodMap>();
-	
+	static ArrayList<GameInstance> RunningGames = new ArrayList<GameInstance>();
+	static ArrayList<CodMap> AddedMaps = new ArrayList<CodMap>();
+	static ArrayList<CodMap> UsedMaps = new ArrayList<CodMap>();
+
 	@SuppressWarnings("unchecked")
-	public static void loadMaps() {
+	static void loadMaps() {
 		AddedMaps.clear();
 		int k = 0;
 		while (ArenasFile.getData().contains("Maps." + k)) {
@@ -129,7 +129,7 @@ public class GameManager {
 		// Found match!
 	}
 
-	public static void leaveMatch(Player p) {
+	static void leaveMatch(Player p) {
 		for (GameInstance i : RunningGames) {
 			if (i.getPlayers().contains(p)) {
 				i.removePlayer(p);
@@ -155,7 +155,7 @@ public class GameManager {
 
 	}
 	
-	public static GameInstance getMatchWhichContains(Player p) {
+	static GameInstance getMatchWhichContains(Player p) {
 		for (GameInstance game : RunningGames) {
 			if(game.getPlayers().contains(p)) {
 				return game;
@@ -199,7 +199,6 @@ public class GameManager {
 		
 		i = null;
 		System.gc();
-		return;
 	}
 
 }

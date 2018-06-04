@@ -10,19 +10,19 @@ import com.rhetorical.cod.files.ProgressionFile;
 
 public class ProgressionManager {
 
-	public HashMap<Player, Integer> prestigeLevel = new HashMap<Player, Integer>();
+	private HashMap<Player, Integer> prestigeLevel = new HashMap<Player, Integer>();
 	// Start from 0
 
-	public HashMap<Player, Integer> level = new HashMap<Player, Integer>();
+	private HashMap<Player, Integer> level = new HashMap<Player, Integer>();
 	// Start from 1
 
-	public HashMap<Player, Double> experience = new HashMap<Player, Double>();
+	private HashMap<Player, Double> experience = new HashMap<Player, Double>();
 	// Start from 0
 
 	private final int maxLevel;
 	private final int maxPrestigeLevel;
 
-	public ProgressionManager() {
+	ProgressionManager() {
 
 		for (Player p : Bukkit.getOnlinePlayers()) {
 			this.loadData(p);
@@ -49,7 +49,7 @@ public class ProgressionManager {
 
 	}
 
-	public void setLevel(Player p, int level, boolean showMessage) {
+	private void setLevel(Player p, int level, boolean showMessage) {
 		this.level.put(p, level);
 
 		if (showMessage) {
@@ -57,10 +57,9 @@ public class ProgressionManager {
 					+ Integer.toString(getLevel(p)) + "§r§7!");
 		}
 
-		return;
 	}
 
-	public void addLevel(Player p) {
+	private void addLevel(Player p) {
 		if (!this.level.containsKey(p)) {
 			this.level.put(p, 1);
 		}
@@ -76,7 +75,6 @@ public class ProgressionManager {
 
 		Main.shopManager.checkForNewGuns(p);
 
-		return;
 	}
 
 	public int getLevel(Player p) {
@@ -95,7 +93,6 @@ public class ProgressionManager {
 					+ Integer.toString(getLevel(p)) + "§r§7!");
 		}
 
-		return;
 	}
 
 	public void addPrestigeLevel(Player p) {
@@ -114,7 +111,7 @@ public class ProgressionManager {
 		return;
 	}
 
-	public int getPrestigeLevel(Player p) {
+	int getPrestigeLevel(Player p) {
 		if (!this.prestigeLevel.containsKey(p)) {
 			this.prestigeLevel.put(p, 0);
 		}
@@ -122,11 +119,10 @@ public class ProgressionManager {
 		return this.prestigeLevel.get(p);
 	}
 
-	public void setExperience(Player p, double experience) {
+	private void setExperience(Player p, double experience) {
 		this.experience.put(p, experience);
 		update(p);
 		StatHandler.addExperience(p, experience - StatHandler.getExperience(p.getName()));
-		return;
 	}
 
 	public void addExperience(Player p, double experience) {
@@ -148,7 +144,7 @@ public class ProgressionManager {
 		update(p);
 	}
 
-	public double getExperience(Player p) {
+	private double getExperience(Player p) {
 		if (!this.experience.containsKey(p)) {
 			this.experience.put(p, 0D);
 		}
@@ -156,7 +152,7 @@ public class ProgressionManager {
 		return this.experience.get(p);
 	}
 
-	public double getExperienceForLevel(int level) {
+	private double getExperienceForLevel(int level) {
 		double exp = 0D;
 
 		if (level <= 0) {
@@ -185,10 +181,9 @@ public class ProgressionManager {
 		} catch (Exception e) {
 			Main.sendMessage(Main.cs, "§cThere was an error setting the player's experience level", Main.lang);
 		}
-		return;
 	}
 
-	public void loadData(Player p) {
+	void loadData(Player p) {
 		int k = 0;
 		while (ProgressionFile.getData().contains("Players." + k)) {
 

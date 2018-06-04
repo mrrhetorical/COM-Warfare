@@ -53,9 +53,6 @@ public class Main extends JavaPlugin {
 	private static String sql_api_key;
 	private static String translate_api_key;
 
-	public static String bVersion;
-	private static String version;
-
 	public static ProgressionManager progManager;
 	public static LoadoutManager loadManager;
 	public static PerkManager perkManager;
@@ -65,7 +62,7 @@ public class Main extends JavaPlugin {
 	public static KillStreakManager killstreakManager;
 
 	public static McLang lang;
-	public static McTranslate translate;
+	private static McTranslate translate;
 	
 	public static int minPlayers = 6;
 	public static int maxPlayers = 12;
@@ -79,17 +76,22 @@ public class Main extends JavaPlugin {
 
 	@Override
 	public void onEnable() {
+
+		try {
+			lang = McLang.valueOf(getPlugin().getConfig().getString("lang"));
+		} catch(Exception e) {
+			lang = McLang.EN;
+			cs.sendMessage(codPrefix + "§cCould not get the language from the config! Make sure you're using the right two letter abbreviation!");
+		}
 		
-		lang = McLang.valueOf(getPlugin().getConfig().getString("lang"));
-		
-		if (lang == null)
+		if (lang != McLang.EN)
 			lang = McLang.EN;
 		
 		Main.cs.sendMessage(Main.codPrefix + "§fChecking dependencies...");
 
 		DependencyManager dm = new DependencyManager();
 		if (!dm.checkDependencies()) {
-			if (getPlugin().getConfig().getBoolean("auto-download-dependency") == true) {
+			if (getPlugin().getConfig().getBoolean("auto-download-dependency")) {
 				Main.cs.sendMessage(Main.codPrefix + "§cOne or more dependencies were not found, will attempt to download them.");
 				try {
 					dm.downloadDependencies();
@@ -103,7 +105,7 @@ public class Main extends JavaPlugin {
 			Main.cs.sendMessage(Main.codPrefix + "§aAll dependencies are installed!");
 		}
 
-		version = getPlugin().getDescription().getVersion();
+		String version = getPlugin().getDescription().getVersion();
 
 		CollectAnalytics.collectPlayerStats();
 
@@ -139,8 +141,6 @@ public class Main extends JavaPlugin {
 			loadManager.load(p);
 			CreditManager.loadCredits(p);
 		}
-
-		bVersion = Bukkit.getServer().getBukkitVersion();
 
 		minPlayers = getPlugin().getConfig().getInt("minPlayers");
 		lobbyLoc = (Location) getPlugin().getConfig().get("com.lobby");
@@ -385,7 +385,6 @@ public class Main extends JavaPlugin {
 					k++;
 					if (GameManager.UsedMaps.contains(m)) {
 						sendMessage(p, Integer.toString(k) + " - §6§lName: §r§a" + m.getName() + " §r§6§lGamemode: §r§c" + m.getGamemode().toString() + " §r§6§lStatus: §r§4IN USE", lang);
-						continue;
 					} else {
 						if (m.isEnabled()) {
 							sendMessage(p, Integer.toString(k) + " - §6§lName: §r§a" + m.getName() + " §r§6§lGamemode: §r§c" + m.getGamemode().toString() + " §r§6§lStatus: §r§aAVAILABLE", lang);
@@ -393,8 +392,6 @@ public class Main extends JavaPlugin {
 						}
 
 						sendMessage(p, Integer.toString(k) + " - §6§lName: §r§a" + m.getName() + " §r§6§lGamemode: §r§c" + m.getGamemode().toString() + " §r§6§lStatus: §r§aUNFINISHED", lang);
-
-						continue;
 					}
 				}
 				return true;
@@ -603,7 +600,7 @@ public class Main extends JavaPlugin {
 		return true;
 	}
 
-	public void createWeapon(Player p, String[] args) {
+	private void createWeapon(Player p, String[] args) {
 		if (args.length == 7) {
 			String name = args[1];
 			WeaponType grenadeType;
@@ -668,16 +665,15 @@ public class Main extends JavaPlugin {
 				Main.shopManager.setTacticalWeapons(tacList);
 				break;
 			default:
-				return;
+				break;
 			}
 
 		} else {
 			sendMessage(p, Main.codPrefix + "§cIncorrect usage! Correct usage: '/cod createWeapon (name) (Lethal/Tactical) (Unlock Type: level/credit/both) (Grenade Material) (Level Unlock) (Cost)'");
-			return;
 		}
 	}
 
-	public void createGun(Player p, String[] args) {
+	private void createGun(Player p, String[] args) {
 		if (args.length == 9) {
 			String name = args[1];
 
@@ -784,7 +780,6 @@ public class Main extends JavaPlugin {
 
 	private static void sendMessage(CommandSender target, String message) {
 		target.sendMessage(message);
-		return;
 	}
 
 	public static void sendMessage(CommandSender target, String message, Object targetLang) {

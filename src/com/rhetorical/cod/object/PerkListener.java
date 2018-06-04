@@ -120,7 +120,6 @@ public class PerkListener implements Listener {
 				return;
 			if (Main.loadManager.getCurrentLoadout((Player) e.getDamager()).hasPerk(Perk.STOPPING_POWER)) {
 				e.setDamage(e.getDamage() * 1.2D);
-				return;
 			}
 		}
 	}
@@ -132,7 +131,6 @@ public class PerkListener implements Listener {
 				return;
 			if (Main.loadManager.getCurrentLoadout((Player) e.getEntity()).hasPerk(Perk.JUGGERNAUT)) {
 				e.setDamage(e.getDamage() / 1.2D);
-				return;
 			}
 		}
 	}
@@ -146,15 +144,14 @@ public class PerkListener implements Listener {
 			
 			if (Main.loadManager.getCurrentLoadout((Player) e.getDamager()).hasPerk(Perk.COMMANDO)) {
 				e.setDamage(200D);
-				return;
-			}	
+			}
 			
 		}
 	}
 	
-	public HashMap<Player, BukkitRunnable> lastStandRunnables = new HashMap<Player, BukkitRunnable>();
+	private HashMap<Player, BukkitRunnable> lastStandRunnables = new HashMap<Player, BukkitRunnable>();
 	
-	public void lastStand(Player p, GameInstance i) {
+	void lastStand(Player p, GameInstance i) {
 		
 		i.health.reset(p);
 		i.health.damage(p, i.health.defaultHealth * 0.8D);
@@ -184,11 +181,10 @@ public class PerkListener implements Listener {
 		br.runTaskTimerAsynchronously(Main.getPlugin(), 0l, 10L);
 	}
 	
-	public void cancelLastStand(Player p) {
+	private void cancelLastStand(Player p) {
 		if (lastStandRunnables.keySet().contains(p)) {
 			lastStandRunnables.get(p).cancel();
 			lastStandRunnables.remove(p);
-			return;
 		}
 	}
 }

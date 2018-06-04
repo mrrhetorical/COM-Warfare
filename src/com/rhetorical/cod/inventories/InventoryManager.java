@@ -33,29 +33,26 @@ import com.rhetorical.cod.object.WeaponType;
 public class InventoryManager implements Listener {
 
 	public ItemStack closeInv = new ItemStack(Material.BARRIER);
-	public ItemStack backInv = new ItemStack(Material.REDSTONE);
+	private ItemStack backInv = new ItemStack(Material.REDSTONE);
 
 	public Inventory mainInventory = Bukkit.createInventory(null, 18, "COM-Warfare");
 	public Inventory mainShopInventory = Bukkit.createInventory(null, 9, "Shop Menu");
-	public Inventory leaderboardInventory = Bukkit.createInventory(null, 36, "Leaderboard");
+	private Inventory leaderboardInventory = Bukkit.createInventory(null, 36, "Leaderboard");
 	public HashMap<Player, Inventory> createClassInventory = new HashMap<Player, Inventory>();
-	public HashMap<Player, Inventory> selectClassInventory = new HashMap<Player, Inventory>();
-	public HashMap<Player, Inventory> personalStatistics = new HashMap<Player, Inventory>();
-	public HashMap<Player, Inventory> killStreakInventory = new HashMap<Player, Inventory>();
+	private HashMap<Player, Inventory> selectClassInventory = new HashMap<Player, Inventory>();
+	private HashMap<Player, Inventory> personalStatistics = new HashMap<Player, Inventory>();
+	private HashMap<Player, Inventory> killStreakInventory = new HashMap<Player, Inventory>();
 
-	public ItemStack joinGame = new ItemStack(Material.EMERALD);
-	public ItemStack createClass = new ItemStack(Material.CHEST);
-	public ItemStack scoreStreaks = new ItemStack(Material.DIAMOND);
-	public ItemStack prestige = new ItemStack(Material.ANVIL);
-	public ItemStack assignments = new ItemStack(Material.GOLD_INGOT);
-	public ItemStack clanTag = new ItemStack(Material.SHEARS);
-	public ItemStack combatRecord = new ItemStack(Material.PAPER);
-	public ItemStack leaderboard = new ItemStack(Material.PAPER);
+	private ItemStack joinGame = new ItemStack(Material.EMERALD);
+	private ItemStack createClass = new ItemStack(Material.CHEST);
+	private ItemStack scoreStreaks = new ItemStack(Material.DIAMOND);
+	private ItemStack combatRecord = new ItemStack(Material.PAPER);
+	private ItemStack leaderboard = new ItemStack(Material.PAPER);
 
-	public ItemStack shopItem = new ItemStack(Material.EMERALD);
-	public ItemStack gunShopItem = new ItemStack(Material.CHEST);
-	public ItemStack grenadeShopItem = new ItemStack(Material.CHEST);
-	public ItemStack perkShopItem = new ItemStack(Material.CHEST);
+	private ItemStack shopItem = new ItemStack(Material.EMERALD);
+	private ItemStack gunShopItem = new ItemStack(Material.CHEST);
+	private ItemStack grenadeShopItem = new ItemStack(Material.CHEST);
+	private ItemStack perkShopItem = new ItemStack(Material.CHEST);
 
 	public boolean shouldCancelClick(Inventory i, Player p) {
 		if (i.equals(mainInventory)) {
@@ -93,10 +90,7 @@ public class InventoryManager implements Listener {
 			return true;
 		}
 
-		if (i.equals(this.killStreakInventory.get(p))) {
-			return true;
-		}
-		return false;
+		return i.equals(this.killStreakInventory.get(p));
 	}
 
 	public InventoryManager() {
@@ -107,7 +101,7 @@ public class InventoryManager implements Listener {
 		Bukkit.getServer().getPluginManager().registerEvents(this, Main.getPlugin());
 	}
 
-	public void setupCloseInvButton() {
+	private void setupCloseInvButton() {
 		ItemMeta closeInvMeta = closeInv.getItemMeta();
 		closeInvMeta.setDisplayName("§c§lClose");
 		closeInv.setItemMeta(closeInvMeta);
@@ -121,7 +115,7 @@ public class InventoryManager implements Listener {
 
 	// Main Inventory
 
-	public void setupMainInventories() {
+	private void setupMainInventories() {
 		joinGame = new ItemStack(Material.EMERALD);
 		ItemMeta joinGameMeta = joinGame.getItemMeta();
 		joinGameMeta.setDisplayName("§a§lFind Match");
@@ -155,7 +149,7 @@ public class InventoryManager implements Listener {
 
 		mainInventory.setItem(2, scoreStreaks);
 
-		prestige = new ItemStack(Material.ANVIL);
+		ItemStack prestige = new ItemStack(Material.ANVIL);
 		ItemMeta prestigeMeta = prestige.getItemMeta();
 		prestigeMeta.setDisplayName("§6§lPrestige Options");
 		ArrayList<String> prestigeLore = new ArrayList<String>();
@@ -166,7 +160,7 @@ public class InventoryManager implements Listener {
 
 		mainInventory.setItem(3, prestige);
 
-		assignments = new ItemStack(Material.GOLD_INGOT);
+		ItemStack assignments = new ItemStack(Material.GOLD_INGOT);
 		ItemMeta assignmentMeta = assignments.getItemMeta();
 		assignmentMeta.setDisplayName("§3§lAssignments & Contracts");
 		ArrayList<String> assignmentLore = new ArrayList<String>();
@@ -179,7 +173,7 @@ public class InventoryManager implements Listener {
 
 		mainInventory.setItem(4, assignments);
 
-		clanTag = new ItemStack(Material.SHEARS);
+		ItemStack clanTag = new ItemStack(Material.SHEARS);
 		ItemMeta clanTagMeta = clanTag.getItemMeta();
 		clanTagMeta.setDisplayName("§5§lClan Tag");
 		ArrayList<String> clanTagLore = new ArrayList<String>();
@@ -424,7 +418,7 @@ public class InventoryManager implements Listener {
 		}
 	}
 
-	public void setupShopInventories(Player p) {
+	private void setupShopInventories(Player p) {
 		Inventory gunShop = Bukkit.createInventory(p, 36, "Gun Shop");
 		Inventory weaponShop = Bukkit.createInventory(p, 36, "Grenade Shop");
 		Inventory perkShop = Bukkit.createInventory(p, 36, "Perk Shop");
@@ -543,7 +537,7 @@ public class InventoryManager implements Listener {
 		Main.shopManager.perkShop.put(p, perkShop);
 	}
 
-	public void setupSelectClassInventory(Player p) {
+	private void setupSelectClassInventory(Player p) {
 
 		Inventory inventory = Bukkit.createInventory(p, 9, "Select Class");
 
@@ -589,7 +583,7 @@ public class InventoryManager implements Listener {
 		return true;
 	}
 
-	public void setupLeaderBoard() {
+	private void setupLeaderBoard() {
 		leaderboardInventory.setItem(35, closeInv);
 		ArrayList<String> pls = StatHandler.getLeaderboardList();
 
@@ -647,7 +641,7 @@ public class InventoryManager implements Listener {
 		System.gc();
 	}
 
-	public void setupPersonalStatsBoardMenu(Player p) {
+	private void setupPersonalStatsBoardMenu(Player p) {
 		if (!personalStatistics.containsKey(p)) {
 			personalStatistics.put(p, Bukkit.createInventory(null, 9, "Combat Record"));
 		}
@@ -689,7 +683,7 @@ public class InventoryManager implements Listener {
 		personalStatistics.put(p, inv);
 	}
 
-	public boolean openPersonalStatsMenu(Player p) {
+	private boolean openPersonalStatsMenu(Player p) {
 
 		setupPersonalStatsBoardMenu(p);
 
@@ -700,7 +694,7 @@ public class InventoryManager implements Listener {
 		return true;
 	}
 
-	public void setupKillStreaksInventory(Player p) {
+	private void setupKillStreaksInventory(Player p) {
 
 		Inventory inv = Bukkit.createInventory(null, 36, "Killstreaks");
 
@@ -714,7 +708,7 @@ public class InventoryManager implements Listener {
 
 	}
 
-	public boolean openKillStreaksInventory(Player p) {
+	private boolean openKillStreaksInventory(Player p) {
 
 		setupKillStreaksInventory(p);
 		Inventory inv = killStreakInventory.get(p);
@@ -751,7 +745,6 @@ public class InventoryManager implements Listener {
 				Main.sendMessage(p,Main.codPrefix + "§7Put in matchmaker queue. . .", Main.lang);
 				GameManager.findMatch(p);
 				p.closeInventory();
-				return;
 			} else if (e.getCurrentItem().equals(createClass)) {
 				p.closeInventory();
 				this.setupCreateClassInventory(p);
@@ -759,23 +752,18 @@ public class InventoryManager implements Listener {
 			} else if (e.getCurrentItem().equals(shopItem)) {
 				p.closeInventory();
 				p.openInventory(mainShopInventory);
-				return;
 			} else if (e.getCurrentItem().equals(combatRecord)) {
 				p.closeInventory();
 				openPersonalStatsMenu(p);
-				return;
 			} else if (e.getCurrentItem().equals(leaderboard)) {
 				p.closeInventory();
 				setupLeaderBoard();
 				p.openInventory(leaderboardInventory);
-				return;
 			} else if (e.getCurrentItem().equals(scoreStreaks)) {
 				p.closeInventory();
 				this.openKillStreaksInventory(p);
-				return;
 			} else if (e.getCurrentItem().equals(closeInv)) {
 				p.closeInventory();
-				return;
 			}
 		} else if (e.getInventory().equals(mainShopInventory)) {
 			if (e.getCurrentItem().equals(gunShopItem)) {
@@ -784,25 +772,21 @@ public class InventoryManager implements Listener {
 					this.setupShopInventories(p);
 				}
 				p.openInventory(Main.shopManager.gunShop.get(p));
-				return;
 			} else if (e.getCurrentItem().equals(grenadeShopItem)) {
 				p.closeInventory();
 				if (!Main.shopManager.weaponShop.containsKey(p)) {
 					this.setupShopInventories(p);
 				}
 				p.openInventory(Main.shopManager.weaponShop.get(p));
-				return;
 			} else if (e.getCurrentItem().equals(perkShopItem)) {
 				p.closeInventory();
 				if (!Main.shopManager.weaponShop.containsKey(p)) {
 					this.setupShopInventories(p);
 				}
 				p.openInventory(Main.shopManager.perkShop.get(p));
-				return;
 			} else if (e.getCurrentItem().equals(shopItem)) {
 				p.closeInventory();
 				p.openInventory(mainShopInventory);
-				return;
 			}
 		} else if (e.getInventory().equals(killStreakInventory.get(p))) {
 			if (e.getCurrentItem() == null || e.getCurrentItem().getType().equals(Material.AIR)) {
@@ -828,7 +812,6 @@ public class InventoryManager implements Listener {
 					i.setAmount(9);
 					break;
 				}
-				return;
 			} else if (e.getCurrentItem().getType().equals(Material.CHEST)) {
 
 				ItemStack uavStack = this.killStreakInventory.get(p).getItem(0);
@@ -882,7 +865,6 @@ public class InventoryManager implements Listener {
 
 				Main.killstreakManager.setStreaks(p, toSet[0], toSet[1], toSet[2]);
 
-				return;
 			}
 
 		} else if (e.getInventory().equals(createClassInventory.get(p))) {
@@ -1023,7 +1005,6 @@ public class InventoryManager implements Listener {
 				Main.sendMessage(p, Main.codPrefix + "§fyou changed your class to " + current.getName() + ". It will change in 10 seconds if you don't move.", Main.lang);
 			}
 
-			return;
 		} else {
 
 			ItemStack item = e.getCurrentItem();
@@ -1155,7 +1136,6 @@ public class InventoryManager implements Listener {
 
 			if (e.getCurrentItem().equals(closeInv)) {
 				p.closeInventory();
-				return;
 			}
 
 		}

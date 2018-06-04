@@ -15,9 +15,9 @@ public class CodMap {
 	private boolean enabled = false;
 	
 	
-	private ArrayList<Location> blueSpawns = new ArrayList<Location>();
-	private ArrayList<Location> redSpawns = new ArrayList<Location>();
-	private ArrayList<Location> pinkSpawns = new ArrayList<Location>();
+	private ArrayList<Location> blueSpawns = new ArrayList<>();
+	private ArrayList<Location> redSpawns = new ArrayList<>();
+	private ArrayList<Location> pinkSpawns = new ArrayList<>();
 	private Location redFlagSpawn;
 	private Location blueFlagSpawn;
 	private Location redAFlagSpawn;
@@ -56,7 +56,6 @@ public class CodMap {
 		ArenasFile.getData().set("Maps." + k + ".redSpawns", getRedSpawns());
 		ArenasFile.saveData();
 		ArenasFile.reloadData();
-		return;
 	}
 	
 	public boolean setCTFflag(String team, Location l) {
@@ -78,7 +77,6 @@ public class CodMap {
 		
 		getBlueSpawns().add(l);
 		setEnable();
-		return;
 	}
 	
 	public void addRedSpawn(Location l) {
@@ -86,7 +84,6 @@ public class CodMap {
 		
 		getRedSpawns().add(l);
 		setEnable();
-		return;
 	}
 	
 	public void addPinkSpawn(Location l) {
@@ -94,7 +91,6 @@ public class CodMap {
 		
 		getPinkSpawns().add(l);
 		setEnable();
-		return;
 	}
 	
 	//Check if enabled
@@ -149,18 +145,18 @@ public class CodMap {
 		setEnable();
 	}
 	
-	public Location getBlueSpawn() {
+	Location getBlueSpawn() {
 		Collections.shuffle(this.getBlueSpawns());
 		return this.getBlueSpawns().get(0);
 		
 	}
 	
-	public Location getRedSpawn() {
+	Location getRedSpawn() {
 		Collections.shuffle(this.getRedSpawns());
 		return this.getRedSpawns().get(0);
 	}
 	
-	public Location getPinkSpawn() {
+	Location getPinkSpawn() {
 		Collections.shuffle(this.getPinkSpawns());
 		return this.getPinkSpawns().get(0);
 	}
@@ -177,7 +173,7 @@ public class CodMap {
 		this.enabled = enabled;
 	}
 
-	public Location getBlueAFlagSpawn() {
+	private Location getBlueAFlagSpawn() {
 		return blueAFlagSpawn;
 	}
 
@@ -185,7 +181,7 @@ public class CodMap {
 		this.blueAFlagSpawn = blueAFlagSpawn;
 	}
 
-	public Location getBlueBFlagSpawn() {
+	private Location getBlueBFlagSpawn() {
 		return blueBFlagSpawn;
 	}
 
@@ -193,7 +189,7 @@ public class CodMap {
 		this.blueBFlagSpawn = blueBFlagSpawn;
 	}
 
-	public Location getBlueCFlagSpawn() {
+	private Location getBlueCFlagSpawn() {
 		return blueCFlagSpawn;
 	}
 
@@ -201,7 +197,7 @@ public class CodMap {
 		this.blueCFlagSpawn = blueCFlagSpawn;
 	}
 
-	public ArrayList<Location> getBlueSpawns() {
+	private ArrayList<Location> getBlueSpawns() {
 		return blueSpawns;
 	}
 
@@ -209,7 +205,7 @@ public class CodMap {
 		this.blueSpawns = blueSpawns;
 	}
 
-	public Location getBlueFlagSpawn() {
+	private Location getBlueFlagSpawn() {
 		return blueFlagSpawn;
 	}
 
@@ -217,7 +213,7 @@ public class CodMap {
 		this.blueFlagSpawn = blueFlagSpawn;
 	}
 
-	public ArrayList<Location> getPinkSpawns() {
+	private ArrayList<Location> getPinkSpawns() {
 		return pinkSpawns;
 	}
 
@@ -225,7 +221,7 @@ public class CodMap {
 		this.pinkSpawns = pinkSpawns;
 	}
 
-	public Location getRedBFlagSpawn() {
+	private Location getRedBFlagSpawn() {
 		return redBFlagSpawn;
 	}
 
@@ -233,7 +229,7 @@ public class CodMap {
 		this.redBFlagSpawn = redBFlagSpawn;
 	}
 
-	public Location getRedAFlagSpawn() {
+	private Location getRedAFlagSpawn() {
 		return redAFlagSpawn;
 	}
 
@@ -241,7 +237,7 @@ public class CodMap {
 		this.redAFlagSpawn = redAFlagSpawn;
 	}
 
-	public Location getRedCFlagSpawn() {
+	private Location getRedCFlagSpawn() {
 		return redCFlagSpawn;
 	}
 
@@ -249,7 +245,7 @@ public class CodMap {
 		this.redCFlagSpawn = redCFlagSpawn;
 	}
 
-	public Location getRedFlagSpawn() {
+	private Location getRedFlagSpawn() {
 		return redFlagSpawn;
 	}
 
@@ -257,7 +253,7 @@ public class CodMap {
 		this.redFlagSpawn = redFlagSpawn;
 	}
 
-	public ArrayList<Location> getRedSpawns() {
+	private ArrayList<Location> getRedSpawns() {
 		return redSpawns;
 	}
 
@@ -269,37 +265,7 @@ public class CodMap {
 		return gm;
 	}
 
-	public void setGamemode(Gamemode gm) {
+	private void setGamemode(Gamemode gm) {
 		this.gm = gm;
 	}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }

@@ -7,7 +7,7 @@ import com.rhetorical.cod.Main;
 
 public class CollectAnalytics {
 	
-	public static int joinedPlayers = 0;
+	private static int joinedPlayers = 0;
 	
 	public static void collectPlayerStats() {
 		BukkitRunnable br = new BukkitRunnable() {
@@ -19,5 +19,7 @@ public class CollectAnalytics {
 		
 		br.runTaskTimerAsynchronously(Main.getPlugin(), 20L, 1200L);
 	}
+	
+	
 	
 }

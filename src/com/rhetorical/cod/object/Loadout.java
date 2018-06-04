@@ -95,7 +95,7 @@ public class Loadout implements Listener {
 		}
 	}
 
-	public Player getOwner() {
+	private Player getOwner() {
 		return this.owner;
 	}
 
@@ -132,11 +132,8 @@ public class Loadout implements Listener {
 	}
 
 	public boolean hasPerk(Perk perk) {
-		if (getPerk1().getPerk().equals(perk) || getPerk2().getPerk().equals(perk) || getPerk3().getPerk().equals(perk)) {
-			return true;
-		}
+		return getPerk1().getPerk().equals(perk) || getPerk2().getPerk().equals(perk) || getPerk3().getPerk().equals(perk);
 
-		return false;
 	}
 
 	public Inventory getPrimaryInventory() {
@@ -266,8 +263,6 @@ public class Loadout implements Listener {
 					p.openInventory(Main.invManager.createClassInventory.get(p));
 				}
 			}
-
-			return;
 		}
 	}
 

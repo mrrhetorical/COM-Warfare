@@ -50,24 +50,24 @@ public class GameInstance implements Listener {
 
 	private boolean forceStarted = false;
 
-	public final int maxScore_TDM;
-	public final int maxScore_RSB;
-	public final int maxScore_FFA;
-	public final int maxScore_DOM;
-	public final int maxScore_CTF;
-	public final int maxScore_KC;
-	public final int maxScore_GUN;
-	public final int maxScore_OITC;
+	private final int maxScore_TDM;
+	private final int maxScore_RSB;
+	private final int maxScore_FFA;
+	private final int maxScore_DOM;
+	private final int maxScore_CTF;
+	private final int maxScore_KC;
+	private final int maxScore_GUN;
+	private final int maxScore_OITC;
 
 	// Score management and game information system for FFA (Free for all)
-	public HashMap<Player, Integer> ffaPlayerScores = new HashMap<Player, Integer>();
-	public HashMap<Player, BossBar> freeForAllBar = new HashMap<Player, BossBar>();
+	private HashMap<Player, Integer> ffaPlayerScores = new HashMap<Player, Integer>();
+	private HashMap<Player, BossBar> freeForAllBar = new HashMap<Player, BossBar>();
 
-	public BossBar scoreBar = Bukkit.createBossBar("§7«§f" + getFancyTime(Main.getPlugin().getConfig().getInt("lobbyTime")) + "§r§7»", BarColor.PINK, BarStyle.SOLID);
+	private BossBar scoreBar = Bukkit.createBossBar("§7«§f" + getFancyTime(Main.getPlugin().getConfig().getInt("lobbyTime")) + "§r§7»", BarColor.PINK, BarStyle.SOLID);
 
 	public HealthManager health;
 
-	public HashMap<Player, CodScore> playerScores = new HashMap<Player, CodScore>();
+	private HashMap<Player, CodScore> playerScores = new HashMap<Player, CodScore>();
 
 	public GameInstance(ArrayList<Player> pls, CodMap map) {
 
@@ -101,7 +101,7 @@ public class GameInstance implements Listener {
 		Main.cs.sendMessage(Main.codPrefix + "§7Game lobby with id " + this.getId() + " created with map " + this.getMap().getName() + " with gamemode " + this.getGameMode() + "!");
 	}
 
-	public void reset() {
+	private void reset() {
 
 		this.RedTeamScore = 0;
 		this.BlueTeamScore = 0;
@@ -130,13 +130,12 @@ public class GameInstance implements Listener {
 		return this.id;
 	}
 
-	public void changeMap(CodMap map) {
+	private void changeMap(CodMap map) {
 		if (map == null)
 			return;
 
 		Gamemode gameMode = this.getGameMode();
 		this.gameTime = Main.getPlugin().getConfig().getInt("gameTime." + gameMode.toString());
-		return;
 	}
 
 	public void addPlayer(Player p) {
@@ -185,24 +184,20 @@ public class GameInstance implements Listener {
 		}
 	}
 
-	public void addBluePoint() {
+	private void addBluePoint() {
 		this.BlueTeamScore++;
-		return;
 	}
 
-	public void addRedPoint() {
+	private void addRedPoint() {
 		this.RedTeamScore++;
-		return;
 	}
 
-	public void addPointForPlayer(Player p) {
+	private void addPointForPlayer(Player p) {
 		if (!this.ffaPlayerScores.containsKey(p)) {
 			this.ffaPlayerScores.put(p, 0);
 		}
 
 		this.ffaPlayerScores.put(p, this.ffaPlayerScores.get(p) + 1);
-
-		return;
 	}
 
 	public void removePlayer(Player p) {
@@ -241,7 +236,7 @@ public class GameInstance implements Listener {
 		System.gc();
 	}
 
-	public void startGame() {
+	private void startGame() {
 
 		if (this.isForceStarted()) {
 			this.forceStart(false);
@@ -271,7 +266,7 @@ public class GameInstance implements Listener {
 		this.setState(GameState.INGAME);
 	}
 
-	public void spawnCodPlayer(Player p, Location L) {
+	private void spawnCodPlayer(Player p, Location L) {
 		p.teleport(L);
 		p.getInventory().clear();
 		Loadout loadout = Main.loadManager.getActiveLoadout(p);
@@ -333,7 +328,7 @@ public class GameInstance implements Listener {
 		}
 	}
 
-	public void assignTeams() {
+	private void assignTeams() {
 
 		if (this.getGameMode() != Gamemode.FFA && this.getGameMode() != Gamemode.OITC && this.getGameMode() != Gamemode.GUN) {
 			for (Player p : players) {
@@ -362,7 +357,7 @@ public class GameInstance implements Listener {
 
 	}
 
-	public void stopGame() {
+	private void stopGame() {
 
 		for (Player p : this.players) {
 
@@ -455,7 +450,7 @@ public class GameInstance implements Listener {
 		br.runTaskTimerAsynchronously(Main.getPlugin(), 0L, 20L);
 	}
 
-	public void startLobbyTimer(int time) {
+	private void startLobbyTimer(int time) {
 
 		if (this.isForceStarted()) {
 			this.forceStart(false);
@@ -514,7 +509,7 @@ public class GameInstance implements Listener {
 		br.runTaskTimerAsynchronously(Main.getPlugin(), 0L, 20L);
 	}
 
-	public void startGameTimer(int time) {
+	private void startGameTimer(int time) {
 
 		this.setState(GameState.INGAME);
 
@@ -608,7 +603,7 @@ public class GameInstance implements Listener {
 		}
 	}
 
-	public String getWinningTeam() {
+	private String getWinningTeam() {
 
 		if (this.getGameMode().equals(Gamemode.FFA)) {
 			int highestScore = 0;
@@ -636,7 +631,7 @@ public class GameInstance implements Listener {
 		return "tie";
 	}
 
-	public String getFancyTime(int time) {
+	private String getFancyTime(int time) {
 
 		String seconds = Integer.toString(time % 60);
 
@@ -657,7 +652,7 @@ public class GameInstance implements Listener {
 		return this.players;
 	}
 
-	public boolean areEnemies(Player a, Player b) {
+	private boolean areEnemies(Player a, Player b) {
 
 		if (a == null || b == null) {
 			return true;
@@ -742,7 +737,7 @@ public class GameInstance implements Listener {
 		br.runTaskTimer(Main.getPlugin(), 0L, 20L);
 	}
 
-	public void updateTabList() {
+	private void updateTabList() {
 
 		String teamColor;
 
@@ -771,17 +766,13 @@ public class GameInstance implements Listener {
 	}
 
 	public boolean isOnBlueTeam(Player p) {
-		if (this.blueTeam.contains(p))
-			return true;
+		return this.blueTeam.contains(p);
 
-		return false;
 	}
 
 	public boolean isOnPinkTeam(Player p) {
-		if (this.ffaPlayerScores.containsKey(p))
-			return true;
+		return this.ffaPlayerScores.containsKey(p);
 
-		return false;
 	}
 
 	public CodMap getMap() {
@@ -797,7 +788,7 @@ public class GameInstance implements Listener {
 		this.currentMap = codMap;
 	}
 
-	public boolean isForceStarted() {
+	private boolean isForceStarted() {
 		return forceStarted;
 	}
 
@@ -805,19 +796,19 @@ public class GameInstance implements Listener {
 		this.forceStarted = forceStarted;
 	}
 
-	public GameState getState() {
+	private GameState getState() {
 		return state;
 	}
 
-	public void setState(GameState state) {
+	private void setState(GameState state) {
 		this.state = state;
 	}
 
-	public Gamemode getGameMode() {
+	private Gamemode getGameMode() {
 		return this.getMap().getGamemode();
 	}
 
-	public void handleDeath(Player killer, Player victim) {
+	private void handleDeath(Player killer, Player victim) {
 
 		RankPerks rank = Main.getRank(killer);
 
@@ -835,7 +826,6 @@ public class GameInstance implements Listener {
 				this.kill(victim, killer);
 				this.addRedPoint();
 				this.updateScores(victim, killer, rank);
-				return;
 			} else if (blueTeam.contains(killer)) {
 				Main.sendMessage(killer, "§9§lYOU §r§f[killed] §r§c§l" + victim.getDisplayName(), Main.lang);
 				Main.sendMessage(killer, "§e+" + rank.getKillExperience() + "xp", Main.lang);
@@ -843,7 +833,6 @@ public class GameInstance implements Listener {
 				this.kill(victim, killer);
 				this.addBluePoint();
 				this.updateScores(victim, killer, rank);
-				return;
 			}
 		} else if (this.getGameMode().equals(Gamemode.FFA)) {
 			Main.sendMessage(killer, "§a§lYOU §r§f[killed] §r§6§l" + victim.getDisplayName(), Main.lang);
@@ -852,15 +841,12 @@ public class GameInstance implements Listener {
 			this.kill(victim, killer);
 			this.addPointForPlayer(killer);
 			this.updateScores(victim, killer, rank);
-			return;
 		}
 	}
 
-	public void updateScores(Player victim, Player killer, RankPerks rank) {
+	private void updateScores(Player victim, Player killer, RankPerks rank) {
 
-		if (this.playerScores.get(killer) == null) {
-			this.playerScores.put(killer, new CodScore(killer));
-		}
+		this.playerScores.computeIfAbsent(killer, k -> new CodScore(killer));
 
 		CodScore killerScore = this.playerScores.get(killer);
 
@@ -1016,8 +1002,6 @@ public class GameInstance implements Listener {
 					Main.perkListener.lastStand(victim, this);
 				}
 			}
-		} else {
-			return;
 		}
 	}
 }

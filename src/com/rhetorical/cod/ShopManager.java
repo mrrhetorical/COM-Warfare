@@ -32,7 +32,7 @@ public class ShopManager {
 	public HashMap<Player, Inventory> weaponShop = new HashMap<Player, Inventory>();
 	public HashMap<Player, Inventory> perkShop = new HashMap<Player, Inventory>();
 
-	public ShopManager() {
+	ShopManager() {
 		this.loadGuns();
 		this.loadWeapons();
 		for (Player p : Bukkit.getOnlinePlayers()) {
@@ -40,7 +40,7 @@ public class ShopManager {
 		}
 	}
 
-	public void loadGuns() {
+	private void loadGuns() {
 
 		if (Main.loadManager.getDefaultPrimary() == null) {
 			return;
@@ -83,7 +83,7 @@ public class ShopManager {
 		}
 	}
 
-	public void loadWeapons() {
+	private void loadWeapons() {
 		lethalWeapons.add(Main.loadManager.getDefaultLethal());
 		tacticalWeapons.add(Main.loadManager.getDefaultTactical());
 
@@ -234,7 +234,7 @@ public class ShopManager {
 		return primaryGuns;
 	}
 
-	public void setPrimaryGuns(ArrayList<CodGun> primaryGuns) {
+	void setPrimaryGuns(ArrayList<CodGun> primaryGuns) {
 		this.primaryGuns = primaryGuns;
 	}
 
@@ -242,7 +242,7 @@ public class ShopManager {
 		return secondaryGuns;
 	}
 
-	public void setSecondaryGuns(ArrayList<CodGun> secondaryGuns) {
+	void setSecondaryGuns(ArrayList<CodGun> secondaryGuns) {
 		this.secondaryGuns = secondaryGuns;
 	}
 
@@ -250,7 +250,7 @@ public class ShopManager {
 		return lethalWeapons;
 	}
 
-	public void setLethalWeapons(ArrayList<CodWeapon> lethalWeapons) {
+	void setLethalWeapons(ArrayList<CodWeapon> lethalWeapons) {
 		this.lethalWeapons = lethalWeapons;
 	}
 
@@ -258,7 +258,7 @@ public class ShopManager {
 		return tacticalWeapons;
 	}
 
-	public void setTacticalWeapons(ArrayList<CodWeapon> tacticalWeapons) {
+	void setTacticalWeapons(ArrayList<CodWeapon> tacticalWeapons) {
 		this.tacticalWeapons = tacticalWeapons;
 	}
 
@@ -266,7 +266,7 @@ public class ShopManager {
 		return purchasedGuns;
 	}
 
-	public void setPurchasedGuns(HashMap<Player, ArrayList<CodGun>> purchasedGuns) {
+	private void setPurchasedGuns(HashMap<Player, ArrayList<CodGun>> purchasedGuns) {
 		this.purchasedGuns = purchasedGuns;
 	}
 
@@ -274,24 +274,18 @@ public class ShopManager {
 		return purchasedWeapons;
 	}
 
-	public void setPurchasedWeapons(HashMap<Player, ArrayList<CodWeapon>> purchasedWeapons) {
+	private void setPurchasedWeapons(HashMap<Player, ArrayList<CodWeapon>> purchasedWeapons) {
 		this.purchasedWeapons = purchasedWeapons;
 	}
 
 	public boolean hasGun(Player p, CodGun gun) {
-		if (purchasedGuns.get(p).contains(gun)) {
-			return true;
-		}
+		return purchasedGuns.get(p).contains(gun);
 
-		return false;
 	}
 
 	public boolean hasWeapon(Player p, CodWeapon grenade) {
-		if (purchasedWeapons.get(p).contains(grenade)) {
-			return true;
-		}
+		return purchasedWeapons.get(p).contains(grenade);
 
-		return false;
 	}
 
 	public boolean isAvailableForPurchase(Player p, CodGun gun) {
@@ -309,7 +303,49 @@ public class ShopManager {
 		return false;
 	}
 
-	public void checkForNewGuns(Player p) {
+	private void unlockGun(HashMap<Player, ArrayList<CodGun>> purchased, Player p, CodGun gun) {
+		ArrayList<CodGun> guns = purchased.get(p);
+
+		guns.add(gun);
+
+		purchased.put(p, guns);
+
+		Main.shopManager.setPurchasedGuns(purchased);
+
+		Main.sendMessage(p, Main.codPrefix + "§aYou just unlocked the §6" + gun.getName() + "§a!", Main.lang);
+		Main.sendMessage(p, Main.codPrefix + "§aEquip it after the match!", Main.lang);
+	}
+
+	private void unlockGrenade(HashMap<Player, ArrayList<CodWeapon>> purchasedWeapons, Player p, CodWeapon grenade) {
+		if (grenade.getType() == UnlockType.LEVEL) {
+
+			HashMap<Player, ArrayList<CodWeapon>> purchased = Main.shopManager.getPurchasedWeapons();
+
+			if (!purchased.get(p).contains(grenade)) {
+
+				if (Main.progManager.getLevel(p) == grenade.getLevelUnlock()) {
+
+					ArrayList<CodWeapon> grenades = purchased.get(p);
+
+					grenades.add(grenade);
+
+					purchased.put(p, grenades);
+
+					Main.shopManager.setPurchasedWeapons(purchased);
+
+					Main.sendMessage(p, Main.codPrefix + "§aYou just unlocked the §6" + grenade.getName() + "§a!", Main.lang);
+					Main.sendMessage(p, Main.codPrefix + "§aEquip it after the match!", Main.lang);
+				}
+			}
+		} else if (grenade.getType() == UnlockType.BOTH) {
+			if (Main.progManager.getLevel(p) == grenade.getLevelUnlock()) {
+				Main.sendMessage(p,
+						Main.codPrefix + "§aThe §6" + grenade.getName() + "§a is now available for purchase!", Main.lang);
+			}
+		}
+	}
+
+	void checkForNewGuns(Player p) {
 		for (CodGun gun : Main.shopManager.primaryGuns) {
 			if (gun.getType() == UnlockType.LEVEL) {
 
@@ -321,16 +357,7 @@ public class ShopManager {
 
 					if (Main.progManager.getLevel(p) == gun.getLevelUnlock()) {
 
-						ArrayList<CodGun> guns = purchased.get(p);
-
-						guns.add(gun);
-
-						purchased.put(p, guns);
-
-						Main.shopManager.setPurchasedGuns(purchased);
-
-						Main.sendMessage(p, Main.codPrefix + "§aYou just unlocked the §6" + gun.getName() + "§a!", Main.lang);
-						Main.sendMessage(p, Main.codPrefix + "§aEquip it after the match!", Main.lang);
+						unlockGun(purchased, p, gun);
 					}
 				}
 			} else if (gun.getType() == UnlockType.BOTH) {
@@ -350,16 +377,7 @@ public class ShopManager {
 				if (!purchased.get(p).contains(gun)) {
 
 					if (Main.progManager.getLevel(p) == gun.getLevelUnlock()) {
-						ArrayList<CodGun> guns = purchased.get(p);
-
-						guns.add(gun);
-
-						purchased.put(p, guns);
-
-						Main.shopManager.setPurchasedGuns(purchased);
-
-						Main.sendMessage(p, Main.codPrefix + "§aYou just unlocked the §6" + gun.getName() + "§a!", Main.lang);
-						Main.sendMessage(p, Main.codPrefix + "§aEquip it after the match!", Main.lang);
+						unlockGun(purchased, p, gun);
 					}
 				}
 			} else if (gun.getType() == UnlockType.BOTH) {
@@ -370,61 +388,11 @@ public class ShopManager {
 		}
 
 		for (CodWeapon grenade : Main.shopManager.lethalWeapons) {
-			if (grenade.getType() == UnlockType.LEVEL) {
-
-				HashMap<Player, ArrayList<CodWeapon>> purchased = Main.shopManager.getPurchasedWeapons();
-
-				if (!purchased.get(p).contains(grenade)) {
-
-					if (Main.progManager.getLevel(p) == grenade.getLevelUnlock()) {
-
-						ArrayList<CodWeapon> grenades = purchased.get(p);
-
-						grenades.add(grenade);
-
-						purchased.put(p, grenades);
-
-						Main.shopManager.setPurchasedWeapons(purchased);
-
-						Main.sendMessage(p, Main.codPrefix + "§aYou just unlocked the §6" + grenade.getName() + "§a!", Main.lang);
-						Main.sendMessage(p, Main.codPrefix + "§aEquip it after the match!", Main.lang);
-					}
-				}
-			} else if (grenade.getType() == UnlockType.BOTH) {
-				if (Main.progManager.getLevel(p) == grenade.getLevelUnlock()) {
-					Main.sendMessage(p, 
-							Main.codPrefix + "§aThe §6" + grenade.getName() + "§a is now available for purchase!", Main.lang);
-				}
-			}
+			unlockGrenade(purchasedWeapons, p, grenade);
 		}
 
 		for (CodWeapon grenade : Main.shopManager.tacticalWeapons) {
-			if (grenade.getType() == UnlockType.LEVEL) {
-
-				HashMap<Player, ArrayList<CodWeapon>> purchased = Main.shopManager.getPurchasedWeapons();
-
-				if (!purchased.get(p).contains(grenade)) {
-
-					if (Main.progManager.getLevel(p) == grenade.getLevelUnlock()) {
-
-						ArrayList<CodWeapon> grenades = purchased.get(p);
-
-						grenades.add(grenade);
-
-						purchased.put(p, grenades);
-
-						Main.shopManager.setPurchasedWeapons(purchased);
-
-						Main.sendMessage(p, Main.codPrefix + "§aYou just unlocked the §6" + grenade.getName() + "§a!", Main.lang);
-						Main.sendMessage(p, Main.codPrefix + "§aEquip it after the match!", Main.lang);
-					}
-				}
-			} else if (grenade.getType() == UnlockType.BOTH) {
-				if (Main.progManager.getLevel(p) == grenade.getLevelUnlock()) {
-					Main.sendMessage(p, 
-							Main.codPrefix + "§aThe §6" + grenade.getName() + "§a is now available for purchase!", Main.lang);
-				}
-			}
+			unlockGrenade(purchasedWeapons, p, grenade);
 		}
 
 	}
