@@ -1137,6 +1137,7 @@ public class GameInstance implements Listener {
 				setTeamArmor(p, Color.RED);
 				addRedPoint();
 				setupFlags(false, true);
+				redFlagHolder = null;
 				for (Player player : players) {
 					Main.sendTitle(player, "§cThe red team scored!", "");
 				}
@@ -1149,6 +1150,7 @@ public class GameInstance implements Listener {
 				setTeamArmor(p, Color.BLUE);
 				addBluePoint();
 				setupFlags(true, false);
+				blueFlagHolder = null;
 				for (Player player : players) {
 					Main.sendTitle(player,  "§9The blue team scored!", "");
 				}
