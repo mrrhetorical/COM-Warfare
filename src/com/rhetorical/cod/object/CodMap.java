@@ -205,7 +205,7 @@ public class CodMap {
 		this.blueSpawns = blueSpawns;
 	}
 
-	private Location getBlueFlagSpawn() {
+	public Location getBlueFlagSpawn() {
 		return blueFlagSpawn;
 	}
 
@@ -245,7 +245,7 @@ public class CodMap {
 		this.redCFlagSpawn = redCFlagSpawn;
 	}
 
-	private Location getRedFlagSpawn() {
+	public Location getRedFlagSpawn() {
 		return redFlagSpawn;
 	}
 

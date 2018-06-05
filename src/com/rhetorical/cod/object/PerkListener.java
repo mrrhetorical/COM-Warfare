@@ -11,15 +11,14 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
-import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import com.rhetorical.cod.GameManager;
 import com.rhetorical.cod.Main;
 
-@SuppressWarnings("deprecation")
 public class PerkListener implements Listener {
 
 	public PerkListener() {
@@ -94,8 +93,11 @@ public class PerkListener implements Listener {
 	}
 
 	@EventHandler
-	public void scavengerPickup(PlayerPickupItemEvent e) {
-		Player p = e.getPlayer();
+	public void scavengerPickup(EntityPickupItemEvent e) {
+		if (!(e.getEntity() instanceof Player))
+			return;
+
+		Player p = (Player) e.getEntity();
 		ItemStack i = e.getItem().getItemStack();
 
 		if (GameManager.isInMatch(p) && Main.loadManager.getCurrentLoadout(p).hasPerk(Perk.SCAVENGER) && i.getType().equals(Material.LAPIS_BLOCK)) {
@@ -178,7 +180,7 @@ public class PerkListener implements Listener {
 		};
 		
 		this.lastStandRunnables.put(p, br);
-		br.runTaskTimerAsynchronously(Main.getPlugin(), 0l, 10L);
+		br.runTaskTimerAsynchronously(Main.getPlugin(), 0L, 10L);
 	}
 	
 	private void cancelLastStand(Player p) {

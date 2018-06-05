@@ -115,6 +115,10 @@ public class ShopManager {
 	public void savePurchaseData(Player p) {
 
 		ArrayList<String> guns = new ArrayList<String>();
+		if (this.purchasedGuns == null) {
+			this.purchasedGuns = new HashMap<>();
+		}
+		this.purchasedGuns.computeIfAbsent(p, k -> new ArrayList<>());
 		for (CodGun gun : this.purchasedGuns.get(p)) {
 			guns.add(gun.getName());
 		}
@@ -122,6 +126,10 @@ public class ShopManager {
 		ShopFile.getData().set("Purchased.Guns." + p.getName(), guns);
 
 		ArrayList<String> weapons = new ArrayList<String>();
+		if (this.purchasedWeapons == null) {
+			this.purchasedWeapons = new HashMap<>();
+		}
+		this.purchasedWeapons.computeIfAbsent(p, k -> new ArrayList<>());
 		for (CodWeapon grenade : this.purchasedWeapons.get(p)) {
 			weapons.add(grenade.getName());
 		}
@@ -129,6 +137,7 @@ public class ShopManager {
 		ShopFile.getData().set("Purchased.Weapons." + p.getName(), weapons);
 
 		ArrayList<String> perks = new ArrayList<String>();
+		this.purchasedPerks.computeIfAbsent(p, k -> new ArrayList<>());
 		for (CodPerk perk : this.purchasedPerks.get(p)) {
 			perks.add(perk.getPerk().getName());
 		}

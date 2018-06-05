@@ -71,26 +71,8 @@ public class InventoryManager implements Listener {
 			}
 		}
 
-		if (i.equals(this.selectClassInventory.get(p))) {
-			return true;
-		}
+		return i.equals(this.selectClassInventory.get(p)) || i.equals(leaderboardInventory) || i.equals(personalStatistics.get(p)) || i.equals(mainShopInventory) || i.equals(Main.shopManager.gunShop.get(p)) || i.equals(Main.shopManager.weaponShop.get(p)) || i.equals(Main.shopManager.perkShop.get(p)) || i.equals(this.killStreakInventory.get(p));
 
-		if (i.equals(leaderboardInventory)) {
-			return true;
-		}
-
-		if (i.equals(personalStatistics.get(p)))
-			return true;
-
-		if (i.equals(mainShopInventory)) {
-			return true;
-		}
-
-		if (i.equals(Main.shopManager.gunShop.get(p)) || i.equals(Main.shopManager.weaponShop.get(p)) || i.equals(Main.shopManager.perkShop.get(p))) {
-			return true;
-		}
-
-		return i.equals(this.killStreakInventory.get(p));
 	}
 
 	public InventoryManager() {
@@ -468,6 +450,9 @@ public class InventoryManager implements Listener {
 		grenades.addAll(Main.shopManager.getTacticalWeapons());
 
 		for (CodWeapon grenade : grenades) {
+			if (grenade == null)
+				continue;
+
 			if (grenade.getType() == UnlockType.BOTH) {
 				if (Main.progManager.getLevel(p) >= grenade.getLevelUnlock()) {
 
@@ -726,10 +711,14 @@ public class InventoryManager implements Listener {
 		if (e.getInventory() == null)
 			return;
 
-		if (shouldCancelClick(e.getInventory(), p)) {
-			e.setCancelled(true);
-		} else {
-			return;
+		try {
+			if (shouldCancelClick(e.getInventory(), p)) {
+				e.setCancelled(true);
+			} else {
+				return;
+			}
+		} catch(Exception exception) {
+			Main.sendMessage(Main.cs, "§c Make sure that you have the default weapons and guns set!", Main.lang);
 		}
 
 		if (e.getCurrentItem() == null)
@@ -752,6 +741,7 @@ public class InventoryManager implements Listener {
 			} else if (e.getCurrentItem().equals(shopItem)) {
 				p.closeInventory();
 				p.openInventory(mainShopInventory);
+				setupShopInventories(p);
 			} else if (e.getCurrentItem().equals(combatRecord)) {
 				p.closeInventory();
 				openPersonalStatsMenu(p);
@@ -898,7 +888,7 @@ public class InventoryManager implements Listener {
 				}
 			}
 
-		} else if (e.getInventory().equals(Main.shopManager.gunShop.get(p))) {
+		} else if (Main.shopManager.gunShop.get(p) != null && e.getInventory().equals(Main.shopManager.gunShop.get(p))) {
 
 			Main.shopManager.loadPurchaseData(p);
 

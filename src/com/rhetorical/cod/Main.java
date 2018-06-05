@@ -1,9 +1,11 @@
 package com.rhetorical.cod;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-
+import com.rhetorical.cod.analytics.CollectAnalytics;
+import com.rhetorical.cod.files.*;
+import com.rhetorical.cod.inventories.InventoryManager;
+import com.rhetorical.cod.object.*;
+import com.rhetorical.tpp.McLang;
+import com.rhetorical.tpp.api.McTranslate;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -15,40 +17,22 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
-import com.rhetorical.cod.analytics.CollectAnalytics;
-import com.rhetorical.cod.files.ArenasFile;
-import com.rhetorical.cod.files.CreditsFile;
-import com.rhetorical.cod.files.GunsFile;
-import com.rhetorical.cod.files.KillstreaksFile;
-import com.rhetorical.cod.files.LoadoutsFile;
-import com.rhetorical.cod.files.ProgressionFile;
-import com.rhetorical.cod.files.ShopFile;
-import com.rhetorical.cod.files.StatsFile;
-import com.rhetorical.cod.inventories.InventoryManager;
-import com.rhetorical.cod.object.CodGun;
-import com.rhetorical.cod.object.CodMap;
-import com.rhetorical.cod.object.CodWeapon;
-import com.rhetorical.cod.object.GameInstance;
-import com.rhetorical.cod.object.Gamemode;
-import com.rhetorical.cod.object.GunType;
-import com.rhetorical.cod.object.KillStreakManager;
-import com.rhetorical.cod.object.Loadout;
-import com.rhetorical.cod.object.PerkListener;
-import com.rhetorical.cod.object.RankPerks;
-import com.rhetorical.cod.object.UnlockType;
-import com.rhetorical.cod.object.WeaponType;
-import com.rhetorical.tpp.McLang;
-import com.rhetorical.tpp.api.McTranslate;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Main extends JavaPlugin {
 
 	public static Plugin getPlugin() {
-		return Bukkit.getServer().getPluginManager().getPlugin("CallofMinecraftRemastered");
+		return Bukkit.getServer().getPluginManager().getPlugin("COM-Warfare");
 	}
 
 	public static String codPrefix = "§f§l[§r§6COM§f§l]§r ";
 	public static ConsoleCommandSender cs = Bukkit.getConsoleSender();
+
+	private static String bukkitVersion;
 
 	private static String sql_api_key;
 	private static String translate_api_key;
@@ -86,7 +70,9 @@ public class Main extends JavaPlugin {
 		
 		if (lang != McLang.EN)
 			lang = McLang.EN;
-		
+
+		bukkitVersion = Bukkit.getServer().getBukkitVersion();
+
 		Main.cs.sendMessage(Main.codPrefix + "§fChecking dependencies...");
 
 		DependencyManager dm = new DependencyManager();
@@ -799,6 +785,17 @@ public class Main extends JavaPlugin {
 		}
 
 		sendMessage(target, translatedMessage);
+	}
+
+	public static void sendTitle(Player p, String title, String subtitle) {
+		//TODO: Add translation capability.
+
+		p.sendTitle(title, subtitle, 10, 0, 10);
+	}
+
+	public static void sendActionBar(Player p, String message) {
+		//TODO: Implement
+		throw new NotImplementedException();
 	}
 
 	public static String getSQLApiKey() {
