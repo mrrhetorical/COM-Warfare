@@ -1,5 +1,5 @@
 name: COM-Warfare
-version: 2.1.1
+version: 2.1.0
 main: com.rhetorical.cod.Main
 description: Call of Duty Multiplayer recreated for use in Minecraft!
 commands:
