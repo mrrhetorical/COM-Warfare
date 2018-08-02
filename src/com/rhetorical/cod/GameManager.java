@@ -14,9 +14,9 @@ import com.rhetorical.cod.object.Gamemode;
 
 public class GameManager {
 
-	static ArrayList<GameInstance> RunningGames = new ArrayList<GameInstance>();
-	static ArrayList<CodMap> AddedMaps = new ArrayList<CodMap>();
-	static ArrayList<CodMap> UsedMaps = new ArrayList<CodMap>();
+	static ArrayList<GameInstance> RunningGames = new ArrayList<>();
+	static ArrayList<CodMap> AddedMaps = new ArrayList<>();
+	static ArrayList<CodMap> UsedMaps = new ArrayList<>();
 
 	@SuppressWarnings("unchecked")
 	static void loadMaps() {
@@ -31,16 +31,13 @@ public class GameManager {
 
 			m = new CodMap(name, gm);
 
-			m.setBlueAFlagSpawn((Location) ArenasFile.getData().get("Maps." + k + ".blueAFlagSpawn"));
-			m.setBlueBFlagSpawn((Location) ArenasFile.getData().get("Maps." + k + ".blueBFlagSpawn"));
-			m.setBlueCFlagSpawn((Location) ArenasFile.getData().get("Maps." + k + ".blueCFlagSpawn"));
+			m.setAFlagSpawn((Location) ArenasFile.getData().get("Maps." + k + ".AFlag"));
+			m.setBFlagSpawn((Location) ArenasFile.getData().get("Maps." + k + ".BFlag"));
+			m.setCFlagSpawn((Location) ArenasFile.getData().get("Maps." + k + ".CFlag"));
 			m.setBlueFlagSpawn((Location) ArenasFile.getData().get("Maps." + k + ".blueFlagSpawn"));
 			m.setBlueSpawns((ArrayList<Location>) ArenasFile.getData().get("Maps." + k + ".blueSpawns"));
 			m.setEnabled(ArenasFile.getData().getBoolean("Maps." + k + ".enabled"));
 			m.setPinkSpawns((ArrayList<Location>) ArenasFile.getData().get("Maps." + k + ".pinkSpawns"));
-			m.setRedAFlagSpawn((Location) ArenasFile.getData().get("Maps." + k + ".redAFlagSpawn"));
-			m.setRedBFlagSpawn((Location) ArenasFile.getData().get("Maps." + k + ".redBFlagSpawn"));
-			m.setRedCFlagSpawn((Location) ArenasFile.getData().get("Maps." + k + ".redCFlagSpawn"));
 			m.setRedFlagSpawn((Location) ArenasFile.getData().get("Maps." + k + ".redFlagSpawn"));
 			m.setRedSpawns((ArrayList<Location>) ArenasFile.getData().get("Maps." + k + ".redSpawns"));
 

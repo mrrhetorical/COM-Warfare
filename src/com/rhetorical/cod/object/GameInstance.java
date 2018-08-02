@@ -9,9 +9,7 @@ import org.bukkit.block.Banner;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
-import org.bukkit.entity.Item;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Projectile;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -28,6 +26,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 
 public class GameInstance implements Listener {
 
@@ -61,6 +60,10 @@ public class GameInstance implements Listener {
 
 	private Item redFlag;
 	private Item blueFlag;
+
+	private ArmorStand aFlag;
+	private ArmorStand bFlag;
+	private ArmorStand cFlag;
 
 	// Score management and game information system for FFA (Free for all)
 	private HashMap<Player, Integer> ffaPlayerScores = new HashMap<>();
@@ -408,6 +411,9 @@ public class GameInstance implements Listener {
 			StatHandler.saveStatData();
 		}
 
+		if (this.getGamemode() == Gamemode.DOM)
+			this.despawnDomFlags();
+
 		this.setState(GameState.STOPPING);
 
 		GameInstance game = this;
@@ -554,6 +560,9 @@ public class GameInstance implements Listener {
 			}
 		}
 
+		if (this.getGamemode().equals(Gamemode.DOM))
+			this.spawnDomFlags();
+
 		GameInstance game = this;
 
 		BukkitRunnable br = new BukkitRunnable() {
@@ -580,6 +589,10 @@ public class GameInstance implements Listener {
 				if (currentMap.getGamemode() != Gamemode.FFA) {
 					scoreBar.setTitle("§cRED: " + RedTeamScore + " §7«§f" + counter + "§r§7»" + " §9BLU: " + BlueTeamScore);
 				} else {
+
+					if (currentMap.getGamemode() == Gamemode.DOM) {
+						game.checkFlags();
+					}
 
 					Player highestScorer = Bukkit.getPlayer(getWinningTeam());
 
@@ -985,19 +998,7 @@ public class GameInstance implements Listener {
 		playerScores.put(victim, victimScore);
 	}
 
-	/*
-	 * 
-	 * GAMEMODE LISTENERS --------------------
-	 * 
-	 * Gamemode listeners contain all the listeners for each gamemode. What will be a part of this: Death listeners per gamemode (and kill), pick up object (for CTF and KC).
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 */
+	/* Gamemode Listeners */
 
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerHit(EntityDamageByEntityEvent e) {
@@ -1217,6 +1218,108 @@ public class GameInstance implements Listener {
 
 			redFlagHolder.getInventory().setHelmet(flag);
 		}
+	}
+
+	private void spawnDomFlags() {
+		if(!getGamemode().equals(Gamemode.DOM))
+			return;
+
+		Location aLoc = this.getMap().getAFlagSpawn();
+		Location bLoc = this.getMap().getBFlagSpawn();
+		Location cLoc = this.getMap().getCFlagSpawn();
+
+		if(aLoc == null || bLoc == null || cLoc == null) {
+			Main.cs.sendMessage(Main.codPrefix + "§The Alpha, Beta, or Charlie flag spawns have not been set for the current map in arena id " + this.getId() + ". The game will likely not work properly.");
+			return;
+		}
+
+		aFlag = aLoc.getWorld().spawn(aLoc, ArmorStand.class);
+
+		aFlag.setCustomName("Flag A");
+		aFlag.setCustomNameVisible(true);
+		aFlag.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 999999, 2));
+
+		bFlag = bLoc.getWorld().spawn(bLoc, ArmorStand.class);
+
+		bFlag.setCustomName("Flag B");
+		bFlag.setCustomNameVisible(true);
+		bFlag.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 999999, 2));
+
+		cFlag = cLoc.getWorld().spawn(cLoc, ArmorStand.class);
+
+		cFlag.setCustomName("Flag C");
+		cFlag.setCustomNameVisible(true);
+		cFlag.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 999999, 2));
+	}
+
+	private void despawnDomFlags() {
+		if (aFlag != null)
+			aFlag.remove();
+
+		if (bFlag != null)
+			bFlag.remove();
+
+		if (cFlag != null)
+			cFlag.remove();
+	}
+
+	private void checkFlags() {
+		if (!getGamemode().equals(Gamemode.DOM))
+			return;
+
+		List<Player> aPlayers = new ArrayList<>();
+		List<Player> bPlayers = new ArrayList<>();
+		List<Player> cPlayers = new ArrayList<>();
+
+		for(Entity e : aFlag.getNearbyEntities(10, 10, 10)) {
+			if (e instanceof Player) {
+				aPlayers.add(((Player) e));
+			}
+		}
+
+		for(Entity e : bFlag.getNearbyEntities(10, 10, 10)) {
+			if (e instanceof Player) {
+				bPlayers.add(((Player) e));
+			}
+		}
+
+		for(Entity e : cFlag.getNearbyEntities(10, 10, 10)) {
+			if (e instanceof Player) {
+				cPlayers.add(((Player) e));
+			}
+		}
+
+		for(int i = 0; i <= 2; i++) {
+			if(i == 0 && aPlayers.isEmpty())
+				continue;
+
+
+			int blue = 0;
+			int red = 0;
+
+			List<Player> check = new ArrayList<>();
+
+			if(i == 0)
+				check = aPlayers;
+			else if (i == 1)
+				check = bPlayers;
+			else if (i == 2)
+				check = cPlayers;
+
+			for(Player p : check) {
+				if (isOnBlueTeam(p))
+					blue++;
+				else if(isOnRedTeam(p))
+					red++;
+			}
+
+			if (red > blue) {
+				this.RedTeamScore++;
+			} else if (blue > red) {
+				this.BlueTeamScore++;
+			}
+		}
+
 	}
 
 	private void setTeamArmor(Player p, Color color) {

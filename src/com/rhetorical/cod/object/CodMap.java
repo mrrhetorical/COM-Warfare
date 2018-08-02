@@ -20,12 +20,9 @@ public class CodMap {
 	private ArrayList<Location> pinkSpawns = new ArrayList<>();
 	private Location redFlagSpawn;
 	private Location blueFlagSpawn;
-	private Location redAFlagSpawn;
-	private Location redBFlagSpawn;
-	private Location redCFlagSpawn;
-	private Location blueAFlagSpawn;
-	private Location blueBFlagSpawn;
-	private Location blueCFlagSpawn;
+	private Location Flag_A;
+	private Location Flag_B;
+	private Location Flag_C;
 	
 	
 	public CodMap(String name, Gamemode gm) {
@@ -40,18 +37,15 @@ public class CodMap {
 			if (ArenasFile.getData().getString("Maps." + k + ".name").equalsIgnoreCase(this.name)) break;
 		}
 		
-		ArenasFile.getData().set("Maps." + k + ".blueAFlagSpawn", getBlueAFlagSpawn());
-		ArenasFile.getData().set("Maps." + k + ".blueBFlagSpawn", getBlueBFlagSpawn());
-		ArenasFile.getData().set("Maps." + k + ".blueCFlagSpawn", getBlueCFlagSpawn());
+		ArenasFile.getData().set("Maps." + k + ".AFlag", getAFlagSpawn());
+		ArenasFile.getData().set("Maps." + k + ".BFlag", getBFlagSpawn());
+		ArenasFile.getData().set("Maps." + k + ".CFlag", getCFlagSpawn());
 		ArenasFile.getData().set("Maps." + k + ".blueFlagSpawn", getBlueFlagSpawn());
 		ArenasFile.getData().set("Maps." + k + ".blueSpawns", getBlueSpawns());
 		ArenasFile.getData().set("Maps." + k + ".enabled", isEnabled());
 		ArenasFile.getData().set("Maps." + k + ".gm", getGamemode().toString());
 		ArenasFile.getData().set("Maps." + k + ".name", this.name);
 		ArenasFile.getData().set("Maps." + k + ".pinkSpawns", getPinkSpawns());
-		ArenasFile.getData().set("Maps." + k + ".redAFlagSpawn", getRedAFlagSpawn());
-		ArenasFile.getData().set("Maps." + k + ".redBFlagSpawn", getRedBFlagSpawn());
-		ArenasFile.getData().set("Maps." + k + ".redCFlagSpawn", getRedCFlagSpawn());
 		ArenasFile.getData().set("Maps." + k + ".redFlagSpawn", getRedFlagSpawn());
 		ArenasFile.getData().set("Maps." + k + ".redSpawns", getRedSpawns());
 		ArenasFile.saveData();
@@ -173,30 +167,6 @@ public class CodMap {
 		this.enabled = enabled;
 	}
 
-	private Location getBlueAFlagSpawn() {
-		return blueAFlagSpawn;
-	}
-
-	public void setBlueAFlagSpawn(Location blueAFlagSpawn) {
-		this.blueAFlagSpawn = blueAFlagSpawn;
-	}
-
-	private Location getBlueBFlagSpawn() {
-		return blueBFlagSpawn;
-	}
-
-	public void setBlueBFlagSpawn(Location blueBFlagSpawn) {
-		this.blueBFlagSpawn = blueBFlagSpawn;
-	}
-
-	private Location getBlueCFlagSpawn() {
-		return blueCFlagSpawn;
-	}
-
-	public void setBlueCFlagSpawn(Location blueCFlagSpawn) {
-		this.blueCFlagSpawn = blueCFlagSpawn;
-	}
-
 	private ArrayList<Location> getBlueSpawns() {
 		return blueSpawns;
 	}
@@ -221,30 +191,6 @@ public class CodMap {
 		this.pinkSpawns = pinkSpawns;
 	}
 
-	private Location getRedBFlagSpawn() {
-		return redBFlagSpawn;
-	}
-
-	public void setRedBFlagSpawn(Location redBFlagSpawn) {
-		this.redBFlagSpawn = redBFlagSpawn;
-	}
-
-	private Location getRedAFlagSpawn() {
-		return redAFlagSpawn;
-	}
-
-	public void setRedAFlagSpawn(Location redAFlagSpawn) {
-		this.redAFlagSpawn = redAFlagSpawn;
-	}
-
-	private Location getRedCFlagSpawn() {
-		return redCFlagSpawn;
-	}
-
-	public void setRedCFlagSpawn(Location redCFlagSpawn) {
-		this.redCFlagSpawn = redCFlagSpawn;
-	}
-
 	public Location getRedFlagSpawn() {
 		return redFlagSpawn;
 	}
@@ -267,5 +213,31 @@ public class CodMap {
 
 	private void setGamemode(Gamemode gm) {
 		this.gm = gm;
+	}
+
+	public Location getAFlagSpawn() {
+		return this.Flag_A;
+	}
+
+	public void setAFlagSpawn(Location loc) {
+		this.Flag_A = loc;
+	}
+
+	public Location getBFlagSpawn() {
+		return this.Flag_B;
+
+	}
+
+
+	public void setBFlagSpawn(Location loc) {
+		this.Flag_B = loc;
+	}
+
+	public Location getCFlagSpawn() {
+		return this.Flag_C;
+	}
+
+	public void setCFlagSpawn(Location loc) {
+		this.Flag_C = loc;
 	}
 }

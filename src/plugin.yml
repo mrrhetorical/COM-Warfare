@@ -6,3 +6,9 @@ commands:
   cod:
     description: Base command for COM-Warfare.
     usage: /<command>
+  comr:
+    description: Base command for COM-Warfare.
+    usage: /<command>
+  com:
+    description: Base command for COM-Warfare.
+    usage: /<command>
