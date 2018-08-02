@@ -1,15 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module type="JAVA_MODULE" version="4">
   <component name="EclipseModuleManager">
-<<<<<<< HEAD
     <libelement value="jar://$USER_HOME$/IdeaProjects/External Lib/mctranslateplusplus.jar!/" />
     <libelement value="jar://$USER_HOME$/IdeaProjects/External Lib/mysqlapi.jar!/" />
     <libelement value="jar://$USER_HOME$/IdeaProjects/External Lib/spigot-1.12.2.jar!/" />
-=======
-    <libelement value="file://$USER_HOME$/Desktop/workspace/Dependencies/spigot-1.12.2.jar" />
-    <libelement value="file://$USER_HOME$/Desktop/workspace/Dependencies/mysqlapi.jar" />
-    <libelement value="file://$USER_HOME$/Desktop/workspace/Dependencies/mctranslatedependency.jar" />
->>>>>>> e6b35540e55ec145fcf4055c4a5a6e50ea6e5173
     <src_description expected_position="0">
       <src_folder value="file://$MODULE_DIR$/src" expected_position="0" />
     </src_description>
@@ -21,52 +15,24 @@
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
     </content>
     <orderEntry type="sourceFolder" forTests="false" />
-<<<<<<< HEAD
     <orderEntry type="inheritedJdk" />
     <orderEntry type="module-library" exported="">
       <library name="mctranslateplusplus.jar">
         <CLASSES>
           <root url="jar://$USER_HOME$/IdeaProjects/External Lib/mctranslateplusplus.jar!/" />
-=======
-    <orderEntry type="jdk" jdkName="1.8.0_60" jdkType="JavaSDK" />
-    <orderEntry type="module-library" exported="">
-      <library>
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/../Dependencies/mctranslatedependency.jar!/" />
->>>>>>> e6b35540e55ec145fcf4055c4a5a6e50ea6e5173
         </CLASSES>
         <JAVADOC />
         <SOURCES />
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
-<<<<<<< HEAD
       <library name="spigot-1.12.2.jar">
         <CLASSES>
           <root url="jar://$USER_HOME$/IdeaProjects/External Lib/spigot-1.12.2.jar!/" />
-=======
-      <library>
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/../Dependencies/mysqlapi.jar!/" />
->>>>>>> e6b35540e55ec145fcf4055c4a5a6e50ea6e5173
         </CLASSES>
         <JAVADOC />
         <SOURCES />
       </library>
     </orderEntry>
-<<<<<<< HEAD
-=======
-    <orderEntry type="module-library" exported="">
-      <library>
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/../Dependencies/spigot-1.12.2.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES>
-          <root url="jar://$MODULE_DIR$/../Dependencies/spigot-1.12.2.jar!/" />
-        </SOURCES>
-      </library>
-    </orderEntry>
->>>>>>> e6b35540e55ec145fcf4055c4a5a6e50ea6e5173
   </component>
 </module>

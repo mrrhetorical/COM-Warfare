@@ -77,6 +77,7 @@ public class CodGun extends CodWeapon {
 		GunsFile.getData().set("Guns." + gunType.toString() + "." + k + ".creditUnlock", this.creditUnlock);
 		GunsFile.saveData();
 		GunsFile.reloadData();
+		return;
 	}
 
 	public String getName() {
@@ -170,7 +171,7 @@ public class CodGun extends CodWeapon {
 		return gunType;
 	}
 
-	private void setGunType(GunType gunType) {
+	public void setGunType(GunType gunType) {
 		this.gunType = gunType;
 	}
 

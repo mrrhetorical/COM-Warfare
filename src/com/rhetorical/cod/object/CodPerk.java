@@ -37,7 +37,7 @@ public class CodPerk {
 		return i;
 	}
 
-	private void setItem(ItemStack item) {
+	public void setItem(ItemStack item) {
 		this.item = item;
 	}
 
@@ -45,7 +45,7 @@ public class CodPerk {
 		return slot;
 	}
 
-	private void setSlot(PerkSlot slot) {
+	public void setSlot(PerkSlot slot) {
 		this.slot = slot;
 	}
 
@@ -53,7 +53,7 @@ public class CodPerk {
 		return lore;
 	}
 
-	private void setLore(ArrayList<String> lore) {
+	public void setLore(ArrayList<String> lore) {
 		this.lore = lore;
 	}
 
@@ -61,7 +61,7 @@ public class CodPerk {
 		return cost;
 	}
 
-	private void setCost(int cost) {
+	public void setCost(int cost) {
 		this.cost = cost;
 	}
 }

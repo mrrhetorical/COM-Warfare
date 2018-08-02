@@ -20,11 +20,11 @@ public class PerkManager {
 	private CodPerk defaultTwo;
 	private CodPerk defaultThree;
 
-	PerkManager() {
+	public PerkManager() {
 		this.loadPerks();
 	}
 
-	private void loadPerks() {
+	public void loadPerks() {
 		for (int i = 0; Main.getPlugin().getConfig().contains("Perks." + i); i++) {
 			Perk perk;
 			try {
@@ -92,11 +92,11 @@ public class PerkManager {
 		return defaultTwo;
 	}
 
-	private void setDefaultTwo(CodPerk defaultTwo) {
+	public void setDefaultTwo(CodPerk defaultTwo) {
 		this.defaultTwo = defaultTwo;
 	}
 
-	CodPerk getDefaultPerk(PerkSlot slot) {
+	public CodPerk getDefaultPerk(PerkSlot slot) {
 
 		int s;
 
@@ -122,7 +122,8 @@ public class PerkManager {
 			int cost = Main.getPlugin().getConfig().getInt("Perks.default." + s + ".cost");
 			ArrayList<String> lore = (ArrayList<String>) Main.getPlugin().getConfig().getStringList("Perks.default." + s + ".lore");
 
-			return new CodPerk(name, perkItem, slot, lore, cost);
+			CodPerk perk = new CodPerk(name, perkItem, slot, lore, cost);
+			return perk;
 		} else {
 			Main.getPlugin().getConfig().set("Perks.default." + s + ".name", Perk.values()[s].toString());
 			Main.getPlugin().getConfig().set("Perks.default." + s + ".material", Material.APPLE.toString());
@@ -150,7 +151,7 @@ public class PerkManager {
 		return defaultThree;
 	}
 
-	private void setDefaultThree(CodPerk defaultThree) {
+	public void setDefaultThree(CodPerk defaultThree) {
 		this.defaultThree = defaultThree;
 	}
 
@@ -158,7 +159,7 @@ public class PerkManager {
 		return defaultOne;
 	}
 
-	private void setDefaultOne(CodPerk defaultOne) {
+	public void setDefaultOne(CodPerk defaultOne) {
 		this.defaultOne = defaultOne;
 	}
 }

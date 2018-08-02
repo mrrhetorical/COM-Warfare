@@ -2,9 +2,9 @@ package com.rhetorical.cod.object;
 
 public class RankPerks {
 	public final String name;
-	private int killCredits;
-	private double killExperience;
-	private int levelCredits;
+	public int killCredits;
+	public double killExperience;
+	public int levelCredits;
 
 	public RankPerks(String name, int killCredits, double killExperience, int levelCredits) {
 		this.name = name;
@@ -17,11 +17,11 @@ public class RankPerks {
 		return this.name;
 	}
 
-	int getKillCredits() {
+	public int getKillCredits() {
 		return this.killCredits;
 	}
 
-	double getKillExperience() {
+	public double getKillExperience() {
 		return this.killExperience;
 	}
 

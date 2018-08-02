@@ -11,10 +11,10 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 
 public class GunsFile {
-	private static GunsFile instance = new GunsFile();
-	private static Plugin p;
-	private static FileConfiguration guns;
-	private static File gfile;
+	static GunsFile instance = new GunsFile();
+	static Plugin p;
+	static FileConfiguration guns;
+	static File gfile;
 
 	public static GunsFile getInstance() {
 		return instance;

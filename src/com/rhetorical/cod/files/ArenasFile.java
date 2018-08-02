@@ -11,10 +11,10 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 
 public class ArenasFile {
-	private static ArenasFile instance = new ArenasFile();
-	private static Plugin p;
-	private static FileConfiguration arenas;
-	private static File afile;
+	static ArenasFile instance = new ArenasFile();
+	static Plugin p;
+	static FileConfiguration arenas;
+	static File afile;
 
 	public static ArenasFile getInstance() {
 		return instance;

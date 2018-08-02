@@ -1,8 +1,8 @@
-name: COM-Warfare
-version: 2.1.0
+name: CallofMinecraftRemastered
+version: 2.0.0
 main: com.rhetorical.cod.Main
-description: Call of Duty Multiplayer recreated for use in Minecraft!
+description: Call of Duty Multiplayer in Minecraft!
 commands:
   cod:
-    description: Base command for COM-Warfare.
-    usage: /<command>
+    description: Main command for COM Warfare
+    usage: /{command}

@@ -1,11 +1,9 @@
 package com.rhetorical.cod;
 
-import com.rhetorical.cod.analytics.CollectAnalytics;
-import com.rhetorical.cod.files.*;
-import com.rhetorical.cod.inventories.InventoryManager;
-import com.rhetorical.cod.object.*;
-import com.rhetorical.tpp.McLang;
-import com.rhetorical.tpp.api.McTranslate;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -17,25 +15,46 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
+import com.rhetorical.cod.analytics.CollectAnalytics;
+import com.rhetorical.cod.files.ArenasFile;
+import com.rhetorical.cod.files.CreditsFile;
+import com.rhetorical.cod.files.GunsFile;
+import com.rhetorical.cod.files.KillstreaksFile;
+import com.rhetorical.cod.files.LoadoutsFile;
+import com.rhetorical.cod.files.ProgressionFile;
+import com.rhetorical.cod.files.ShopFile;
+import com.rhetorical.cod.files.StatsFile;
+import com.rhetorical.cod.inventories.InventoryManager;
+import com.rhetorical.cod.object.CodGun;
+import com.rhetorical.cod.object.CodMap;
+import com.rhetorical.cod.object.CodWeapon;
+import com.rhetorical.cod.object.GameInstance;
+import com.rhetorical.cod.object.Gamemode;
+import com.rhetorical.cod.object.GunType;
+import com.rhetorical.cod.object.KillStreakManager;
+import com.rhetorical.cod.object.Loadout;
+import com.rhetorical.cod.object.PerkListener;
+import com.rhetorical.cod.object.RankPerks;
+import com.rhetorical.cod.object.UnlockType;
+import com.rhetorical.cod.object.WeaponType;
+import com.rhetorical.tpp.McLang;
+import com.rhetorical.tpp.api.McTranslate;
 
 public class Main extends JavaPlugin {
 
 	public static Plugin getPlugin() {
-		return Bukkit.getServer().getPluginManager().getPlugin("COM-Warfare");
+		return Bukkit.getServer().getPluginManager().getPlugin("CallofMinecraftRemastered");
 	}
 
 	public static String codPrefix = "§f§l[§r§6COM§f§l]§r ";
 	public static ConsoleCommandSender cs = Bukkit.getConsoleSender();
 
-	private static String bukkitVersion;
-
 	private static String sql_api_key;
 	private static String translate_api_key;
+
+	public static String bVersion;
+	private static String version;
 
 	public static ProgressionManager progManager;
 	public static LoadoutManager loadManager;
@@ -46,13 +65,8 @@ public class Main extends JavaPlugin {
 	public static KillStreakManager killstreakManager;
 
 	public static McLang lang;
-<<<<<<< HEAD
 	public static McTranslate translate;
 
-=======
-	private static McTranslate translate;
-	
->>>>>>> e6b35540e55ec145fcf4055c4a5a6e50ea6e5173
 	public static int minPlayers = 6;
 	public static int maxPlayers = 12;
 
@@ -66,7 +80,6 @@ public class Main extends JavaPlugin {
 	@Override
 	public void onEnable() {
 
-<<<<<<< HEAD
 		{
 			String bukkitVersion = Bukkit.getServer().getBukkitVersion();
 
@@ -98,42 +111,26 @@ public class Main extends JavaPlugin {
 
 		if (lang == null)
 			lang = McLang.EN;
-=======
-		try {
-			lang = McLang.valueOf(getPlugin().getConfig().getString("lang"));
-		} catch(Exception e) {
-			lang = McLang.EN;
-			cs.sendMessage(codPrefix + "§cCould not get the language from the config! Make sure you're using the right two letter abbreviation!");
-		}
-		
-		if (lang != McLang.EN)
-			lang = McLang.EN;
-
-		bukkitVersion = Bukkit.getServer().getBukkitVersion();
->>>>>>> e6b35540e55ec145fcf4055c4a5a6e50ea6e5173
 
 		Main.cs.sendMessage(Main.codPrefix + "§fChecking dependencies...");
 
 		DependencyManager dm = new DependencyManager();
 		if (!dm.checkDependencies()) {
-
-			/* Removed temporarily due to issues with downloading the file more than once. */
-//			if (getPlugin().getConfig().getBoolean("auto-download-dependency")) {
-//				Main.cs.sendMessage(Main.codPrefix + "§cOne or more dependencies were not found, will attempt to download them.");
-//				try {
-//					dm.downloadDependencies();
-//				} catch (Exception e) {
-//					Main.cs.sendMessage(Main.codPrefix + "§cCould not download dependencies! Make sure that the plugins folder can be written to!");
-//				}
-//			} else {
-//				Main.cs.sendMessage(Main.codPrefix + "§cCould not download dependencies! You must set the value for \"auto-download-dependency\" to 'true' in the config to automatically download them!");
-//			}
-			Main.cs.sendMessage("§6§l[CAUTION] §r§cNot all dependencies for COM-Warfare are installed! The plugin likely will not work as intended!");
+			if (getPlugin().getConfig().getBoolean("auto-download-dependency") == true) {
+				Main.cs.sendMessage(Main.codPrefix + "§cOne or more dependencies were not found, will attempt to download them.");
+				try {
+					dm.downloadDependencies();
+				} catch (Exception e) {
+					Main.cs.sendMessage(Main.codPrefix + "§cCould not download dependcies! Make sure that the plugins folder can be written to!");
+				}
+			} else {
+				Main.cs.sendMessage(Main.codPrefix + "§cCould not download dependencies! You must set the value for \"auto-download-depenencies\" to 'true' in the config to automatically download them!");
+			}
 		} else {
 			Main.cs.sendMessage(Main.codPrefix + "§aAll dependencies are installed!");
 		}
 
-		String version = getPlugin().getDescription().getVersion();
+		version = getPlugin().getDescription().getVersion();
 
 		CollectAnalytics.collectPlayerStats();
 
@@ -170,6 +167,8 @@ public class Main extends JavaPlugin {
 			CreditManager.loadCredits(p);
 		}
 
+		bVersion = Bukkit.getServer().getBukkitVersion();
+
 		minPlayers = getPlugin().getConfig().getInt("minPlayers");
 		lobbyLoc = (Location) getPlugin().getConfig().get("com.lobby");
 		defaultHealth = getPlugin().getConfig().getDouble("defaultHealth");
@@ -201,6 +200,8 @@ public class Main extends JavaPlugin {
 			i++;
 		}
 
+		Main.cs.sendMessage(Main.codPrefix + "§a§lCOM-Warfare version §r§f" + version + "§r§a§l is now up and running!");
+
 		Main.cs.sendMessage(Main.codPrefix + "There are " + i + " ranks registered!");
 		for (RankPerks r : Main.serverRanks) {
 			sendMessage(cs, "Rank registered: " + r.getName(), lang);
@@ -228,7 +229,6 @@ public class Main extends JavaPlugin {
 			tryTranslateAgain.runTaskLater(getPlugin(), 400L);
 		}
 
-		Main.cs.sendMessage(Main.codPrefix + "§a§lCOM-Warfare version §r§f" + version + "§r§a§l is now up and running!");
 	}
 
 	@Override
@@ -412,6 +412,7 @@ public class Main extends JavaPlugin {
 					k++;
 					if (GameManager.UsedMaps.contains(m)) {
 						sendMessage(p, Integer.toString(k) + " - §6§lName: §r§a" + m.getName() + " §r§6§lGamemode: §r§c" + m.getGamemode().toString() + " §r§6§lStatus: §r§4IN USE", lang);
+						continue;
 					} else {
 						if (m.isEnabled()) {
 							sendMessage(p, Integer.toString(k) + " - §6§lName: §r§a" + m.getName() + " §r§6§lGamemode: §r§c" + m.getGamemode().toString() + " §r§6§lStatus: §r§aAVAILABLE", lang);
@@ -419,6 +420,8 @@ public class Main extends JavaPlugin {
 						}
 
 						sendMessage(p, Integer.toString(k) + " - §6§lName: §r§a" + m.getName() + " §r§6§lGamemode: §r§c" + m.getGamemode().toString() + " §r§6§lStatus: §r§aUNFINISHED", lang);
+
+						continue;
 					}
 				}
 				return true;
@@ -627,7 +630,7 @@ public class Main extends JavaPlugin {
 		return true;
 	}
 
-	private void createWeapon(Player p, String[] args) {
+	public void createWeapon(Player p, String[] args) {
 		if (args.length == 7) {
 			String name = args[1];
 			WeaponType grenadeType;
@@ -692,15 +695,16 @@ public class Main extends JavaPlugin {
 				Main.shopManager.setTacticalWeapons(tacList);
 				break;
 			default:
-				break;
+				return;
 			}
 
 		} else {
 			sendMessage(p, Main.codPrefix + "§cIncorrect usage! Correct usage: '/cod createWeapon (name) (Lethal/Tactical) (Unlock Type: level/credit/both) (Grenade Material) (Level Unlock) (Cost)'");
+			return;
 		}
 	}
 
-	private void createGun(Player p, String[] args) {
+	public void createGun(Player p, String[] args) {
 		if (args.length == 9) {
 			String name = args[1];
 
@@ -807,6 +811,7 @@ public class Main extends JavaPlugin {
 
 	private static void sendMessage(CommandSender target, String message) {
 		target.sendMessage(message);
+		return;
 	}
 
 	public static void sendMessage(CommandSender target, String message, Object targetLang) {
@@ -826,17 +831,6 @@ public class Main extends JavaPlugin {
 		}
 
 		sendMessage(target, translatedMessage);
-	}
-
-	public static void sendTitle(Player p, String title, String subtitle) {
-		//TODO: Add translation capability.
-
-		p.sendTitle(title, subtitle, 10, 0, 10);
-	}
-
-	public static void sendActionBar(Player p, String message) {
-		//TODO: Implement
-		throw new NotImplementedException();
 	}
 
 	public static String getSQLApiKey() {
