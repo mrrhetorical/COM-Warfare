@@ -66,7 +66,7 @@ public class Main extends JavaPlugin {
 
 	public static McLang lang;
 	public static McTranslate translate;
-
+	
 	public static int minPlayers = 6;
 	public static int maxPlayers = 12;
 
@@ -79,39 +79,12 @@ public class Main extends JavaPlugin {
 
 	@Override
 	public void onEnable() {
-
-		{
-			String bukkitVersion = Bukkit.getServer().getBukkitVersion();
-
-			if (bukkitVersion.startsWith("1.9") || bukkitVersion.startsWith("1.10") || bukkitVersion.startsWith("1.11") || bukkitVersion.startsWith("1.12")) {
-				System.out.println(Main.codPrefix + "Your server version is up to date for COM-Warfare!");
-			} else if (bukkitVersion.startsWith("1.13")) {
-				System.out.println(Main.codPrefix + "Your server version is too new for COM-Warfare!");
-			} else if (bukkitVersion.startsWith("1.8")) {
-				System.out.println(Main.codPrefix + "Your server version is up to date for COM-Warfare, but some functionality may not be there while using 1.8!");
-			} else if (bukkitVersion.startsWith("1.7") ||bukkitVersion.startsWith("1.6") || bukkitVersion.startsWith("1.5") || bukkitVersion.startsWith("1.4")) {
-				System.out.println(Main.codPrefix + "Your server version is not up to date for COM-Warfare, do not expect anything to work.");
-			} else {
-				System.out.println(Main.codPrefix + "Server version unknown. Cannot predit whether COM-Warfare will work properly or not.");
-			}
-			
-			
-			String javaVersion = System.getProperty("java.version");
-			
-			if (javaVersion.startsWith("1.5") || javaVersion.startsWith("1.6")) {
-				System.out.println(Main.codPrefix + "Java 1.5 - 1.6 detected; COM-Warfare may not function properly.");
-			} else if (javaVersion.startsWith("1.7") || javaVersion.startsWith("1.8")) {
-				System.out.println(Main.codPrefix + "Your java version is up to date for COM-Warfare!");
-			}
-			
-			
-		}
-
+		
 		lang = McLang.valueOf(getPlugin().getConfig().getString("lang"));
-
+		
 		if (lang == null)
 			lang = McLang.EN;
-
+		
 		Main.cs.sendMessage(Main.codPrefix + "§fChecking dependencies...");
 
 		DependencyManager dm = new DependencyManager();
@@ -206,31 +179,31 @@ public class Main extends JavaPlugin {
 		for (RankPerks r : Main.serverRanks) {
 			sendMessage(cs, "Rank registered: " + r.getName(), lang);
 		}
-
+		
 		try {
 			translate = new McTranslate(Main.getPlugin(), Main.translate_api_key);
-		} catch (Exception e) {
-			Main.sendMessage(cs, Main.codPrefix + "§cCould not start McTranslate++ API!");
+		} catch(Exception e) {
+			Main.sendMessage(cs,  Main.codPrefix + "§cCould not start McTranslate++ API!");
 			Main.sendMessage(cs, Main.codPrefix + "§cAttempting to reconnect to McTranslate++ API in 20 seconds!");
 			BukkitRunnable tryTranslateAgain = new BukkitRunnable() {
 				public void run() {
 					try {
 						translate = new McTranslate(Main.getPlugin(), Main.translate_api_key);
-					} catch (Exception e) {
+					} catch(Exception e) {
 						Main.sendMessage(Main.cs, Main.codPrefix + "§cCould not start McTranslate++ API!");
 						return;
 					}
-
+					
 					Main.sendMessage(Main.cs, Main.codPrefix + "§aSuccessfully started McTranslate++ API!");
-
+					
 				}
 			};
-
+			
 			tryTranslateAgain.runTaskLater(getPlugin(), 400L);
 		}
 
 	}
-
+	
 	@Override
 	public void onDisable() {
 		if (GameManager.AddedMaps.size() != 0) {
