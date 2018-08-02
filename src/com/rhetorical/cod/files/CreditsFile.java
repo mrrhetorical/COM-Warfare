@@ -11,10 +11,10 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 
 public class CreditsFile {
-	private static CreditsFile instance = new CreditsFile();
-	private static Plugin p;
-	private static FileConfiguration credits;
-	private static File cfile;
+	static CreditsFile instance = new CreditsFile();
+	static Plugin p;
+	static FileConfiguration credits;
+	static File cfile;
 
 	public static CreditsFile getInstance() {
 		return instance;

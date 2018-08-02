@@ -9,9 +9,9 @@ import org.bukkit.entity.Player;
 import com.rhetorical.cod.files.CreditsFile;
 
 public class CreditManager {
-	private static HashMap<Player, Integer> creditMap = new HashMap<Player, Integer>();
+	public static HashMap<Player, Integer> creditMap = new HashMap<Player, Integer>();
 
-	static void loadCredits(Player p) {
+	public static void loadCredits(Player p) {
 		for (int k = 0; CreditsFile.getData().contains("Credits.players." + k); k++) {
 			if (p.getName().equals(CreditsFile.getData().get("Credits.players." + k + ".player"))) {
 
@@ -23,7 +23,7 @@ public class CreditManager {
 		}
 	}
 
-	private static void saveCredits(Player p) {
+	public static void saveCredits(Player p) {
 		int k = 0;
 		for (k = 0; CreditsFile.getData().contains("Credits.players." + k); k++) {
 			if (p.getName().equals(CreditsFile.getData().get("Credits.players." + k + ".player"))) {
@@ -48,9 +48,9 @@ public class CreditManager {
 		}
 	}
 	
-	static int getCredits(String name) {
+	public static int getCredits(String name) {
 		
-		if (Bukkit.getPlayer(name) != null) {
+		if (Bukkit.getPlayer(name) instanceof OfflinePlayer) {
 			return -1;
 		}
 		
@@ -67,15 +67,17 @@ public class CreditManager {
 	public static void setCredits(Player p, int amt) {
 		creditMap.put(p, amt);
 		saveCredits(p);
+		return;
 	}
 	
-	static void setCredits(String name, int amt) {
-		if (Bukkit.getPlayer(name) != null) {
+	public static void setCredits(String name, int amt) {
+		if (Bukkit.getPlayer(name) instanceof OfflinePlayer) {
 			return;
 		}
 		
 		creditMap.put(Bukkit.getPlayer(name), amt);
 		saveCredits(Bukkit.getPlayer(name));
+		return;
 	}
 	
 	

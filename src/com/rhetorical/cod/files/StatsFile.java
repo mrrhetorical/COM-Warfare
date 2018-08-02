@@ -11,10 +11,10 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 
 public class StatsFile {
-	private static StatsFile instance = new StatsFile();
-	private static Plugin p;
-	private static FileConfiguration stats;
-	private static File sfile;
+	static StatsFile instance = new StatsFile();
+	static Plugin p;
+	static FileConfiguration stats;
+	static File sfile;
 
 	public static StatsFile getInstance() {
 		return instance;

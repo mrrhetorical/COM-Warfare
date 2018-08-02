@@ -66,6 +66,7 @@ public class CodWeapon {
 		GunsFile.getData().set("Weapons." + weaponType.toString() + "." + k + ".creditUnlock", this.creditUnlock);
 		GunsFile.saveData();
 		GunsFile.reloadData();
+		return;
 	}
 	
 	public String getName() {

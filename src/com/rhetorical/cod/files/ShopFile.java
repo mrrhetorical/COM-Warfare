@@ -11,10 +11,10 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 
 public class ShopFile {
-	private static ShopFile instance = new ShopFile();
-	private static Plugin p;
-	private static FileConfiguration shop;
-	private static File sfile;
+	static ShopFile instance = new ShopFile();
+	static Plugin p;
+	static FileConfiguration shop;
+	static File sfile;
 
 	public static ShopFile getInstance() {
 		return instance;
