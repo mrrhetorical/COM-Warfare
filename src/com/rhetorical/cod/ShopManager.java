@@ -19,18 +19,18 @@ import com.rhetorical.cod.object.WeaponType;
 
 public class ShopManager {
 
-	private ArrayList<CodGun> primaryGuns = new ArrayList<CodGun>();
-	private ArrayList<CodGun> secondaryGuns = new ArrayList<CodGun>();
-	private ArrayList<CodWeapon> lethalWeapons = new ArrayList<CodWeapon>();
-	private ArrayList<CodWeapon> tacticalWeapons = new ArrayList<CodWeapon>();
+	private ArrayList<CodGun> primaryGuns = new ArrayList<>();
+	private ArrayList<CodGun> secondaryGuns = new ArrayList<>();
+	private ArrayList<CodWeapon> lethalWeapons = new ArrayList<>();
+	private ArrayList<CodWeapon> tacticalWeapons = new ArrayList<>();
 
-	public HashMap<Player, ArrayList<CodGun>> purchasedGuns = new HashMap<Player, ArrayList<CodGun>>();
-	public HashMap<Player, ArrayList<CodWeapon>> purchasedWeapons = new HashMap<Player, ArrayList<CodWeapon>>();
-	public HashMap<Player, ArrayList<CodPerk>> purchasedPerks = new HashMap<Player, ArrayList<CodPerk>>();
+	public HashMap<Player, ArrayList<CodGun>> purchasedGuns = new HashMap<>();
+	public HashMap<Player, ArrayList<CodWeapon>> purchasedWeapons = new HashMap<>();
+	public HashMap<Player, ArrayList<CodPerk>> purchasedPerks = new HashMap<>();
 
-	public HashMap<Player, Inventory> gunShop = new HashMap<Player, Inventory>();
-	public HashMap<Player, Inventory> weaponShop = new HashMap<Player, Inventory>();
-	public HashMap<Player, Inventory> perkShop = new HashMap<Player, Inventory>();
+	public HashMap<Player, Inventory> gunShop = new HashMap<>();
+	public HashMap<Player, Inventory> weaponShop = new HashMap<>();
+	public HashMap<Player, Inventory> perkShop = new HashMap<>();
 
 	ShopManager() {
 		this.loadGuns();
@@ -114,7 +114,7 @@ public class ShopManager {
 
 	public void savePurchaseData(Player p) {
 
-		ArrayList<String> guns = new ArrayList<String>();
+		ArrayList<String> guns = new ArrayList<>();
 		if (this.purchasedGuns == null) {
 			this.purchasedGuns = new HashMap<>();
 		}
@@ -125,7 +125,7 @@ public class ShopManager {
 
 		ShopFile.getData().set("Purchased.Guns." + p.getName(), guns);
 
-		ArrayList<String> weapons = new ArrayList<String>();
+		ArrayList<String> weapons = new ArrayList<>();
 		if (this.purchasedWeapons == null) {
 			this.purchasedWeapons = new HashMap<>();
 		}
@@ -136,7 +136,7 @@ public class ShopManager {
 
 		ShopFile.getData().set("Purchased.Weapons." + p.getName(), weapons);
 
-		ArrayList<String> perks = new ArrayList<String>();
+		ArrayList<String> perks = new ArrayList<>();
 		this.purchasedPerks.computeIfAbsent(p, k -> new ArrayList<>());
 		for (CodPerk perk : this.purchasedPerks.get(p)) {
 			perks.add(perk.getPerk().getName());
@@ -157,9 +157,9 @@ public class ShopManager {
 	@SuppressWarnings("unchecked")
 	public void loadPurchaseData(Player p) {
 
-		ArrayList<CodGun> guns = new ArrayList<CodGun>();
-		ArrayList<CodWeapon> grenades = new ArrayList<CodWeapon>();
-		ArrayList<CodPerk> perks = new ArrayList<CodPerk>();
+		ArrayList<CodGun> guns = new ArrayList<>();
+		ArrayList<CodWeapon> grenades = new ArrayList<>();
+		ArrayList<CodPerk> perks = new ArrayList<>();
 
 		ArrayList<String> gunList = (ArrayList<String>) ShopFile.getData().get("Purchased.Guns." + p.getName());
 
@@ -325,7 +325,7 @@ public class ShopManager {
 		Main.sendMessage(p, Main.codPrefix + "§aEquip it after the match!", Main.lang);
 	}
 
-	private void unlockGrenade(HashMap<Player, ArrayList<CodWeapon>> purchasedWeapons, Player p, CodWeapon grenade) {
+	private void unlockGrenade(Player p, CodWeapon grenade) {
 		if (grenade.getType() == UnlockType.LEVEL) {
 
 			HashMap<Player, ArrayList<CodWeapon>> purchased = Main.shopManager.getPurchasedWeapons();
@@ -397,11 +397,11 @@ public class ShopManager {
 		}
 
 		for (CodWeapon grenade : Main.shopManager.lethalWeapons) {
-			unlockGrenade(purchasedWeapons, p, grenade);
+			unlockGrenade(p, grenade);
 		}
 
 		for (CodWeapon grenade : Main.shopManager.tacticalWeapons) {
-			unlockGrenade(purchasedWeapons, p, grenade);
+			unlockGrenade(p, grenade);
 		}
 
 	}

@@ -75,9 +75,9 @@ public class GameManager {
 			}
 		}
 
-		TreeMap<Integer, GameInstance> possibleMatches = new TreeMap<Integer, GameInstance>();
+		TreeMap<Integer, GameInstance> possibleMatches = new TreeMap<>();
 
-		GameInstance newGame = null;
+		GameInstance newGame;
 
 		Main.sendMessage(Main.cs, Main.codPrefix + "§7Searching for match. . .", Main.lang);
 		for (GameInstance i : RunningGames) {
@@ -104,7 +104,7 @@ public class GameManager {
 				return false;
 			}
 
-			newGame = new GameInstance(new ArrayList<Player>(), map);
+			newGame = new GameInstance(new ArrayList<>(), map);
 
 			RunningGames.add(newGame);
 
@@ -193,8 +193,7 @@ public class GameManager {
 		if (UsedMaps.contains(i.getMap())) {
 			UsedMaps.remove(i.getMap());
 		}
-		
-		i = null;
+
 		System.gc();
 	}
 

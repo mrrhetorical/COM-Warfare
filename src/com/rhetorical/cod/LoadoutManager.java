@@ -26,15 +26,6 @@ public class LoadoutManager {
 	private HashMap<Player, ArrayList<Loadout>> playerLoadouts = new HashMap<Player, ArrayList<Loadout>>();
 	private HashMap<Player, Loadout> activeLoadouts = new HashMap<Player, Loadout>();
 
-	// private ArrayList<CodGun> primaryGuns = new ArrayList<CodGun>();
-	// private ArrayList<CodGun> secondaryGuns = new ArrayList<CodGun>();
-	// private ArrayList<CodWeapon> LethalWeapons = new ArrayList<CodWeapon>();
-	// private ArrayList<CodWeapon> tacticalWeapons = new
-	// ArrayList<CodWeapon>();
-	// private ArrayList<Perk> primaryPerks = new ArrayList<Perk>();
-	// private ArrayList<Perk> secondaryPerks = new ArrayList<Perk>();
-	// private ArrayList<Perk> tertiaryPerks = new ArrayList<Perk>();
-
 	public ItemStack knife;
 
 	LoadoutManager(HashMap<Player, ArrayList<Loadout>> pL) {

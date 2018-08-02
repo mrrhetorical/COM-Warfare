@@ -37,7 +37,6 @@ public class GameInstance implements Listener {
 	public GameInstance gm = this;
 	private int gameTime;
 	private int lobbyTime;
-	public String fancyTime;
 
 	private GameState state;
 
@@ -49,21 +48,14 @@ public class GameInstance implements Listener {
 
 	private boolean forceStarted = false;
 
-	private final int maxScore_TDM;
-	private final int maxScore_RSB;
-	private final int maxScore_FFA;
-	private final int maxScore_DOM;
-	private final int maxScore_CTF;
-	private final int maxScore_KC;
-	private final int maxScore_GUN;
-	private final int maxScore_OITC;
+	private final int maxScore_TDM, maxScore_RSB, maxScore_FFA, maxScore_DOM, maxScore_CTF, maxScore_KC, maxScore_GUN,  maxScore_OITC;
 
 	private Item redFlag;
 	private Item blueFlag;
 
-	private ArmorStand aFlag;
-	private ArmorStand bFlag;
-	private ArmorStand cFlag;
+	private ArmorStand aFlag, bFlag, cFlag;
+
+	private int aFlagCapture, bFlagCapture, cFlagCapture; // Range: -10 to 10. Lower is red, higher is blue.
 
 	// Score management and game information system for FFA (Free for all)
 	private HashMap<Player, Integer> ffaPlayerScores = new HashMap<>();
@@ -1261,6 +1253,10 @@ public class GameInstance implements Listener {
 
 		if (cFlag != null)
 			cFlag.remove();
+
+		aFlagCapture = 0;
+		bFlagCapture = 0;
+		cFlagCapture = 0;
 	}
 
 	private void checkFlags() {
@@ -1313,10 +1309,87 @@ public class GameInstance implements Listener {
 					red++;
 			}
 
-			if (red > blue) {
-				this.RedTeamScore++;
-			} else if (blue > red) {
-				this.BlueTeamScore++;
+			if (i == 0) {
+				if (aFlagCapture == 10 && blue >= red) {
+					BlueTeamScore++;
+				} else if (aFlagCapture == -10 && red >= blue) {
+					RedTeamScore++;
+				} else {
+					aFlagCapture += blue - red;
+
+					if (aFlagCapture > 10)
+						aFlagCapture = 10;
+					else if (aFlagCapture < -10)
+						aFlagCapture = -10;
+
+					if (aFlagCapture == 10) {
+						for (Player p : this.getPlayers()) {
+							p.sendMessage("§eThe §9BLUE §eteam has captured flag A!");
+						}
+					} else if (aFlagCapture == -10) {
+						for (Player p : this.getPlayers()) {
+							p.sendMessage("§eThe §cRED §eteam has captured flag A!");
+						}
+					} else if (aFlagCapture == 0) {
+						for (Player p : this.getPlayers()) {
+							p.sendMessage("§eFlag A has been Neutralized!");
+						}
+					}
+				}
+			} else if (i == 1) {
+				if (bFlagCapture == 10 && blue >= red) {
+					BlueTeamScore++;
+				} else if (bFlagCapture == -10 && red >= blue) {
+					RedTeamScore++;
+				} else {
+					bFlagCapture += blue - red;
+
+					if (bFlagCapture > 10)
+						bFlagCapture = 10;
+					else if (bFlagCapture < -10)
+						bFlagCapture = -10;
+
+					if (bFlagCapture == 10) {
+						for (Player p : this.getPlayers()) {
+							p.sendMessage("§eThe §9BLUE §eteam has captured flag B!");
+						}
+					} else if (bFlagCapture == -10) {
+						for (Player p : this.getPlayers()) {
+							p.sendMessage("§eThe §cRED §eteam has captured flag B!");
+						}
+					} else if (bFlagCapture == 0) {
+						for (Player p : this.getPlayers()) {
+							p.sendMessage("§eFlag B has been Neutralized!");
+						}
+					}
+				}
+			} else if (i == 2) {
+				if (cFlagCapture == 10 && blue >= red) {
+					BlueTeamScore++;
+				} else if (cFlagCapture == -10 && red >= blue) {
+					RedTeamScore++;
+				} else {
+					cFlagCapture += blue - red;
+
+					if (cFlagCapture > 10)
+						cFlagCapture = 10;
+					else if (cFlagCapture < -10)
+						cFlagCapture = -10;
+
+					if (cFlagCapture == 10) {
+						for (Player p : this.getPlayers()) {
+							p.sendMessage("§eThe §9BLUE §eteam has captured flag C!");
+						}
+					} else if (cFlagCapture == -10) {
+						for (Player p : this.getPlayers()) {
+							p.sendMessage("§eThe §cRED §eteam has captured flag C!");
+						}
+					} else if (cFlagCapture == 0) {
+						for (Player p : this.getPlayers()) {
+							p.sendMessage("§eFlag C has been Neutralized!");
+						}
+					}
+				}
 			}
 		}
 

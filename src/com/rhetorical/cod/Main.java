@@ -77,16 +77,19 @@ public class Main extends JavaPlugin {
 
 		DependencyManager dm = new DependencyManager();
 		if (!dm.checkDependencies()) {
-			if (getPlugin().getConfig().getBoolean("auto-download-dependency")) {
-				Main.cs.sendMessage(Main.codPrefix + "§cOne or more dependencies were not found, will attempt to download them.");
-				try {
-					dm.downloadDependencies();
-				} catch (Exception e) {
-					Main.cs.sendMessage(Main.codPrefix + "§cCould not download dependcies! Make sure that the plugins folder can be written to!");
-				}
-			} else {
-				Main.cs.sendMessage(Main.codPrefix + "§cCould not download dependencies! You must set the value for \"auto-download-depenencies\" to 'true' in the config to automatically download them!");
-			}
+
+			/* Removed temporarily due to issues with downloading the file more than once. */
+//			if (getPlugin().getConfig().getBoolean("auto-download-dependency")) {
+//				Main.cs.sendMessage(Main.codPrefix + "§cOne or more dependencies were not found, will attempt to download them.");
+//				try {
+//					dm.downloadDependencies();
+//				} catch (Exception e) {
+//					Main.cs.sendMessage(Main.codPrefix + "§cCould not download dependencies! Make sure that the plugins folder can be written to!");
+//				}
+//			} else {
+//				Main.cs.sendMessage(Main.codPrefix + "§cCould not download dependencies! You must set the value for \"auto-download-dependency\" to 'true' in the config to automatically download them!");
+//			}
+			Main.cs.sendMessage("§6§l[CAUTION] §r§cNot all dependencies for COM-Warfare are installed! The plugin likely will not work as intended!");
 		} else {
 			Main.cs.sendMessage(Main.codPrefix + "§aAll dependencies are installed!");
 		}
@@ -159,8 +162,6 @@ public class Main extends JavaPlugin {
 			i++;
 		}
 
-		Main.cs.sendMessage(Main.codPrefix + "§a§lCOM-Warfare version §r§f" + version + "§r§a§l is now up and running!");
-
 		Main.cs.sendMessage(Main.codPrefix + "There are " + i + " ranks registered!");
 		for (RankPerks r : Main.serverRanks) {
 			sendMessage(cs, "Rank registered: " + r.getName(), lang);
@@ -188,6 +189,7 @@ public class Main extends JavaPlugin {
 			tryTranslateAgain.runTaskLater(getPlugin(), 400L);
 		}
 
+		Main.cs.sendMessage(Main.codPrefix + "§a§lCOM-Warfare version §r§f" + version + "§r§a§l is now up and running!");
 	}
 	
 	@Override
