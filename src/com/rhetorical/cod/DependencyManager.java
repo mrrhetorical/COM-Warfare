@@ -8,9 +8,9 @@ import java.nio.channels.ReadableByteChannel;
 
 import org.bukkit.Bukkit;
 
-public class DependencyManager {
+class DependencyManager {
 
-	public boolean checkDependencies() {
+	boolean checkDependencies() {
 		boolean hasDependencies = true;
 		if (Bukkit.getServer().getPluginManager().getPlugin("McTranslatePlusPlus") == null || Bukkit.getServer().getPluginManager().getPlugin("mySQL-API") == null) {
 			hasDependencies = false;
@@ -18,7 +18,7 @@ public class DependencyManager {
 		return hasDependencies;
 	}
 
-	public void downloadDependencies() throws IOException {
+	void downloadDependencies() throws IOException {
 		if (Bukkit.getServer().getPluginManager().getPlugin("McTranslatePlusPlus") == null) {
 			Main.cs.sendMessage(Main.codPrefix + "§aStarting download of \"McTranslate++\" jar.");
 			URL download = new URL("https://www.dropbox.com/s/oaaazjgkfdpq4eq/mctranslateplusplus.jar?dl=1");

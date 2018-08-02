@@ -87,7 +87,6 @@ public class Listeners implements Listener {
 	public void onBlockBreak(BlockBreakEvent e) {
 		if (GameManager.isInMatch(e.getPlayer())) {
 			e.setCancelled(true);
-			return;
 		}
 	}
 	

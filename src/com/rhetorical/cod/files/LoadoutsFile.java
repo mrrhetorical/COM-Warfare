@@ -11,10 +11,10 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 
 public class LoadoutsFile {
-	static LoadoutsFile instance = new LoadoutsFile();
-	static Plugin p;
-	static FileConfiguration loadouts;
-	static File lfile;
+	private static LoadoutsFile instance = new LoadoutsFile();
+	private static Plugin p;
+	private static FileConfiguration loadouts;
+	private static File lfile;
 
 	public static LoadoutsFile getInstance() {
 		return instance;

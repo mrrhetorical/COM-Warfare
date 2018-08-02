@@ -11,10 +11,10 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 
 public class KillstreaksFile {
-	static KillstreaksFile instance = new KillstreaksFile();
-	static Plugin p;
-	static FileConfiguration killstreaks;
-	static File kfile;
+	private static KillstreaksFile instance = new KillstreaksFile();
+	private static Plugin p;
+	private static FileConfiguration killstreaks;
+	private static File kfile;
 
 	public static KillstreaksFile getInstance() {
 		return instance;

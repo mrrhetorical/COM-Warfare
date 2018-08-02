@@ -11,10 +11,10 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 
 public class ProgressionFile {
-	static ProgressionFile instance = new ProgressionFile();
-	static Plugin p;
-	static FileConfiguration progression;
-	static File pfile;
+	private static ProgressionFile instance = new ProgressionFile();
+	private static Plugin p;
+	private static FileConfiguration progression;
+	private static File pfile;
 
 	public static ProgressionFile getInstance() {
 		return instance;

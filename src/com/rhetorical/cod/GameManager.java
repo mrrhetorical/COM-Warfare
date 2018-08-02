@@ -14,12 +14,12 @@ import com.rhetorical.cod.object.Gamemode;
 
 public class GameManager {
 
-	public static ArrayList<GameInstance> RunningGames = new ArrayList<GameInstance>();
-	public static ArrayList<CodMap> AddedMaps = new ArrayList<CodMap>();
-	public static ArrayList<CodMap> UsedMaps = new ArrayList<CodMap>();
-	
+	static ArrayList<GameInstance> RunningGames = new ArrayList<>();
+	static ArrayList<CodMap> AddedMaps = new ArrayList<>();
+	static ArrayList<CodMap> UsedMaps = new ArrayList<>();
+
 	@SuppressWarnings("unchecked")
-	public static void loadMaps() {
+	static void loadMaps() {
 		AddedMaps.clear();
 		int k = 0;
 		while (ArenasFile.getData().contains("Maps." + k)) {
@@ -31,16 +31,13 @@ public class GameManager {
 
 			m = new CodMap(name, gm);
 
-			m.setBlueAFlagSpawn((Location) ArenasFile.getData().get("Maps." + k + ".blueAFlagSpawn"));
-			m.setBlueBFlagSpawn((Location) ArenasFile.getData().get("Maps." + k + ".blueBFlagSpawn"));
-			m.setBlueCFlagSpawn((Location) ArenasFile.getData().get("Maps." + k + ".blueCFlagSpawn"));
+			m.setAFlagSpawn((Location) ArenasFile.getData().get("Maps." + k + ".AFlag"));
+			m.setBFlagSpawn((Location) ArenasFile.getData().get("Maps." + k + ".BFlag"));
+			m.setCFlagSpawn((Location) ArenasFile.getData().get("Maps." + k + ".CFlag"));
 			m.setBlueFlagSpawn((Location) ArenasFile.getData().get("Maps." + k + ".blueFlagSpawn"));
 			m.setBlueSpawns((ArrayList<Location>) ArenasFile.getData().get("Maps." + k + ".blueSpawns"));
 			m.setEnabled(ArenasFile.getData().getBoolean("Maps." + k + ".enabled"));
 			m.setPinkSpawns((ArrayList<Location>) ArenasFile.getData().get("Maps." + k + ".pinkSpawns"));
-			m.setRedAFlagSpawn((Location) ArenasFile.getData().get("Maps." + k + ".redAFlagSpawn"));
-			m.setRedBFlagSpawn((Location) ArenasFile.getData().get("Maps." + k + ".redBFlagSpawn"));
-			m.setRedCFlagSpawn((Location) ArenasFile.getData().get("Maps." + k + ".redCFlagSpawn"));
 			m.setRedFlagSpawn((Location) ArenasFile.getData().get("Maps." + k + ".redFlagSpawn"));
 			m.setRedSpawns((ArrayList<Location>) ArenasFile.getData().get("Maps." + k + ".redSpawns"));
 
@@ -78,9 +75,9 @@ public class GameManager {
 			}
 		}
 
-		TreeMap<Integer, GameInstance> possibleMatches = new TreeMap<Integer, GameInstance>();
+		TreeMap<Integer, GameInstance> possibleMatches = new TreeMap<>();
 
-		GameInstance newGame = null;
+		GameInstance newGame;
 
 		Main.sendMessage(Main.cs, Main.codPrefix + "§7Searching for match. . .", Main.lang);
 		for (GameInstance i : RunningGames) {
@@ -107,7 +104,7 @@ public class GameManager {
 				return false;
 			}
 
-			newGame = new GameInstance(new ArrayList<Player>(), map);
+			newGame = new GameInstance(new ArrayList<>(), map);
 
 			RunningGames.add(newGame);
 
@@ -129,7 +126,7 @@ public class GameManager {
 		// Found match!
 	}
 
-	public static void leaveMatch(Player p) {
+	static void leaveMatch(Player p) {
 		for (GameInstance i : RunningGames) {
 			if (i.getPlayers().contains(p)) {
 				i.removePlayer(p);
@@ -155,7 +152,7 @@ public class GameManager {
 
 	}
 	
-	public static GameInstance getMatchWhichContains(Player p) {
+	static GameInstance getMatchWhichContains(Player p) {
 		for (GameInstance game : RunningGames) {
 			if(game.getPlayers().contains(p)) {
 				return game;
@@ -196,10 +193,8 @@ public class GameManager {
 		if (UsedMaps.contains(i.getMap())) {
 			UsedMaps.remove(i.getMap());
 		}
-		
-		i = null;
+
 		System.gc();
-		return;
 	}
 
 }
