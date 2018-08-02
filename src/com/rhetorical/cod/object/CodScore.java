@@ -13,7 +13,7 @@ public class CodScore {
 	private int killStreak;
 	private double score;
 
-	public CodScore(Player p) {
+	CodScore(Player p) {
 		this.owner = p;
 		this.deaths = 0;
 		this.kills = 0;
@@ -25,19 +25,19 @@ public class CodScore {
 		return this.owner;
 	}
 	
-	public int getDeaths() {
+	int getDeaths() {
 		return this.deaths;
 	}
 
-	public void setDeaths(int deaths) {
+	void setDeaths(int deaths) {
 		this.deaths = deaths;
 	}
 
-	public int getKills() {
+	int getKills() {
 		return this.kills;
 	}
 
-	public void addKill() {
+	void addKill() {
 		this.kills++;
 		StatHandler.addKill(owner);
 	}
@@ -46,15 +46,15 @@ public class CodScore {
 		this.kills = kills;
 	}
 	
-	public int getKillstreak() {
+	int getKillstreak() {
 		return this.killStreak;
 	}
 
-	public void resetKillstreak() {
+	void resetKillstreak() {
 		this.killStreak = 0;
 	}
 
-	public void addKillstreak() {
+	void addKillstreak() {
 		this.killStreak++;
 	}
 	
@@ -66,7 +66,7 @@ public class CodScore {
 		this.score = score;
 	}
 	
-	public void addScore(double toAdd) {
+	void addScore(double toAdd) {
 		this.score += toAdd;
 	}
 	

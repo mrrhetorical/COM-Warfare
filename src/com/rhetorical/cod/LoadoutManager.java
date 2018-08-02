@@ -26,18 +26,9 @@ public class LoadoutManager {
 	private HashMap<Player, ArrayList<Loadout>> playerLoadouts = new HashMap<Player, ArrayList<Loadout>>();
 	private HashMap<Player, Loadout> activeLoadouts = new HashMap<Player, Loadout>();
 
-	// private ArrayList<CodGun> primaryGuns = new ArrayList<CodGun>();
-	// private ArrayList<CodGun> secondaryGuns = new ArrayList<CodGun>();
-	// private ArrayList<CodWeapon> LethalWeapons = new ArrayList<CodWeapon>();
-	// private ArrayList<CodWeapon> tacticalWeapons = new
-	// ArrayList<CodWeapon>();
-	// private ArrayList<Perk> primaryPerks = new ArrayList<Perk>();
-	// private ArrayList<Perk> secondaryPerks = new ArrayList<Perk>();
-	// private ArrayList<Perk> tertiaryPerks = new ArrayList<Perk>();
-
 	public ItemStack knife;
 
-	public LoadoutManager(HashMap<Player, ArrayList<Loadout>> pL) {
+	LoadoutManager(HashMap<Player, ArrayList<Loadout>> pL) {
 		this.playerLoadouts = pL;
 		for (Player p : Bukkit.getOnlinePlayers()) {
 			allowedClasses.put(p, getAllowedClasses(p));
@@ -151,7 +142,7 @@ public class LoadoutManager {
 				classes++;
 				break;
 			default:
-				continue;
+				break;
 			}
 		}
 
@@ -210,9 +201,7 @@ public class LoadoutManager {
 		UnlockType type = UnlockType.valueOf(GunsFile.getData().getString("Weapons.LETHAL.default.unlockType"));
 		ItemStack weapon = GunsFile.getData().getItemStack("Weapons.LETHAL.default.item");
 
-		CodWeapon grenade = new CodWeapon(weaponName, WeaponType.LETHAL, type, weapon, 0);
-
-		return grenade;
+		return new CodWeapon(weaponName, WeaponType.LETHAL, type, weapon, 0);
 	}
 
 	public CodWeapon getDefaultTactical() {
@@ -227,9 +216,7 @@ public class LoadoutManager {
 		UnlockType type = UnlockType.valueOf(GunsFile.getData().getString("Weapons.TACTICAL.default.unlockType"));
 		ItemStack weapon = GunsFile.getData().getItemStack("Weapons.TACTICAL.default.item");
 
-		CodWeapon grenade = new CodWeapon(weaponName, WeaponType.TACTICAL, type, weapon, 0);
-
-		return grenade;
+		return new CodWeapon(weaponName, WeaponType.TACTICAL, type, weapon, 0);
 	}
 
 	public boolean load(Player p) {
@@ -373,7 +360,7 @@ public class LoadoutManager {
 
 	public void save(Player p) {
 
-		if (getLoadouts(p).equals(null)) {
+		if (getLoadouts(p) == null) {
 			return;
 		}
 
@@ -415,16 +402,13 @@ public class LoadoutManager {
 	}
 
 	public Loadout getActiveLoadout(Player p) {
-		if (this.activeLoadouts.get(p) == null) {
-			this.activeLoadouts.put(p, this.getLoadouts(p).get(0));
-		}
+		this.activeLoadouts.computeIfAbsent(p, k -> this.getLoadouts(p).get(0));
 
 		return this.activeLoadouts.get(p);
 	}
 
 	public void setActiveLoadout(Player p, Loadout loadout) {
 		this.activeLoadouts.put(p, loadout);
-		return;
 	}
 
 	public CodGun getRandomPrimary() {

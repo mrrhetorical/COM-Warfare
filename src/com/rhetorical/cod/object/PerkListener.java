@@ -11,15 +11,14 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
-import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import com.rhetorical.cod.GameManager;
 import com.rhetorical.cod.Main;
 
-@SuppressWarnings("deprecation")
 public class PerkListener implements Listener {
 
 	public PerkListener() {
@@ -94,8 +93,11 @@ public class PerkListener implements Listener {
 	}
 
 	@EventHandler
-	public void scavengerPickup(PlayerPickupItemEvent e) {
-		Player p = e.getPlayer();
+	public void scavengerPickup(EntityPickupItemEvent e) {
+		if (!(e.getEntity() instanceof Player))
+			return;
+
+		Player p = (Player) e.getEntity();
 		ItemStack i = e.getItem().getItemStack();
 
 		if (GameManager.isInMatch(p) && Main.loadManager.getCurrentLoadout(p).hasPerk(Perk.SCAVENGER) && i.getType().equals(Material.LAPIS_BLOCK)) {
@@ -120,7 +122,6 @@ public class PerkListener implements Listener {
 				return;
 			if (Main.loadManager.getCurrentLoadout((Player) e.getDamager()).hasPerk(Perk.STOPPING_POWER)) {
 				e.setDamage(e.getDamage() * 1.2D);
-				return;
 			}
 		}
 	}
@@ -132,7 +133,6 @@ public class PerkListener implements Listener {
 				return;
 			if (Main.loadManager.getCurrentLoadout((Player) e.getEntity()).hasPerk(Perk.JUGGERNAUT)) {
 				e.setDamage(e.getDamage() / 1.2D);
-				return;
 			}
 		}
 	}
@@ -146,15 +146,14 @@ public class PerkListener implements Listener {
 			
 			if (Main.loadManager.getCurrentLoadout((Player) e.getDamager()).hasPerk(Perk.COMMANDO)) {
 				e.setDamage(200D);
-				return;
-			}	
+			}
 			
 		}
 	}
 	
-	public HashMap<Player, BukkitRunnable> lastStandRunnables = new HashMap<Player, BukkitRunnable>();
+	private HashMap<Player, BukkitRunnable> lastStandRunnables = new HashMap<Player, BukkitRunnable>();
 	
-	public void lastStand(Player p, GameInstance i) {
+	void lastStand(Player p, GameInstance i) {
 		
 		i.health.reset(p);
 		i.health.damage(p, i.health.defaultHealth * 0.8D);
@@ -181,14 +180,13 @@ public class PerkListener implements Listener {
 		};
 		
 		this.lastStandRunnables.put(p, br);
-		br.runTaskTimerAsynchronously(Main.getPlugin(), 0l, 10L);
+		br.runTaskTimerAsynchronously(Main.getPlugin(), 0L, 10L);
 	}
 	
-	public void cancelLastStand(Player p) {
+	private void cancelLastStand(Player p) {
 		if (lastStandRunnables.keySet().contains(p)) {
 			lastStandRunnables.get(p).cancel();
 			lastStandRunnables.remove(p);
-			return;
 		}
 	}
 }

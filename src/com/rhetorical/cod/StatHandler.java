@@ -19,7 +19,6 @@ public class StatHandler {
 
 		StatsFile.getData().set(p.getName() + ".kills", kills);
 		StatHandler.addPlayerToLeaderboardList(p.getName());
-		return;
 	}
 
 	public static void addDeath(Player p) {
@@ -32,10 +31,9 @@ public class StatHandler {
 		deaths++;
 		StatsFile.getData().set(p.getName() + ".deaths", deaths);
 		StatHandler.addPlayerToLeaderboardList(p.getName());
-		return;
 	}
 
-	public static void addExperience(Player p, double experience) {
+	static void addExperience(Player p, double experience) {
 		if (!StatsFile.getData().contains(p.getName() + ".experience")) {
 			StatsFile.getData().set(p.getName() + ".experience", 0D);
 		}
@@ -46,7 +44,6 @@ public class StatHandler {
 
 		StatsFile.getData().set(p.getName() + ".experience", totalExperience);
 		StatHandler.addPlayerToLeaderboardList(p.getName());
-		return;
 	}
 
 	public static void removeExperience(Player p, double experience) {
@@ -59,7 +56,6 @@ public class StatHandler {
 		totalExperience -= experience;
 		StatsFile.getData().set(p.getName() + ".experience", totalExperience);
 		StatHandler.addPlayerToLeaderboardList(p.getName());
-		return;
 	}
 
 	public static void removeKill(Player p) {
@@ -77,7 +73,6 @@ public class StatHandler {
 
 		StatsFile.getData().set(p.getName() + ".kills", kills);
 		StatHandler.addPlayerToLeaderboardList(p.getName());
-		return;
 	}
 
 	public static void removeDeath(Player p) {
@@ -95,10 +90,9 @@ public class StatHandler {
 
 		StatsFile.getData().set(p.getName() + ".deaths", deaths);
 		StatHandler.addPlayerToLeaderboardList(p.getName());
-		return;
 	}
 
-	public static void addPlayerToLeaderboardList(String pName) {
+	private static void addPlayerToLeaderboardList(String pName) {
 
 		int k = 0;
 
@@ -112,7 +106,6 @@ public class StatHandler {
 		StatsFile.getData().set("Leaderboard." + k + ".name", pName);
 		StatsFile.saveData();
 		StatsFile.reloadData();
-		return;
 	}
 
 	public static ArrayList<String> getLeaderboardList() {
@@ -159,6 +152,5 @@ public class StatHandler {
 	public static void saveStatData() {
 		StatsFile.saveData();
 		StatsFile.reloadData();
-		return;
 	}
 }

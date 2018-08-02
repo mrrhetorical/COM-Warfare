@@ -62,7 +62,7 @@ public class KillStreakManager {
 		nukeItem.setItemMeta(nukeMeta);
 	}
 
-	public void kill(Player p, Player killer) {
+	void kill(Player p, Player killer) {
 		if (!killstreakMap.containsKey(p))
 			killstreakMap.put(p, 0);
 
@@ -76,7 +76,7 @@ public class KillStreakManager {
 		checkStreaks(killer);
 	}
 
-	public void checkStreaks(Player p) {
+	private void checkStreaks(Player p) {
 		KillStreak[] streaks = playerKillstreaks.get(p);
 
 		for (KillStreak s : streaks) {
@@ -119,7 +119,7 @@ public class KillStreakManager {
 		return false;
 	}
 
-	public void streaksAfterDeath(Player p) {
+	void streaksAfterDeath(Player p) {
 		if (availableKillstreaks.containsKey(p)) {
 			for (KillStreak k : availableKillstreaks.get(p)) {
 				p.getInventory().addItem(k.getKillstreakItem());
@@ -127,7 +127,7 @@ public class KillStreakManager {
 		}
 	}
 
-	public void loadStreaks(Player p) {
+	void loadStreaks(Player p) {
 		if (!KillstreaksFile.getData().contains("Killstreaks." + p.getName())) {
 			this.saveStreaks(p);
 			KillStreak[] killStreaks = {};
@@ -158,7 +158,7 @@ public class KillStreakManager {
 		this.playerKillstreaks.put(p, killStreaks);
 	}
 
-	public void saveStreaks(Player p) {
+	private void saveStreaks(Player p) {
 		if (!this.playerKillstreaks.containsKey(p)) {
 			String[] streaks = { "UAV", "COUNTER_UAV", "NUKE" };
 			KillstreaksFile.getData().set("Killstreaks." + p.getName() + ".streaks", streaks);
