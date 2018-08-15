@@ -43,8 +43,8 @@ public class Main extends JavaPlugin {
 	public static PerkListener perkListener;
 	public static KillStreakManager killstreakManager;
 
-	public static McLang lang;
-	private static McTranslate translate;
+	public static Object lang;
+	private static Object translate;
 	
 	public static int minPlayers = 6;
 	public static int maxPlayers = 12;
@@ -59,19 +59,6 @@ public class Main extends JavaPlugin {
 	@Override
 	public void onEnable() {
 
-		if (getPlugin().getConfig().getString("lang").equalsIgnoreCase("none")) {
-			lang = McLang.EN;
-		} else {
-			try {
-				lang = McLang.valueOf(getPlugin().getConfig().getString("lang"));
-			} catch (Exception e) {
-				lang = McLang.EN;
-				cs.sendMessage(codPrefix + "§cCould not get the language from the config! Make sure you're using the right two letter abbreviation!");
-			}
-
-			if (lang != McLang.EN)
-				lang = McLang.EN;
-		}
 		String bukkitVersion = Bukkit.getServer().getBukkitVersion();
 
 		if (!bukkitVersion.startsWith("1.13")) {
@@ -88,13 +75,32 @@ public class Main extends JavaPlugin {
 					dm.downloadDependencies();
 				} catch (Exception e) {
 					Main.cs.sendMessage(Main.codPrefix + "§cCould not download dependencies! Make sure that the plugins folder can be written to!");
+					Main.cs.sendMessage("§l§f[§6§lCAUTION§r§f] §r§cNot all dependencies for COM-Warfare are installed! The plugin likely will not work as intended!");
 				}
 			} else {
 				Main.cs.sendMessage(Main.codPrefix + "§cCould not download dependencies! You must set the value for \"auto-download-dependency\" to 'true' in the config to automatically download them!");
+				Main.cs.sendMessage("§l§f[§6§lCAUTION§r§f] §r§cNot all dependencies for COM-Warfare are installed! The plugin likely will not work as intended!");
 			}
-			Main.cs.sendMessage("§l§f[§6§lCAUTION§r§f] §r§cNot all dependencies for COM-Warfare are installed! The plugin likely will not work as intended!");
 		} else {
 			Main.cs.sendMessage(Main.codPrefix + "§aAll dependencies are installed!");
+		}
+
+		try {
+			if (getPlugin().getConfig().getString("lang").equalsIgnoreCase("none")) {
+				lang = McLang.EN;
+			} else {
+				try {
+					lang = McLang.valueOf(getPlugin().getConfig().getString("lang"));
+				} catch (Exception e) {
+					lang = McLang.EN;
+					cs.sendMessage(codPrefix + "§cCould not get the language from the config! Make sure you're using the right two letter abbreviation!");
+				}
+
+				if (lang != McLang.EN)
+					lang = McLang.EN;
+			}
+		} catch(Exception classException) {
+			Main.cs.sendMessage(Main.codPrefix + "§cMcTranslate++ Doesn't seem to be installed? If you have 'auto-download-dependencies' turned on, it will automatically install, and after installing, you should restart the server!");
 		}
 
 		String version = getPlugin().getDescription().getVersion();
@@ -167,14 +173,13 @@ public class Main extends JavaPlugin {
 
 		Main.cs.sendMessage(Main.codPrefix + "There are " + i + " ranks registered!");
 		for (RankPerks r : Main.serverRanks) {
-			sendMessage(cs, "Rank registered: " + r.getName(), lang);
+			sendMessage(cs, Main.codPrefix + "Rank registered: " + r.getName(), lang);
 		}
 		
 		try {
 			translate = new McTranslate(Main.getPlugin(), Main.translate_api_key);
 		} catch(Exception e) {
-			Main.sendMessage(cs,  Main.codPrefix + "§cCould not start McTranslate++ API!");
-			Main.sendMessage(cs, Main.codPrefix + "§cAttempting to reconnect to McTranslate++ API in 20 seconds!");
+			Main.sendMessage(cs, Main.codPrefix + "§fAttempting to reconnect to McTranslate++ API...");
 			BukkitRunnable tryTranslateAgain = new BukkitRunnable() {
 				public void run() {
 					try {
@@ -185,16 +190,17 @@ public class Main extends JavaPlugin {
 					}
 					
 					Main.sendMessage(Main.cs, Main.codPrefix + "§aSuccessfully started McTranslate++ API!");
+					this.cancel();
 					
 				}
 			};
 			
-			tryTranslateAgain.runTaskLater(getPlugin(), 400L);
+			tryTranslateAgain.runTaskTimer(getPlugin(), 200L, 200L);
 		}
 
 		Main.cs.sendMessage(Main.codPrefix + "§a§lCOM-Warfare version §r§f" + version + "§r§a§l is now up and running!");
 	}
-	
+
 	@Override
 	public void onDisable() {
 		if (GameManager.AddedMaps.size() != 0) {
@@ -837,7 +843,7 @@ public class Main extends JavaPlugin {
 		String translatedMessage;
 
 		try {
-			translatedMessage = translate.translateRuntime(message, McLang.EN, (McLang) targetLang);
+			translatedMessage = ((McTranslate)translate).translateRuntime(message, McLang.EN, (McLang) targetLang);
 		} catch (Exception e) {
 			sendMessage(target, message);
 			return;
