@@ -202,7 +202,7 @@ public class InventoryManager implements Listener {
 
 		mainInventory.setItem(9, shopItem);
 
-		ItemStack gunItem = new ItemStack(Material.WOOD_HOE);
+		ItemStack gunItem = new ItemStack(Material.WOODEN_HOE);
 		ItemMeta gunMeta = gunItem.getItemMeta();
 		gunMeta.setDisplayName("§9Gun Shop");
 		ArrayList<String> gunLore = new ArrayList<String>();
@@ -259,7 +259,7 @@ public class InventoryManager implements Listener {
 
 			Loadout loadout = Main.loadManager.getLoadouts(p).get(i);
 
-			ItemStack header = new ItemStack(Material.WORKBENCH);
+			ItemStack header = new ItemStack(Material.CRAFTING_TABLE);
 			ItemMeta headerMeta = header.getItemMeta();
 			headerMeta.setDisplayName(loadout.getName());
 			ArrayList<String> headerLore = new ArrayList<String>();
@@ -577,7 +577,7 @@ public class InventoryManager implements Listener {
 		HashMap<String, ItemStack> leaderboardOrder = new HashMap<String, ItemStack>();
 
 		for (String name : pls) {
-			ItemStack player = new ItemStack(Material.SKULL_ITEM);
+			ItemStack player = new ItemStack(Material.SKELETON_SKULL);
 			ItemMeta playerMeta = player.getItemMeta();
 			playerMeta.setDisplayName("§f§lPlayer: " + name);
 
@@ -645,7 +645,7 @@ public class InventoryManager implements Listener {
 		killsMeta.setDisplayName("§a§lKills: §r§f" + totalKills);
 		kills.setItemMeta(killsMeta);
 
-		ItemStack deaths = new ItemStack(Material.SKULL_ITEM);
+		ItemStack deaths = new ItemStack(Material.SKELETON_SKULL);
 		ItemMeta deathsMeta = deaths.getItemMeta();
 		deathsMeta.setDisplayName("§c§lDeaths: §r§f" + totalDeaths);
 		deaths.setItemMeta(deathsMeta);

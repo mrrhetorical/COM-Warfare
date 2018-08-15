@@ -130,7 +130,7 @@ public class KillStreakManager {
 	void loadStreaks(Player p) {
 		if (!KillstreaksFile.getData().contains("Killstreaks." + p.getName())) {
 			this.saveStreaks(p);
-			KillStreak[] killStreaks = {};
+			KillStreak[] killStreaks = new KillStreak[3];
 			killStreaks[0] = (KillStreak.UAV);
 			killStreaks[1] = (KillStreak.COUNTER_UAV);
 			killStreaks[2] = (KillStreak.NUKE);
@@ -140,8 +140,8 @@ public class KillStreakManager {
 
 		List<String> streaks = KillstreaksFile.getData().getStringList("Killstreaks." + p.getName() + ".streaks");
 
-		KillStreak[] killStreaks = {};
-		int i = 0;
+		KillStreak[] killStreaks = new KillStreak[streaks.size()];
+		int i = -1;
 		for (String s : streaks) {
 			i++;
 			KillStreak ks;

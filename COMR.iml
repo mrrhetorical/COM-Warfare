@@ -15,33 +15,33 @@
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
     </content>
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="jdk" jdkName="1.8.0_60" jdkType="JavaSDK" />
-    <orderEntry type="module-library" exported="">
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="module-library" scope="PROVIDED">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/../Dependencies/mctranslatedependency.jar!/" />
+          <root url="jar://$USER_HOME$/IdeaProjects/External Lib/mysqlapi.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="module-library" exported="">
+    <orderEntry type="module-library" scope="PROVIDED">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/../Dependencies/mysqlapi.jar!/" />
+          <root url="jar://$USER_HOME$/IdeaProjects/External Lib/mctranslateplusplus.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="module-library" exported="">
+    <orderEntry type="module-library" scope="PROVIDED">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/../Dependencies/spigot-1.12.2.jar!/" />
+          <root url="jar://$USER_HOME$/IdeaProjects/External Lib/spigot-1.13.0.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES>
-          <root url="jar://$MODULE_DIR$/../Dependencies/spigot-1.12.2.jar!/" />
+          <root url="jar://$USER_HOME$/IdeaProjects/External Lib/spigot-1.13.0.jar!/" />
         </SOURCES>
       </library>
     </orderEntry>

@@ -34,7 +34,6 @@ public class GameInstance implements Listener {
 
 	private ArrayList<Player> players = new ArrayList<>();
 	private CodMap currentMap;
-	public GameInstance gm = this;
 	private int gameTime;
 	private int lobbyTime;
 
@@ -280,15 +279,13 @@ public class GameInstance implements Listener {
 	private void setupFlags(boolean red, boolean blue) {
 		if (red) {
 			Location spawn = this.currentMap.getRedFlagSpawn();
-			ItemStack flag = new ItemStack(Material.STANDING_BANNER);
-			((Banner) flag).setBaseColor(DyeColor.RED);
+			ItemStack flag = new ItemStack(Material.RED_BANNER);
 			redFlag = spawn.getWorld().dropItem(spawn, flag);
 		}
 
 		if (blue) {
 			Location spawn = this.currentMap.getBlueFlagSpawn();
-			ItemStack flag = new ItemStack(Material.STANDING_BANNER);
-			((Banner) flag).setBaseColor(DyeColor.BLUE);
+			ItemStack flag = new ItemStack(Material.BLUE_BANNER);
 			blueFlag = spawn.getWorld().dropItem(spawn, flag);
 		}
 	}
@@ -477,7 +474,7 @@ public class GameInstance implements Listener {
 			}
 		};
 
-		br.runTaskTimerAsynchronously(Main.getPlugin(), 0L, 20L);
+		br.runTaskTimer(Main.getPlugin(), 0L, 20L);
 	}
 
 	private void startLobbyTimer(int time) {
@@ -534,7 +531,7 @@ public class GameInstance implements Listener {
 			}
 		};
 
-		br.runTaskTimerAsynchronously(Main.getPlugin(), 0L, 20L);
+		br.runTaskTimer(Main.getPlugin(), 0L, 20L);
 	}
 
 	private void startGameTimer(int time) {
@@ -552,8 +549,9 @@ public class GameInstance implements Listener {
 			}
 		}
 
-		if (this.getGamemode().equals(Gamemode.DOM))
+		if (this.getGamemode().equals(Gamemode.DOM)) {
 			this.spawnDomFlags();
+		}
 
 		GameInstance game = this;
 
@@ -670,7 +668,7 @@ public class GameInstance implements Listener {
 
 		};
 
-		br.runTaskTimerAsynchronously(Main.getPlugin(), 0L, 20L);
+		br.runTaskTimer(Main.getPlugin(), 0L, 20L);
 	}
 
 	private void endGameByScore(BukkitRunnable runnable) {
@@ -1023,7 +1021,7 @@ public class GameInstance implements Listener {
 
 		ItemStack heldWeapon = attacker.getInventory().getItemInMainHand();
 
-		if (heldWeapon.getType() == Material.DIAMOND_SWORD || heldWeapon.getType() == Material.GOLD_SWORD || heldWeapon.getType() == Material.IRON_SWORD || heldWeapon.getType() == Material.STONE_SWORD || heldWeapon.getType() == Material.WOOD_SWORD) {
+		if (heldWeapon.getType() == Material.DIAMOND_SWORD || heldWeapon.getType() == Material.GOLDEN_SWORD || heldWeapon.getType() == Material.IRON_SWORD || heldWeapon.getType() == Material.STONE_SWORD || heldWeapon.getType() == Material.WOODEN_SWORD) {
 			damage = Main.defaultHealth;
 		} else {
 			damage = Math.round(Main.defaultHealth / 4);
@@ -1197,16 +1195,14 @@ public class GameInstance implements Listener {
 		if (blueFlagHolder != null) {
 
 
-			ItemStack flag = new ItemStack(Material.STANDING_BANNER);
-			((Banner) flag).setBaseColor(DyeColor.RED);
+			ItemStack flag = new ItemStack(Material.RED_BANNER);
 
 			blueFlagHolder.getInventory().setHelmet(flag);
 		}
 
 		if(redFlagHolder != null) {
 
-			ItemStack flag = new ItemStack(Material.STANDING_BANNER);
-			((Banner) flag).setBaseColor(DyeColor.BLUE);
+			ItemStack flag = new ItemStack(Material.BLUE_BANNER);
 
 			redFlagHolder.getInventory().setHelmet(flag);
 		}
@@ -1221,27 +1217,34 @@ public class GameInstance implements Listener {
 		Location cLoc = this.getMap().getCFlagSpawn();
 
 		if(aLoc == null || bLoc == null || cLoc == null) {
-			Main.cs.sendMessage(Main.codPrefix + "§The Alpha, Beta, or Charlie flag spawns have not been set for the current map in arena id " + this.getId() + ". The game will likely not work properly.");
+			Main.sendMessage(Main.cs, Main.codPrefix + "§The Alpha, Beta, or Charlie flag spawns have not been set for the current map in arena id " + this.getId() + ". The game will likely not work properly.", Main.lang);
 			return;
 		}
 
-		aFlag = aLoc.getWorld().spawn(aLoc, ArmorStand.class);
+		Main.sendMessage(Main.cs, "Spawning flags", Main.lang	);
+
+		aFlag = (ArmorStand) aLoc.getWorld().spawnEntity(aLoc, EntityType.ARMOR_STAND);
 
 		aFlag.setCustomName("Flag A");
 		aFlag.setCustomNameVisible(true);
-		aFlag.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 999999, 2));
+		aFlag.setVisible(true);
+		aFlag.setGravity(true);
 
-		bFlag = bLoc.getWorld().spawn(bLoc, ArmorStand.class);
+		bFlag = (ArmorStand) bLoc.getWorld().spawnEntity(bLoc, EntityType.ARMOR_STAND);
 
 		bFlag.setCustomName("Flag B");
 		bFlag.setCustomNameVisible(true);
-		bFlag.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 999999, 2));
+		bFlag.setVisible(true);
+		bFlag.setGravity(true);
 
-		cFlag = cLoc.getWorld().spawn(cLoc, ArmorStand.class);
+		cFlag = (ArmorStand) cLoc.getWorld().spawnEntity(cLoc, EntityType.ARMOR_STAND);
 
 		cFlag.setCustomName("Flag C");
 		cFlag.setCustomNameVisible(true);
-		cFlag.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 999999, 2));
+		cFlag.setVisible(true);
+		cFlag.setGravity(true);
+
+		Main.sendMessage(Main.cs, "Spawned flags", Main.lang	);
 	}
 
 	private void despawnDomFlags() {

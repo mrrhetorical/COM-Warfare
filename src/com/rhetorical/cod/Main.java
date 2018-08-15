@@ -32,8 +32,6 @@ public class Main extends JavaPlugin {
 	public static String codPrefix = "§f§l[§r§6COM§f§l]§r ";
 	public static ConsoleCommandSender cs = Bukkit.getConsoleSender();
 
-	private static String bukkitVersion;
-
 	private static String sql_api_key;
 	private static String translate_api_key;
 
@@ -53,43 +51,48 @@ public class Main extends JavaPlugin {
 
 	public static double defaultHealth = 100D;
 
-	private static ArrayList<RankPerks> serverRanks = new ArrayList<RankPerks>();
+	private static ArrayList<RankPerks> serverRanks = new ArrayList<>();
 
 	public static Location lobbyLoc;
-	private static HashMap<Player, Location> lastLoc = new HashMap<Player, Location>();
+	private static HashMap<Player, Location> lastLoc = new HashMap<>();
 
 	@Override
 	public void onEnable() {
 
-		try {
-			lang = McLang.valueOf(getPlugin().getConfig().getString("lang"));
-		} catch(Exception e) {
+		if (getPlugin().getConfig().getString("lang").equalsIgnoreCase("none")) {
 			lang = McLang.EN;
-			cs.sendMessage(codPrefix + "§cCould not get the language from the config! Make sure you're using the right two letter abbreviation!");
-		}
-		
-		if (lang != McLang.EN)
-			lang = McLang.EN;
+		} else {
+			try {
+				lang = McLang.valueOf(getPlugin().getConfig().getString("lang"));
+			} catch (Exception e) {
+				lang = McLang.EN;
+				cs.sendMessage(codPrefix + "§cCould not get the language from the config! Make sure you're using the right two letter abbreviation!");
+			}
 
-		bukkitVersion = Bukkit.getServer().getBukkitVersion();
+			if (lang != McLang.EN)
+				lang = McLang.EN;
+		}
+		String bukkitVersion = Bukkit.getServer().getBukkitVersion();
+
+		if (!bukkitVersion.startsWith("1.13")) {
+			Main.cs.sendMessage(Main.codPrefix + "§cYou are not on the right version of Spigot/Bukkit, COM-Warfare might not work as intended. To ensure it will work properly, please use version §f1.13§c!");
+		}
 
 		Main.cs.sendMessage(Main.codPrefix + "§fChecking dependencies...");
 
 		DependencyManager dm = new DependencyManager();
 		if (!dm.checkDependencies()) {
-
-			/* Removed temporarily due to issues with downloading the file more than once. */
-//			if (getPlugin().getConfig().getBoolean("auto-download-dependency")) {
-//				Main.cs.sendMessage(Main.codPrefix + "§cOne or more dependencies were not found, will attempt to download them.");
-//				try {
-//					dm.downloadDependencies();
-//				} catch (Exception e) {
-//					Main.cs.sendMessage(Main.codPrefix + "§cCould not download dependencies! Make sure that the plugins folder can be written to!");
-//				}
-//			} else {
-//				Main.cs.sendMessage(Main.codPrefix + "§cCould not download dependencies! You must set the value for \"auto-download-dependency\" to 'true' in the config to automatically download them!");
-//			}
-			Main.cs.sendMessage("§6§l[CAUTION] §r§cNot all dependencies for COM-Warfare are installed! The plugin likely will not work as intended!");
+			if (getPlugin().getConfig().getBoolean("auto-download-dependency")) {
+				Main.cs.sendMessage(Main.codPrefix + "§cOne or more dependencies were not found, will attempt to download them.");
+				try {
+					dm.downloadDependencies();
+				} catch (Exception e) {
+					Main.cs.sendMessage(Main.codPrefix + "§cCould not download dependencies! Make sure that the plugins folder can be written to!");
+				}
+			} else {
+				Main.cs.sendMessage(Main.codPrefix + "§cCould not download dependencies! You must set the value for \"auto-download-dependency\" to 'true' in the config to automatically download them!");
+			}
+			Main.cs.sendMessage("§l§f[§6§lCAUTION§r§f] §r§cNot all dependencies for COM-Warfare are installed! The plugin likely will not work as intended!");
 		} else {
 			Main.cs.sendMessage(Main.codPrefix + "§aAll dependencies are installed!");
 		}
@@ -111,7 +114,7 @@ public class Main extends JavaPlugin {
 		getPlugin().reloadConfig();
 
 		progManager = new ProgressionManager();
-		loadManager = new LoadoutManager(new HashMap<Player, ArrayList<Loadout>>());
+		loadManager = new LoadoutManager(new HashMap<>());
 		perkManager = new PerkManager();
 		invManager = new InventoryManager();
 		shopManager = new ShopManager();
@@ -315,7 +318,7 @@ public class Main extends JavaPlugin {
 						sendMessage(p, cColor + "/cod removeMap [name] | " + dColor + "Command to remove a map.");
 						break;
 					case 2:
-						sendMessage(p, cColor + "/cod set [lobby/spawn] | " + dColor + "Opens a page in the help menu.");
+						sendMessage(p, cColor + "/cod set [lobby/spawn/flag] | " + dColor + "Opens a page in the help menu.");
 						sendMessage(p, cColor + "/cod credits give | " + dColor + "Gives credits to a person.");
 						sendMessage(p, cColor + "/cod credits set | " + dColor + "Sets amount of credits for a player.");
 						sendMessage(p, cColor + "/cod lobby | " + dColor + "Teleports you to the lobby.");
@@ -379,7 +382,7 @@ public class Main extends JavaPlugin {
 							continue;
 						}
 
-						sendMessage(p, Integer.toString(k) + " - §6§lName: §r§a" + m.getName() + " §r§6§lGamemode: §r§c" + m.getGamemode().toString() + " §r§6§lStatus: §r§aUNFINISHED", lang);
+						sendMessage(p, Integer.toString(k) + " - §6§lName: §r§a" + m.getName() + " ea§r§6§lGamemode: §r§c" + m.getGamemode().toString() + " §r§6§lStatus: §r§aUNFINISHED", lang);
 					}
 				}
 				return true;
@@ -452,7 +455,7 @@ public class Main extends JavaPlugin {
 			} else if (args[0].equalsIgnoreCase("set") && hasPerm(p, "com.map.modify")) {
 
 				if (!(args.length > 1)) {
-					sendMessage(p, Main.codPrefix + "§cIncorrect usage! Correct usage: /cod set (lobby/spawn) [args]");
+					sendMessage(p, Main.codPrefix + "§cIncorrect usage! Correct usage: /cod set (lobby/spawn/flag) [args]");
 					return true;
 				}
 
@@ -467,7 +470,7 @@ public class Main extends JavaPlugin {
 					return true;
 				} else if (args[1].equalsIgnoreCase("spawn") && hasPerm(p, "com.map.addSpawn")) {
 
-					if (!(args.length >= 4)) {
+					if (args.length < 4) {
 						sendMessage(p, Main.codPrefix + "§cIncorrect usage! Correct usage: /cod set spawn (map name) (team)");
 						return true;
 					}
@@ -505,6 +508,56 @@ public class Main extends JavaPlugin {
 						sendMessage(p, Main.codPrefix + "§cThat's not a valid team!", lang);
 						return true;
 					}
+				} else if (args[1].equalsIgnoreCase("flag") && hasPerm(p, "com.map.modify")) {
+
+					if (args.length < 4) {
+						sendMessage(p, Main.codPrefix + "§cIncorrect usage! Correct usage: /cod set flag (map name) (red/blue/a/b/c)");
+						return true;
+					}
+
+					CodMap map = null;
+
+					String mapName = args[2];
+					for(CodMap m : GameManager.AddedMaps) {
+						if (m.getName().equalsIgnoreCase(mapName)){
+							map = m;
+							break;
+						}
+					}
+
+					if (map == null) {
+						sendMessage(p, Main.codPrefix + "§cThat map doesn't exist! Map names are case sensitive!", lang);
+						return true;
+					}
+
+					String arg = args[3];
+
+					switch(arg.toLowerCase()) {
+						case "red":
+							map.addRedFlagSpawn(p.getLocation());
+							sendMessage(p, Main.codPrefix + "§aSuccessfully set §cred §aCTF flag spawn!");
+							return true;
+						case "blue":
+							map.addBlueFlagSpawn(p.getLocation());
+							sendMessage(p, Main.codPrefix + "§aSuccessfully set §9blue §aCTF flag spawn!");
+							return true;
+						case "a":
+							map.addAFlagSpawn(p.getLocation());
+							sendMessage(p, Main.codPrefix + "§aSuccessfully set §eA DOM §aflag spawn!");
+							return true;
+						case "b":
+							map.addBFlagSpawn(p.getLocation());
+							sendMessage(p, Main.codPrefix + "§aSuccessfully set §eB DOM §aflag spawn!");
+							return true;
+						case "c":
+							map.addCFlagSpawn(p.getLocation());
+							sendMessage(p, Main.codPrefix + "§aSuccessfully set §eC DOM §aflag spawn!");
+							return true;
+						default:
+							sendMessage(p, Main.codPrefix + "§cIncorrect usage! Available flags are \"A\", \"B\", \"C\", \"Blue\", or \"Red\"!");
+							return true;
+					}
+
 				}
 
 			} else if (args[0].equalsIgnoreCase("lobby") && hasPerm(p, "com.lobby")) {
@@ -567,7 +620,11 @@ public class Main extends JavaPlugin {
 				}
 			} else if (args[0].equalsIgnoreCase("start") && hasPerm(p, "com.forceStart")) {
 				if (GameManager.isInMatch(p)) {
-					GameManager.getMatchWhichContains(p).forceStart(true);
+					try {
+						GameManager.getMatchWhichContains(p).forceStart(true);
+					} catch(Exception e) {
+						sendMessage(Main.cs, Main.codPrefix + "§cCould not find the game that the player is in!", Main.lang	);
+					}
 					return true;
 				} else {
 					sendMessage(p, Main.codPrefix + "§cYou must be in a game to use that command!", lang);

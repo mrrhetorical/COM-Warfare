@@ -32,7 +32,7 @@ public class CodMap {
 	
 	public void save() {
 		
-		int k = 0;
+		int k;
 		for (k = 0; ArenasFile.getData().contains("Maps." + k); k++) {
 			if (ArenasFile.getData().getString("Maps." + k + ".name").equalsIgnoreCase(this.name)) break;
 		}
@@ -50,20 +50,6 @@ public class CodMap {
 		ArenasFile.getData().set("Maps." + k + ".redSpawns", getRedSpawns());
 		ArenasFile.saveData();
 		ArenasFile.reloadData();
-	}
-	
-	public boolean setCTFflag(String team, Location l) {
-		if (team.equalsIgnoreCase("red")) {
-			setRedFlagSpawn(l);
-			setEnable();
-			return true;
-		} else if (team.equalsIgnoreCase("blue")) {
-			setBlueFlagSpawn(l);
-			setEnable();
-			return true;
-		}
-		setEnable();
-		return false;
 	}
 
 	public void addblueSpawn(Location l) {
@@ -90,7 +76,7 @@ public class CodMap {
 	//Check if enabled
 	public boolean setEnable() {
 		
-		if (getGamemode().equals(Gamemode.TDM)) {
+		if (getGamemode().equals(Gamemode.TDM) || getGamemode().equals(Gamemode.RSB) || getGamemode().equals(Gamemode.INFECT) || getGamemode().equals(Gamemode.KC)) {
 			if (getBlueSpawns() != null && getRedSpawns() != null) {
 				if (getBlueSpawns().size() >= 1 && getRedSpawns().size() >= 1) {
 					this.setEnabled(true);
@@ -104,7 +90,7 @@ public class CodMap {
 			this.setEnabled(false);
 			this.save();
 			return false;
-		} else if (getGamemode().equals(Gamemode.FFA)) {
+		} else if (getGamemode().equals(Gamemode.FFA) || getGamemode().equals(Gamemode.OITC) || getGamemode().equals(Gamemode.GUN)) {
 			if (getPinkSpawns() != null && getPinkSpawns().size() >= Main.maxPlayers) {
 				this.setEnabled(true);
 				this.save();
@@ -114,6 +100,33 @@ public class CodMap {
 			this.setEnabled(false);
 			this.save();
 			return false;
+		} else if (getGamemode().equals(Gamemode.CTF)) {
+			if (getBlueSpawns() != null && getRedSpawns() != null && getBlueFlagSpawn() != null && getRedFlagSpawn() != null) {
+				if (getBlueSpawns().size() >= 1 && getRedSpawns().size() >= 1) {
+					this.setEnabled(true);
+					this.save();
+					return true;
+				}
+				this.setEnabled(false);
+				this.save();
+				return false;
+			}
+
+			this.setEnabled(false);
+			this.save();
+			return false;
+		} else if (getGamemode().equals(Gamemode.DOM)) {
+			if (getBlueSpawns() != null && getRedSpawns() != null && getAFlagSpawn() != null && getBFlagSpawn() != null && getCFlagSpawn() != null) {
+				if (getBlueSpawns().size() >= 1 && getRedSpawns().size() >= 1) {
+					this.setEnabled(true);
+					this.save();
+					return true;
+				}
+
+				this.setEnabled(false);
+				this.save();
+				return true;
+			}
 		}
 		
 		this.setEnabled(false);
@@ -179,6 +192,11 @@ public class CodMap {
 		return blueFlagSpawn;
 	}
 
+	public void addBlueFlagSpawn(Location blueFlagSpawn) {
+		this.blueFlagSpawn = blueFlagSpawn;
+		setEnable();
+	}
+
 	public void setBlueFlagSpawn(Location blueFlagSpawn) {
 		this.blueFlagSpawn = blueFlagSpawn;
 	}
@@ -195,9 +213,15 @@ public class CodMap {
 		return redFlagSpawn;
 	}
 
+	public void addRedFlagSpawn(Location redFlagSpawn) {
+		this.redFlagSpawn = redFlagSpawn;
+		setEnable();
+	}
+
 	public void setRedFlagSpawn(Location redFlagSpawn) {
 		this.redFlagSpawn = redFlagSpawn;
 	}
+
 
 	private ArrayList<Location> getRedSpawns() {
 		return redSpawns;
@@ -219,6 +243,11 @@ public class CodMap {
 		return this.Flag_A;
 	}
 
+	public void addAFlagSpawn(Location loc) {
+		this.Flag_A = loc;
+		setEnable();
+	}
+
 	public void setAFlagSpawn(Location loc) {
 		this.Flag_A = loc;
 	}
@@ -229,6 +258,11 @@ public class CodMap {
 	}
 
 
+	public void addBFlagSpawn(Location loc) {
+		this.Flag_B = loc;
+		setEnable();
+	}
+
 	public void setBFlagSpawn(Location loc) {
 		this.Flag_B = loc;
 	}
@@ -237,7 +271,12 @@ public class CodMap {
 		return this.Flag_C;
 	}
 
-	public void setCFlagSpawn(Location loc) {
+	public void addCFlagSpawn(Location loc) {
 		this.Flag_C = loc;
+		setEnable();
+	}
+
+	public void setCFlagSpawn(Location loc) {
+		this.Flag_C =  loc;
 	}
 }

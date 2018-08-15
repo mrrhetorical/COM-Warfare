@@ -62,15 +62,15 @@ public class GameManager {
 		
 		if (Main.lobbyLoc == null) {
 			
-			Main.sendMessage(Main.cs, Main.codPrefix + "§cNo lobby set! You cannot start a game without a lobby location set!", Main.lang);
-			Main.sendMessage(Main.cs, Main.codPrefix + "§7Could not create a match because there is no lobby location!", Main.lang);
+			Main.sendMessage(p, Main.codPrefix + "§cNo lobby set! You cannot start a game without a lobby location set!", Main.lang);
+			Main.sendMessage(p, Main.codPrefix + "§7Could not create a match because there is no lobby location!", Main.lang);
 			return false;
 		}
 		
 
 		for (GameInstance i : RunningGames) {
 			if (i.getPlayers().contains(p)) {
-				Main.sendMessage(Main.cs, Main.codPrefix + "§7You are already in a game!", Main.lang);
+				Main.sendMessage(p, Main.codPrefix + "§7You are already in a game!", Main.lang);
 				return false;
 			}
 		}
@@ -79,7 +79,7 @@ public class GameManager {
 
 		GameInstance newGame;
 
-		Main.sendMessage(Main.cs, Main.codPrefix + "§7Searching for match. . .", Main.lang);
+		Main.sendMessage(p, Main.codPrefix + "§7Searching for match. . .", Main.lang);
 		for (GameInstance i : RunningGames) {
 			if (i.getPlayers().size() < 12) {
 				if (i.getPlayers().size() == 0) {
@@ -94,13 +94,13 @@ public class GameManager {
 
 		if (possibleMatches.size() == 0) {
 
-			Main.sendMessage(Main.cs, Main.codPrefix + "§7Could not find a match. . .", Main.lang);
-			Main.sendMessage(Main.cs, Main.codPrefix + "§7Creating match. . .", Main.lang);
+			Main.sendMessage(p, Main.codPrefix + "§7Could not find a match. . .", Main.lang);
+			Main.sendMessage(p, Main.codPrefix + "§7Creating match. . .", Main.lang);
 
 			CodMap map = pickRandomMap();
 			
 			if (map == null) {
-				Main.sendMessage(Main.cs, Main.codPrefix + "§7Could not create a match because there are not enough maps!", Main.lang);
+				Main.sendMessage(p, Main.codPrefix + "§7Could not create a match because there are not enough maps!", Main.lang);
 				return false;
 			}
 
@@ -110,13 +110,13 @@ public class GameManager {
 
 			newGame.addPlayer(p);
 
-			Main.sendMessage(Main.cs, Main.codPrefix + "§7Created Lobby!", Main.lang);
+			Main.sendMessage(p, Main.codPrefix + "§7Created Lobby!", Main.lang);
 			return true;
 
 		}
 
 		possibleMatches.lastEntry().getValue().addPlayer(p);
-		Main.sendMessage(Main.cs, Main.codPrefix + "§7Found Match!", Main.lang);
+		Main.sendMessage(p, Main.codPrefix + "§7Found Match!", Main.lang);
 		for (Player inGame : possibleMatches.lastEntry().getValue().getPlayers()) {
 			Main.sendMessage(inGame, Main.codPrefix + "§7" + p.getName() + "§7 has joined your lobby!", Main.lang);
 		}
