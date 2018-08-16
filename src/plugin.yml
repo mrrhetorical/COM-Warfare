@@ -13,3 +13,6 @@ commands:
   com:
     description: Base command for COM-Warfare.
     usage: /<command>
+  war:
+    description: Base command for COM-Warfare.
+    usage: /<command>

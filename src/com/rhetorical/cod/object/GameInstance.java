@@ -171,13 +171,10 @@ public class GameInstance implements Listener {
 			this.assignTeams();
 			if (this.isOnRedTeam(p)) {
 				this.spawnCodPlayer(p, this.currentMap.getRedSpawn());
-				this.setTeamArmor(p, Color.RED);
 			} else if (this.isOnBlueTeam(p)) {
 				this.spawnCodPlayer(p, this.currentMap.getBlueSpawn());
-				this.setTeamArmor(p, Color.BLUE);
 			} else {
 				this.spawnCodPlayer(p, this.currentMap.getPinkSpawn());
-				this.setTeamArmor(p, Color.PURPLE);
 			}
 		}
 
@@ -255,16 +252,13 @@ public class GameInstance implements Listener {
 			if (this.getGamemode() != Gamemode.FFA && this.getGamemode() != Gamemode.OITC && this.getGamemode() != Gamemode.GUN) {
 				if (blueTeam.contains(p)) {
 					spawnCodPlayer(p, this.currentMap.getBlueSpawn());
-					this.setTeamArmor(p, Color.BLUE);
 				} else if (redTeam.contains(p)) {
 					spawnCodPlayer(p, this.currentMap.getRedSpawn());
-					this.setTeamArmor(p, Color.RED);
 				} else {
 					assignTeams();
 				}
 			} else {
 				spawnCodPlayer(p, this.currentMap.getPinkSpawn());
-				this.setTeamArmor(p, Color.PURPLE);
 			}
 		}
 
@@ -293,8 +287,23 @@ public class GameInstance implements Listener {
 	private void spawnCodPlayer(Player p, Location L) {
 		p.teleport(L);
 		p.getInventory().clear();
+		p.setGameMode(GameMode.ADVENTURE);
+		p.setHealth(20d);
+		p.setFoodLevel(20);
 		Loadout loadout = Main.loadManager.getActiveLoadout(p);
 		Main.killstreakManager.streaksAfterDeath(p);
+
+		if (blueTeam.contains(p)) {
+			setTeamArmor(p, Color.BLUE);
+		} else if (redTeam.contains(p)) {
+			if (getGamemode() == Gamemode.INFECT) {
+				setTeamArmor(p, Color.GREEN);
+			} else {
+				setTeamArmor(p, Color.RED);
+			}
+		} else {
+			setTeamArmor(p, Color.PURPLE);
+		}
 
 		if (this.getGamemode() == Gamemode.RSB) {
 
@@ -328,14 +337,21 @@ public class GameInstance implements Listener {
 			p.getInventory().setItem(19, primaryAmmo);
 			p.getInventory().setItem(25, secondaryAmmo);
 
-		} else if (this.getGamemode() != Gamemode.RSB && this.getGamemode() != Gamemode.INFECT && this.getGamemode() != Gamemode.OITC && this.getGamemode() != Gamemode.GUN) {
+		} else if (getGamemode() == Gamemode.DOM
+				|| getGamemode() == Gamemode.CTF
+				|| getGamemode() == Gamemode.KC
+				|| getGamemode() == Gamemode.TDM
+				|| getGamemode() == Gamemode.FFA
+				|| getGamemode() == Gamemode.INFECT) {
 
 			p.getInventory().setItem(0, Main.loadManager.knife);
-			p.getInventory().setItem(1, loadout.getPrimary().getGun());
-			p.getInventory().setItem(2, loadout.getSecondary().getGun());
-			p.getInventory().setItem(3, loadout.getLethal().getWeapon());
-			p.getInventory().setItem(4, loadout.getTactical().getWeapon());
 
+			if (getGamemode() != Gamemode.INFECT || (getGamemode() == Gamemode.INFECT && blueTeam.contains(p))) {
+				p.getInventory().setItem(1, loadout.getPrimary().getGun());
+				p.getInventory().setItem(2, loadout.getSecondary().getGun());
+				p.getInventory().setItem(3, loadout.getLethal().getWeapon());
+				p.getInventory().setItem(4, loadout.getTactical().getWeapon());
+			}
 			// Ammo
 
 			ItemStack primaryAmmo = loadout.getPrimary().getAmmo();
@@ -349,6 +365,10 @@ public class GameInstance implements Listener {
 
 			p.getInventory().setItem(19, primaryAmmo);
 
+			if (getGamemode() == Gamemode.INFECT && redTeam.contains(p)) {
+				p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 20 * gameTime, 1));
+			}
+
 		}
 	}
 
@@ -356,9 +376,6 @@ public class GameInstance implements Listener {
 
 		if (this.getGamemode() != Gamemode.FFA && this.getGamemode() != Gamemode.OITC && this.getGamemode() != Gamemode.GUN) {
 			for (Player p : players) {
-				// check if any players are partied and put them on a team
-				// together
-
 				if (blueTeam.contains(p) || redTeam.contains(p))
 					continue;
 
@@ -369,6 +386,15 @@ public class GameInstance implements Listener {
 					redTeam.add(p);
 					Main.sendMessage(p, Main.codPrefix + "§cYou are on the red team!", Main.lang);
 				}
+			}
+		} else if (getGamemode() == Gamemode.INFECT) {
+			for (Player p : players) {
+				if (redTeam.size() != 0) {
+					blueTeam.add(p);
+					continue;
+				}
+
+				redTeam.add(p);
 			}
 		} else {
 			for (Player p : players) {
@@ -754,6 +780,15 @@ public class GameInstance implements Listener {
 
 		GameInstance game = this;
 
+		if (getGamemode() == Gamemode.INFECT && redTeam.contains(killer))
+		{
+			if (blueTeam.contains(p)) {
+				blueTeam.remove(p);
+			}
+
+			redTeam.add(p);
+		}
+
 		BukkitRunnable br = new BukkitRunnable() {
 			int t = 3;
 
@@ -761,6 +796,7 @@ public class GameInstance implements Listener {
 
 				p.getInventory().clear();
 				p.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 120, 1));
+				p.removePotionEffect(PotionEffectType.SPEED);
 
 				if (t > 0) {
 
@@ -773,38 +809,19 @@ public class GameInstance implements Listener {
 				} else if (t <= 1) {
 					if (game.state == GameState.INGAME) {
 						if (currentMap.getGamemode() != Gamemode.FFA) {
-							if (blueTeam.contains(p)) {
-								// spawnCodPlayer(p,
-								// Main.playerLoadouts.get(p).get(0),
-								// this.currentMap.getBlueSpawn());
+							if (blueTeam.contains(p) || redTeam.contains(p)) {
 								spawnCodPlayer(p, game.currentMap.getBlueSpawn());
-								setTeamArmor(p, Color.BLUE);
-								p.setHealth(20D);
-							} else if (redTeam.contains(p)) {
-								// spawnCodPlayer(p,
-								// Main.playerLoadouts.get(p).get(0),
-								// this.currentMap.getRedSpawn());
-								spawnCodPlayer(p, game.currentMap.getRedSpawn());
-								setTeamArmor(p, Color.RED);
-								p.setHealth(20D);
 							} else {
 								assignTeams();
 							}
 
-							p.setGameMode(GameMode.SURVIVAL);
-							p.setHealth(20D);
-							p.setFoodLevel(20);
 							this.cancel();
 						} else {
 							spawnCodPlayer(p, game.currentMap.getPinkSpawn());
-							setTeamArmor(p, Color.PURPLE);
-							p.setGameMode(GameMode.SURVIVAL);
-							p.setHealth(20D);
-							p.setFoodLevel(20);
 							this.cancel();
 						}
 					} else {
-						p.setGameMode(GameMode.SURVIVAL);
+						p.setGameMode(GameMode.ADVENTURE);
 						p.teleport(Main.lobbyLoc);
 						p.setHealth(20D);
 						p.setFoodLevel(20);
