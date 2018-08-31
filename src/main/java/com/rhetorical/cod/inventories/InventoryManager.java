@@ -38,10 +38,10 @@ public class InventoryManager implements Listener {
 	public Inventory mainInventory = Bukkit.createInventory(null, 18, "COM-Warfare");
 	public Inventory mainShopInventory = Bukkit.createInventory(null, 9, "Shop Menu");
 	private Inventory leaderboardInventory = Bukkit.createInventory(null, 36, "Leaderboard");
-	public HashMap<Player, Inventory> createClassInventory = new HashMap<Player, Inventory>();
-	private HashMap<Player, Inventory> selectClassInventory = new HashMap<Player, Inventory>();
-	private HashMap<Player, Inventory> personalStatistics = new HashMap<Player, Inventory>();
-	private HashMap<Player, Inventory> killStreakInventory = new HashMap<Player, Inventory>();
+	public HashMap<Player, Inventory> createClassInventory = new HashMap<>();
+	private HashMap<Player, Inventory> selectClassInventory = new HashMap<>();
+	private HashMap<Player, Inventory> personalStatistics = new HashMap<>();
+	private HashMap<Player, Inventory> killStreakInventory = new HashMap<>();
 
 	private ItemStack joinGame = new ItemStack(Material.EMERALD);
 	private ItemStack createClass = new ItemStack(Material.CHEST);
@@ -416,7 +416,7 @@ public class InventoryManager implements Listener {
 
 					ItemMeta gunMeta = item.getItemMeta();
 
-					ArrayList<String> lore = new ArrayList<String>();
+					ArrayList<String> lore = new ArrayList<>();
 
 					lore.add("§6Cost: " + gun.getCreditUnlock());
 
@@ -433,7 +433,7 @@ public class InventoryManager implements Listener {
 
 				ItemMeta gunMeta = item.getItemMeta();
 
-				ArrayList<String> lore = new ArrayList<String>();
+				ArrayList<String> lore = new ArrayList<>();
 
 				lore.add("§6Cost: " + gun.getCreditUnlock());
 
@@ -460,7 +460,7 @@ public class InventoryManager implements Listener {
 
 					ItemMeta gunMeta = item.getItemMeta();
 
-					ArrayList<String> lore = new ArrayList<String>();
+					ArrayList<String> lore = new ArrayList<>();
 
 					lore.add("§6Cost: " + grenade.getCreditUnlock());
 
@@ -477,7 +477,7 @@ public class InventoryManager implements Listener {
 
 				ItemMeta gunMeta = item.getItemMeta();
 
-				ArrayList<String> lore = new ArrayList<String>();
+				ArrayList<String> lore = new ArrayList<>();
 
 				lore.add("§6Cost: " + grenade.getCreditUnlock());
 

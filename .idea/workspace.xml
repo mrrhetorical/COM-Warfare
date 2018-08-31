@@ -7,9 +7,68 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c004894e-1f3c-4cdf-ba37-fd72a31bc043" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/artifacts/COMR_jar.xml" afterPath="$PROJECT_DIR$/.idea/artifacts/COMR_jar.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/compiler.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_google_code_gson_gson_2_8_0.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_google_guava_guava_21_0.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_googlecode_json_simple_json_simple_1_1_1.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__commons_lang_commons_lang_2_6.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__junit_junit_4_10.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__net_md_5_bungeecord_chat_1_13_SNAPSHOT.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_hamcrest_hamcrest_core_1_1.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_spigotmc_spigot_api_1_13_1_R0_1_SNAPSHOT.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_yaml_snakeyaml_1_21.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/pom.xml" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/artifacts/COMR_jar.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/rhetorical/cod/CreditManager.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/rhetorical/cod/DependencyManager.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/rhetorical/cod/GameManager.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/rhetorical/cod/Listeners.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/rhetorical/cod/LoadoutManager.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/rhetorical/cod/Main.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/rhetorical/cod/PerkManager.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/rhetorical/cod/ProgressionManager.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/rhetorical/cod/ShopManager.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/rhetorical/cod/StatHandler.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/rhetorical/cod/analytics/CollectAnalytics.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/rhetorical/cod/api/StatRetreival.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/rhetorical/cod/files/ArenasFile.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/rhetorical/cod/files/CreditsFile.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/rhetorical/cod/files/GunsFile.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/rhetorical/cod/files/KillstreaksFile.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/rhetorical/cod/files/LoadoutsFile.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/rhetorical/cod/files/ProgressionFile.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/rhetorical/cod/files/ShopFile.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/rhetorical/cod/files/StatsFile.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/rhetorical/cod/inventories/InventoryManager.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/rhetorical/cod/object/CodGun.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/rhetorical/cod/object/CodMap.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/rhetorical/cod/object/CodPerk.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/rhetorical/cod/object/CodScore.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/rhetorical/cod/object/CodWeapon.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/rhetorical/cod/object/GameInstance.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/rhetorical/cod/object/GameState.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/rhetorical/cod/object/Gamemode.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/rhetorical/cod/object/GunType.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/rhetorical/cod/object/HealthManager.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/rhetorical/cod/object/KillStreak.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/rhetorical/cod/object/KillStreakManager.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/rhetorical/cod/object/Loadout.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/rhetorical/cod/object/Perk.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/rhetorical/cod/object/PerkListener.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/rhetorical/cod/object/PerkSlot.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/rhetorical/cod/object/RankPerks.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/rhetorical/cod/object/ScoreStreakCost.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/rhetorical/cod/object/Scorestreak.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/rhetorical/cod/object/UnlockType.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/rhetorical/cod/object/WeaponType.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/config.yml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/plugin.yml" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/COMR.iml" afterPath="$PROJECT_DIR$/COMR.iml" />
     </list>
     <ignored path="$PROJECT_DIR$/bin/" />
+    <ignored path="$PROJECT_DIR$/target/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -24,27 +83,39 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file leaf-file-name="Main.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/com/rhetorical/cod/Main.java">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/Main.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="289">
+            <state relative-caret-position="3553">
               <caret line="232" column="143" lean-forward="false" selection-start-line="232" selection-start-column="143" selection-end-line="232" selection-end-column="143" />
-              <folding />
+              <folding>
+                <element signature="imports" expanded="false" />
+                <element signature="e#906#907#0" expanded="false" />
+                <element signature="e#982#983#0" expanded="false" />
+                <element signature="e#28984#28985#0" expanded="false" />
+                <element signature="e#29018#29019#0" expanded="false" />
+                <element signature="e#29786#29787#0" expanded="false" />
+                <element signature="e#29816#29817#0" expanded="false" />
+                <element signature="e#29863#29864#0" expanded="false" />
+                <element signature="e#29899#29900#0" expanded="false" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file leaf-file-name="DependencyManager.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/com/rhetorical/cod/DependencyManager.java">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/DependencyManager.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="187">
-              <caret line="17" column="75" lean-forward="true" selection-start-line="17" selection-start-column="75" selection-end-line="17" selection-end-column="75" />
-              <folding />
+              <caret line="17" column="75" lean-forward="false" selection-start-line="17" selection-start-column="75" selection-end-line="17" selection-end-column="75" />
+              <folding>
+                <element signature="imports" expanded="false" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file leaf-file-name="GameManager.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/com/rhetorical/cod/GameManager.java">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/GameManager.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="17">
               <caret line="14" column="13" lean-forward="false" selection-start-line="14" selection-start-column="13" selection-end-line="14" selection-end-column="13" />
@@ -54,30 +125,58 @@
         </entry>
       </file>
       <file leaf-file-name="KillStreakManager.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/com/rhetorical/cod/object/KillStreakManager.java">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/object/KillStreakManager.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="858">
+            <state relative-caret-position="2261">
               <caret line="143" column="18" lean-forward="false" selection-start-line="143" selection-start-column="18" selection-end-line="143" selection-end-column="18" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="GameInstance.java" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/com/rhetorical/cod/object/GameInstance.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="163">
-              <caret line="293" column="52" lean-forward="true" selection-start-line="293" selection-start-column="52" selection-end-line="293" selection-end-column="52" />
               <folding>
-                <element signature="e#22802#22803#0" expanded="true" />
-                <element signature="e#22840#22841#0" expanded="true" />
+                <element signature="imports" expanded="false" />
+                <element signature="e#622#644#0" expanded="false" />
+                <element signature="e#709#726#0" expanded="false" />
+                <element signature="e#812#843#0" expanded="false" />
+                <element signature="e#5310#5318#0" expanded="false" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="CodGun.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/com/rhetorical/cod/object/CodGun.java">
+      <file leaf-file-name="GameInstance.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/object/GameInstance.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="23766">
+              <caret line="1446" column="0" lean-forward="false" selection-start-line="1446" selection-start-column="0" selection-end-line="1446" selection-end-column="0" />
+              <folding>
+                <element signature="imports" expanded="false" />
+                <element signature="e#2248#2266#0" expanded="false" />
+                <element signature="e#4157#4158#0" expanded="false" />
+                <element signature="e#4178#4179#0" expanded="false" />
+                <element signature="e#5385#5386#0" expanded="false" />
+                <element signature="e#5412#5413#0" expanded="false" />
+                <element signature="e#5443#5444#0" expanded="false" />
+                <element signature="e#5469#5470#0" expanded="false" />
+                <element signature="e#7043#7044#0" expanded="false" />
+                <element signature="e#7109#7110#0" expanded="false" />
+                <element signature="e#20527#20528#0" expanded="false" />
+                <element signature="e#20553#20554#0" expanded="false" />
+                <element signature="e#22802#22803#0" expanded="false" />
+                <element signature="e#22840#22841#0" expanded="false" />
+                <element signature="e#23194#23195#0" expanded="false" />
+                <element signature="e#23220#23221#0" expanded="false" />
+                <element signature="e#23269#23270#0" expanded="false" />
+                <element signature="e#23308#23309#0" expanded="false" />
+                <element signature="e#23341#23342#0" expanded="false" />
+                <element signature="e#23360#23361#0" expanded="false" />
+                <element signature="e#23403#23404#0" expanded="false" />
+                <element signature="e#23428#23429#0" expanded="false" />
+                <element signature="e#23463#23464#0" expanded="false" />
+                <element signature="e#23504#23505#0" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="CodGun.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/object/CodGun.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="68">
               <caret line="7" column="13" lean-forward="false" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="13" />
@@ -87,37 +186,57 @@
         </entry>
       </file>
       <file leaf-file-name="CodMap.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/com/rhetorical/cod/object/CodMap.java">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/object/CodMap.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="3077">
               <caret line="199" column="0" lean-forward="false" selection-start-line="199" selection-start-column="0" selection-end-line="202" selection-end-column="0" />
               <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="e#4939#4940#0" expanded="true" />
-                <element signature="e#4974#4975#0" expanded="true" />
-                <element signature="e#5013#5014#0" expanded="true" />
-                <element signature="e#5040#5041#0" expanded="true" />
-                <element signature="e#5210#5211#0" expanded="true" />
-                <element signature="e#5251#5252#0" expanded="true" />
-                <element signature="e#5648#5649#0" expanded="true" />
-                <element signature="e#5687#5688#0" expanded="true" />
-                <element signature="e#5818#5819#0" expanded="true" />
-                <element signature="e#5851#5852#0" expanded="true" />
-                <element signature="e#5998#5999#0" expanded="true" />
-                <element signature="e#6023#6024#0" expanded="true" />
-                <element signature="e#6150#6151#0" expanded="true" />
-                <element signature="e#6174#6175#0" expanded="true" />
-                <element signature="e#6364#6365#0" expanded="true" />
-                <element signature="e#6388#6389#0" expanded="true" />
-                <element signature="e#6576#6577#0" expanded="true" />
-                <element signature="e#6601#6602#0" expanded="true" />
+                <element signature="imports" expanded="false" />
+                <element signature="e#4657#4658#0" expanded="false" />
+                <element signature="e#4680#4681#0" expanded="false" />
+                <element signature="e#4711#4712#0" expanded="false" />
+                <element signature="e#4732#4733#0" expanded="false" />
+                <element signature="e#4776#4777#0" expanded="false" />
+                <element signature="e#4805#4806#0" expanded="false" />
+                <element signature="e#4853#4854#0" expanded="false" />
+                <element signature="e#4877#4878#0" expanded="false" />
+                <element signature="e#4939#4940#0" expanded="false" />
+                <element signature="e#4974#4975#0" expanded="false" />
+                <element signature="e#5013#5014#0" expanded="false" />
+                <element signature="e#5040#5041#0" expanded="false" />
+                <element signature="e#5299#5300#0" expanded="false" />
+                <element signature="e#5323#5324#0" expanded="false" />
+                <element signature="e#5385#5386#0" expanded="false" />
+                <element signature="e#5420#5421#0" expanded="false" />
+                <element signature="e#5458#5459#0" expanded="false" />
+                <element signature="e#5484#5485#0" expanded="false" />
+                <element signature="e#5648#5649#0" expanded="false" />
+                <element signature="e#5687#5688#0" expanded="false" />
+                <element signature="e#5735#5736#0" expanded="false" />
+                <element signature="e#5758#5759#0" expanded="false" />
+                <element signature="e#5818#5819#0" expanded="false" />
+                <element signature="e#5851#5852#0" expanded="false" />
+                <element signature="e#5885#5886#0" expanded="false" />
+                <element signature="e#5901#5902#0" expanded="false" />
+                <element signature="e#5943#5944#0" expanded="false" />
+                <element signature="e#5962#5963#0" expanded="false" />
+                <element signature="e#5998#5999#0" expanded="false" />
+                <element signature="e#6023#6024#0" expanded="false" />
+                <element signature="e#6150#6151#0" expanded="false" />
+                <element signature="e#6174#6175#0" expanded="false" />
+                <element signature="e#6364#6365#0" expanded="false" />
+                <element signature="e#6388#6389#0" expanded="false" />
+                <element signature="e#6424#6425#0" expanded="false" />
+                <element signature="e#6449#6450#0" expanded="false" />
+                <element signature="e#6576#6577#0" expanded="false" />
+                <element signature="e#6601#6602#0" expanded="false" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file leaf-file-name="Gamemode.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/com/rhetorical/cod/object/Gamemode.java">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/object/Gamemode.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="255">
               <caret line="15" column="21" lean-forward="false" selection-start-line="15" selection-start-column="21" selection-end-line="15" selection-end-column="21" />
@@ -202,12 +321,13 @@
         <option value="$PROJECT_DIR$/src/com/rhetorical/cod/object/CodMap.java" />
         <option value="$PROJECT_DIR$/src/com/rhetorical/cod/object/KillStreakManager.java" />
         <option value="$PROJECT_DIR$/src/com/rhetorical/cod/GameManager.java" />
-        <option value="$PROJECT_DIR$/src/com/rhetorical/cod/inventories/InventoryManager.java" />
         <option value="$PROJECT_DIR$/src/com/rhetorical/cod/DependencyManager.java" />
         <option value="$PROJECT_DIR$/src/config.yml" />
         <option value="$PROJECT_DIR$/src/com/rhetorical/cod/object/GameInstance.java" />
         <option value="$PROJECT_DIR$/src/com/rhetorical/cod/Main.java" />
         <option value="$PROJECT_DIR$/src/plugin.yml" />
+        <option value="$PROJECT_DIR$/src/com/rhetorical/cod/inventories/InventoryManager.java" />
+        <option value="$PROJECT_DIR$/pom.xml" />
       </list>
     </option>
   </component>
@@ -217,11 +337,18 @@
     <detection-done>true</detection-done>
     <sorting>DEFINITION_ORDER</sorting>
   </component>
+  <component name="MavenImportPreferences">
+    <option name="importingSettings">
+      <MavenImportingSettings>
+        <option name="importAutomatically" value="true" />
+      </MavenImportingSettings>
+    </option>
+  </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="213" />
-    <option name="y" value="84" />
-    <option name="width" value="1378" />
-    <option name="height" value="832" />
+    <option name="x" value="256" />
+    <option name="y" value="106" />
+    <option name="width" value="1371" />
+    <option name="height" value="834" />
   </component>
   <component name="ProjectLevelVcsManager">
     <ConfirmationsSetting value="2" id="Add" />
@@ -241,6 +368,8 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="PackagesPane" />
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -281,7 +410,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="cod" />
+              <option name="myItemId" value="main" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -299,28 +428,52 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="cod" />
+              <option name="myItemId" value="main" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="inventories" />
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="COM-Warfare" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="COM-Warfare" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="cod" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
         </subPane>
       </pane>
-      <pane id="PackagesPane" />
-      <pane id="Scope" />
       <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../McTranslatePlusPlus" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../COM-Zombies" />
     <property name="nodejs_interpreter_path" value="/usr/local/bin/node" />
     <property name="js.eslint.eslintPackage" value="" />
-    <property name="project.structure.last.edited" value="Artifacts" />
+    <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2045977" />
     <property name="js-jscs-nodeInterpreter" value="/usr/local/bin/node" />
@@ -759,46 +912,53 @@
       <workItem from="1534370650803" duration="2662000" />
       <workItem from="1534373666557" duration="18000" />
       <workItem from="1534373834227" duration="37000" />
-      <workItem from="1534449717899" duration="2112000" />
+      <workItem from="1534449717899" duration="2213000" />
+      <workItem from="1534453466254" duration="2000" />
+      <workItem from="1534453481085" duration="599000" />
+      <workItem from="1534460119729" duration="30000" />
+      <workItem from="1535070559235" duration="38000" />
+      <workItem from="1535345783080" duration="333000" />
+      <workItem from="1535746630643" duration="34000" />
+      <workItem from="1535746685507" duration="898000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="32856000" />
+    <option name="totallyTimeSpent" value="34891000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="213" y="84" width="1378" height="832" extended-state="0" />
+    <frame x="256" y="106" width="1371" height="834" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Nl-Palette" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32875264" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Image Layers" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Properties" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2503671" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.30553505" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.28319883" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Theme Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="true" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32875264" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -818,168 +978,161 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/com/rhetorical/cod/files/ArenasFile.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="285">
-          <caret line="29" column="19" lean-forward="false" selection-start-line="29" selection-start-column="19" selection-end-line="29" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/rhetorical/cod/files/ShopFile.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/files/ShopFile.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="120">
           <caret line="16" column="28" lean-forward="false" selection-start-line="16" selection-start-column="28" selection-end-line="16" selection-end-column="28" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/rhetorical/cod/files/StatsFile.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/files/StatsFile.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="120">
           <caret line="16" column="28" lean-forward="false" selection-start-line="16" selection-start-column="28" selection-end-line="16" selection-end-column="28" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/rhetorical/cod/files/ProgressionFile.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/files/ProgressionFile.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="120">
           <caret line="16" column="12" lean-forward="false" selection-start-line="16" selection-start-column="12" selection-end-line="16" selection-end-column="12" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/rhetorical/cod/files/LoadoutsFile.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/files/LoadoutsFile.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="120">
           <caret line="16" column="12" lean-forward="false" selection-start-line="16" selection-start-column="12" selection-end-line="16" selection-end-column="12" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/rhetorical/cod/files/KillstreaksFile.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/files/KillstreaksFile.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="120">
           <caret line="16" column="12" lean-forward="false" selection-start-line="16" selection-start-column="12" selection-end-line="16" selection-end-column="12" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/rhetorical/cod/files/GunsFile.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/files/GunsFile.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="120">
           <caret line="16" column="12" lean-forward="false" selection-start-line="16" selection-start-column="12" selection-end-line="16" selection-end-column="12" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/rhetorical/cod/files/CreditsFile.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/files/CreditsFile.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="120">
           <caret line="16" column="12" lean-forward="false" selection-start-line="16" selection-start-column="12" selection-end-line="16" selection-end-column="12" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/rhetorical/cod/api/StatRetreival.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/api/StatRetreival.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="135">
           <caret line="9" column="4" lean-forward="false" selection-start-line="9" selection-start-column="4" selection-end-line="9" selection-end-column="4" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/rhetorical/cod/analytics/CollectAnalytics.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/analytics/CollectAnalytics.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="90">
           <caret line="9" column="4" lean-forward="false" selection-start-line="9" selection-start-column="4" selection-end-line="9" selection-end-column="4" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/rhetorical/cod/object/CodPerk.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/object/CodPerk.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="559">
           <caret line="63" column="4" lean-forward="false" selection-start-line="63" selection-start-column="4" selection-end-line="63" selection-end-column="4" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/rhetorical/cod/object/CodScore.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/object/CodScore.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="529">
           <caret line="68" column="4" lean-forward="false" selection-start-line="68" selection-start-column="4" selection-end-line="68" selection-end-column="4" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/rhetorical/cod/object/CodWeapon.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/object/CodWeapon.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="975">
           <caret line="68" column="0" lean-forward="false" selection-start-line="68" selection-start-column="0" selection-end-line="68" selection-end-column="0" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/rhetorical/cod/object/GameState.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/object/GameState.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="45">
           <caret line="3" column="19" lean-forward="false" selection-start-line="3" selection-start-column="19" selection-end-line="3" selection-end-column="19" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/rhetorical/cod/object/GunType.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/object/GunType.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="30">
           <caret line="2" column="12" lean-forward="false" selection-start-line="2" selection-start-column="12" selection-end-line="2" selection-end-column="12" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/rhetorical/cod/object/HealthManager.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/object/HealthManager.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="559">
           <caret line="73" column="4" lean-forward="false" selection-start-line="73" selection-start-column="4" selection-end-line="73" selection-end-column="4" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/rhetorical/cod/object/KillStreak.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/object/KillStreak.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="60">
           <caret line="5" column="12" lean-forward="false" selection-start-line="5" selection-start-column="12" selection-end-line="5" selection-end-column="12" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/rhetorical/cod/object/Perk.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/object/Perk.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="30">
           <caret line="2" column="12" lean-forward="false" selection-start-line="2" selection-start-column="12" selection-end-line="2" selection-end-column="12" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/rhetorical/cod/object/PerkSlot.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/object/PerkSlot.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="60">
           <caret line="5" column="12" lean-forward="false" selection-start-line="5" selection-start-column="12" selection-end-line="5" selection-end-column="12" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/rhetorical/cod/object/RankPerks.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/object/RankPerks.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="285">
           <caret line="23" column="4" lean-forward="false" selection-start-line="23" selection-start-column="4" selection-end-line="23" selection-end-column="4" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/rhetorical/cod/object/Scorestreak.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/object/Scorestreak.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="60">
           <caret line="4" column="13" lean-forward="false" selection-start-line="4" selection-start-column="13" selection-end-line="4" selection-end-column="13" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/rhetorical/cod/object/ScoreStreakCost.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/object/ScoreStreakCost.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="30">
           <caret line="2" column="12" lean-forward="false" selection-start-line="2" selection-start-column="12" selection-end-line="2" selection-end-column="12" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/rhetorical/cod/object/UnlockType.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/object/UnlockType.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="30">
           <caret line="2" column="12" lean-forward="false" selection-start-line="2" selection-start-column="12" selection-end-line="2" selection-end-column="12" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/rhetorical/cod/object/WeaponType.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/object/WeaponType.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="30">
           <caret line="2" column="12" lean-forward="false" selection-start-line="2" selection-start-column="12" selection-end-line="2" selection-end-column="12" />
@@ -995,14 +1148,14 @@
     <entry file="jar://$PROJECT_DIR$/../Dependencies/spigot-1.12.2.jar!/org/bukkit/material/Banner.class" />
     <entry file="jar://$PROJECT_DIR$/../Dependencies/spigot-1.12.2.jar!/org/bukkit/inventory/ItemStack.class" />
     <entry file="jar://$PROJECT_DIR$/../Dependencies/spigot-1.12.2.jar!/org/bukkit/inventory/meta/LeatherArmorMeta.class" />
-    <entry file="file://$PROJECT_DIR$/src/com/rhetorical/cod/object/PerkListener.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/object/PerkListener.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="450">
           <caret line="182" column="58" lean-forward="false" selection-start-line="182" selection-start-column="58" selection-end-line="182" selection-end-column="58" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/rhetorical/cod/object/Loadout.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/object/Loadout.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="369">
           <caret line="161" column="36" lean-forward="true" selection-start-line="161" selection-start-column="36" selection-end-line="161" selection-end-column="36" />
@@ -1010,7 +1163,7 @@
       </provider>
     </entry>
     <entry file="jar:///Library/Java/JavaVirtualMachines/jdk1.8.0_60.jdk/Contents/Home/src.zip!/java/util/function/Function.java" />
-    <entry file="file://$PROJECT_DIR$/src/com/rhetorical/cod/ShopManager.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/ShopManager.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1456">
           <caret line="399" column="26" lean-forward="false" selection-start-line="399" selection-start-column="26" selection-end-line="399" selection-end-column="26" />
@@ -1018,48 +1171,12 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/rhetorical/cod/LoadoutManager.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/LoadoutManager.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="120">
           <caret line="26" column="85" lean-forward="false" selection-start-line="26" selection-start-column="85" selection-end-line="26" selection-end-column="85" />
           <folding>
             <element signature="e#874#902#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/rhetorical/cod/object/Gamemode.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="15" column="21" lean-forward="false" selection-start-line="15" selection-start-column="21" selection-end-line="15" selection-end-column="21" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/rhetorical/cod/object/CodMap.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3077">
-          <caret line="199" column="0" lean-forward="false" selection-start-line="199" selection-start-column="0" selection-end-line="202" selection-end-column="0" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#4939#4940#0" expanded="true" />
-            <element signature="e#4974#4975#0" expanded="true" />
-            <element signature="e#5013#5014#0" expanded="true" />
-            <element signature="e#5040#5041#0" expanded="true" />
-            <element signature="e#5210#5211#0" expanded="true" />
-            <element signature="e#5251#5252#0" expanded="true" />
-            <element signature="e#5648#5649#0" expanded="true" />
-            <element signature="e#5687#5688#0" expanded="true" />
-            <element signature="e#5818#5819#0" expanded="true" />
-            <element signature="e#5851#5852#0" expanded="true" />
-            <element signature="e#5998#5999#0" expanded="true" />
-            <element signature="e#6023#6024#0" expanded="true" />
-            <element signature="e#6150#6151#0" expanded="true" />
-            <element signature="e#6174#6175#0" expanded="true" />
-            <element signature="e#6364#6365#0" expanded="true" />
-            <element signature="e#6388#6389#0" expanded="true" />
-            <element signature="e#6576#6577#0" expanded="true" />
-            <element signature="e#6601#6602#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1071,50 +1188,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/rhetorical/cod/inventories/InventoryManager.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="571">
-          <caret line="647" column="64" lean-forward="false" selection-start-line="647" selection-start-column="64" selection-end-line="647" selection-end-column="64" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/config.yml">
+    <entry file="file://$PROJECT_DIR$/src/main/java/config.yml">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="17">
           <caret line="1" column="31" lean-forward="false" selection-start-line="1" selection-start-column="31" selection-end-line="1" selection-end-column="31" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/rhetorical/cod/GameManager.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
-          <caret line="14" column="13" lean-forward="false" selection-start-line="14" selection-start-column="13" selection-end-line="14" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/rhetorical/cod/DependencyManager.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="187">
-          <caret line="17" column="75" lean-forward="true" selection-start-line="17" selection-start-column="75" selection-end-line="17" selection-end-column="75" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/rhetorical/cod/object/KillStreakManager.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="858">
-          <caret line="143" column="18" lean-forward="false" selection-start-line="143" selection-start-column="18" selection-end-line="143" selection-end-column="18" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/rhetorical/cod/object/CodGun.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="68">
-          <caret line="7" column="13" lean-forward="false" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="13" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1122,34 +1199,176 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="306">
           <caret line="48" column="6" lean-forward="false" selection-start-line="48" selection-start-column="6" selection-end-line="48" selection-end-column="6" />
-          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/rhetorical/cod/Main.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="289">
-          <caret line="232" column="143" lean-forward="false" selection-start-line="232" selection-start-column="143" selection-end-line="232" selection-end-column="143" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/plugin.yml">
+    <entry file="file://$PROJECT_DIR$/src/main/java/plugin.yml">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="289">
           <caret line="17" column="21" lean-forward="true" selection-start-line="17" selection-start-column="21" selection-end-line="17" selection-end-column="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/Main.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3553">
+          <caret line="232" column="143" lean-forward="false" selection-start-line="232" selection-start-column="143" selection-end-line="232" selection-end-column="143" />
+          <folding>
+            <element signature="imports" expanded="false" />
+            <element signature="e#906#907#0" expanded="false" />
+            <element signature="e#982#983#0" expanded="false" />
+            <element signature="e#28984#28985#0" expanded="false" />
+            <element signature="e#29018#29019#0" expanded="false" />
+            <element signature="e#29786#29787#0" expanded="false" />
+            <element signature="e#29816#29817#0" expanded="false" />
+            <element signature="e#29863#29864#0" expanded="false" />
+            <element signature="e#29899#29900#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/DependencyManager.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="187">
+          <caret line="17" column="75" lean-forward="false" selection-start-line="17" selection-start-column="75" selection-end-line="17" selection-end-column="75" />
+          <folding>
+            <element signature="imports" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/object/KillStreakManager.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2261">
+          <caret line="143" column="18" lean-forward="false" selection-start-line="143" selection-start-column="18" selection-end-line="143" selection-end-column="18" />
+          <folding>
+            <element signature="imports" expanded="false" />
+            <element signature="e#622#644#0" expanded="false" />
+            <element signature="e#709#726#0" expanded="false" />
+            <element signature="e#812#843#0" expanded="false" />
+            <element signature="e#5310#5318#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/object/GameInstance.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="23766">
+          <caret line="1446" column="0" lean-forward="false" selection-start-line="1446" selection-start-column="0" selection-end-line="1446" selection-end-column="0" />
+          <folding>
+            <element signature="imports" expanded="false" />
+            <element signature="e#2248#2266#0" expanded="false" />
+            <element signature="e#4157#4158#0" expanded="false" />
+            <element signature="e#4178#4179#0" expanded="false" />
+            <element signature="e#5385#5386#0" expanded="false" />
+            <element signature="e#5412#5413#0" expanded="false" />
+            <element signature="e#5443#5444#0" expanded="false" />
+            <element signature="e#5469#5470#0" expanded="false" />
+            <element signature="e#7043#7044#0" expanded="false" />
+            <element signature="e#7109#7110#0" expanded="false" />
+            <element signature="e#20527#20528#0" expanded="false" />
+            <element signature="e#20553#20554#0" expanded="false" />
+            <element signature="e#22802#22803#0" expanded="false" />
+            <element signature="e#22840#22841#0" expanded="false" />
+            <element signature="e#23194#23195#0" expanded="false" />
+            <element signature="e#23220#23221#0" expanded="false" />
+            <element signature="e#23269#23270#0" expanded="false" />
+            <element signature="e#23308#23309#0" expanded="false" />
+            <element signature="e#23341#23342#0" expanded="false" />
+            <element signature="e#23360#23361#0" expanded="false" />
+            <element signature="e#23403#23404#0" expanded="false" />
+            <element signature="e#23428#23429#0" expanded="false" />
+            <element signature="e#23463#23464#0" expanded="false" />
+            <element signature="e#23504#23505#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/object/CodMap.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3077">
+          <caret line="199" column="0" lean-forward="false" selection-start-line="199" selection-start-column="0" selection-end-line="202" selection-end-column="0" />
+          <folding>
+            <element signature="imports" expanded="false" />
+            <element signature="e#4657#4658#0" expanded="false" />
+            <element signature="e#4680#4681#0" expanded="false" />
+            <element signature="e#4711#4712#0" expanded="false" />
+            <element signature="e#4732#4733#0" expanded="false" />
+            <element signature="e#4776#4777#0" expanded="false" />
+            <element signature="e#4805#4806#0" expanded="false" />
+            <element signature="e#4853#4854#0" expanded="false" />
+            <element signature="e#4877#4878#0" expanded="false" />
+            <element signature="e#4939#4940#0" expanded="false" />
+            <element signature="e#4974#4975#0" expanded="false" />
+            <element signature="e#5013#5014#0" expanded="false" />
+            <element signature="e#5040#5041#0" expanded="false" />
+            <element signature="e#5299#5300#0" expanded="false" />
+            <element signature="e#5323#5324#0" expanded="false" />
+            <element signature="e#5385#5386#0" expanded="false" />
+            <element signature="e#5420#5421#0" expanded="false" />
+            <element signature="e#5458#5459#0" expanded="false" />
+            <element signature="e#5484#5485#0" expanded="false" />
+            <element signature="e#5648#5649#0" expanded="false" />
+            <element signature="e#5687#5688#0" expanded="false" />
+            <element signature="e#5735#5736#0" expanded="false" />
+            <element signature="e#5758#5759#0" expanded="false" />
+            <element signature="e#5818#5819#0" expanded="false" />
+            <element signature="e#5851#5852#0" expanded="false" />
+            <element signature="e#5885#5886#0" expanded="false" />
+            <element signature="e#5901#5902#0" expanded="false" />
+            <element signature="e#5943#5944#0" expanded="false" />
+            <element signature="e#5962#5963#0" expanded="false" />
+            <element signature="e#5998#5999#0" expanded="false" />
+            <element signature="e#6023#6024#0" expanded="false" />
+            <element signature="e#6150#6151#0" expanded="false" />
+            <element signature="e#6174#6175#0" expanded="false" />
+            <element signature="e#6364#6365#0" expanded="false" />
+            <element signature="e#6388#6389#0" expanded="false" />
+            <element signature="e#6424#6425#0" expanded="false" />
+            <element signature="e#6449#6450#0" expanded="false" />
+            <element signature="e#6576#6577#0" expanded="false" />
+            <element signature="e#6601#6602#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/inventories/InventoryManager.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1096">
+          <caret line="435" column="27" lean-forward="true" selection-start-line="435" selection-start-column="27" selection-end-line="435" selection-end-column="27" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/rhetorical/cod/object/GameInstance.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/GameManager.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="163">
-          <caret line="293" column="52" lean-forward="true" selection-start-line="293" selection-start-column="52" selection-end-line="293" selection-end-column="52" />
-          <folding>
-            <element signature="e#22802#22803#0" expanded="true" />
-            <element signature="e#22840#22841#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="17">
+          <caret line="14" column="13" lean-forward="false" selection-start-line="14" selection-start-column="13" selection-end-line="14" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/object/Gamemode.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="15" column="21" lean-forward="false" selection-start-line="15" selection-start-column="21" selection-end-line="15" selection-end-column="21" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="323">
+          <caret line="19" column="45" lean-forward="false" selection-start-line="19" selection-start-column="45" selection-end-line="19" selection-end-column="45" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/object/CodGun.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="68">
+          <caret line="7" column="13" lean-forward="false" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="13" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1164,7 +1383,6 @@
             <option name="proportions">
               <list>
                 <option value="0.2045977" />
-                <option value="0.5" />
               </list>
             </option>
           </splitter-proportions>
@@ -1195,7 +1413,7 @@
       </state>
       <state key="JdkListConfigurable.UI">
         <settings>
-          <last-edited>1.8</last-edited>
+          <last-edited>1.8u181</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>
@@ -1231,6 +1449,7 @@
       </state>
       <state key="ProjectLibrariesConfigurable.UI">
         <settings>
+          <last-edited>Maven: com.google.code.gson:gson:2.8.0</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>
