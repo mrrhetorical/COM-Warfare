@@ -1,0 +1,57 @@
+#Auto download dependencies: Automatically download all required dependencies if this plugin cannot find them on the computer. By having this value set to 'true', you understand and thereby give permission for this application to download files that are required to run features of this plugin onto this computer.
+auto-download-dependency: false
+#Lang: The two letter abbreviation for what language the plugin will be translated to. Set to 'none' if you don't want to use the translation service.
+lang: EN
+#Lobby Time: The amount of time players should wait in the lobby before the match starts.
+lobbyTime: 70
+#Minimum player count: The amount of players that are required to start a game.
+minPlayers: 6
+#Game time: The amount of time (in seconds) players should spend inside of a match, separated by gamemode.
+gameTime:
+  TDM: 600
+  DOM: 600
+  CTF: 600
+  FFA: 600
+  RSB: 600
+#Default health: How much health should the player start with? (Default is 20 in minecraft, but 100 can be used to make guns do more precise damage amounts.)
+defaultHealth: 100
+#Max level: What is the maximum level that a player can reach before they stop to level up?
+maxLevel: 55
+#Maximum prestige level: What is the prestige level at which the player can reach before they can no longer prestige?
+maxPrestigeLevel: 10
+#SQL api_key: The key required by EasyMySQL-API to utilize all SQL actions
+sql:
+  api_key: none
+#Translate api_key: The key required by McTranslate++ to utilize all Cloud-based translation actions.
+translate:
+  api_key: none
+#Maximum score: The score that players much reach in the game to stop the game before the timer has finished counting down.
+maxScore:
+  TDM: 75
+  RSB: 75
+  FFA: 30
+  KC: 50
+  DOM: 200
+  CTF: 3
+  INFECT: 120
+  OITC: 3
+
+#Rank Tiers: The tiers at which players can recieve different rewards. All players can get the default one. The permission for each tier are 'com.'
+RankTiers:
+  0:
+    #The name of the tier.
+    name: default
+    #The amounts for kill rewards.
+    kill:
+      #Amount of xp rewarded when a player kills another player.
+      xp: 100
+      #Amount of credits rewarded when a player kills another player.
+      credits: 1
+    #Amount of credits rewarded when a player levels up.
+    levelCredits: 0
+  1:
+    name: donator
+    kill:
+      xp: 100
+      credits: 1
+    levelCredits: 1

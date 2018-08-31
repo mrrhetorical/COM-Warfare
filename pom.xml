@@ -12,24 +12,19 @@
             <id>spigot-repo</id>
             <url>https://hub.spigotmc.org/nexus/content/repositories/</url>
         </repository>
+
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
     </repositories>
 
     <dependencies>
 
         <dependency>
-            <groupId>com.rhetorical</groupId>
-            <artifactId>mc-translate</artifactId>
-            <version>1.0</version>
-            <scope>provided</scope>
-            <systemPath>C:/Users/caleb/m2-local-repo/com/rhetorical/mc-translate/mctranslateplusplus.jar</systemPath>
-        </dependency>
-
-        <dependency>
-            <groupId>com.rhetorical</groupId>
-            <artifactId>mysql-api</artifactId>
-            <version>1.0</version>
-            <scope>provided</scope>
-            <systemPath>C:/Users/caleb/m2-local-repo/com/rhetorical/mysql-api/mysqlapi.jar</systemPath>
+            <groupId>com.github.mrrhetorical</groupId>
+            <artifactId>McTranslatePlusPlus</artifactId>
+            <version>master-1.1-g9681908-1</version>
         </dependency>
 
         <dependency>
