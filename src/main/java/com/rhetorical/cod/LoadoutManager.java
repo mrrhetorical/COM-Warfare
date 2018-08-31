@@ -36,9 +36,9 @@ public class LoadoutManager {
 
 		knife = new ItemStack(Material.IRON_SWORD);
 		ItemMeta knifeMeta = knife.getItemMeta();
-		knifeMeta.setDisplayName("§eKnife");
+		knifeMeta.setDisplayName("\u00A7eKnife");
 		ArrayList<String> knifeLore = new ArrayList<String>();
-		knifeLore.add("§6A knife that can kill players in one hit.");
+		knifeLore.add("\u00A76A knife that can kill players in one hit.");
 		knifeMeta.setLore(knifeLore);
 		knife.setItemMeta(knifeMeta);
 	}
@@ -153,7 +153,7 @@ public class LoadoutManager {
 
 		if (!GunsFile.getData().contains("Guns.Primary.default")) {
 
-			Main.sendMessage(Main.cs,  Main.codPrefix + "§cCan't start COM-Warfare without a default primary weapon!", Main.lang);
+			Main.sendMessage(Main.cs,  Main.codPrefix + "\u00A7cCan't start COM-Warfare without a default PRIMARY weapon!", Main.lang);
 			return null;
 		}
 
@@ -173,7 +173,7 @@ public class LoadoutManager {
 
 		if (!GunsFile.getData().contains("Guns.Secondary.default")) {
 
-			Main.sendMessage(Main.cs,  Main.codPrefix + "§cCan't start COM-Warfare without a default secondary weapon!", Main.lang);
+			Main.sendMessage(Main.cs,  Main.codPrefix + "\u00A7cCan't start COM-Warfare without a default SECONDARY weapon!", Main.lang);
 			return null;
 		}
 
@@ -193,7 +193,7 @@ public class LoadoutManager {
 
 		if (!GunsFile.getData().contains("Weapons.LETHAL.default")) {
 
-			Main.sendMessage(Main.cs,  Main.codPrefix + "§cCan't start COM-Warfare without a default lethal weapon!", Main.lang);
+			Main.sendMessage(Main.cs,  Main.codPrefix + "\u00A7cCan't start COM-Warfare without a default LETHAL weapon!", Main.lang);
 			return null;
 		}
 
@@ -208,7 +208,7 @@ public class LoadoutManager {
 
 		if (!GunsFile.getData().contains("Weapons.TACTICAL.default")) {
 
-			Main.sendMessage(Main.cs,  Main.codPrefix + "§cCan't start COM-Warfare without a default TACTICAL weapon!", Main.lang);
+			Main.sendMessage(Main.cs,  Main.codPrefix + "\u00A7cCan't start COM-Warfare without a default TACTICAL weapon!", Main.lang);
 			return null;
 		}
 
@@ -338,7 +338,7 @@ public class LoadoutManager {
 				loadout = new Loadout(p, name, primary, secondary, lethal, tactical, perkOne, perkTwo, perkThree);
 				l.add(loadout);
 			} catch (Exception e) {
-				Main.sendMessage(Main.cs,  Main.codPrefix + "§cError loading player loadout from the config.", Main.lang);
+				Main.sendMessage(Main.cs,  Main.codPrefix + "\u00A7cError loading player loadout from the config.", Main.lang);
 			}
 
 			k++;

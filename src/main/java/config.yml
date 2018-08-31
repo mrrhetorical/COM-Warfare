@@ -19,9 +19,6 @@ defaultHealth: 100
 maxLevel: 55
 #Maximum prestige level: What is the prestige level at which the player can reach before they can no longer prestige?
 maxPrestigeLevel: 10
-#SQL api_key: The key required by EasyMySQL-API to utilize all SQL actions
-sql:
-  api_key: none
 #Translate api_key: The key required by McTranslate++ to utilize all Cloud-based translation actions.
 translate:
   api_key: none

@@ -67,7 +67,7 @@ public class PerkListener implements Listener {
 
 						p.getInventory().setItem(19, primaryAmmo);
 					} else {
-						Main.sendMessage(p, Main.codPrefix + "§cYou moved and couldn't finish switching your class!", Main.lang);
+						Main.sendMessage(p, Main.codPrefix + "\u00A7cYou moved and couldn't finish switching your class!", Main.lang);
 					}
 					this.cancel();
 				}
@@ -160,7 +160,7 @@ public class PerkListener implements Listener {
 		p.setWalkSpeed(0.1F);
 		p.setSneaking(true);
 		
-		Main.sendMessage(p, "§fYou are in final stand! Wait 20 seconds to get back up!", Main.lang);
+		Main.sendMessage(p, "\u00A7fYou are in final stand! Wait 20 seconds to get back up!", Main.lang);
 		BukkitRunnable br = new BukkitRunnable() {
 			
 			private int time = 40;
@@ -171,7 +171,7 @@ public class PerkListener implements Listener {
 				else {
 					p.setWalkSpeed(1F);
 					i.health.reset(p);
-					Main.sendMessage(p, "§fYou are out of final stand!", Main.lang);
+					Main.sendMessage(p, "\u00A7fYou are out of final stand!", Main.lang);
 					cancelLastStand(p);
 				}
 				

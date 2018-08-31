@@ -34,30 +34,30 @@ public class KillStreakManager {
 	public static void setup() {
 		KillStreakManager.uavItem = new ItemStack(Material.SHEARS);
 		ItemMeta uavMeta = uavItem.getItemMeta();
-		uavMeta.setDisplayName("§6§lUAV");
+		uavMeta.setDisplayName("\u00A76\u00A7lUAV");
 		List<String> uavLore = uavMeta.getLore();
 		if (uavLore == null)
 			uavLore = new ArrayList<String>();
-		uavLore.add("§f§lRequired kills: §a" + 3);
+		uavLore.add("\u00A7f\u00A7lRequired kills: \u00A7a" + 3);
 		uavMeta.setLore(uavLore);
 		uavItem.setItemMeta(uavMeta);
 
 		KillStreakManager.counterUavItem = new ItemStack(Material.SHEARS);
 		ItemMeta counterUavMeta = counterUavItem.getItemMeta();
-		counterUavMeta.setDisplayName("§6§lCounter UAV");
+		counterUavMeta.setDisplayName("\u00A76\u00A7lCounter UAV");
 		List<String> counterUavLore = counterUavMeta.getLore();
 		if (counterUavLore == null)
 			counterUavLore = new ArrayList<String>();
-		counterUavLore.add("§f§lRequred kills: §a" + 4);
+		counterUavLore.add("\u00A7f\u00A7lRequred kills: \u00A7a" + 4);
 		counterUavItem.setItemMeta(counterUavMeta);
 
 		KillStreakManager.nukeItem = new ItemStack(Material.TNT);
 		ItemMeta nukeMeta = nukeItem.getItemMeta();
-		nukeMeta.setDisplayName("§6§lNuke");
+		nukeMeta.setDisplayName("\u00A76\u00A7lNuke");
 		List<String> nukeLore = nukeMeta.getLore();
 		if (nukeLore == null)
 			nukeLore = new ArrayList<String>();
-		nukeLore.add("§f§lRequired kills: §a" + 25);
+		nukeLore.add("\u00A7f\u00A7lRequired kills: \u00A7a" + 25);
 		nukeMeta.setLore(nukeLore);
 		nukeItem.setItemMeta(nukeMeta);
 	}
@@ -148,7 +148,7 @@ public class KillStreakManager {
 			try {
 				ks = KillStreak.valueOf(s);
 			} catch (Exception e) {
-				Main.cs.sendMessage(Main.codPrefix + "§cCould not load killstreak information for " + p.getName());
+				Main.cs.sendMessage(Main.codPrefix + "\u00A7cCould not load killstreak information for " + p.getName());
 				continue;
 			}
 

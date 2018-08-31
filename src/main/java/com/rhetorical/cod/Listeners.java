@@ -60,20 +60,20 @@ public class Listeners implements Listener {
 			if (GameManager.isInMatch(sender) && GameManager.isInMatch(reciever)) {
 				if (GameManager.getMatchWhichContains(sender) == GameManager.getMatchWhichContains(reciever)) {
 					if (reciever == sender) {
-						reciever.sendMessage("§a" + sender.getDisplayName() + " §r§f»§r §7" + message);
+						reciever.sendMessage("\u00A7a" + sender.getDisplayName() + " \u00A7r\u00A7f»\u00A7r \u00A77" + message);
 						continue;
 					}
 
 					GameInstance i = GameManager.getMatchWhichContains(sender);
 
 					if (i.isOnBlueTeam(sender)) {
-						reciever.sendMessage("§9" + sender.getDisplayName() + " §r§f»§r §7" + message);
+						reciever.sendMessage("\u00A79" + sender.getDisplayName() + " \u00A7r\u00A7f»\u00A7r \u00A77" + message);
 					} else if (i.isOnRedTeam(sender)) {
-						reciever.sendMessage("§c" + sender.getDisplayName() + " §r§f»§r §7" + message);
+						reciever.sendMessage("\u00A7c" + sender.getDisplayName() + " \u00A7r\u00A7f»\u00A7r \u00A77" + message);
 					} else if (i.isOnPinkTeam(sender)) {
-						reciever.sendMessage("§d" + sender.getDisplayName() + " §r§f»§r §7" + message);
+						reciever.sendMessage("\u00A7d" + sender.getDisplayName() + " \u00A7r\u00A7f»\u00A7r \u00A77" + message);
 					} else {
-						reciever.sendMessage("§7" + sender.getDisplayName() + " §r§f»§r §7" + message);
+						reciever.sendMessage("\u00A77" + sender.getDisplayName() + " \u00A7r\u00A7f»\u00A7r \u00A77" + message);
 					}
 				}
 			} else {

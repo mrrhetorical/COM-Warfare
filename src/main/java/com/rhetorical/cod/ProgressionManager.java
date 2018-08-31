@@ -34,7 +34,7 @@ public class ProgressionManager {
 		if (maxLevelFromConfig <= 0) {
 			this.maxLevel = 55;
 			Main.sendMessage(Main.cs, 
-					Main.codPrefix + "§cMax level set to 55 by default! You must set a maximum level of at least 1!", Main.lang);
+					Main.codPrefix + "\u00A7cMax level set to 55 by default! You must set a maximum level of at least 1!", Main.lang);
 		} else {
 			this.maxLevel = maxLevelFromConfig;
 		}
@@ -42,7 +42,7 @@ public class ProgressionManager {
 		if (maxPrestigeLevelFromConfig <= 0) {
 			this.maxPrestigeLevel = 10;
 			Main.sendMessage(Main.cs, Main.codPrefix
-					+ "§cMax prestige level set to 10 by default! You must set a maximum level of at least 1!", Main.lang);
+					+ "\u00A7cMax prestige level set to 10 by default! You must set a maximum level of at least 1!", Main.lang);
 		} else {
 			this.maxPrestigeLevel = maxPrestigeLevelFromConfig;
 		}
@@ -53,8 +53,8 @@ public class ProgressionManager {
 		this.level.put(p, level);
 
 		if (showMessage) {
-			p.sendMessage(Main.codPrefix + "§7Congratulations! You just ranked up to level §e"
-					+ Integer.toString(getLevel(p)) + "§r§7!");
+			p.sendMessage(Main.codPrefix + "\u00A77Congratulations! You just ranked up to level \u00A7e"
+					+ Integer.toString(getLevel(p)) + "\u00A7r\u00A77!");
 		}
 
 	}
@@ -65,12 +65,12 @@ public class ProgressionManager {
 		}
 
 		this.level.put(p, this.level.get(p) + 1);
-		p.sendMessage(Main.codPrefix + "§7Congratulations! You just ranked up to level §e"
-				+ Integer.toString(getLevel(p)) + "§r§7!");
+		p.sendMessage(Main.codPrefix + "\u00A77Congratulations! You just ranked up to level \u00A7e"
+				+ Integer.toString(getLevel(p)) + "\u00A7r\u00A77!");
 
 		if (this.getLevel(p) == this.maxLevel) {
 			p.sendMessage(Main.codPrefix
-					+ "§7Congratulations! You've reached the highest rank! Visit the prestige menu to get your reward!");
+					+ "\u00A77Congratulations! You've reached the highest rank! Visit the prestige menu to get your reward!");
 		}
 
 		Main.shopManager.checkForNewGuns(p);
@@ -89,8 +89,8 @@ public class ProgressionManager {
 		this.prestigeLevel.put(p, level);
 
 		if (showMessage) {
-			p.sendMessage(Main.codPrefix + "§7Congratulations! You just ranked up to prestige level §e"
-					+ Integer.toString(getLevel(p)) + "§r§7!");
+			p.sendMessage(Main.codPrefix + "\u00A77Congratulations! You just ranked up to prestige level \u00A7e"
+					+ Integer.toString(getLevel(p)) + "\u00A7r\u00A77!");
 		}
 
 	}
@@ -104,9 +104,9 @@ public class ProgressionManager {
 			return;
 
 		this.prestigeLevel.put(p, this.prestigeLevel.get(p) + 1);
-		p.sendMessage(Main.codPrefix + "§7Congratulations! You just ranked up to prestige level §e"
-				+ Integer.toString(getLevel(p)) + "§r§7!");
-		p.sendMessage(Main.codPrefix + "§7Your rank has been reset!");
+		p.sendMessage(Main.codPrefix + "\u00A77Congratulations! You just ranked up to prestige level \u00A7e"
+				+ Integer.toString(getLevel(p)) + "\u00A7r\u00A77!");
+		p.sendMessage(Main.codPrefix + "\u00A77Your rank has been reset!");
 		setLevel(p, 1, false);
 		return;
 	}
@@ -179,7 +179,7 @@ public class ProgressionManager {
 		try {
 			p.setExp((float) (getExperience(p) / getExperienceForLevel(getLevel(p))));
 		} catch (Exception e) {
-			Main.sendMessage(Main.cs, "§cThere was an error setting the player's experience level", Main.lang);
+			Main.sendMessage(Main.cs, "\u00A7cThere was an error setting the player's experience level", Main.lang);
 		}
 	}
 

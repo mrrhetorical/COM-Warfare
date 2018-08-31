@@ -13,7 +13,7 @@ public class CollectAnalytics {
 		BukkitRunnable br = new BukkitRunnable() {
 			public void run() {
 				CollectAnalytics.joinedPlayers = Bukkit.getOnlinePlayers().size();
-//				Main.cs.sendMessage(Main.codPrefix + "§fThere's " + joinedPlayers + " players playing on this server");
+//				Main.cs.sendMessage(Main.codPrefix + "\u00A7fThere's " + joinedPlayers + " players playing on this server");
 			}
 		};
 		

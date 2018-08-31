@@ -321,8 +321,8 @@ public class ShopManager {
 
 		Main.shopManager.setPurchasedGuns(purchased);
 
-		Main.sendMessage(p, Main.codPrefix + "§aYou just unlocked the §6" + gun.getName() + "§a!", Main.lang);
-		Main.sendMessage(p, Main.codPrefix + "§aEquip it after the match!", Main.lang);
+		Main.sendMessage(p, Main.codPrefix + "\u00A7aYou just unlocked the \u00A76" + gun.getName() + "\u00A7a!", Main.lang);
+		Main.sendMessage(p, Main.codPrefix + "\u00A7aEquip it after the match!", Main.lang);
 	}
 
 	private void unlockGrenade(Player p, CodWeapon grenade) {
@@ -342,14 +342,14 @@ public class ShopManager {
 
 					Main.shopManager.setPurchasedWeapons(purchased);
 
-					Main.sendMessage(p, Main.codPrefix + "§aYou just unlocked the §6" + grenade.getName() + "§a!", Main.lang);
-					Main.sendMessage(p, Main.codPrefix + "§aEquip it after the match!", Main.lang);
+					Main.sendMessage(p, Main.codPrefix + "\u00A7aYou just unlocked the \u00A76" + grenade.getName() + "\u00A7a!", Main.lang);
+					Main.sendMessage(p, Main.codPrefix + "\u00A7aEquip it after the match!", Main.lang);
 				}
 			}
 		} else if (grenade.getType() == UnlockType.BOTH) {
 			if (Main.progManager.getLevel(p) == grenade.getLevelUnlock()) {
 				Main.sendMessage(p,
-						Main.codPrefix + "§aThe §6" + grenade.getName() + "§a is now available for purchase!", Main.lang);
+						Main.codPrefix + "\u00A7aThe \u00A76" + grenade.getName() + "\u00A7a is now available for purchase!", Main.lang);
 			}
 		}
 	}
@@ -371,7 +371,7 @@ public class ShopManager {
 				}
 			} else if (gun.getType() == UnlockType.BOTH) {
 				if (Main.progManager.getLevel(p) == gun.getLevelUnlock()) {
-					Main.sendMessage(p, Main.codPrefix + "§aThe §6" + gun.getName() + "§a is now available for purchase!", Main.lang);
+					Main.sendMessage(p, Main.codPrefix + "\u00A7aThe \u00A76" + gun.getName() + "\u00A7a is now available for purchase!", Main.lang);
 				}
 			}
 
@@ -391,7 +391,7 @@ public class ShopManager {
 				}
 			} else if (gun.getType() == UnlockType.BOTH) {
 				if (Main.progManager.getLevel(p) == gun.getLevelUnlock()) {
-					Main.sendMessage(p, Main.codPrefix + "§aThe §6" + gun.getName() + "§a is now available for purchase!", Main.lang);
+					Main.sendMessage(p, Main.codPrefix + "\u00A7aThe \u00A76" + gun.getName() + "\u00A7a is now available for purchase!", Main.lang);
 				}
 			}
 		}

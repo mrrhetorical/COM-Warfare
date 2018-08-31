@@ -86,10 +86,10 @@ public class CreditManager {
 				setCredits(p, getCredits(p) - cost);
 			}
 			saveCredits(p);
-			Main.sendMessage(p, Main.codPrefix + "§aPurchase successful!", Main.lang);
+			Main.sendMessage(p, Main.codPrefix + "\u00A7aPurchase successful!", Main.lang);
 			return true;
 		} else {
-			Main.sendMessage(p, Main.codPrefix + "§cInsufficient funds!", Main.lang);
+			Main.sendMessage(p, Main.codPrefix + "\u00A7cInsufficient funds!", Main.lang);
 			return false;
 		}
 	}
