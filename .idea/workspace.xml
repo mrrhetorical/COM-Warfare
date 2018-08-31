@@ -7,65 +7,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c004894e-1f3c-4cdf-ba37-fd72a31bc043" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/compiler.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_google_code_gson_gson_2_8_0.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_google_guava_guava_21_0.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_googlecode_json_simple_json_simple_1_1_1.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__commons_lang_commons_lang_2_6.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__junit_junit_4_10.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__net_md_5_bungeecord_chat_1_13_SNAPSHOT.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_hamcrest_hamcrest_core_1_1.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_spigotmc_spigot_api_1_13_1_R0_1_SNAPSHOT.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_yaml_snakeyaml_1_21.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/pom.xml" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/artifacts/COMR_jar.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/rhetorical/cod/CreditManager.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/rhetorical/cod/DependencyManager.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/rhetorical/cod/GameManager.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/rhetorical/cod/Listeners.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/rhetorical/cod/LoadoutManager.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/rhetorical/cod/Main.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/rhetorical/cod/PerkManager.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/rhetorical/cod/ProgressionManager.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/rhetorical/cod/ShopManager.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/rhetorical/cod/StatHandler.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/rhetorical/cod/analytics/CollectAnalytics.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/rhetorical/cod/api/StatRetreival.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/rhetorical/cod/files/ArenasFile.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/rhetorical/cod/files/CreditsFile.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/rhetorical/cod/files/GunsFile.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/rhetorical/cod/files/KillstreaksFile.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/rhetorical/cod/files/LoadoutsFile.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/rhetorical/cod/files/ProgressionFile.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/rhetorical/cod/files/ShopFile.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/rhetorical/cod/files/StatsFile.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/rhetorical/cod/inventories/InventoryManager.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/rhetorical/cod/object/CodGun.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/rhetorical/cod/object/CodMap.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/rhetorical/cod/object/CodPerk.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/rhetorical/cod/object/CodScore.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/rhetorical/cod/object/CodWeapon.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/rhetorical/cod/object/GameInstance.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/rhetorical/cod/object/GameState.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/rhetorical/cod/object/Gamemode.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/rhetorical/cod/object/GunType.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/rhetorical/cod/object/HealthManager.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/rhetorical/cod/object/KillStreak.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/rhetorical/cod/object/KillStreakManager.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/rhetorical/cod/object/Loadout.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/rhetorical/cod/object/Perk.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/rhetorical/cod/object/PerkListener.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/rhetorical/cod/object/PerkSlot.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/rhetorical/cod/object/RankPerks.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/rhetorical/cod/object/ScoreStreakCost.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/rhetorical/cod/object/Scorestreak.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/rhetorical/cod/object/UnlockType.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/rhetorical/cod/object/WeaponType.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/config.yml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/plugin.yml" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_rhetorical_mc_translate_1_0.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_rhetorical_mysql_api_1_0.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/COMR.iml" afterPath="$PROJECT_DIR$/COMR.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pom.xml" afterPath="$PROJECT_DIR$/pom.xml" />
     </list>
     <ignored path="$PROJECT_DIR$/bin/" />
     <ignored path="$PROJECT_DIR$/target/" />
@@ -85,19 +31,9 @@
       <file leaf-file-name="Main.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/Main.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="3553">
+            <state relative-caret-position="2541">
               <caret line="232" column="143" lean-forward="false" selection-start-line="232" selection-start-column="143" selection-end-line="232" selection-end-column="143" />
-              <folding>
-                <element signature="imports" expanded="false" />
-                <element signature="e#906#907#0" expanded="false" />
-                <element signature="e#982#983#0" expanded="false" />
-                <element signature="e#28984#28985#0" expanded="false" />
-                <element signature="e#29018#29019#0" expanded="false" />
-                <element signature="e#29786#29787#0" expanded="false" />
-                <element signature="e#29816#29817#0" expanded="false" />
-                <element signature="e#29863#29864#0" expanded="false" />
-                <element signature="e#29899#29900#0" expanded="false" />
-              </folding>
+              <folding />
             </state>
           </provider>
         </entry>
@@ -175,11 +111,21 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="CodGun.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="CodGun.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/object/CodGun.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="68">
               <caret line="7" column="13" lean-forward="false" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="13" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="pom.xml" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/pom.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="85">
+              <caret line="5" column="19" lean-forward="false" selection-start-line="5" selection-start-column="18" selection-end-line="5" selection-end-column="19" />
               <folding />
             </state>
           </provider>
@@ -345,8 +291,8 @@
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="256" />
-    <option name="y" value="106" />
+    <option name="x" value="247" />
+    <option name="y" value="54" />
     <option name="width" value="1371" />
     <option name="height" value="834" />
   </component>
@@ -473,7 +419,7 @@
     <property name="last_opened_file_path" value="$PROJECT_DIR$/../COM-Zombies" />
     <property name="nodejs_interpreter_path" value="/usr/local/bin/node" />
     <property name="js.eslint.eslintPackage" value="" />
-    <property name="project.structure.last.edited" value="Modules" />
+    <property name="project.structure.last.edited" value="Problems" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2045977" />
     <property name="js-jscs-nodeInterpreter" value="/usr/local/bin/node" />
@@ -919,16 +865,16 @@
       <workItem from="1535070559235" duration="38000" />
       <workItem from="1535345783080" duration="333000" />
       <workItem from="1535746630643" duration="34000" />
-      <workItem from="1535746685507" duration="898000" />
+      <workItem from="1535746685507" duration="1991000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="34891000" />
+    <option name="totallyTimeSpent" value="35984000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="256" y="106" width="1371" height="834" extended-state="0" />
-    <editor active="true" />
+    <frame x="247" y="54" width="1371" height="834" extended-state="0" />
+    <editor active="false" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -944,7 +890,7 @@
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.30553505" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.30553505" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.28319883" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -1209,24 +1155,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/Main.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3553">
-          <caret line="232" column="143" lean-forward="false" selection-start-line="232" selection-start-column="143" selection-end-line="232" selection-end-column="143" />
-          <folding>
-            <element signature="imports" expanded="false" />
-            <element signature="e#906#907#0" expanded="false" />
-            <element signature="e#982#983#0" expanded="false" />
-            <element signature="e#28984#28985#0" expanded="false" />
-            <element signature="e#29018#29019#0" expanded="false" />
-            <element signature="e#29786#29787#0" expanded="false" />
-            <element signature="e#29816#29817#0" expanded="false" />
-            <element signature="e#29863#29864#0" expanded="false" />
-            <element signature="e#29899#29900#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/DependencyManager.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="187">
@@ -1356,10 +1284,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/pom.xml">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/Main.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
-          <caret line="19" column="45" lean-forward="false" selection-start-line="19" selection-start-column="45" selection-end-line="19" selection-end-column="45" />
+        <state relative-caret-position="2541">
+          <caret line="232" column="143" lean-forward="false" selection-start-line="232" selection-start-column="143" selection-end-line="232" selection-end-column="143" />
           <folding />
         </state>
       </provider>
@@ -1368,6 +1296,14 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="68">
           <caret line="7" column="13" lean-forward="false" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="85">
+          <caret line="5" column="19" lean-forward="false" selection-start-line="5" selection-start-column="18" selection-end-line="5" selection-end-column="19" />
           <folding />
         </state>
       </provider>
@@ -1405,7 +1341,7 @@
           <splitter-proportions>
             <option name="proportions">
               <list>
-                <option value="0.2" />
+                <option value="0.2045977" />
               </list>
             </option>
           </splitter-proportions>
@@ -1449,7 +1385,7 @@
       </state>
       <state key="ProjectLibrariesConfigurable.UI">
         <settings>
-          <last-edited>Maven: com.google.code.gson:gson:2.8.0</last-edited>
+          <last-edited>Maven: com.rhetorical:mc-translate:1.0</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>

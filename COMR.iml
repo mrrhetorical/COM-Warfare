@@ -19,24 +19,8 @@
     </content>
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="inheritedJdk" />
-    <orderEntry type="module-library" exported="" scope="PROVIDED">
-      <library>
-        <CLASSES>
-          <root url="jar://$USER_HOME$/IdeaProjects/External Lib/mysqlapi.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" exported="" scope="PROVIDED">
-      <library>
-        <CLASSES>
-          <root url="jar://$USER_HOME$/IdeaProjects/External Lib/mctranslateplusplus.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
+    <orderEntry type="library" exported="" scope="PROVIDED" name="Maven: com.rhetorical:mc-translate:1.0" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="Maven: com.rhetorical:mysql-api:1.0" level="project" />
     <orderEntry type="library" exported="" scope="PROVIDED" name="Maven: org.spigotmc:spigot-api:1.13.1-R0.1-SNAPSHOT" level="project" />
     <orderEntry type="library" exported="" scope="PROVIDED" name="Maven: commons-lang:commons-lang:2.6" level="project" />
     <orderEntry type="library" exported="" scope="PROVIDED" name="Maven: com.googlecode.json-simple:json-simple:1.1.1" level="project" />
