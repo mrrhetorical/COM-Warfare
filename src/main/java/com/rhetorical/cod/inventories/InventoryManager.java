@@ -550,7 +550,7 @@ public class InventoryManager implements Listener {
 			inventory.setItem(i, item);
 		}
 
-		this.selectClassInventory.put(p, inventory);
+		selectClassInventory.put(p, inventory);
 	}
 
 	public boolean openSelectClassInventory(Player p) {

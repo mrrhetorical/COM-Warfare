@@ -47,7 +47,7 @@ public class GameInstance implements Listener {
 
 	private boolean forceStarted = false;
 
-	private final int maxScore_TDM, maxScore_RSB, maxScore_FFA, maxScore_DOM, maxScore_CTF, maxScore_KC, maxScore_GUN,  maxScore_OITC;
+	private final int maxScore_TDM, maxScore_RSB, maxScore_FFA, maxScore_DOM, maxScore_CTF, maxScore_KC, maxScore_GUN,  maxScore_OITC, maxScore_DESTROY, maxScore_RESCUE;
 
 	private Item redFlag;
 	private Item blueFlag;
@@ -75,16 +75,18 @@ public class GameInstance implements Listener {
 
 		Main.getPlugin().reloadConfig();
 
-		this.gameTime = Main.getPlugin().getConfig().getInt("gameTime." + this.getGamemode().toString());
-		this.lobbyTime = Main.getPlugin().getConfig().getInt("lobbyTime");
-		this.maxScore_TDM = Main.getPlugin().getConfig().getInt("maxScore.TDM");
-		this.maxScore_CTF = Main.getPlugin().getConfig().getInt("maxScore.CTF");
-		this.maxScore_DOM = Main.getPlugin().getConfig().getInt("maxScore.DOM");
-		this.maxScore_FFA = Main.getPlugin().getConfig().getInt("maxScore.FFA");
-		this.maxScore_RSB = Main.getPlugin().getConfig().getInt("maxScore.RSB");
-		this.maxScore_KC = Main.getPlugin().getConfig().getInt("maxScore.KC");
-		this.maxScore_GUN = Main.getPlugin().getConfig().getInt("maxScore.GUN");
-		this.maxScore_OITC = Main.getPlugin().getConfig().getInt("maxScore.OITC");
+		gameTime = Main.getPlugin().getConfig().getInt("gameTime." + getGamemode().toString());
+		lobbyTime = Main.getPlugin().getConfig().getInt("lobbyTime");
+		maxScore_TDM = Main.getPlugin().getConfig().getInt("maxScore.TDM");
+		maxScore_CTF = Main.getPlugin().getConfig().getInt("maxScore.CTF");
+		maxScore_DOM = Main.getPlugin().getConfig().getInt("maxScore.DOM");
+		maxScore_FFA = Main.getPlugin().getConfig().getInt("maxScore.FFA");
+		maxScore_RSB = Main.getPlugin().getConfig().getInt("maxScore.RSB");
+		maxScore_KC = Main.getPlugin().getConfig().getInt("maxScore.KC");
+		maxScore_GUN = Main.getPlugin().getConfig().getInt("maxScore.GUN");
+		maxScore_OITC = Main.getPlugin().getConfig().getInt("maxScore.OITC");
+		maxScore_DESTROY = Main.getPlugin().getConfig().getInt("maxScore.DESTROY");
+		maxScore_RESCUE = Main.getPlugin().getConfig().getInt("maxScore.RESCUE");
 
 		this.setState(GameState.WAITING);
 
@@ -169,12 +171,28 @@ public class GameInstance implements Listener {
 
 		if (this.getState() == GameState.INGAME) {
 			this.assignTeams();
-			if (this.isOnRedTeam(p)) {
-				this.spawnCodPlayer(p, this.currentMap.getRedSpawn());
-			} else if (this.isOnBlueTeam(p)) {
-				this.spawnCodPlayer(p, this.currentMap.getBlueSpawn());
+
+			if (getGamemode() != Gamemode.DESTROY && getGamemode() != Gamemode.RESCUE) {
+
+				if (this.isOnRedTeam(p)) {
+					this.spawnCodPlayer(p, this.currentMap.getRedSpawn());
+				} else if (this.isOnBlueTeam(p)) {
+					this.spawnCodPlayer(p, this.currentMap.getBlueSpawn());
+				} else {
+					this.spawnCodPlayer(p, this.currentMap.getPinkSpawn());
+				}
 			} else {
-				this.spawnCodPlayer(p, this.currentMap.getPinkSpawn());
+				p.setGameMode(GameMode.SPECTATOR);
+				isAlive.put(p, false);
+				if (isOnRedTeam(p)) {
+					if(redTeam.size() > 1) {
+						p.setSpectatorTarget(redTeam.get(0));
+					}
+				} else if (isOnBlueTeam(p)) {
+					if(blueTeam.size() > 1) {
+						p.setSpectatorTarget(redTeam.get(0));
+					}
+				}
 			}
 		}
 
@@ -262,7 +280,13 @@ public class GameInstance implements Listener {
 			}
 		}
 
-		startGameTimer(gameTime);
+		if (getGamemode() == Gamemode.DESTROY || getGamemode() == Gamemode.RESCUE) {
+			for (Player p : players) {
+				isAlive.put(p, true);
+			}
+		}
+
+		startGameTimer(gameTime, false);
 		this.setState(GameState.INGAME);
 	}
 
@@ -342,7 +366,9 @@ public class GameInstance implements Listener {
 				|| getGamemode() == Gamemode.KC
 				|| getGamemode() == Gamemode.TDM
 				|| getGamemode() == Gamemode.FFA
-				|| getGamemode() == Gamemode.INFECT) {
+				|| getGamemode() == Gamemode.INFECT
+				|| getGamemode() == Gamemode.DESTROY
+				|| getGamemode() == Gamemode.RESCUE) {
 
 			p.getInventory().setItem(0, Main.loadManager.knife);
 
@@ -560,25 +586,26 @@ public class GameInstance implements Listener {
 		br.runTaskTimer(Main.getPlugin(), 0L, 20L);
 	}
 
-	private void startGameTimer(int time) {
+	private void startGameTimer(int time, boolean newRound) {
 
-		this.setState(GameState.INGAME);
+		if (!newRound) {
+			setState(GameState.INGAME);
 
-		scoreBar.removeAll();
+			scoreBar.removeAll();
 
-		for (Player p : players) {
-			if (!currentMap.getGamemode().equals(Gamemode.FFA)) {
-				scoreBar.addPlayer(p);
-			} else {
-				freeForAllBar.put(p, Bukkit.createBossBar("\u00A77«\u00A7f" + getFancyTime(Main.getPlugin().getConfig().getInt("gameTime.FFA")) + "\u00A7r\u00A77»", BarColor.PINK, BarStyle.SOLID));
-				freeForAllBar.get(p).addPlayer(p);
+			for (Player p : players) {
+				if (!currentMap.getGamemode().equals(Gamemode.FFA)) {
+					scoreBar.addPlayer(p);
+				} else {
+					freeForAllBar.put(p, Bukkit.createBossBar("\u00A77«\u00A7f" + getFancyTime(Main.getPlugin().getConfig().getInt("gameTime.FFA")) + "\u00A7r\u00A77»", BarColor.PINK, BarStyle.SOLID));
+					freeForAllBar.get(p).addPlayer(p);
+				}
+			}
+
+			if (this.getGamemode().equals(Gamemode.DOM)) {
+				this.spawnDomFlags();
 			}
 		}
-
-		if (this.getGamemode().equals(Gamemode.DOM)) {
-			this.spawnDomFlags();
-		}
-
 		GameInstance game = this;
 
 		BukkitRunnable br = new BukkitRunnable() {
@@ -636,6 +663,22 @@ public class GameInstance implements Listener {
 
 				game.updateTabList();
 
+				if(getAlivePlayers(redTeam) == 0) {
+					addBluePoint();
+					startGameTimer(gameTime, true);
+					for (Player pp : players) {
+						isAlive.put(pp, true);
+					}
+					this.cancel();
+				} else if (getAlivePlayers(blueTeam) == 0) {
+					addRedPoint();
+					startGameTimer(gameTime, true);
+					for (Player pp : players) {
+						isAlive.put(pp, true);
+					}
+					this.cancel();
+				}
+
 				if (currentMap.getGamemode() == Gamemode.TDM || currentMap.getGamemode() == Gamemode.RSB || currentMap.getGamemode() == Gamemode.DOM || currentMap.getGamemode() == Gamemode.CTF || currentMap.getGamemode() == Gamemode.KC) {
 					if (BlueTeamScore >= maxScore_TDM || RedTeamScore >= maxScore_TDM && getGamemode().equals(Gamemode.TDM)) {
 						endGameByScore(this);
@@ -661,6 +704,17 @@ public class GameInstance implements Listener {
 						endGameByScore(this);
 						return;
 					}
+
+					if (BlueTeamScore >= maxScore_DESTROY || RedTeamScore >= maxScore_DESTROY && getGamemode().equals(Gamemode.DESTROY)) {
+						endGameByScore(this);
+						return;
+					}
+
+					if (BlueTeamScore >= maxScore_RESCUE || RedTeamScore >= maxScore_RESCUE && getGamemode().equals(Gamemode.RESCUE)) {
+						endGameByScore(this);
+						return;
+					}
+
 				}
 
 				if (currentMap.getGamemode().equals(Gamemode.FFA)) {
@@ -712,7 +766,7 @@ public class GameInstance implements Listener {
 
 	private String getWinningTeam() {
 
-		if (this.getGamemode().equals(Gamemode.FFA)) {
+		if (getGamemode().equals(Gamemode.FFA) || getGamemode().equals(Gamemode.OITC) || getGamemode().equals(Gamemode.GUN)) {
 			int highestScore = 0;
 			Player highestScoringPlayer = null;
 			for (Player p : ffaPlayerScores.keySet()) {
@@ -774,14 +828,41 @@ public class GameInstance implements Listener {
 		return true;
 	}
 
+	private HashMap<Player, Boolean> isAlive = new HashMap<>();
+	private int getAlivePlayers(ArrayList<Player> team) {
+		int count = 0;
+
+		for (Player p : team) {
+			if (isAlive.get(p)) {
+				count++;
+			}
+		}
+
+		return count;
+	}
+
+
 	public void kill(Player p, Player killer) {
 
 		Main.killstreakManager.kill(p, killer);
 
 		GameInstance game = this;
 
-		if (getGamemode() == Gamemode.INFECT && redTeam.contains(killer))
-		{
+		if (getGamemode() == Gamemode.DESTROY || getGamemode() == Gamemode.RESCUE) {
+			p.setGameMode(GameMode.SPECTATOR);
+			isAlive.put(p, false);
+
+			if (isOnBlueTeam(p) && getAlivePlayers(blueTeam) > 0 && getGamemode() == Gamemode.RESCUE) {
+				Main.sendTitle(p, Main.codPrefix + "\u00A7cYou will respawn if your teammate picks up your dog tag!", "");
+			} else if (isOnRedTeam(p) && getAlivePlayers(redTeam) > 0 && getGamemode() == Gamemode.RESCUE) {
+				Main.sendTitle(p, Main.codPrefix + "\u00A7cYou will respawn if your teammate picks up your dog tag!", "");
+			}
+
+			return;
+		}
+
+
+		if (getGamemode() == Gamemode.INFECT && redTeam.contains(killer)) {
 			if (blueTeam.contains(p)) {
 				blueTeam.remove(p);
 			}

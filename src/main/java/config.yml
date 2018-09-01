@@ -32,6 +32,8 @@ maxScore:
   CTF: 3
   INFECT: 120
   OITC: 3
+  DESTROY: 4
+  RESCUE: 4
 
 #Rank Tiers: The tiers at which players can recieve different rewards. All players can get the default one. The permission for each tier are 'com.'
 RankTiers:

@@ -7,22 +7,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c004894e-1f3c-4cdf-ba37-fd72a31bc043" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/rhetorical/cod/CreditManager.java" afterPath="$PROJECT_DIR$/src/main/java/com/rhetorical/cod/CreditManager.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/rhetorical/cod/DependencyManager.java" afterPath="$PROJECT_DIR$/src/main/java/com/rhetorical/cod/DependencyManager.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/rhetorical/cod/GameManager.java" afterPath="$PROJECT_DIR$/src/main/java/com/rhetorical/cod/GameManager.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/rhetorical/cod/Listeners.java" afterPath="$PROJECT_DIR$/src/main/java/com/rhetorical/cod/Listeners.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/rhetorical/cod/LoadoutManager.java" afterPath="$PROJECT_DIR$/src/main/java/com/rhetorical/cod/LoadoutManager.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/rhetorical/cod/Main.java" afterPath="$PROJECT_DIR$/src/main/java/com/rhetorical/cod/Main.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/rhetorical/cod/PerkManager.java" afterPath="$PROJECT_DIR$/src/main/java/com/rhetorical/cod/PerkManager.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/rhetorical/cod/ProgressionManager.java" afterPath="$PROJECT_DIR$/src/main/java/com/rhetorical/cod/ProgressionManager.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/rhetorical/cod/ShopManager.java" afterPath="$PROJECT_DIR$/src/main/java/com/rhetorical/cod/ShopManager.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/rhetorical/cod/analytics/CollectAnalytics.java" afterPath="$PROJECT_DIR$/src/main/java/com/rhetorical/cod/analytics/CollectAnalytics.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/rhetorical/cod/inventories/InventoryManager.java" afterPath="$PROJECT_DIR$/src/main/java/com/rhetorical/cod/inventories/InventoryManager.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/rhetorical/cod/object/GameInstance.java" afterPath="$PROJECT_DIR$/src/main/java/com/rhetorical/cod/object/GameInstance.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/rhetorical/cod/object/KillStreakManager.java" afterPath="$PROJECT_DIR$/src/main/java/com/rhetorical/cod/object/KillStreakManager.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/rhetorical/cod/object/PerkListener.java" afterPath="$PROJECT_DIR$/src/main/java/com/rhetorical/cod/object/PerkListener.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/rhetorical/cod/object/Gamemode.java" afterPath="$PROJECT_DIR$/src/main/java/com/rhetorical/cod/object/Gamemode.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/config.yml" afterPath="$PROJECT_DIR$/src/main/java/config.yml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/plugin.yml" afterPath="$PROJECT_DIR$/src/main/java/plugin.yml" />
     </list>
     <ignored path="$PROJECT_DIR$/bin/" />
     <ignored path="$PROJECT_DIR$/target/" />
@@ -42,21 +31,38 @@
       <file leaf-file-name="Main.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/Main.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="136">
-              <caret line="31" column="38" lean-forward="false" selection-start-line="31" selection-start-column="38" selection-end-line="31" selection-end-column="38" />
-              <folding>
-                <element signature="e#6936#7356#0" expanded="true" />
-                <element signature="e#7355#7356#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="1183">
+              <caret line="639" column="60" lean-forward="true" selection-start-line="639" selection-start-column="60" selection-end-line="639" selection-end-column="60" />
+              <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="PerkManager.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/PerkManager.java">
+      <file leaf-file-name="GameManager.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/GameManager.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="193">
-              <caret line="32" column="60" lean-forward="false" selection-start-line="32" selection-start-column="60" selection-end-line="32" selection-end-column="60" />
+            <state relative-caret-position="17">
+              <caret line="56" column="56" lean-forward="false" selection-start-line="56" selection-start-column="56" selection-end-line="56" selection-end-column="56" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="DependencyManager.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/DependencyManager.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="204">
+              <caret line="18" column="50" lean-forward="false" selection-start-line="18" selection-start-column="50" selection-end-line="18" selection-end-column="50" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Gamemode.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/object/Gamemode.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="51">
+              <caret line="3" column="67" lean-forward="false" selection-start-line="3" selection-start-column="67" selection-end-line="3" selection-end-column="67" />
               <folding />
             </state>
           </provider>
@@ -72,16 +78,6 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="PerkListener.java" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/object/PerkListener.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="433">
-              <caret line="68" column="28" lean-forward="true" selection-start-line="68" selection-start-column="28" selection-end-line="68" selection-end-column="28" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="ProgressionManager.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/ProgressionManager.java">
           <provider selected="true" editor-type-id="text-editor">
@@ -92,21 +88,24 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="GameInstance.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="GameInstance.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/object/GameInstance.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="546">
-              <caret line="62" column="53" lean-forward="false" selection-start-line="62" selection-start-column="53" selection-end-line="62" selection-end-column="53" />
-              <folding />
+            <state relative-caret-position="-587">
+              <caret line="612" column="25" lean-forward="true" selection-start-line="612" selection-start-column="25" selection-end-line="612" selection-end-column="25" />
+              <folding>
+                <element signature="e#6003#6004#0" expanded="true" />
+                <element signature="e#6029#6030#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ShopManager.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/ShopManager.java">
+      <file leaf-file-name="config.yml" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/config.yml">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="572">
-              <caret line="323" column="46" lean-forward="false" selection-start-line="323" selection-start-column="46" selection-end-line="323" selection-end-column="46" />
+            <state relative-caret-position="578">
+              <caret line="34" column="12" lean-forward="true" selection-start-line="34" selection-start-column="12" selection-end-line="34" selection-end-column="12" />
               <folding />
             </state>
           </provider>
@@ -115,7 +114,7 @@
       <file leaf-file-name="CollectAnalytics.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/analytics/CollectAnalytics.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="187">
+            <state relative-caret-position="204">
               <caret line="15" column="54" lean-forward="false" selection-start-line="15" selection-start-column="54" selection-end-line="15" selection-end-column="54" />
               <folding />
             </state>
@@ -125,18 +124,8 @@
       <file leaf-file-name="InventoryManager.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/inventories/InventoryManager.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="316">
-              <caret line="87" column="37" lean-forward="false" selection-start-line="87" selection-start-column="37" selection-end-line="87" selection-end-column="37" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="LoadoutManager.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/LoadoutManager.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="193">
-              <caret line="38" column="34" lean-forward="false" selection-start-line="38" selection-start-column="34" selection-end-line="38" selection-end-column="34" />
+            <state relative-caret-position="435">
+              <caret line="552" column="8" lean-forward="false" selection-start-line="552" selection-start-column="8" selection-end-line="552" selection-end-column="8" />
               <folding />
             </state>
           </provider>
@@ -146,10 +135,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>helmet</find>
-      <find>death</find>
-      <find>setupflag</find>
-      <find>handledeath</find>
       <find>pickupitem</find>
       <find>gunshop</find>
       <find>gunshop =</find>
@@ -176,6 +161,10 @@
       <find>defaultPrimary</find>
       <find>§</find>
       <find>getdefaultprimary</find>
+      <find>class</find>
+      <find>gametime</find>
+      <find>addplayer</find>
+      <find>isalive</find>
     </findStrings>
     <replaceStrings>
       <replace>\u00A7</replace>
@@ -195,7 +184,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/com/rhetorical/cod/CreditManager.java" />
         <option value="$PROJECT_DIR$/src/com/rhetorical/cod/Listeners.java" />
         <option value="$PROJECT_DIR$/src/com/rhetorical/cod/PerkManager.java" />
         <option value="$PROJECT_DIR$/src/com/rhetorical/cod/ProgressionManager.java" />
@@ -230,7 +218,6 @@
         <option value="$PROJECT_DIR$/src/plugin.yml" />
         <option value="$PROJECT_DIR$/src/com/rhetorical/cod/inventories/InventoryManager.java" />
         <option value="$PROJECT_DIR$/pom.xml" />
-        <option value="$PROJECT_DIR$/src/main/java/config.yml" />
         <option value="$PROJECT_DIR$/src/main/java/plugin.yml" />
         <option value="$PROJECT_DIR$/src/main/java/com/rhetorical/cod/CreditManager.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/rhetorical/cod/DependencyManager.java" />
@@ -242,10 +229,12 @@
         <option value="$PROJECT_DIR$/src/main/java/com/rhetorical/cod/ProgressionManager.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/rhetorical/cod/ShopManager.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/rhetorical/cod/analytics/CollectAnalytics.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/rhetorical/cod/inventories/InventoryManager.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/rhetorical/cod/object/GameInstance.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/rhetorical/cod/object/KillStreakManager.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/rhetorical/cod/object/PerkListener.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/rhetorical/cod/inventories/InventoryManager.java" />
+        <option value="$PROJECT_DIR$/src/main/java/config.yml" />
+        <option value="$PROJECT_DIR$/src/main/java/com/rhetorical/cod/object/Gamemode.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/rhetorical/cod/object/GameInstance.java" />
       </list>
     </option>
   </component>
@@ -263,8 +252,8 @@
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="244" />
-    <option name="y" value="108" />
+    <option name="x" value="293" />
+    <option name="y" value="76" />
     <option name="width" value="1371" />
     <option name="height" value="834" />
   </component>
@@ -286,6 +275,9 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
+      <pane id="Scratches" />
+      <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -378,11 +370,38 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="COM-Warfare" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="COM-Warfare" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="cod" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="object" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
         </subPane>
       </pane>
-      <pane id="Scope" />
-      <pane id="Scratches" />
-      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -843,15 +862,16 @@
       <workItem from="1535750288015" duration="183000" />
       <workItem from="1535750569675" duration="789000" />
       <workItem from="1535751509723" duration="398000" />
-      <workItem from="1535752998677" duration="860000" />
+      <workItem from="1535752998677" duration="963000" />
+      <workItem from="1535819070043" duration="1928000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="39561000" />
+    <option name="totallyTimeSpent" value="41592000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="244" y="108" width="1371" height="834" extended-state="0" />
+    <frame x="293" y="76" width="1371" height="834" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -870,7 +890,6 @@
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.30553505" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32980973" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.28319883" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
@@ -883,6 +902,7 @@
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32875264" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32980973" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -1130,25 +1150,9 @@
         <state relative-caret-position="858">
           <caret line="199" column="0" lean-forward="false" selection-start-line="199" selection-start-column="0" selection-end-line="202" selection-end-column="0" />
           <folding>
-            <element signature="e#5210#5211#0" expanded="true" />
-            <element signature="e#5251#5252#0" expanded="true" />
+            <element signature="e#5210#5211#0" expanded="false" />
+            <element signature="e#5251#5252#0" expanded="false" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/object/Gamemode.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="15" column="21" lean-forward="false" selection-start-line="15" selection-start-column="21" selection-end-line="15" selection-end-column="21" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/config.yml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="340">
-          <caret line="20" column="20" lean-forward="false" selection-start-line="20" selection-start-column="20" selection-end-line="20" selection-end-column="20" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1156,7 +1160,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="17">
           <caret line="1" column="21" lean-forward="false" selection-start-line="1" selection-start-column="21" selection-end-line="1" selection-end-column="21" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1184,22 +1187,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/DependencyManager.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="204">
-          <caret line="18" column="50" lean-forward="false" selection-start-line="18" selection-start-column="50" selection-end-line="18" selection-end-column="50" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/GameManager.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
-          <caret line="56" column="56" lean-forward="false" selection-start-line="56" selection-start-column="56" selection-end-line="56" selection-end-column="56" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/Listeners.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="202">
@@ -1210,67 +1197,80 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/LoadoutManager.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="193">
+        <state relative-caret-position="340">
           <caret line="38" column="34" lean-forward="false" selection-start-line="38" selection-start-column="34" selection-end-line="38" selection-end-column="34" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/Main.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="136">
-          <caret line="31" column="38" lean-forward="false" selection-start-line="31" selection-start-column="38" selection-end-line="31" selection-end-column="38" />
-          <folding>
-            <element signature="e#6936#7356#0" expanded="true" />
-            <element signature="e#7355#7356#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/PerkManager.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="193">
+        <state relative-caret-position="391">
           <caret line="32" column="60" lean-forward="false" selection-start-line="32" selection-start-column="60" selection-end-line="32" selection-end-column="60" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/ProgressionManager.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
-          <caret line="36" column="38" lean-forward="false" selection-start-line="36" selection-start-column="38" selection-end-line="36" selection-end-column="38" />
-          <folding />
+          <folding>
+            <element signature="imports" expanded="false" />
+            <element signature="e#785#786#0" expanded="false" />
+            <element signature="e#808#809#0" expanded="false" />
+            <element signature="e#3020#3021#0" expanded="false" />
+            <element signature="e#3044#3045#0" expanded="false" />
+            <element signature="e#3095#3096#0" expanded="false" />
+            <element signature="e#3130#3131#0" expanded="false" />
+            <element signature="e#4678#4679#0" expanded="false" />
+            <element signature="e#4706#4707#0" expanded="false" />
+            <element signature="e#4775#4776#0" expanded="false" />
+            <element signature="e#4818#4819#0" expanded="false" />
+            <element signature="e#4855#4856#0" expanded="false" />
+            <element signature="e#4881#4882#0" expanded="false" />
+            <element signature="e#4936#4937#0" expanded="false" />
+            <element signature="e#4975#4976#0" expanded="false" />
+            <element signature="e#5010#5011#0" expanded="false" />
+            <element signature="e#5034#5035#0" expanded="false" />
+            <element signature="e#5085#5086#0" expanded="false" />
+            <element signature="e#5120#5121#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/ShopManager.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="572">
+        <state relative-caret-position="4862">
           <caret line="323" column="46" lean-forward="false" selection-start-line="323" selection-start-column="46" selection-end-line="323" selection-end-column="46" />
-          <folding />
+          <folding>
+            <element signature="imports" expanded="false" />
+            <element signature="e#9009#9010#0" expanded="false" />
+            <element signature="e#9034#9035#0" expanded="false" />
+            <element signature="e#9089#9090#0" expanded="false" />
+            <element signature="e#9126#9127#0" expanded="false" />
+            <element signature="e#9174#9175#0" expanded="false" />
+            <element signature="e#9201#9202#0" expanded="false" />
+            <element signature="e#9260#9261#0" expanded="false" />
+            <element signature="e#9301#9302#0" expanded="false" />
+            <element signature="e#9352#9353#0" expanded="false" />
+            <element signature="e#9379#9380#0" expanded="false" />
+            <element signature="e#9441#9442#0" expanded="false" />
+            <element signature="e#9482#9483#0" expanded="false" />
+            <element signature="e#9535#9536#0" expanded="false" />
+            <element signature="e#9564#9565#0" expanded="false" />
+            <element signature="e#9630#9631#0" expanded="false" />
+            <element signature="e#9675#9676#0" expanded="false" />
+            <element signature="e#9740#9741#0" expanded="false" />
+            <element signature="e#9767#9768#0" expanded="false" />
+            <element signature="e#9851#9852#0" expanded="false" />
+            <element signature="e#9892#9893#0" expanded="false" />
+            <element signature="e#9963#9964#0" expanded="false" />
+            <element signature="e#9993#9994#0" expanded="false" />
+            <element signature="e#13683#13684#0" expanded="false" />
+            <element signature="e#13718#13719#0" expanded="false" />
+            <element signature="e#13779#13780#0" expanded="false" />
+            <element signature="e#13819#13820#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/analytics/CollectAnalytics.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/object/PerkListener.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="187">
-          <caret line="15" column="54" lean-forward="false" selection-start-line="15" selection-start-column="54" selection-end-line="15" selection-end-column="54" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/inventories/InventoryManager.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="316">
-          <caret line="87" column="37" lean-forward="false" selection-start-line="87" selection-start-column="37" selection-end-line="87" selection-end-column="37" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/object/GameInstance.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="546">
-          <caret line="62" column="53" lean-forward="false" selection-start-line="62" selection-start-column="53" selection-end-line="62" selection-end-column="53" />
+        <state relative-caret-position="833">
+          <caret line="68" column="28" lean-forward="false" selection-start-line="68" selection-start-column="28" selection-end-line="68" selection-end-column="28" />
           <folding />
         </state>
       </provider>
@@ -1283,11 +1283,78 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/object/PerkListener.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/ProgressionManager.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="433">
-          <caret line="68" column="28" lean-forward="true" selection-start-line="68" selection-start-column="28" selection-end-line="68" selection-end-column="28" />
+        <state relative-caret-position="17">
+          <caret line="36" column="38" lean-forward="false" selection-start-line="36" selection-start-column="38" selection-end-line="36" selection-end-column="38" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/analytics/CollectAnalytics.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="204">
+          <caret line="15" column="54" lean-forward="false" selection-start-line="15" selection-start-column="54" selection-end-line="15" selection-end-column="54" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/inventories/InventoryManager.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="435">
+          <caret line="552" column="8" lean-forward="false" selection-start-line="552" selection-start-column="8" selection-end-line="552" selection-end-column="8" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/config.yml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="578">
+          <caret line="34" column="12" lean-forward="true" selection-start-line="34" selection-start-column="12" selection-end-line="34" selection-end-column="12" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/Main.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1183">
+          <caret line="639" column="60" lean-forward="true" selection-start-line="639" selection-start-column="60" selection-end-line="639" selection-end-column="60" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/GameManager.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="17">
+          <caret line="56" column="56" lean-forward="false" selection-start-line="56" selection-start-column="56" selection-end-line="56" selection-end-column="56" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/DependencyManager.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="204">
+          <caret line="18" column="50" lean-forward="false" selection-start-line="18" selection-start-column="50" selection-end-line="18" selection-end-column="50" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/object/Gamemode.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="51">
+          <caret line="3" column="67" lean-forward="false" selection-start-line="3" selection-start-column="67" selection-end-line="3" selection-end-column="67" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/object/GameInstance.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-587">
+          <caret line="612" column="25" lean-forward="true" selection-start-line="612" selection-start-column="25" selection-end-line="612" selection-end-column="25" />
+          <folding>
+            <element signature="e#6003#6004#0" expanded="true" />
+            <element signature="e#6029#6030#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
