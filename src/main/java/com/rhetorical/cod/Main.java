@@ -398,7 +398,7 @@ public class Main extends JavaPlugin {
 					String mapGm = args[2];
 					Gamemode mapGameMode;
 					try {
-						mapGameMode = Gamemode.valueOf(mapGm);
+						mapGameMode = Gamemode.valueOf(mapGm.toUpperCase());
 					} catch (Exception e) {
 						sendMessage(p, Main.codPrefix + "\u00A7cThat gamemode doesn't exist!", lang);
 						return true;
