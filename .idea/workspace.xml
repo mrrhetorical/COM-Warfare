@@ -7,10 +7,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c004894e-1f3c-4cdf-ba37-fd72a31bc043" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_bstats_bstats_bukkit_1_2.xml" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/main/java/com/rhetorical/cod/analytics/CollectAnalytics.java" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_bstats_bstats_bukkit_1_2.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_bstats_bstats_bukkit_1_2.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/COMR.iml" afterPath="$PROJECT_DIR$/COMR.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pom.xml" afterPath="$PROJECT_DIR$/pom.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/rhetorical/cod/Main.java" afterPath="$PROJECT_DIR$/src/main/java/com/rhetorical/cod/Main.java" />
     </list>
@@ -29,24 +27,24 @@
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="Main.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="Main.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/Main.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="459">
-              <caret line="110" column="8" lean-forward="false" selection-start-line="110" selection-start-column="8" selection-end-line="110" selection-end-column="8" />
+              <caret line="110" column="0" lean-forward="false" selection-start-line="110" selection-start-column="0" selection-end-line="110" selection-end-column="0" />
               <folding>
-                <element signature="e#6843#7284#0" expanded="true" />
-                <element signature="e#7283#7284#0" expanded="true" />
+                <element signature="e#6841#7282#0" expanded="true" />
+                <element signature="e#7281#7282#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="pom.xml" pinned="false" current-in-tab="false">
+      <file leaf-file-name="pom.xml" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/pom.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="912">
-              <caret line="80" column="61" lean-forward="false" selection-start-line="80" selection-start-column="61" selection-end-line="80" selection-end-column="61" />
+            <state relative-caret-position="198">
+              <caret line="32" column="27" lean-forward="false" selection-start-line="32" selection-start-column="27" selection-end-line="32" selection-end-column="27" />
               <folding />
             </state>
           </provider>
@@ -224,8 +222,8 @@
         <option value="$PROJECT_DIR$/src/main/java/com/rhetorical/cod/object/CodMap.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/rhetorical/cod/api/StatRetreival.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/rhetorical/cod/object/GameInstance.java" />
-        <option value="$PROJECT_DIR$/pom.xml" />
         <option value="$PROJECT_DIR$/src/main/java/com/rhetorical/cod/Main.java" />
+        <option value="$PROJECT_DIR$/pom.xml" />
       </list>
     </option>
   </component>
@@ -857,12 +855,12 @@
       <workItem from="1535752998677" duration="963000" />
       <workItem from="1535819070043" duration="3918000" />
       <workItem from="1535874352189" duration="2914000" />
-      <workItem from="1535914314854" duration="307000" />
+      <workItem from="1535914314854" duration="544000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="46803000" />
+    <option name="totallyTimeSpent" value="47040000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="235" y="90" width="1371" height="834" extended-state="0" />
@@ -1294,14 +1292,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/pom.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="912">
-          <caret line="80" column="61" lean-forward="false" selection-start-line="80" selection-start-column="61" selection-end-line="80" selection-end-column="61" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/analytics/CollectAnalytics.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="187">
@@ -1313,11 +1303,19 @@
     <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/Main.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="459">
-          <caret line="110" column="8" lean-forward="false" selection-start-line="110" selection-start-column="8" selection-end-line="110" selection-end-column="8" />
+          <caret line="110" column="0" lean-forward="false" selection-start-line="110" selection-start-column="0" selection-end-line="110" selection-end-column="0" />
           <folding>
-            <element signature="e#6843#7284#0" expanded="true" />
-            <element signature="e#7283#7284#0" expanded="true" />
+            <element signature="e#6841#7282#0" expanded="true" />
+            <element signature="e#7281#7282#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="198">
+          <caret line="32" column="27" lean-forward="false" selection-start-line="32" selection-start-column="27" selection-end-line="32" selection-end-column="27" />
+          <folding />
         </state>
       </provider>
     </entry>

@@ -30,6 +30,7 @@
             <groupId>com.github.mrrhetorical</groupId>
             <artifactId>McTranslatePlusPlus</artifactId>
             <version>master-1.1-g9681908-1</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>

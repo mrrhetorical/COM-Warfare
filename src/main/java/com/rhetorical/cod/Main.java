@@ -108,7 +108,7 @@ public class Main extends JavaPlugin {
 		}
 
 		String version = getPlugin().getDescription().getVersion();
-		
+
 		ProgressionFile.setup(getPlugin());
 		ArenasFile.setup(getPlugin());
 		CreditsFile.setup(getPlugin());
