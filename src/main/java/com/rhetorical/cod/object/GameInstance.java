@@ -60,7 +60,7 @@ public class GameInstance implements Listener {
 	private HashMap<Player, Integer> ffaPlayerScores = new HashMap<>();
 	private HashMap<Player, BossBar> freeForAllBar = new HashMap<>();
 
-	private BossBar scoreBar = Bukkit.createBossBar("\u00A77«\u00A7f" + getFancyTime(Main.getPlugin().getConfig().getInt("lobbyTime")) + "\u00A7r\u00A77»", BarColor.PINK, BarStyle.SOLID);
+	private BossBar scoreBar = Bukkit.createBossBar(ChatColor.GRAY + "«" + ChatColor.WHITE + getFancyTime(Main.getPlugin().getConfig().getInt("lobbyTime")) + ChatColor.RESET + "" + ChatColor.GRAY + "»", BarColor.PINK, BarStyle.SOLID);
 
 	public HealthManager health;
 
@@ -100,7 +100,7 @@ public class GameInstance implements Listener {
 
 		System.gc();
 
-		Main.cs.sendMessage(Main.codPrefix + "\u00A77Game lobby with id " + this.getId() + " created with map " + this.getMap().getName() + " with gamemode " + this.getGamemode() + ".");
+		Main.cs.sendMessage(Main.codPrefix + ChatColor.GRAY + "Game lobby with id " + this.getId() + " created with map " + this.getMap().getName() + " with gamemode " + this.getGamemode() + ".");
 	}
 
 	private void reset() {
@@ -407,10 +407,10 @@ public class GameInstance implements Listener {
 
 				if (redTeam.size() >= blueTeam.size()) {
 					blueTeam.add(p);
-					Main.sendMessage(p, Main.codPrefix + "\u00A79You are on the blue team!", Main.lang);
+					Main.sendMessage(p, Main.codPrefix + ChatColor.BLUE + "You are on the blue team!", Main.lang);
 				} else {
 					redTeam.add(p);
-					Main.sendMessage(p, Main.codPrefix + "\u00A7cYou are on the red team!", Main.lang);
+					Main.sendMessage(p, Main.codPrefix + ChatColor.RED + "You are on the red team!", Main.lang);
 				}
 			}
 		} else if (getGamemode() == Gamemode.INFECT) {
@@ -427,7 +427,7 @@ public class GameInstance implements Listener {
 				if (this.ffaPlayerScores.containsKey(p))
 					continue;
 
-				Main.sendMessage(p, Main.codPrefix + "\u00A7dYou are on the pink team!", Main.lang);
+				Main.sendMessage(p, Main.codPrefix + ChatColor.LIGHT_PURPLE + "You are on the pink team!", Main.lang);
 			}
 		}
 
@@ -473,12 +473,12 @@ public class GameInstance implements Listener {
 
 					if (currentMap.getGamemode() != Gamemode.FFA) {
 						if (getWinningTeam().equalsIgnoreCase("red")) {
-							teamFormat = "\u00A7cRED";
+							teamFormat = ChatColor.RED + "RED";
 						} else if (getWinningTeam().equalsIgnoreCase("blue")) {
-							teamFormat = "\u00A79BLUE";
+							teamFormat = ChatColor.DARK_BLUE + "BLUE";
 						} else if (getWinningTeam().equalsIgnoreCase("nobody") || getWinningTeam().equalsIgnoreCase("tie")) {
-							Main.sendMessage(p, Main.codPrefix + "\u00A77Nobody won the match! It was a tie!", Main.lang);
-							Main.sendMessage(p, Main.codPrefix + "\u00A7fReturning to the lobby in " + Integer.toString(t) + " seconds!", Main.lang);
+							Main.sendMessage(p, Main.codPrefix + ChatColor.GRAY + "Nobody won the match! It was a tie!", Main.lang);
+							Main.sendMessage(p, Main.codPrefix + ChatColor.WHITE + "Returning to the lobby in " + Integer.toString(t) + " seconds!", Main.lang);
 							CodScore score = playerScores.get(p);
 
 							float kd = ((float) score.getKills() / (float) score.getDeaths());
@@ -487,12 +487,12 @@ public class GameInstance implements Listener {
 								kd = score.getKills();
 							}
 
-							Main.sendMessage(p, "\u00A7a\u00A7lKills: " + score.getKills() + " \u00A7c\u00A7lDeaths: " + score.getDeaths() + " \u00A7f\u00A7lKDR: " + kd, Main.lang);
+							Main.sendMessage(p, ChatColor.GREEN + "" + ChatColor.BOLD + "Kills: " + score.getKills() + " " + ChatColor.RED + "" + ChatColor.BOLD + "Deaths: " + score.getDeaths() + " " + ChatColor.WHITE + "" + ChatColor.BOLD + "KDR: " + kd, Main.lang);
 							continue;
 						}
 
-						Main.sendMessage(p, Main.codPrefix + "\u00A7fThe " + teamFormat + " \u00A7r\u00A7fteam won the match!", Main.lang);
-						Main.sendMessage(p, Main.codPrefix + "\u00A7fReturning to the lobby in " + Integer.toString(t) + " seconds!", Main.lang);
+						Main.sendMessage(p, Main.codPrefix + ChatColor.WHITE + "The " + teamFormat + ChatColor.RESET + "" + ChatColor.WHITE + " team won the match!", Main.lang);
+						Main.sendMessage(p, Main.codPrefix + ChatColor.WHITE +"Returning to the lobby in " + Integer.toString(t) + " seconds!", Main.lang);
 						CodScore score = playerScores.get(p);
 
 						float kd = ((float) score.getKills() / (float) score.getDeaths());
@@ -501,10 +501,10 @@ public class GameInstance implements Listener {
 							kd = score.getKills();
 						}
 
-						Main.sendMessage(p, "\u00A7a\u00A7lKills: " + score.getKills() + " \u00A7c\u00A7lDeaths: " + score.getDeaths() + " \u00A7f\u00A7lKDR: " + kd, Main.lang);
+						Main.sendMessage(p, ChatColor.GREEN + "" + ChatColor.BOLD + "Kills: " + score.getKills() + " " + ChatColor.RED + ChatColor.BOLD + "Deaths: " + score.getDeaths() + " " + ChatColor.WHITE + "" + ChatColor.BOLD + "KDR: " + kd, Main.lang);
 					} else {
-						Main.sendMessage(p, Main.codPrefix + "\u00A7e" + getWinningTeam() + " \u00A7r\u00A7fwon the match!", Main.lang);
-						Main.sendMessage(p, Main.codPrefix + "\u00A7fReturning to the lobby in " + Integer.toString(t) + " seconds!", Main.lang);
+						Main.sendMessage(p, Main.codPrefix + ChatColor.YELLOW + getWinningTeam() + " " + ChatColor.RESET + "" + ChatColor.WHITE + "won the match!", Main.lang);
+						Main.sendMessage(p, Main.codPrefix + ChatColor.WHITE + "Returning to the lobby in " + Integer.toString(t) + " seconds!", Main.lang);
 						CodScore score = playerScores.get(p);
 						float kd = ((float) score.getKills() / (float) score.getDeaths());
 
@@ -512,7 +512,7 @@ public class GameInstance implements Listener {
 							kd = score.getKills();
 						}
 
-						Main.sendMessage(p, "\u00A7a\u00A7lKills: " + score.getKills() + " \u00A7c\u00A7lDeaths: " + score.getDeaths() + " \u00A7f\u00A7lKDR: " + kd, Main.lang);
+						Main.sendMessage(p, ChatColor.GREEN + "" + ChatColor.BOLD + "Kills: " + score.getKills() + " " + ChatColor.RED + "" + ChatColor.BOLD + "Deaths: " + score.getDeaths() + " " + ChatColor.WHITE + "" + ChatColor.BOLD + "KDR: " + kd, Main.lang);
 					}
 				}
 
@@ -555,7 +555,7 @@ public class GameInstance implements Listener {
 
 				String counter = getFancyTime(t);
 
-				scoreBar.setTitle("\u00A77«\u00A7f" + counter + "\u00A7r\u00A77»");
+				scoreBar.setTitle(ChatColor.GRAY + "«" + ChatColor.WHITE + counter + ChatColor.RESET + "" + ChatColor.GRAY + "»");
 
 				Double progress = (((double) t) / ((double) lobbyTime));
 
@@ -565,12 +565,12 @@ public class GameInstance implements Listener {
 					for (Player p : game.players) {
 
 						if (t == 0) {
-							Main.sendMessage(p, Main.codPrefix + "\u00A77Game starting now!", Main.lang);
+							Main.sendMessage(p, Main.codPrefix + ChatColor.GRAY + "Game starting now!", Main.lang);
 							continue;
 						}
 
-						Main.sendMessage(p, Main.codPrefix + "\u00A77Game starting in " + getFancyTime(t) + "!", Main.lang);
-						Main.sendMessage(p, Main.codPrefix + "\u00A77Map: \u00A7a" + game.currentMap.getName() + " \u00A7r\u00A77Gamemode: \u00A7c" + game.currentMap.getGamemode().toString(), Main.lang);
+						Main.sendMessage(p, Main.codPrefix + ChatColor.GRAY + "Game starting in " + getFancyTime(t) + "!", Main.lang);
+						Main.sendMessage(p, Main.codPrefix + ChatColor.GRAY + "Map: " + ChatColor.GREEN + game.currentMap.getName() + ChatColor.RESET + ChatColor.GRAY + " Gamemode: " + ChatColor.RED + game.currentMap.getGamemode().toString(), Main.lang);
 					}
 				}
 
@@ -597,7 +597,7 @@ public class GameInstance implements Listener {
 				if (!currentMap.getGamemode().equals(Gamemode.FFA)) {
 					scoreBar.addPlayer(p);
 				} else {
-					freeForAllBar.put(p, Bukkit.createBossBar("\u00A77«\u00A7f" + getFancyTime(Main.getPlugin().getConfig().getInt("gameTime.FFA")) + "\u00A7r\u00A77»", BarColor.PINK, BarStyle.SOLID));
+					freeForAllBar.put(p, Bukkit.createBossBar(ChatColor.GRAY + "«" + ChatColor.WHITE + getFancyTime(Main.getPlugin().getConfig().getInt("gameTime.FFA")) + ChatColor.RESET + ChatColor.WHITE + "»", BarColor.PINK, BarStyle.SOLID));
 					freeForAllBar.get(p).addPlayer(p);
 				}
 			}
@@ -630,7 +630,7 @@ public class GameInstance implements Listener {
 
 
 				if (currentMap.getGamemode() != Gamemode.FFA) {
-					scoreBar.setTitle("\u00A7cRED: " + RedTeamScore + " \u00A77«\u00A7f" + counter + "\u00A7r\u00A77»" + " \u00A79BLU: " + BlueTeamScore);
+					scoreBar.setTitle(ChatColor.RED + "RED: " + RedTeamScore + ChatColor.GRAY + " «" + ChatColor.WHITE + counter + ChatColor.RESET + ChatColor.GRAY + "»" + ChatColor.DARK_BLUE + " BLU: " + BlueTeamScore);
 				} else {
 
 					if (currentMap.getGamemode() == Gamemode.DOM) {
@@ -652,7 +652,7 @@ public class GameInstance implements Listener {
 							ffaPlayerScores.put(highestScorer, 0);
 						}
 						Double progress = (((double) t) / ((double) gameTime));
-						freeForAllBar.get(p).setTitle("\u00A7a" + p.getDisplayName() + ": " + ffaPlayerScores.get(p) + " \u00A77«\u00A7f" + counter + "\u00A7r\u00A77»" + " \u00A76" + highestScorer.getDisplayName() + ": " + ffaPlayerScores.get(highestScorer));
+						freeForAllBar.get(p).setTitle(ChatColor.GREEN + p.getDisplayName() + ": " + ffaPlayerScores.get(p) + ChatColor.GRAY + " «" + ChatColor.WHITE + counter + ChatColor.RESET + ChatColor.GRAY + "»" + " " + ChatColor.GOLD + highestScorer.getDisplayName() + ": " + ffaPlayerScores.get(highestScorer));
 						freeForAllBar.get(p).setProgress(progress);
 					}
 				}
@@ -853,9 +853,9 @@ public class GameInstance implements Listener {
 			isAlive.put(p, false);
 
 			if (isOnBlueTeam(p) && getAlivePlayers(blueTeam) > 0 && getGamemode() == Gamemode.RESCUE) {
-				Main.sendTitle(p, Main.codPrefix + "\u00A7cYou will respawn if your teammate picks up your dog tag!", "");
+				Main.sendTitle(p, Main.codPrefix + ChatColor.RED + "You will respawn if your teammate picks up your dog tag!", "");
 			} else if (isOnRedTeam(p) && getAlivePlayers(redTeam) > 0 && getGamemode() == Gamemode.RESCUE) {
-				Main.sendTitle(p, Main.codPrefix + "\u00A7cYou will respawn if your teammate picks up your dog tag!", "");
+				Main.sendTitle(p, Main.codPrefix + ChatColor.RED + "You will respawn if your teammate picks up your dog tag!", "");
 			}
 
 			return;
@@ -886,7 +886,7 @@ public class GameInstance implements Listener {
 					p.setSpectatorTarget(killer);
 
 					if (t == 3)
-						Main.sendTitle(p, Main.codPrefix + "\u00A7cYou will respawn in " + t + " seconds!", "");
+						Main.sendTitle(p, Main.codPrefix + ChatColor.RED + "You will respawn in " + t + " seconds!", "");
 				} else if (t <= 1) {
 					if (game.state == GameState.INGAME) {
 						if (currentMap.getGamemode() != Gamemode.FFA) {
@@ -926,11 +926,11 @@ public class GameInstance implements Listener {
 		for (Player p : this.players) {
 
 			if (this.isOnRedTeam(p)) {
-				teamColor = "\u00A7c";
+				teamColor = ChatColor.RED + "";
 			} else if (this.isOnBlueTeam(p)) {
-				teamColor = "\u00A79";
+				teamColor = ChatColor.DARK_BLUE + "";
 			} else {
-				teamColor = "\u00A7d";
+				teamColor = ChatColor.LIGHT_PURPLE + "";
 			}
 
 			CodScore score = this.playerScores.get(p);
@@ -991,8 +991,8 @@ public class GameInstance implements Listener {
 
 		if (this.getGamemode().equals(Gamemode.TDM) || this.getGamemode().equals(Gamemode.RSB) || this.getGamemode().equals(Gamemode.DOM)) {
 			if (redTeam.contains(killer)) {
-				Main.sendMessage(killer, "\u00A7c\u00A7lYOU \u00A7r\u00A7f[killed] \u00A7r\u00A79\u00A7l" + victim.getDisplayName(), Main.lang);
-				Main.sendTitle(killer, "", "\u00A7e+" + rank.getKillExperience() + "xp");
+				Main.sendMessage(killer, "" + ChatColor.RED + ChatColor.BOLD + "YOU " + ChatColor.RESET + "" + ChatColor.WHITE + "[killed] " + ChatColor.RESET + ChatColor.DARK_BLUE + ChatColor.BOLD + victim.getDisplayName(), Main.lang);
+				Main.sendTitle(killer, "", ChatColor.YELLOW + "+" + rank.getKillExperience() + "xp");
 
 				Main.progManager.addExperience(killer, rank.getKillExperience());
 				CreditManager.setCredits(killer, CreditManager.getCredits(killer) + rank.getKillCredits());
@@ -1000,8 +1000,8 @@ public class GameInstance implements Listener {
 				this.addRedPoint();
 				this.updateScores(victim, killer, rank);
 			} else if (blueTeam.contains(killer)) {
-				Main.sendMessage(killer, "\u00A79\u00A7lYOU \u00A7r\u00A7f[killed] \u00A7r\u00A7c\u00A7l" + victim.getDisplayName(), Main.lang);
-				Main.sendTitle(killer, "", "\u00A7e+" + rank.getKillExperience() + "xp");
+				Main.sendMessage(killer,  "" + ChatColor.DARK_BLUE + ChatColor.BOLD + "YOU " + ChatColor.RESET + ChatColor.WHITE + "[killed] " + ChatColor.RESET + ChatColor.RED + ChatColor.BOLD + victim.getDisplayName(), Main.lang);
+				Main.sendTitle(killer, "", ChatColor.YELLOW + "+" + rank.getKillExperience() + "xp");
 				Main.progManager.addExperience(killer, rank.getKillExperience());
 				this.kill(victim, killer);
 				this.addBluePoint();
@@ -1011,7 +1011,7 @@ public class GameInstance implements Listener {
 			if (victim == redFlagHolder) {
 				dropFlag(blueFlag, victim.getLocation());
 				for (Player p : players) {
-					Main.sendMessage(p, "\u00A7a The \u00A7b blue \u00A7a flag has been dropped!", Main.lang);
+					Main.sendMessage(p, ChatColor.GREEN + "The " + ChatColor.DARK_BLUE + "blue " + ChatColor.GREEN + "flag has been dropped!", Main.lang);
 				}
 				return;
 			}
@@ -1019,7 +1019,7 @@ public class GameInstance implements Listener {
 			if (victim == blueFlagHolder) {
 				dropFlag(redFlag, victim.getLocation());
 				for (Player p : players) {
-					Main.sendMessage(p, "\u00A7a The \u00A7c red \u00A7a flag has been dropped!", Main.lang);
+					Main.sendMessage(p, ChatColor.GREEN + "The " + ChatColor.RED + "red " + ChatColor.GREEN + "flag has been dropped!", Main.lang);
 				}
 				return;
 			}
@@ -1029,16 +1029,16 @@ public class GameInstance implements Listener {
 
 		if (this.getGamemode().equals(Gamemode.CTF) || this.getGamemode().equals(Gamemode.INFECT)) {
 			if (redTeam.contains(killer)) {
-				Main.sendMessage(killer, "\u00A7c\u00A7lYOU \u00A7r\u00A7f[killed] \u00A7r\u00A79\u00A7l" + victim.getDisplayName(), Main.lang);
-				Main.sendTitle(killer, "", "\u00A7e+" + rank.getKillExperience() + "xp");
+				Main.sendMessage(killer, "" + ChatColor.RED + ChatColor.BOLD + "YOU " + ChatColor.RESET + "" + ChatColor.WHITE + "[killed] " + ChatColor.RESET + ChatColor.DARK_BLUE + ChatColor.BOLD + victim.getDisplayName(), Main.lang);
+				Main.sendTitle(killer, "", ChatColor.YELLOW + "+" + rank.getKillExperience() + "xp");
 
 				Main.progManager.addExperience(killer, rank.getKillExperience());
 				CreditManager.setCredits(killer, CreditManager.getCredits(killer) + rank.getKillCredits());
 				this.kill(victim, killer);
 				this.updateScores(victim, killer, rank);
 			} else if (blueTeam.contains(killer)) {
-				Main.sendMessage(killer, "\u00A79\u00A7lYOU \u00A7r\u00A7f[killed] \u00A7r\u00A7c\u00A7l" + victim.getDisplayName(), Main.lang);
-				Main.sendTitle(killer, "", "\u00A7e+" + rank.getKillExperience() + "xp");
+				Main.sendMessage(killer,  "" + ChatColor.DARK_BLUE + ChatColor.BOLD + "YOU " + ChatColor.RESET + ChatColor.WHITE + "[killed] " + ChatColor.RESET + ChatColor.RED + ChatColor.BOLD + victim.getDisplayName(), Main.lang);
+				Main.sendTitle(killer, "", ChatColor.YELLOW + "+" + rank.getKillExperience() + "xp");
 				Main.progManager.addExperience(killer, rank.getKillExperience());
 				this.kill(victim, killer);
 				this.updateScores(victim, killer, rank);
@@ -1048,8 +1048,8 @@ public class GameInstance implements Listener {
 		}
 
 		if (this.getGamemode().equals(Gamemode.FFA) || this.getGamemode().equals(Gamemode.GUN)) {
-			Main.sendMessage(killer, "\u00A7a\u00A7lYOU \u00A7r\u00A7f[killed] \u00A7r\u00A76\u00A7l" + victim.getDisplayName(), Main.lang);
-			Main.sendTitle(killer, "", "\u00A7e+" + rank.getKillExperience() + "xp");
+			Main.sendMessage(killer, "" + ChatColor.GREEN + ChatColor.BOLD + "YOU " + ChatColor.RESET + ChatColor.WHITE + "[killed] " + ChatColor.RESET	 + ChatColor.GOLD + ChatColor.BOLD + victim.getDisplayName(), Main.lang);
+			Main.sendTitle(killer, "", ChatColor.YELLOW + "+" + rank.getKillExperience() + "xp");
 			Main.progManager.addExperience(killer, rank.getKillExperience());
 			this.kill(victim, killer);
 			this.addPointForPlayer(killer);
@@ -1228,7 +1228,7 @@ public class GameInstance implements Listener {
 				setupFlags(false, true);
 				redFlagHolder = null;
 				for (Player player : players) {
-					Main.sendTitle(player, "\u00A7cThe red team scored!", "");
+					Main.sendTitle(player, ChatColor.RED + "The red team scored!", "");
 				}
 			}
 
@@ -1241,7 +1241,7 @@ public class GameInstance implements Listener {
 				setupFlags(true, false);
 				blueFlagHolder = null;
 				for (Player player : players) {
-					Main.sendTitle(player,  "\u00A79The blue team scored!", "");
+					Main.sendTitle(player,  ChatColor.DARK_BLUE + "The blue team scored!", "");
 				}
 			}
 		}
@@ -1315,7 +1315,7 @@ public class GameInstance implements Listener {
 		Location cLoc = this.getMap().getCFlagSpawn();
 
 		if(aLoc == null || bLoc == null || cLoc == null) {
-			Main.sendMessage(Main.cs, Main.codPrefix + "\u00A7The Alpha, Beta, or Charlie flag spawns have not been set for the current map in arena id " + this.getId() + ". The game will likely not work properly.", Main.lang);
+			Main.sendMessage(Main.cs, Main.codPrefix + ChatColor.RED + "The Alpha, Beta, or Charlie flag spawns have not been set for the current map in arena id " + this.getId() + ". The game will likely not work properly.", Main.lang);
 			return;
 		}
 
@@ -1425,15 +1425,15 @@ public class GameInstance implements Listener {
 
 					if (aFlagCapture == 10) {
 						for (Player p : this.getPlayers()) {
-							p.sendMessage("\u00A7eThe \u00A79BLUE \u00A7eteam has captured flag A!");
+							p.sendMessage(ChatColor.YELLOW + "The " + ChatColor.DARK_BLUE + "BLUE " + ChatColor.YELLOW + "team has captured flag A!");
 						}
 					} else if (aFlagCapture == -10) {
 						for (Player p : this.getPlayers()) {
-							p.sendMessage("\u00A7eThe \u00A7cRED \u00A7eteam has captured flag A!");
+							p.sendMessage(ChatColor.YELLOW + "The " + ChatColor.RED + "RED " + ChatColor.YELLOW + "team has captured flag A!");
 						}
 					} else if (aFlagCapture == 0) {
 						for (Player p : this.getPlayers()) {
-							p.sendMessage("\u00A7eFlag A has been Neutralized!");
+							p.sendMessage(ChatColor.YELLOW + "Flag A has been Neutralized!");
 						}
 					}
 				}
@@ -1452,15 +1452,15 @@ public class GameInstance implements Listener {
 
 					if (bFlagCapture == 10) {
 						for (Player p : this.getPlayers()) {
-							p.sendMessage("\u00A7eThe \u00A79BLUE \u00A7eteam has captured flag B!");
+							p.sendMessage(ChatColor.YELLOW + "The " + ChatColor.DARK_BLUE + "BLUE " + ChatColor.YELLOW + "team has captured flag B!");
 						}
 					} else if (bFlagCapture == -10) {
 						for (Player p : this.getPlayers()) {
-							p.sendMessage("\u00A7eThe \u00A7cRED \u00A7eteam has captured flag B!");
+							p.sendMessage(ChatColor.YELLOW + "The " + ChatColor.RED + "RED " + ChatColor.YELLOW + "team has captured flag B!");
 						}
 					} else if (bFlagCapture == 0) {
 						for (Player p : this.getPlayers()) {
-							p.sendMessage("\u00A7eFlag B has been Neutralized!");
+							p.sendMessage(ChatColor.YELLOW + "Flag B has been Neutralized!");
 						}
 					}
 				}
@@ -1479,15 +1479,15 @@ public class GameInstance implements Listener {
 
 					if (cFlagCapture == 10) {
 						for (Player p : this.getPlayers()) {
-							p.sendMessage("\u00A7eThe \u00A79BLUE \u00A7eteam has captured flag C!");
+							p.sendMessage(ChatColor.YELLOW + "The " + ChatColor.DARK_BLUE + "BLUE " + ChatColor.YELLOW + "team has captured flag C!");
 						}
 					} else if (cFlagCapture == -10) {
 						for (Player p : this.getPlayers()) {
-							p.sendMessage("\u00A7eThe \u00A7cRED \u00A7eteam has captured flag C!");
+							p.sendMessage(ChatColor.YELLOW + "The " + ChatColor.RED + "RED " + ChatColor.YELLOW + "team has captured flag C!");
 						}
 					} else if (cFlagCapture == 0) {
 						for (Player p : this.getPlayers()) {
-							p.sendMessage("\u00A7eFlag C has been Neutralized!");
+							p.sendMessage(ChatColor.YELLOW + "Flag C has been Neutralized!");
 						}
 					}
 				}

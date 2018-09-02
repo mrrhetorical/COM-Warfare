@@ -7,6 +7,7 @@ import com.rhetorical.cod.object.*;
 import com.rhetorical.tpp.McLang;
 import com.rhetorical.tpp.api.McTranslate;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
@@ -29,7 +30,7 @@ public class Main extends JavaPlugin {
 		return Bukkit.getServer().getPluginManager().getPlugin("COM-Warfare");
 	}
 
-	public static String codPrefix = "\u00A7f\u00A7l[\u00A7r\u00A76COM\u00A7f\u00A7l]\u00A7r ";
+	public static String codPrefix = "[COM] ";
 	public static ConsoleCommandSender cs = Bukkit.getConsoleSender();
 
 	private static String sql_api_key;
@@ -62,27 +63,27 @@ public class Main extends JavaPlugin {
 		String bukkitVersion = Bukkit.getServer().getBukkitVersion();
 
 		if (!bukkitVersion.startsWith("1.13")) {
-			Main.cs.sendMessage(Main.codPrefix + "\u00A7cYou are not on the right version of Spigot/Bukkit, COM-Warfare might not work as intended. To ensure it will work properly, please use version \u00A7f1.13\u00A7c!");
+			Main.cs.sendMessage(Main.codPrefix + ChatColor.RED + "You are not on the right version of Spigot/Bukkit, COM-Warfare might not work as intended. To ensure it will work properly, please use version " + ChatColor.WHITE + "1.13" + ChatColor.RED + "!");
 		}
 
-		Main.cs.sendMessage(Main.codPrefix + "\u00A7fChecking dependencies...");
+		Main.cs.sendMessage(Main.codPrefix + "Checking dependencies...");
 
 		DependencyManager dm = new DependencyManager();
 		if (!dm.checkDependencies()) {
 			if (getPlugin().getConfig().getBoolean("auto-download-dependency")) {
-				Main.cs.sendMessage(Main.codPrefix + "\u00A7cOne or more dependencies were not found, will attempt to download them.");
+				Main.cs.sendMessage(Main.codPrefix + ChatColor.RED + "One or more dependencies were not found, will attempt to download them.");
 				try {
 					dm.downloadDependencies();
 				} catch (Exception e) {
-					Main.cs.sendMessage(Main.codPrefix + "\u00A7cCould not download dependencies! Make sure that the plugins folder can be written to!");
-					Main.cs.sendMessage("\u00A7l\u00A7f[\u00A76\u00A7lCAUTION\u00A7r\u00A7f] \u00A7r\u00A7cNot all dependencies for COM-Warfare are installed! The plugin likely will not work as intended!");
+					Main.cs.sendMessage(Main.codPrefix + ChatColor.RED +"Could not download dependencies! Make sure that the plugins folder can be written to!");
+					Main.cs.sendMessage(Main.codPrefix + ChatColor.RED + "Not all dependencies for COM-Warfare are installed! The plugin likely will not work as intended!");
 				}
 			} else {
-				Main.cs.sendMessage(Main.codPrefix + "\u00A7cCould not download dependencies! You must set the value for \"auto-download-dependency\" to 'true' in the config to automatically download them!");
-				Main.cs.sendMessage("\u00A7l\u00A7f[\u00A76\u00A7lCAUTION\u00A7r\u00A7f] \u00A7r\u00A7cNot all dependencies for COM-Warfare are installed! The plugin likely will not work as intended!");
+				Main.cs.sendMessage(Main.codPrefix + ChatColor.RED + "Could not download dependencies! You must set the value for \"auto-download-dependency\" to 'true' in the config to automatically download them!");
+				Main.cs.sendMessage(ChatColor.RED + "Not all dependencies for COM-Warfare are installed! The plugin likely will not work as intended!");
 			}
 		} else {
-			Main.cs.sendMessage(Main.codPrefix + "\u00A7aAll dependencies are installed!");
+			Main.cs.sendMessage(Main.codPrefix + ChatColor.GREEN + "All dependencies are installed!");
 		}
 
 		try {
@@ -93,14 +94,14 @@ public class Main extends JavaPlugin {
 					lang = McLang.valueOf(getPlugin().getConfig().getString("lang"));
 				} catch (Exception e) {
 					lang = McLang.EN;
-					cs.sendMessage(codPrefix + "\u00A7cCould not get the language from the config! Make sure you're using the right two letter abbreviation!");
+					cs.sendMessage(codPrefix + ChatColor.RED + "Could not get the language from the config! Make sure you're using the right two letter abbreviation!");
 				}
 
 				if (lang != McLang.EN)
 					lang = McLang.EN;
 			}
 		} catch(Exception classException) {
-			Main.cs.sendMessage(Main.codPrefix + "\u00A7cMcTranslate++ Doesn't seem to be installed? If you have 'auto-download-dependencies' turned on, it will automatically install, and after installing, you should restart the server!");
+			Main.cs.sendMessage(Main.codPrefix + ChatColor.RED + "McTranslate++ Doesn't seem to be installed? If you have 'auto-download-dependencies' turned on, it will automatically install, and after installing, you should restart the server!");
 		}
 
 		String version = getPlugin().getDescription().getVersion();
@@ -178,17 +179,17 @@ public class Main extends JavaPlugin {
 		try {
 			translate = new McTranslate(Main.getPlugin(), Main.translate_api_key);
 		} catch(Exception e) {
-			Main.sendMessage(cs, Main.codPrefix + "\u00A7fAttempting to reconnect to McTranslate++ API...");
+			Main.sendMessage(cs, Main.codPrefix + "Attempting to reconnect to McTranslate++ API...");
 			BukkitRunnable tryTranslateAgain = new BukkitRunnable() {
 				public void run() {
 					try {
 						translate = new McTranslate(Main.getPlugin(), Main.translate_api_key);
 					} catch(Exception e) {
-						Main.sendMessage(Main.cs, Main.codPrefix + "\u00A7cCould not start McTranslate++ API!");
+						Main.sendMessage(Main.cs, Main.codPrefix + ChatColor.RED + "Could not start McTranslate++ API!");
 						return;
 					}
 					
-					Main.sendMessage(Main.cs, Main.codPrefix + "\u00A7aSuccessfully started McTranslate++ API!");
+					Main.sendMessage(Main.cs, Main.codPrefix + ChatColor.YELLOW + "Successfully started McTranslate++ API!");
 					this.cancel();
 					
 				}
@@ -197,7 +198,7 @@ public class Main extends JavaPlugin {
 			tryTranslateAgain.runTaskTimer(getPlugin(), 200L, 200L);
 		}
 
-		Main.cs.sendMessage(Main.codPrefix + "\u00A7a\u00A7lCOM-Warfare version \u00A7r\u00A7f" + version + "\u00A7r\u00A7a\u00A7l is now up and running!");
+		Main.cs.sendMessage(Main.codPrefix + ChatColor.GREEN + ChatColor.BOLD + "COM-Warfare version " + ChatColor.RESET + ChatColor.WHITE + version + ChatColor.RESET + ChatColor.GREEN + ChatColor.BOLD + " is now up and running!");
 	}
 
 	@Override
@@ -221,7 +222,7 @@ public class Main extends JavaPlugin {
 		if (p.hasPermission(s) || p.hasPermission("com.*")) {
 			return true;
 		} else {
-			sendMessage(p, Main.codPrefix + "\u00A7cYou don't have permission to do that!", lang);
+			sendMessage(p, Main.codPrefix + ChatColor.RED + "You don't have permission to do that!", lang);
 			return false;
 		}
 	}
@@ -234,15 +235,15 @@ public class Main extends JavaPlugin {
 
 		Player p = null;
 
-		String cColor = "\u00A7a\u00A7l";
-		String dColor = "\u00A7f\u00A7l";
+		String cColor = "" + ChatColor.GREEN + ChatColor.BOLD;
+		String dColor = "" + ChatColor.WHITE + ChatColor.BOLD;
 
 		if (!(sender instanceof Player)) {
 			if (args.length >= 1) {
 				if (args[0].equalsIgnoreCase("help")) {
-					sendMessage(cs, "\u00A76\u00A7lCOM-Warfare Help \u00A7f[\u00A7lPage 1 of 1\u00A7r\u00A7l]", lang);
+					sendMessage(cs, "" + ChatColor.GOLD + ChatColor.BOLD + "COM-Warfare Help " + ChatColor.WHITE + "[" + ChatColor.BOLD + "Page 1 of 1" + ChatColor.RESET + ChatColor.WHITE + "]", lang);
 
-					sendMessage(cs, "\u00A7f\u00A7lType the command to see the specifics on how to use it.", lang);
+					sendMessage(cs, "" + ChatColor.WHITE + ChatColor.BOLD + "Type the command to see the specifics on how to use it.", lang);
 					sendMessage(cs, cColor + "/cod giveCredits {name} [amount] | " + dColor + "Gives an amount of credits to a player.");
 					sendMessage(cs, cColor + "/cod setCredits {name} [amount] | " + dColor + "Sets the credits amount for a player.");
 					return true;
@@ -282,7 +283,7 @@ public class Main extends JavaPlugin {
 		// Console commands ^^ | Player commands vv
 
 		if (!(sender instanceof Player)) {
-			sendMessage(cs, "\u00A7cYou must be a player to execute these commands for COM-Warfare!", lang);
+			sendMessage(cs, ChatColor.RED + "You must be a player to execute these commands for COM-Warfare!", lang);
 			return true;
 		}
 
@@ -299,14 +300,16 @@ public class Main extends JavaPlugin {
 					try {
 						page = Integer.parseInt(args[1]);
 					} catch (Exception e) {
-						sendMessage(p, Main.codPrefix + "\u00A7cYou didn't specify a proper page.", lang);
+						sendMessage(p, Main.codPrefix + ChatColor.RED + "You didn't specify a proper page.", lang);
 						return true;
 					}
 
 					if (!(page > 0 && page <= 3)) {
-						sendMessage(p, Main.codPrefix + "\u00A7cYou didn't give a proper page number!", lang);
+						sendMessage(p, Main.codPrefix + ChatColor.RED + "You didn't give a proper page number!", lang);
 						return true;
 					}
+
+					//FIXME: Left off here converting to ChatColor!
 
 					sendMessage(p, "-===\u00A76\u00A7lCOM-Warfare Help\u00A7r===-", lang);
 					sendMessage(p, "\u00A7f[\u00A7lPage " + page + " of 3\u00A7r\u00A7l]", lang);
