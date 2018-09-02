@@ -1,11 +1,11 @@
 package com.rhetorical.cod;
 
-import com.rhetorical.cod.analytics.CollectAnalytics;
 import com.rhetorical.cod.files.*;
 import com.rhetorical.cod.inventories.InventoryManager;
 import com.rhetorical.cod.object.*;
 import com.rhetorical.tpp.McLang;
 import com.rhetorical.tpp.api.McTranslate;
+import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -18,7 +18,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -57,8 +56,12 @@ public class Main extends JavaPlugin {
 	public static Location lobbyLoc;
 	private static HashMap<Player, Location> lastLoc = new HashMap<>();
 
+	private Metrics bMetrics;
+
 	@Override
 	public void onEnable() {
+
+		bMetrics = new Metrics(this);
 
 		String bukkitVersion = Bukkit.getServer().getBukkitVersion();
 
@@ -105,9 +108,7 @@ public class Main extends JavaPlugin {
 		}
 
 		String version = getPlugin().getDescription().getVersion();
-
-		CollectAnalytics.collectPlayerStats();
-
+		
 		ProgressionFile.setup(getPlugin());
 		ArenasFile.setup(getPlugin());
 		CreditsFile.setup(getPlugin());
