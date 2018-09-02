@@ -859,7 +859,6 @@ public class Main extends JavaPlugin {
 
 	public static void sendActionBar(Player p, String message) {
 		//TODO: Implement
-		throw new NotImplementedException();
 	}
 
 	public static String getSQLApiKey() {

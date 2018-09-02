@@ -7,10 +7,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c004894e-1f3c-4cdf-ba37-fd72a31bc043" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/rhetorical/cod/Main.java" afterPath="$PROJECT_DIR$/src/main/java/com/rhetorical/cod/Main.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/rhetorical/cod/api/StatRetreival.java" afterPath="$PROJECT_DIR$/src/main/java/com/rhetorical/cod/api/StatRetreival.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/rhetorical/cod/object/CodMap.java" afterPath="$PROJECT_DIR$/src/main/java/com/rhetorical/cod/object/CodMap.java" />
     </list>
     <ignored path="$PROJECT_DIR$/bin/" />
     <ignored path="$PROJECT_DIR$/target/" />
@@ -30,8 +27,8 @@
       <file leaf-file-name="Main.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/Main.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="527">
-              <caret line="328" column="86" lean-forward="false" selection-start-line="328" selection-start-column="86" selection-end-line="328" selection-end-column="86" />
+            <state relative-caret-position="645">
+              <caret line="861" column="0" lean-forward="false" selection-start-line="861" selection-start-column="0" selection-end-line="861" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -857,12 +854,12 @@
       <workItem from="1535751509723" duration="398000" />
       <workItem from="1535752998677" duration="963000" />
       <workItem from="1535819070043" duration="3918000" />
-      <workItem from="1535874352189" duration="281000" />
+      <workItem from="1535874352189" duration="439000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="43863000" />
+    <option name="totallyTimeSpent" value="44021000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
@@ -1316,8 +1313,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/Main.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="527">
-          <caret line="328" column="86" lean-forward="false" selection-start-line="328" selection-start-column="86" selection-end-line="328" selection-end-column="86" />
+        <state relative-caret-position="645">
+          <caret line="861" column="0" lean-forward="false" selection-start-line="861" selection-start-column="0" selection-end-line="861" selection-end-column="0" />
           <folding />
         </state>
       </provider>
