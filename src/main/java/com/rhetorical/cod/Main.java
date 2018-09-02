@@ -318,7 +318,7 @@ public class Main extends JavaPlugin {
 						sendMessage(p, cColor + "/cod | " + dColor + "Opens the main menu.");
 						sendMessage(p, cColor + "/cod join | " + dColor + "Joins a game through the matchmaker.");
 						sendMessage(p, cColor + "/cod leave | " + dColor + "Leaves the current game.");
-						sendMessage(p, cColor + "/cod listMaps | " + dColor + "Lists the avaiable maps.");
+						sendMessage(p, cColor + "/cod listMaps | " + dColor + "Lists the available maps.");
 						sendMessage(p, cColor + "/cod createMap [args] | " + dColor + "Create a map.");
 						sendMessage(p, cColor + "/cod removeMap [name] | " + dColor + "Command to remove a map.");
 						break;
@@ -327,7 +327,7 @@ public class Main extends JavaPlugin {
 						sendMessage(p, cColor + "/cod credits give | " + dColor + "Gives credits to a person.");
 						sendMessage(p, cColor + "/cod credits set | " + dColor + "Sets amount of credits for a player.");
 						sendMessage(p, cColor + "/cod lobby | " + dColor + "Teleports you to the lobby.");
-						sendMessage(p, cColor + "/cod createGun [args] | " + dColor + "Creats a gun.");
+						sendMessage(p, cColor + "/cod createGun [args] | " + dColor + "Creates a gun.");
 						sendMessage(p, cColor + "/cod shop | " + dColor + "Opens the shop.");
 
 						break;
@@ -347,7 +347,7 @@ public class Main extends JavaPlugin {
 					sendMessage(p, cColor + "/cod | " + dColor + "Opens the main menu.");
 					sendMessage(p, cColor + "/cod join | " + dColor + "Joins a game through the matchmaker.");
 					sendMessage(p, cColor + "/cod leave | " + dColor + "Leaves the current game.");
-					sendMessage(p, cColor + "/cod listMaps | " + dColor + "Lists the avaiable maps.");
+					sendMessage(p, cColor + "/cod listMaps | " + dColor + "Lists the available maps.");
 					sendMessage(p, cColor + "/cod createMap [args] | " + dColor + "Create a map.");
 					sendMessage(p, cColor + "/cod removeMap [name] | " + dColor + "Command to remove a map.");
 

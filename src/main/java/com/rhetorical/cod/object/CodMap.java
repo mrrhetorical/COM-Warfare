@@ -76,7 +76,7 @@ public class CodMap {
 	//Check if enabled
 	public boolean setEnable() {
 		
-		if (getGamemode().equals(Gamemode.TDM) || getGamemode().equals(Gamemode.RSB) || getGamemode().equals(Gamemode.INFECT) || getGamemode().equals(Gamemode.KC)) {
+		if (getGamemode().equals(Gamemode.TDM) || getGamemode().equals(Gamemode.RSB) || getGamemode().equals(Gamemode.INFECT) || getGamemode().equals(Gamemode.KC) || getGamemode().equals(Gamemode.RESCUE)) {
 			if (getBlueSpawns() != null && getRedSpawns() != null) {
 				if (getBlueSpawns().size() >= 1 && getRedSpawns().size() >= 1) {
 					this.setEnabled(true);

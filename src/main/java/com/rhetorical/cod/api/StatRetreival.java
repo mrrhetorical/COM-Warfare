@@ -2,12 +2,12 @@ package com.rhetorical.cod.api;
 
 import com.rhetorical.cod.files.StatsFile;
 
-public class StatRetreival<Data> {
+public class StatRetrieval<Data> {
 	
 	private	Data information;
 	private int responseCode;
 	
-	private StatRetreival(Data info, int rCode) {
+	private StatRetrieval(Data info, int rCode) {
 		this.information = info;
 		this.responseCode = rCode;
 	}
@@ -33,26 +33,26 @@ public class StatRetreival<Data> {
 		}	
 	}
 	
-	public static StatRetreival<Double> getTotalExperience(String playerName) {
+	public static StatRetrieval<Double> getTotalExperience(String playerName) {
 		
 		if (!StatsFile.getData().contains(playerName + ".experience"))
-			return new StatRetreival<Double>(0d, 2);
+			return new StatRetrieval<>(0d, 2);
 		
-		return new StatRetreival<Double>(StatsFile.getData().getDouble(playerName + ".experience"), 0);
+		return new StatRetrieval<>(StatsFile.getData().getDouble(playerName + ".experience"), 0);
 	}
 	
-	public static StatRetreival<Integer> getTotalDeaths(String playerName) {
+	public static StatRetrieval<Integer> getTotalDeaths(String playerName) {
 		if (!StatsFile.getData().contains(playerName + ".deaths"))
-			return new StatRetreival<Integer>(0, 2);
+			return new StatRetrieval<>(0, 2);
 		
-		return new StatRetreival<Integer>(StatsFile.getData().getInt(playerName + ".deaths"), 0);
+		return new StatRetrieval<>(StatsFile.getData().getInt(playerName + ".deaths"), 0);
 	}
 	
-	public static StatRetreival<Integer> getTotalKills(String playerName) {
+	public static StatRetrieval<Integer> getTotalKills(String playerName) {
 		if (!StatsFile.getData().contains(playerName + ".kills"))
-			return new StatRetreival<Integer>(0, 2); 
+			return new StatRetrieval<>(0, 2);
 		
-		return new StatRetreival<Integer>(StatsFile.getData().getInt(playerName + ".kills"), 0);
+		return new StatRetrieval<>(StatsFile.getData().getInt(playerName + ".kills"), 0);
 		
 	}
 	
