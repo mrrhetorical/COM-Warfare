@@ -7,6 +7,90 @@
     <version>RELEASE-2.${vMajor}.${vMinor}</version>
     <name>COM-Warfare</name>
 
+    <repositories>
+        <repository>
+            <id>spigot-repo</id>
+            <url>https://hub.spigotmc.org/nexus/content/repositories/</url>
+        </repository>
+
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+
+        <repository>
+            <id>bstats-repo</id>
+            <url>http://repo.bstats.org/content/repositories/releases/</url>
+        </repository>
+    </repositories>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.github.mrrhetorical</groupId>
+            <artifactId>McTranslatePlusPlus</artifactId>
+            <version>master-1.1-g9681908-1</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.bstats</groupId>
+            <artifactId>bstats-bukkit</artifactId>
+            <version>1.2</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot-api</artifactId>
+            <version>1.13.1-R0.1-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/java</directory>
+                <includes>
+                    <include>plugin.yml</include>
+                    <include>config.yml</include>
+                </includes>
+            </resource>
+        </resources>
+
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.1.0</version>
+                <configuration>
+                    <relocations>
+                        <relocation>
+                            <pattern>org.bstats</pattern>
+                            <shadedPattern>com.rhetorical.cod</shadedPattern>
+                        </relocation>
+                    </relocations>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 
 <profiles>
 
@@ -17,57 +101,16 @@
     <profile>
         <id>1.12</id>
 
-        <repositories>
-            <repository>
-                <id>spigot-repo</id>
-                <url>https://hub.spigotmc.org/nexus/content/repositories/</url>
-            </repository>
-
-            <repository>
-                <id>jitpack.io</id>
-                <url>https://jitpack.io</url>
-            </repository>
-
-            <repository>
-                <id>bstats-repo</id>
-                <url>http://repo.bstats.org/content/repositories/releases/</url>
-            </repository>
-        </repositories>
-
         <dependencies>
             <dependency>
-                <groupId>com.github.mrrhetorical</groupId>
-                <artifactId>McTranslatePlusPlus</artifactId>
-                <version>master-1.1-g9681908-1</version>
-                <scope>provided</scope>
-            </dependency>
-
-            <dependency>
-                <groupId>org.bstats</groupId>
-                <artifactId>bstats-bukkit</artifactId>
-                <version>1.2</version>
-                <scope>compile</scope>
-            </dependency>
-
-            <dependency>
                 <groupId>org.spigotmc</groupId>
-                <artifactId>spigot-api</artifactId>
+                <artifactId>spigot</artifactId>
                 <version>1.12.2-R0.1-SNAPSHOT</version>
                 <scope>provided</scope>
             </dependency>
         </dependencies>
 
         <build>
-
-            <resources>
-                <resource>
-                    <directory>src/main/java</directory>
-                    <includes>
-                        <include>plugin.yml</include>
-                        <include>config.yml</include>
-                    </includes>
-                </resource>
-            </resources>
 
             <plugins>
 
@@ -78,37 +121,6 @@
                     <configuration>
                         <finalName>com-warfare-4.${vMajor}.${vMinor}-1.12</finalName>
                     </configuration>
-                </plugin> 
-
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-compiler-plugin</artifactId>
-                    <configuration>
-                        <source>1.8</source>
-                        <target>1.8</target>
-                    </configuration>
-                </plugin>
-
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-shade-plugin</artifactId>
-                    <version>3.1.0</version>
-                    <configuration>
-                        <relocations>
-                            <relocation>
-                                <pattern>org.bstats</pattern>
-                                <shadedPattern>com.rhetorical.cod</shadedPattern>
-                            </relocation>
-                        </relocations>
-                    </configuration>
-                    <executions>
-                        <execution>
-                            <phase>package</phase>
-                            <goals>
-                                <goal>shade</goal>
-                            </goals>
-                        </execution>
-                    </executions>
                 </plugin>
 
                 <plugin> 
@@ -177,58 +189,7 @@
     <profile>
         <id>1.13</id>
 
-        <repositories>
-            <repository>
-                <id>spigot-repo</id>
-                <url>https://hub.spigotmc.org/nexus/content/repositories/</url>
-            </repository>
-
-            <repository>
-                <id>jitpack.io</id>
-                <url>https://jitpack.io</url>
-            </repository>
-
-            <repository>
-                <id>bstats-repo</id>
-                <url>http://repo.bstats.org/content/repositories/releases/</url>
-            </repository>
-        </repositories>
-
-        <dependencies>
-            <dependency>
-                <groupId>com.github.mrrhetorical</groupId>
-                <artifactId>McTranslatePlusPlus</artifactId>
-                <version>master-1.1-g9681908-1</version>
-                <scope>provided</scope>
-            </dependency>
-
-            <dependency>
-                <groupId>org.bstats</groupId>
-                <artifactId>bstats-bukkit</artifactId>
-                <version>1.2</version>
-                <scope>compile</scope>
-            </dependency>
-
-            <dependency>
-                <groupId>org.spigotmc</groupId>
-                <artifactId>spigot-api</artifactId>
-                <version>1.13.1-R0.1-SNAPSHOT</version>
-                <scope>provided</scope>
-            </dependency>
-        </dependencies>
-
         <build>
-
-            <resources>
-                <resource>
-                    <directory>src/main/java</directory>
-                    <includes>
-                        <include>plugin.yml</include>
-                        <include>config.yml</include>
-                    </includes>
-                </resource>
-            </resources>
-
             <plugins>
 
                 <plugin>
@@ -240,36 +201,6 @@
                     </configuration>
                 </plugin> 
 
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-compiler-plugin</artifactId>
-                    <configuration>
-                        <source>1.8</source>
-                        <target>1.8</target>
-                    </configuration>
-                </plugin>
-
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-shade-plugin</artifactId>
-                    <version>3.1.0</version>
-                    <configuration>
-                        <relocations>
-                            <relocation>
-                                <pattern>org.bstats</pattern>
-                                <shadedPattern>com.rhetorical.cod</shadedPattern>
-                            </relocation>
-                        </relocations>
-                    </configuration>
-                    <executions>
-                        <execution>
-                            <phase>package</phase>
-                            <goals>
-                                <goal>shade</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin> 
             </plugins>
         </build>
     </profile>
