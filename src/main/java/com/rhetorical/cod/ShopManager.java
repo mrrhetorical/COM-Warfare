@@ -119,8 +119,10 @@ public class ShopManager {
 			this.purchasedGuns = new HashMap<>();
 		}
 		this.purchasedGuns.computeIfAbsent(p, k -> new ArrayList<>());
-		for (CodGun gun : this.purchasedGuns.get(p)) {
-			guns.add(gun.getName());
+		if (purchasedGuns.get(p) != null) {
+			for (CodGun gun : this.purchasedGuns.get(p)) {
+				guns.add(gun.getName());
+			}
 		}
 
 		ShopFile.getData().set("Purchased.Guns." + p.getName(), guns);
@@ -129,17 +131,24 @@ public class ShopManager {
 		if (this.purchasedWeapons == null) {
 			this.purchasedWeapons = new HashMap<>();
 		}
+
 		this.purchasedWeapons.computeIfAbsent(p, k -> new ArrayList<>());
-		for (CodWeapon grenade : this.purchasedWeapons.get(p)) {
-			weapons.add(grenade.getName());
+
+		if (purchasedWeapons.get(p) != null) {
+			for (CodWeapon grenade : this.purchasedWeapons.get(p)) {
+				weapons.add(grenade.getName());
+			}
 		}
 
 		ShopFile.getData().set("Purchased.Weapons." + p.getName(), weapons);
 
 		ArrayList<String> perks = new ArrayList<>();
 		this.purchasedPerks.computeIfAbsent(p, k -> new ArrayList<>());
-		for (CodPerk perk : this.purchasedPerks.get(p)) {
-			perks.add(perk.getPerk().getName());
+
+		if (purchasedPerks.get(p) != null) {
+			for (CodPerk perk : this.purchasedPerks.get(p)) {
+				perks.add(perk.getPerk().getName());
+			}
 		}
 		
 		if (perks.size() == 0) {
