@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="8af5c05d-5471-4f5e-81d7-17ff24fee9c9" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pom.xml" afterPath="$PROJECT_DIR$/pom.xml" />
     </list>
     <ignored path="$PROJECT_DIR$/target/" />
@@ -32,8 +31,8 @@
       <file leaf-file-name="pom.xml" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/pom.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="408">
-              <caret line="108" column="36" lean-forward="true" selection-start-line="108" selection-start-column="36" selection-end-line="108" selection-end-column="36" />
+            <state relative-caret-position="391">
+              <caret line="107" column="38" lean-forward="false" selection-start-line="107" selection-start-column="38" selection-end-line="107" selection-end-column="38" />
               <folding />
             </state>
           </provider>
@@ -78,8 +77,8 @@
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="2246" />
-    <option name="y" value="201" />
+    <option name="x" value="2392" />
+    <option name="y" value="242" />
     <option name="width" value="1430" />
     <option name="height" value="810" />
   </component>
@@ -593,15 +592,15 @@
       <workItem from="1536040952410" duration="135000" />
       <workItem from="1537075439753" duration="549000" />
       <workItem from="1537076447295" duration="161000" />
-      <workItem from="1537076673464" duration="565000" />
+      <workItem from="1537076673464" duration="1080000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="3772000" />
+    <option name="totallyTimeSpent" value="4287000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="2246" y="201" width="1430" height="810" extended-state="0" />
+    <frame x="2392" y="242" width="1430" height="810" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -739,8 +738,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/pom.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="408">
-          <caret line="108" column="36" lean-forward="true" selection-start-line="108" selection-start-column="36" selection-end-line="108" selection-end-column="36" />
+        <state relative-caret-position="391">
+          <caret line="107" column="38" lean-forward="false" selection-start-line="107" selection-start-column="38" selection-end-line="107" selection-end-column="38" />
           <folding />
         </state>
       </provider>
