@@ -4,7 +4,7 @@
     <groupId>com.rhetorical</groupId>
     <artifactId>com-warfare</artifactId>
     <packaging>jar</packaging>
-    <version>RELEASE-2.4.${vMinor}</version>
+    <version>RELEASE-2.4.${vS}</version>
     <name>COM-Warfare</name>
 
     <repositories>
@@ -104,7 +104,7 @@
         <dependencies>
             <dependency>
                 <groupId>org.spigotmc</groupId>
-                <artifactId>spigot</artifactId>
+                <artifactId>spigot-api</artifactId>
                 <version>1.12.2-R0.1-SNAPSHOT</version>
                 <scope>provided</scope>
             </dependency>

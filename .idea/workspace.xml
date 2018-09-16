@@ -1,15 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="ArtifactsWorkspaceSettings">
-    <artifacts-to-build>
-      <artifact name="COMR:jar" />
-    </artifacts-to-build>
-  </component>
   <component name="ChangeListManager">
-    <list default="true" id="c004894e-1f3c-4cdf-ba37-fd72a31bc043" name="Default" comment="">
+    <list default="true" id="8af5c05d-5471-4f5e-81d7-17ff24fee9c9" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_spigotmc_spigot_api_1_13_R0_1_SNAPSHOT.xml" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/dictionaries/caleb.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/COMR.iml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/config.yml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/plugin.yml" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/compiler.xml" afterPath="$PROJECT_DIR$/.idea/compiler.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__net_md_5_bungeecord_chat_1_13_SNAPSHOT.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__net_md_5_bungeecord_chat_1_13_SNAPSHOT.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_spigotmc_spigot_api_1_13_1_R0_1_SNAPSHOT.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_spigotmc_spigot_api_1_13_1_R0_1_SNAPSHOT.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/modules.xml" afterPath="$PROJECT_DIR$/.idea/modules.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/vcs.xml" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pom.xml" afterPath="$PROJECT_DIR$/pom.xml" />
     </list>
-    <ignored path="$PROJECT_DIR$/bin/" />
     <ignored path="$PROJECT_DIR$/target/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -24,192 +30,17 @@
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="Main.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="Main.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/Main.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1462">
-              <caret line="109" column="42" lean-forward="false" selection-start-line="109" selection-start-column="42" selection-end-line="109" selection-end-column="42" />
-              <folding>
-                <element signature="imports" expanded="false" />
-                <element signature="e#844#845#0" expanded="false" />
-                <element signature="e#920#921#0" expanded="false" />
-                <element signature="e#30132#30133#0" expanded="false" />
-                <element signature="e#30166#30167#0" expanded="false" />
-                <element signature="e#30895#30896#0" expanded="false" />
-                <element signature="e#30925#30926#0" expanded="false" />
-                <element signature="e#30972#30973#0" expanded="false" />
-                <element signature="e#31008#31009#0" expanded="false" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="CodMap.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/object/CodMap.java">
-          <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="17">
-              <caret line="49" column="77" lean-forward="false" selection-start-line="49" selection-start-column="77" selection-end-line="49" selection-end-column="77" />
+              <caret line="7" column="33" lean-forward="false" selection-start-line="7" selection-start-column="33" selection-end-line="7" selection-end-column="33" />
               <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="GameManager.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/GameManager.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="17">
-              <caret line="56" column="56" lean-forward="false" selection-start-line="56" selection-start-column="56" selection-end-line="56" selection-end-column="56" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="DependencyManager.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/DependencyManager.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="204">
-              <caret line="18" column="50" lean-forward="false" selection-start-line="18" selection-start-column="50" selection-end-line="18" selection-end-column="50" />
-              <folding>
-                <element signature="imports" expanded="false" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Gamemode.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/object/Gamemode.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="51">
-              <caret line="3" column="57" lean-forward="false" selection-start-line="3" selection-start-column="57" selection-end-line="3" selection-end-column="57" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ShopManager.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/ShopManager.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2006">
-              <caret line="133" column="0" lean-forward="false" selection-start-line="133" selection-start-column="0" selection-end-line="133" selection-end-column="0" />
-              <folding>
-                <element signature="imports" expanded="false" />
-                <element signature="e#6596#6626#0" expanded="false" />
-                <element signature="e#9151#9152#0" expanded="false" />
-                <element signature="e#9176#9177#0" expanded="false" />
-                <element signature="e#9231#9232#0" expanded="false" />
-                <element signature="e#9268#9269#0" expanded="false" />
-                <element signature="e#9316#9317#0" expanded="false" />
-                <element signature="e#9343#9344#0" expanded="false" />
-                <element signature="e#9402#9403#0" expanded="false" />
-                <element signature="e#9443#9444#0" expanded="false" />
-                <element signature="e#9494#9495#0" expanded="false" />
-                <element signature="e#9521#9522#0" expanded="false" />
-                <element signature="e#9583#9584#0" expanded="false" />
-                <element signature="e#9624#9625#0" expanded="false" />
-                <element signature="e#9677#9678#0" expanded="false" />
-                <element signature="e#9706#9707#0" expanded="false" />
-                <element signature="e#9772#9773#0" expanded="false" />
-                <element signature="e#9817#9818#0" expanded="false" />
-                <element signature="e#9882#9883#0" expanded="false" />
-                <element signature="e#9909#9910#0" expanded="false" />
-                <element signature="e#9993#9994#0" expanded="false" />
-                <element signature="e#10034#10035#0" expanded="false" />
-                <element signature="e#10105#10106#0" expanded="false" />
-                <element signature="e#10135#10136#0" expanded="false" />
-                <element signature="e#13825#13826#0" expanded="false" />
-                <element signature="e#13860#13861#0" expanded="false" />
-                <element signature="e#13921#13922#0" expanded="false" />
-                <element signature="e#13961#13962#0" expanded="false" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="pom.xml" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/pom.xml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="3383">
-              <caret line="199" column="48" lean-forward="false" selection-start-line="199" selection-start-column="48" selection-end-line="199" selection-end-column="48" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="GameInstance.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/object/GameInstance.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="17">
-              <caret line="1481" column="146" lean-forward="false" selection-start-line="1481" selection-start-column="146" selection-end-line="1481" selection-end-column="146" />
-              <folding>
-                <element signature="imports" expanded="false" />
-                <element signature="e#4373#4374#0" expanded="false" />
-                <element signature="e#4394#4395#0" expanded="false" />
-                <element signature="e#6002#6003#0" expanded="false" />
-                <element signature="e#6029#6030#0" expanded="false" />
-                <element signature="e#6060#6061#0" expanded="false" />
-                <element signature="e#6086#6087#0" expanded="false" />
-                <element signature="e#7812#7813#0" expanded="false" />
-                <element signature="e#7878#7879#0" expanded="false" />
-                <element signature="e#23250#23251#0" expanded="false" />
-                <element signature="e#23276#23277#0" expanded="false" />
-                <element signature="e#26425#26426#0" expanded="false" />
-                <element signature="e#26463#26464#0" expanded="false" />
-                <element signature="e#26817#26818#0" expanded="false" />
-                <element signature="e#26843#26844#0" expanded="false" />
-                <element signature="e#26892#26893#0" expanded="false" />
-                <element signature="e#26931#26932#0" expanded="false" />
-                <element signature="e#26964#26965#0" expanded="false" />
-                <element signature="e#26983#26984#0" expanded="false" />
-                <element signature="e#27026#27027#0" expanded="false" />
-                <element signature="e#27051#27052#0" expanded="false" />
-                <element signature="e#27086#27087#0" expanded="false" />
-                <element signature="e#27127#27128#0" expanded="false" />
-              </folding>
             </state>
           </provider>
         </entry>
       </file>
     </leaf>
-  </component>
-  <component name="FindInProjectRecents">
-    <findStrings>
-      <find>shopManager.gunShop</find>
-      <find>open</find>
-      <find>openInventory</find>
-      <find>startGame</find>
-      <find>gametimer</find>
-      <find>maxscore_TDM</find>
-      <find>maxscore_Dom</find>
-      <find>kc</find>
-      <find>checkflags</find>
-      <find>despawnDomFlags</find>
-      <find>oncommand</find>
-      <find>set</find>
-      <find>spawndom</find>
-      <find>spawndomflags</find>
-      <find>despawndomflags</find>
-      <find>kill</find>
-      <find>spawncodplayer</find>
-      <find>potioneffect</find>
-      <find>speed</find>
-      <find>Can't start</find>
-      <find>defaultPrimary</find>
-      <find>§</find>
-      <find>getdefaultprimary</find>
-      <find>class</find>
-      <find>gametime</find>
-      <find>addplayer</find>
-      <find>isalive</find>
-      <find>createmap</find>
-      <find>map list</find>
-      <find>\u00A7</find>
-    </findStrings>
-    <replaceStrings>
-      <replace>\u00A7</replace>
-    </replaceStrings>
-    <dirStrings>
-      <dir>C:\Users\caleb\workspace\COM-Warfare\src\main\java</dir>
-    </dirStrings>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -222,56 +53,7 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/com/rhetorical/cod/ProgressionManager.java" />
-        <option value="$PROJECT_DIR$/src/com/rhetorical/cod/files/ArenasFile.java" />
-        <option value="$PROJECT_DIR$/src/com/rhetorical/cod/files/ShopFile.java" />
-        <option value="$PROJECT_DIR$/src/com/rhetorical/cod/files/StatsFile.java" />
-        <option value="$PROJECT_DIR$/src/com/rhetorical/cod/files/ProgressionFile.java" />
-        <option value="$PROJECT_DIR$/src/com/rhetorical/cod/files/LoadoutsFile.java" />
-        <option value="$PROJECT_DIR$/src/com/rhetorical/cod/files/KillstreaksFile.java" />
-        <option value="$PROJECT_DIR$/src/com/rhetorical/cod/files/GunsFile.java" />
-        <option value="$PROJECT_DIR$/src/com/rhetorical/cod/files/CreditsFile.java" />
-        <option value="$PROJECT_DIR$/src/com/rhetorical/cod/api/StatRetreival.java" />
-        <option value="$PROJECT_DIR$/src/com/rhetorical/cod/analytics/CollectAnalytics.java" />
-        <option value="$PROJECT_DIR$/src/com/rhetorical/cod/object/CodGun.java" />
-        <option value="$PROJECT_DIR$/src/com/rhetorical/cod/object/CodPerk.java" />
-        <option value="$PROJECT_DIR$/src/com/rhetorical/cod/object/CodScore.java" />
-        <option value="$PROJECT_DIR$/src/com/rhetorical/cod/object/CodWeapon.java" />
-        <option value="$PROJECT_DIR$/src/com/rhetorical/cod/object/HealthManager.java" />
-        <option value="$PROJECT_DIR$/src/com/rhetorical/cod/object/Loadout.java" />
-        <option value="$PROJECT_DIR$/src/com/rhetorical/cod/object/RankPerks.java" />
-        <option value="$PROJECT_DIR$/src/com/rhetorical/cod/object/PerkListener.java" />
-        <option value="$PROJECT_DIR$/src/com/rhetorical/cod/LoadoutManager.java" />
-        <option value="$PROJECT_DIR$/src/com/rhetorical/cod/ShopManager.java" />
-        <option value="$PROJECT_DIR$/src/com/rhetorical/cod/object/Gamemode.java" />
-        <option value="$PROJECT_DIR$/src/com/rhetorical/cod/object/CodMap.java" />
-        <option value="$PROJECT_DIR$/src/com/rhetorical/cod/object/KillStreakManager.java" />
-        <option value="$PROJECT_DIR$/src/com/rhetorical/cod/GameManager.java" />
-        <option value="$PROJECT_DIR$/src/com/rhetorical/cod/DependencyManager.java" />
-        <option value="$PROJECT_DIR$/src/config.yml" />
-        <option value="$PROJECT_DIR$/src/com/rhetorical/cod/object/GameInstance.java" />
-        <option value="$PROJECT_DIR$/src/com/rhetorical/cod/Main.java" />
-        <option value="$PROJECT_DIR$/src/plugin.yml" />
-        <option value="$PROJECT_DIR$/src/com/rhetorical/cod/inventories/InventoryManager.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/rhetorical/cod/CreditManager.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/rhetorical/cod/DependencyManager.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/rhetorical/cod/GameManager.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/rhetorical/cod/Listeners.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/rhetorical/cod/LoadoutManager.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/rhetorical/cod/PerkManager.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/rhetorical/cod/ProgressionManager.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/rhetorical/cod/analytics/CollectAnalytics.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/rhetorical/cod/object/KillStreakManager.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/rhetorical/cod/object/PerkListener.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/rhetorical/cod/inventories/InventoryManager.java" />
-        <option value="$PROJECT_DIR$/src/main/java/config.yml" />
-        <option value="$PROJECT_DIR$/src/main/java/com/rhetorical/cod/object/Gamemode.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/rhetorical/cod/object/CodMap.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/rhetorical/cod/api/StatRetreival.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/rhetorical/cod/object/GameInstance.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/rhetorical/cod/Main.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/rhetorical/cod/ShopManager.java" />
-        <option value="$PROJECT_DIR$/src/main/java/plugin.yml" />
         <option value="$PROJECT_DIR$/pom.xml" />
       </list>
     </option>
@@ -283,17 +65,24 @@
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="mavenHome" value="$USER_HOME$/maven/apache-maven-3.5.4" />
+      </MavenGeneralSettings>
+    </option>
     <option name="importingSettings">
       <MavenImportingSettings>
+        <option name="createModulesForAggregators" value="false" />
+        <option name="downloadSourcesAutomatically" value="true" />
         <option name="importAutomatically" value="true" />
       </MavenImportingSettings>
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="224" />
-    <option name="y" value="68" />
-    <option name="width" value="1371" />
-    <option name="height" value="834" />
+    <option name="x" value="262" />
+    <option name="y" value="198" />
+    <option name="width" value="1430" />
+    <option name="height" value="810" />
   </component>
   <component name="ProjectLevelVcsManager">
     <ConfirmationsSetting value="2" id="Add" />
@@ -313,6 +102,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -377,20 +167,18 @@
       </pane>
       <pane id="Scratches" />
       <pane id="PackagesPane" />
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
+    <property name="settings.editor.selected.configurable" value="reference.settings.project.maven.repository.indices" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="nodejs_interpreter_path" value="/usr/local/bin/node" />
+    <property name="nodejs_interpreter_path" value="C:/Program Files/nodejs/node" />
     <property name="js.eslint.eslintPackage" value="" />
-    <property name="project.structure.last.edited" value="Project" />
+    <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2045977" />
-    <property name="js-jscs-nodeInterpreter" value="/usr/local/bin/node" />
-    <property name="settings.editor.selected.configurable" value="configurable.group.appearance" />
+    <property name="js-jscs-nodeInterpreter" value="C:\Program Files\nodejs\node.exe" />
   </component>
   <component name="RunManager">
     <configuration default="true" type="#org.jetbrains.idea.devkit.run.PluginConfigurationType" factoryName="Plugin">
@@ -578,7 +366,7 @@
           <option name="browser" value="a7bb68e0-33c0-4d6f-a81a-aac1fdb870c8" />
           <option name="launcherType" value="OSDefault" />
           <option name="newPlayerInstance" value="false" />
-          <option name="playerPath" value="/Applications/Flash Player Debugger.app" />
+          <option name="playerPath" value="FlashPlayerDebugger.exe" />
         </LauncherParameters>
       </option>
       <option name="mobileRunTarget" value="Emulator" />
@@ -601,7 +389,7 @@
           <option name="browser" value="a7bb68e0-33c0-4d6f-a81a-aac1fdb870c8" />
           <option name="launcherType" value="OSDefault" />
           <option name="newPlayerInstance" value="false" />
-          <option name="playerPath" value="/Applications/Flash Player Debugger.app" />
+          <option name="playerPath" value="FlashPlayerDebugger.exe" />
         </LauncherParameters>
       </option>
       <option name="moduleName" value="" />
@@ -693,7 +481,7 @@
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
       <option name="ALTERNATIVE_JRE_PATH" />
       <option name="PASS_PARENT_ENVS" value="true" />
-      <module name="COMR" />
+      <module name="COM-Warfare" />
       <envs />
       <method />
     </configuration>
@@ -793,101 +581,58 @@
   <component name="ShelveChangesManager" show_recycled="false">
     <option name="remove_strategy" value="false" />
   </component>
-  <component name="StructureViewFactory">
-    <option name="AUTOSCROLL_FROM_SOURCE" value="true" />
-  </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="c004894e-1f3c-4cdf-ba37-fd72a31bc043" name="Default" comment="" />
-      <created>1528096104661</created>
+      <changelist id="8af5c05d-5471-4f5e-81d7-17ff24fee9c9" name="Default" comment="" />
+      <created>1536038331153</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1528096104661</updated>
-      <workItem from="1528096108499" duration="1843000" />
-      <workItem from="1528131497271" duration="1511000" />
-      <workItem from="1528133157731" duration="5939000" />
-      <workItem from="1528219822446" duration="159000" />
-      <workItem from="1528220001942" duration="32000" />
-      <workItem from="1528226808821" duration="1307000" />
-      <workItem from="1532193881979" duration="118000" />
-      <workItem from="1532194170855" duration="30000" />
-      <workItem from="1532546256321" duration="4700000" />
-      <workItem from="1533203459911" duration="865000" />
-      <workItem from="1533244567776" duration="197000" />
-      <workItem from="1533244843315" duration="253000" />
-      <workItem from="1533245140151" duration="10090000" />
-      <workItem from="1533963324218" duration="49000" />
-      <workItem from="1534286123343" duration="2000" />
-      <workItem from="1534286317455" duration="3000" />
-      <workItem from="1534310897895" duration="190000" />
-      <workItem from="1534368649047" duration="408000" />
-      <workItem from="1534369927471" duration="316000" />
-      <workItem from="1534370616816" duration="15000" />
-      <workItem from="1534370650803" duration="2662000" />
-      <workItem from="1534373666557" duration="18000" />
-      <workItem from="1534373834227" duration="37000" />
-      <workItem from="1534449717899" duration="2213000" />
-      <workItem from="1534453466254" duration="2000" />
-      <workItem from="1534453481085" duration="599000" />
-      <workItem from="1534460119729" duration="30000" />
-      <workItem from="1535070559235" duration="38000" />
-      <workItem from="1535345783080" duration="333000" />
-      <workItem from="1535746630643" duration="34000" />
-      <workItem from="1535746685507" duration="1991000" />
-      <workItem from="1535748700675" duration="998000" />
-      <workItem from="1535749844077" duration="349000" />
-      <workItem from="1535750288015" duration="183000" />
-      <workItem from="1535750569675" duration="789000" />
-      <workItem from="1535751509723" duration="398000" />
-      <workItem from="1535752998677" duration="963000" />
-      <workItem from="1535819070043" duration="3918000" />
-      <workItem from="1535874352189" duration="2914000" />
-      <workItem from="1535914314854" duration="1364000" />
-      <workItem from="1535915707330" duration="154000" />
-      <workItem from="1536022214025" duration="103000" />
-      <workItem from="1536025476757" duration="243000" />
-      <workItem from="1536027456172" duration="317000" />
-      <workItem from="1536030679560" duration="494000" />
-      <workItem from="1536036964182" duration="605000" />
+      <updated>1536038331153</updated>
+      <workItem from="1536038334118" duration="272000" />
+      <workItem from="1536038669374" duration="680000" />
+      <workItem from="1536039397600" duration="1410000" />
+      <workItem from="1536040952410" duration="135000" />
+      <workItem from="1537075439753" duration="549000" />
+      <workItem from="1537076447295" duration="161000" />
+      <workItem from="1537076673464" duration="13000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="49776000" />
+    <option name="totallyTimeSpent" value="3220000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="224" y="68" width="1371" height="834" extended-state="0" />
+    <frame x="262" y="198" width="1430" height="810" extended-state="1" />
     <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Nl-Palette" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Image Layers" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Image Layers" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
+      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Properties" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.35498154" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.28319883" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Properties" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32390383" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Theme Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="true" content_ui="tabs" />
+      <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Theme Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32875264" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32980973" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -897,9 +642,7 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <option name="time" value="5" />
-    </breakpoint-manager>
+    <breakpoint-manager />
     <watches-manager />
   </component>
   <component name="antWorkspaceConfiguration">
@@ -907,432 +650,98 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/files/CreditsFile.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="16" column="12" lean-forward="false" selection-start-line="16" selection-start-column="12" selection-end-line="16" selection-end-column="12" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/object/CodPerk.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="559">
-          <caret line="63" column="4" lean-forward="false" selection-start-line="63" selection-start-column="4" selection-end-line="63" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/object/CodScore.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="529">
-          <caret line="68" column="4" lean-forward="false" selection-start-line="68" selection-start-column="4" selection-end-line="68" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/object/CodWeapon.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="975">
-          <caret line="68" column="0" lean-forward="false" selection-start-line="68" selection-start-column="0" selection-end-line="68" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/object/GameState.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="45">
-          <caret line="3" column="19" lean-forward="false" selection-start-line="3" selection-start-column="19" selection-end-line="3" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/object/GunType.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="30">
-          <caret line="2" column="12" lean-forward="false" selection-start-line="2" selection-start-column="12" selection-end-line="2" selection-end-column="12" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/object/HealthManager.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="559">
-          <caret line="73" column="4" lean-forward="false" selection-start-line="73" selection-start-column="4" selection-end-line="73" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/object/KillStreak.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="60">
-          <caret line="5" column="12" lean-forward="false" selection-start-line="5" selection-start-column="12" selection-end-line="5" selection-end-column="12" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/object/Perk.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="30">
-          <caret line="2" column="12" lean-forward="false" selection-start-line="2" selection-start-column="12" selection-end-line="2" selection-end-column="12" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/object/PerkSlot.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="60">
-          <caret line="5" column="12" lean-forward="false" selection-start-line="5" selection-start-column="12" selection-end-line="5" selection-end-column="12" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/object/RankPerks.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="285">
-          <caret line="23" column="4" lean-forward="false" selection-start-line="23" selection-start-column="4" selection-end-line="23" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/object/Scorestreak.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="60">
-          <caret line="4" column="13" lean-forward="false" selection-start-line="4" selection-start-column="13" selection-end-line="4" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/object/ScoreStreakCost.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="30">
-          <caret line="2" column="12" lean-forward="false" selection-start-line="2" selection-start-column="12" selection-end-line="2" selection-end-column="12" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/object/UnlockType.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="30">
-          <caret line="2" column="12" lean-forward="false" selection-start-line="2" selection-start-column="12" selection-end-line="2" selection-end-column="12" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/object/WeaponType.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="30">
-          <caret line="2" column="12" lean-forward="false" selection-start-line="2" selection-start-column="12" selection-end-line="2" selection-end-column="12" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$PROJECT_DIR$/../Dependencies/spigot-1.12.2.jar!/org/bukkit/World.class" />
-    <entry file="jar://$PROJECT_DIR$/../Dependencies/spigot-1.12.2.jar!/org/bukkit/block/BlockState.class" />
-    <entry file="jar://$PROJECT_DIR$/../Dependencies/spigot-1.12.2.jar!/org/bukkit/metadata/Metadatable.class" />
-    <entry file="jar://$PROJECT_DIR$/../Dependencies/spigot-1.12.2.jar!/org/bukkit/block/Banner.class" />
-    <entry file="jar://$PROJECT_DIR$/../Dependencies/spigot-1.12.2.jar!/org/bukkit/material/Directional.class" />
-    <entry file="jar://$PROJECT_DIR$/../Dependencies/spigot-1.12.2.jar!/org/bukkit/material/Attachable.class" />
-    <entry file="jar://$PROJECT_DIR$/../Dependencies/spigot-1.12.2.jar!/org/bukkit/material/Banner.class" />
-    <entry file="jar://$PROJECT_DIR$/../Dependencies/spigot-1.12.2.jar!/org/bukkit/inventory/ItemStack.class" />
-    <entry file="jar://$PROJECT_DIR$/../Dependencies/spigot-1.12.2.jar!/org/bukkit/inventory/meta/LeatherArmorMeta.class" />
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/object/Loadout.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="369">
-          <caret line="161" column="36" lean-forward="true" selection-start-line="161" selection-start-column="36" selection-end-line="161" selection-end-column="36" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar:///Library/Java/JavaVirtualMachines/jdk1.8.0_60.jdk/Contents/Home/src.zip!/java/util/function/Function.java" />
-    <entry file="jar://$USER_HOME$/IdeaProjects/External Lib/spigot-1.12.2.jar!/org/bukkit/World.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="202">
-          <caret line="200" column="25" lean-forward="false" selection-start-line="200" selection-start-column="25" selection-end-line="200" selection-end-column="25" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://C:/Program Files/Java/jdk1.8.0_112/src.zip!/java/util/function/Function.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="306">
-          <caret line="48" column="6" lean-forward="false" selection-start-line="48" selection-start-column="6" selection-end-line="48" selection-end-column="6" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="uml://MAVEN/com.rhetorical:com-warfare:RELEASE-2.2.${v}">
-      <provider selected="true" editor-type-id="UmlEditorProvider">
-        <state>
-          <ID>MAVEN</ID>
-          <OriginalElement>com.rhetorical:com-warfare:RELEASE-2.2.${v}</OriginalElement>
-          <nodes>
-            <node x="" y="">com.rhetorical:com-warfare:RELEASE-2.2.${v}</node>
-            <node x="" y="">com.github.mrrhetorical:McTranslatePlusPlus:jar:1.0</node>
-            <node x="" y="">com.github.mrrhetorical:McTranslatePlusPlus:jar:1.0/com.google.cloud:google-cloud-translate:jar:1.14.0</node>
-            <node x="" y="">com.github.mrrhetorical:McTranslatePlusPlus:jar:1.0/com.google.cloud:google-cloud-translate:jar:1.14.0/com.google.cloud:google-cloud-core:jar:1.14.0</node>
-            <node x="" y="">com.github.mrrhetorical:McTranslatePlusPlus:jar:1.0/com.google.cloud:google-cloud-translate:jar:1.14.0/com.google.cloud:google-cloud-core:jar:1.14.0/com.google.guava:guava:jar:20.0</node>
-            <node x="" y="">com.github.mrrhetorical:McTranslatePlusPlus:jar:1.0/com.google.cloud:google-cloud-translate:jar:1.14.0/com.google.cloud:google-cloud-core:jar:1.14.0/joda-time:joda-time:jar:2.9.2</node>
-            <node x="" y="">com.github.mrrhetorical:McTranslatePlusPlus:jar:1.0/com.google.cloud:google-cloud-translate:jar:1.14.0/com.google.cloud:google-cloud-core:jar:1.14.0/org.json:json:jar:20160810</node>
-            <node x="" y="">com.github.mrrhetorical:McTranslatePlusPlus:jar:1.0/com.google.cloud:google-cloud-translate:jar:1.14.0/com.google.cloud:google-cloud-core:jar:1.14.0/com.google.http-client:google-http-client:jar:1.23.0</node>
-            <node x="" y="">com.github.mrrhetorical:McTranslatePlusPlus:jar:1.0/com.google.cloud:google-cloud-translate:jar:1.14.0/com.google.cloud:google-cloud-core:jar:1.14.0/com.google.http-client:google-http-client:jar:1.23.0/org.apache.httpcomponents:httpclient:jar:4.0.1</node>
-            <node x="" y="">com.github.mrrhetorical:McTranslatePlusPlus:jar:1.0/com.google.cloud:google-cloud-translate:jar:1.14.0/com.google.cloud:google-cloud-core:jar:1.14.0/com.google.http-client:google-http-client:jar:1.23.0/org.apache.httpcomponents:httpclient:jar:4.0.1/org.apache.httpcomponents:httpcore:jar:4.0.1</node>
-            <node x="" y="">com.github.mrrhetorical:McTranslatePlusPlus:jar:1.0/com.google.cloud:google-cloud-translate:jar:1.14.0/com.google.cloud:google-cloud-core:jar:1.14.0/com.google.http-client:google-http-client:jar:1.23.0/org.apache.httpcomponents:httpclient:jar:4.0.1/commons-logging:commons-logging:jar:1.1.1</node>
-            <node x="" y="">com.github.mrrhetorical:McTranslatePlusPlus:jar:1.0/com.google.cloud:google-cloud-translate:jar:1.14.0/com.google.cloud:google-cloud-core:jar:1.14.0/com.google.http-client:google-http-client:jar:1.23.0/org.apache.httpcomponents:httpclient:jar:4.0.1/commons-codec:commons-codec:jar:1.3</node>
-            <node x="" y="">com.github.mrrhetorical:McTranslatePlusPlus:jar:1.0/com.google.cloud:google-cloud-translate:jar:1.14.0/com.google.cloud:google-cloud-core:jar:1.14.0/com.google.code.findbugs:jsr305:jar:3.0.0</node>
-            <node x="" y="">com.github.mrrhetorical:McTranslatePlusPlus:jar:1.0/com.google.cloud:google-cloud-translate:jar:1.14.0/com.google.cloud:google-cloud-core:jar:1.14.0/com.google.api:api-common:jar:1.2.0</node>
-            <node x="" y="">com.github.mrrhetorical:McTranslatePlusPlus:jar:1.0/com.google.cloud:google-cloud-translate:jar:1.14.0/com.google.cloud:google-cloud-core:jar:1.14.0/com.google.api:api-common:jar:1.2.0/com.google.guava:guava:jar:19.0</node>
-            <node x="" y="">com.github.mrrhetorical:McTranslatePlusPlus:jar:1.0/com.google.cloud:google-cloud-translate:jar:1.14.0/com.google.cloud:google-cloud-core:jar:1.14.0/com.google.api:gax:jar:1.15.0</node>
-            <node x="" y="">com.github.mrrhetorical:McTranslatePlusPlus:jar:1.0/com.google.cloud:google-cloud-translate:jar:1.14.0/com.google.cloud:google-cloud-core:jar:1.14.0/com.google.api:gax:jar:1.15.0/com.google.auto.value:auto-value:jar:1.2</node>
-            <node x="" y="">com.github.mrrhetorical:McTranslatePlusPlus:jar:1.0/com.google.cloud:google-cloud-translate:jar:1.14.0/com.google.cloud:google-cloud-core:jar:1.14.0/com.google.api:gax:jar:1.15.0/com.google.guava:guava:jar:21.0</node>
-            <node x="" y="">com.github.mrrhetorical:McTranslatePlusPlus:jar:1.0/com.google.cloud:google-cloud-translate:jar:1.14.0/com.google.cloud:google-cloud-core:jar:1.14.0/com.google.api:gax:jar:1.15.0/org.threeten:threetenbp:jar:1.3.3</node>
-            <node x="" y="">com.github.mrrhetorical:McTranslatePlusPlus:jar:1.0/com.google.cloud:google-cloud-translate:jar:1.14.0/com.google.cloud:google-cloud-core:jar:1.14.0/com.google.protobuf:protobuf-java-util:jar:3.4.0</node>
-            <node x="" y="">com.github.mrrhetorical:McTranslatePlusPlus:jar:1.0/com.google.cloud:google-cloud-translate:jar:1.14.0/com.google.cloud:google-cloud-core:jar:1.14.0/com.google.protobuf:protobuf-java-util:jar:3.4.0/com.google.protobuf:protobuf-java:jar:3.4.0</node>
-            <node x="" y="">com.github.mrrhetorical:McTranslatePlusPlus:jar:1.0/com.google.cloud:google-cloud-translate:jar:1.14.0/com.google.cloud:google-cloud-core:jar:1.14.0/com.google.protobuf:protobuf-java-util:jar:3.4.0/com.google.guava:guava:jar:21.0</node>
-            <node x="" y="">com.github.mrrhetorical:McTranslatePlusPlus:jar:1.0/com.google.cloud:google-cloud-translate:jar:1.14.0/com.google.cloud:google-cloud-core:jar:1.14.0/com.google.protobuf:protobuf-java-util:jar:3.4.0/com.google.code.gson:gson:jar:2.7</node>
-            <node x="" y="">com.github.mrrhetorical:McTranslatePlusPlus:jar:1.0/com.google.cloud:google-cloud-translate:jar:1.14.0/com.google.cloud:google-cloud-core:jar:1.14.0/com.google.api.grpc:proto-google-common-protos:jar:1.0.2</node>
-            <node x="" y="">com.github.mrrhetorical:McTranslatePlusPlus:jar:1.0/com.google.cloud:google-cloud-translate:jar:1.14.0/com.google.cloud:google-cloud-core:jar:1.14.0/com.google.api.grpc:proto-google-iam-v1:jar:0.1.26</node>
-            <node x="" y="">com.github.mrrhetorical:McTranslatePlusPlus:jar:1.0/com.google.cloud:google-cloud-translate:jar:1.14.0/com.google.cloud:google-cloud-core:jar:1.14.0/com.google.api.grpc:proto-google-iam-v1:jar:0.1.26/com.google.protobuf:protobuf-java:jar:3.3.0</node>
-            <node x="" y="">com.github.mrrhetorical:McTranslatePlusPlus:jar:1.0/com.google.cloud:google-cloud-translate:jar:1.14.0/com.google.cloud:google-cloud-core:jar:1.14.0/com.google.api.grpc:proto-google-iam-v1:jar:0.1.26/com.google.api:api-common:jar:1.1.0</node>
-            <node x="" y="">com.github.mrrhetorical:McTranslatePlusPlus:jar:1.0/com.google.cloud:google-cloud-translate:jar:1.14.0/com.google.cloud:google-cloud-core-http:jar:1.14.0</node>
-            <node x="" y="">com.github.mrrhetorical:McTranslatePlusPlus:jar:1.0/com.google.cloud:google-cloud-translate:jar:1.14.0/com.google.cloud:google-cloud-core-http:jar:1.14.0/com.google.auth:google-auth-library-credentials:jar:0.9.0</node>
-            <node x="" y="">com.github.mrrhetorical:McTranslatePlusPlus:jar:1.0/com.google.cloud:google-cloud-translate:jar:1.14.0/com.google.cloud:google-cloud-core-http:jar:1.14.0/com.google.auth:google-auth-library-oauth2-http:jar:0.9.0</node>
-            <node x="" y="">com.github.mrrhetorical:McTranslatePlusPlus:jar:1.0/com.google.cloud:google-cloud-translate:jar:1.14.0/com.google.cloud:google-cloud-core-http:jar:1.14.0/com.google.auth:google-auth-library-oauth2-http:jar:0.9.0/com.google.http-client:google-http-client:jar:1.19.0</node>
-            <node x="" y="">com.github.mrrhetorical:McTranslatePlusPlus:jar:1.0/com.google.cloud:google-cloud-translate:jar:1.14.0/com.google.cloud:google-cloud-core-http:jar:1.14.0/com.google.auth:google-auth-library-oauth2-http:jar:0.9.0/com.google.http-client:google-http-client-jackson2:jar:1.19.0</node>
-            <node x="" y="">com.github.mrrhetorical:McTranslatePlusPlus:jar:1.0/com.google.cloud:google-cloud-translate:jar:1.14.0/com.google.cloud:google-cloud-core-http:jar:1.14.0/com.google.auth:google-auth-library-oauth2-http:jar:0.9.0/com.google.guava:guava:jar:21.0</node>
-            <node x="" y="">com.github.mrrhetorical:McTranslatePlusPlus:jar:1.0/com.google.cloud:google-cloud-translate:jar:1.14.0/com.google.cloud:google-cloud-core-http:jar:1.14.0/com.google.oauth-client:google-oauth-client:jar:1.23.0</node>
-            <node x="" y="">com.github.mrrhetorical:McTranslatePlusPlus:jar:1.0/com.google.cloud:google-cloud-translate:jar:1.14.0/com.google.cloud:google-cloud-core-http:jar:1.14.0/com.google.oauth-client:google-oauth-client:jar:1.23.0/com.google.code.findbugs:jsr305:jar:1.3.9</node>
-            <node x="" y="">com.github.mrrhetorical:McTranslatePlusPlus:jar:1.0/com.google.cloud:google-cloud-translate:jar:1.14.0/com.google.cloud:google-cloud-core-http:jar:1.14.0/com.google.guava:guava:jar:21.0</node>
-            <node x="" y="">com.github.mrrhetorical:McTranslatePlusPlus:jar:1.0/com.google.cloud:google-cloud-translate:jar:1.14.0/com.google.cloud:google-cloud-core-http:jar:1.14.0/com.google.http-client:google-http-client-appengine:jar:1.23.0</node>
-            <node x="" y="">com.github.mrrhetorical:McTranslatePlusPlus:jar:1.0/com.google.cloud:google-cloud-translate:jar:1.14.0/com.google.cloud:google-cloud-core-http:jar:1.14.0/com.google.http-client:google-http-client-jackson:jar:1.23.0</node>
-            <node x="" y="">com.github.mrrhetorical:McTranslatePlusPlus:jar:1.0/com.google.cloud:google-cloud-translate:jar:1.14.0/com.google.cloud:google-cloud-core-http:jar:1.14.0/com.google.http-client:google-http-client-jackson:jar:1.23.0/org.codehaus.jackson:jackson-core-asl:jar:1.9.11</node>
-            <node x="" y="">com.github.mrrhetorical:McTranslatePlusPlus:jar:1.0/com.google.cloud:google-cloud-translate:jar:1.14.0/com.google.cloud:google-cloud-core-http:jar:1.14.0/com.google.http-client:google-http-client-jackson2:jar:1.23.0</node>
-            <node x="" y="">com.github.mrrhetorical:McTranslatePlusPlus:jar:1.0/com.google.cloud:google-cloud-translate:jar:1.14.0/com.google.cloud:google-cloud-core-http:jar:1.14.0/com.google.http-client:google-http-client-jackson2:jar:1.23.0/com.fasterxml.jackson.core:jackson-core:jar:2.1.3</node>
-            <node x="" y="">com.github.mrrhetorical:McTranslatePlusPlus:jar:1.0/com.google.cloud:google-cloud-translate:jar:1.14.0/com.google.apis:google-api-services-translate:jar:v2-rev47-1.22.0</node>
-            <node x="" y="">com.github.mrrhetorical:McTranslatePlusPlus:jar:1.0/com.google.apis:google-api-services-cloudresourcemanager:jar:v1-rev461-1.23.0</node>
-            <node x="" y="">com.github.mrrhetorical:McTranslatePlusPlus:jar:1.0/com.google.apis:google-api-services-cloudresourcemanager:jar:v1-rev461-1.23.0/com.google.api-client:google-api-client:jar:1.23.0</node>
-            <node x="" y="">com.github.mrrhetorical:McTranslatePlusPlus:jar:1.0/com.google.apis:google-api-services-cloudresourcemanager:jar:v1-rev461-1.23.0/com.google.api-client:google-api-client:jar:1.23.0/com.google.guava:guava-jdk5:jar:17.0</node>
-            <node x="" y="">org.spigotmc:spigot-api:jar:1.13.1-R0.1-SNAPSHOT</node>
-            <node x="" y="">org.spigotmc:spigot-api:jar:1.13.1-R0.1-SNAPSHOT/commons-lang:commons-lang:jar:2.6</node>
-            <node x="" y="">org.spigotmc:spigot-api:jar:1.13.1-R0.1-SNAPSHOT/com.googlecode.json-simple:json-simple:jar:1.1.1</node>
-            <node x="" y="">org.spigotmc:spigot-api:jar:1.13.1-R0.1-SNAPSHOT/com.googlecode.json-simple:json-simple:jar:1.1.1/junit:junit:jar:4.10</node>
-            <node x="" y="">org.spigotmc:spigot-api:jar:1.13.1-R0.1-SNAPSHOT/com.googlecode.json-simple:json-simple:jar:1.1.1/junit:junit:jar:4.10/org.hamcrest:hamcrest-core:jar:1.1</node>
-            <node x="" y="">org.spigotmc:spigot-api:jar:1.13.1-R0.1-SNAPSHOT/com.google.guava:guava:jar:21.0</node>
-            <node x="" y="">org.spigotmc:spigot-api:jar:1.13.1-R0.1-SNAPSHOT/com.google.code.gson:gson:jar:2.8.0</node>
-            <node x="" y="">org.spigotmc:spigot-api:jar:1.13.1-R0.1-SNAPSHOT/org.yaml:snakeyaml:jar:1.21</node>
-            <node x="" y="">org.spigotmc:spigot-api:jar:1.13.1-R0.1-SNAPSHOT/net.md-5:bungeecord-chat:jar:1.13-20180828.215504-26</node>
-            <node x="" y="">org.spigotmc:spigot-api:jar:1.13.1-R0.1-SNAPSHOT/net.md-5:bungeecord-chat:jar:1.13-20180828.215504-26/com.google.guava:guava:jar:21.0</node>
-          </nodes>
-          <notes />
-          <edges />
-          <settings layout="Hierarchic Group" zoom="0.6789900811541929" x="1099.0" y="428.0" />
-          <SelectedNodes />
-          <Categories />
-          <SCOPE>All</SCOPE>
-          <VISIBILITY>All</VISIBILITY>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/object/CodGun.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="68">
-          <caret line="7" column="13" lean-forward="false" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/StatHandler.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="68">
-          <caret line="9" column="13" lean-forward="false" selection-start-line="9" selection-start-column="13" selection-end-line="9" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/CreditManager.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="368">
-          <caret line="88" column="50" lean-forward="false" selection-start-line="88" selection-start-column="50" selection-end-line="88" selection-end-column="50" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/Listeners.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="202">
-          <caret line="62" column="46" lean-forward="false" selection-start-line="62" selection-start-column="46" selection-end-line="62" selection-end-column="46" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/LoadoutManager.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="340">
-          <caret line="38" column="34" lean-forward="false" selection-start-line="38" selection-start-column="34" selection-end-line="38" selection-end-column="34" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/PerkManager.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="391">
-          <caret line="32" column="60" lean-forward="false" selection-start-line="32" selection-start-column="60" selection-end-line="32" selection-end-column="60" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/object/PerkListener.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="833">
-          <caret line="68" column="28" lean-forward="false" selection-start-line="68" selection-start-column="28" selection-end-line="68" selection-end-column="28" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/object/KillStreakManager.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="442">
-          <caret line="36" column="32" lean-forward="false" selection-start-line="36" selection-start-column="32" selection-end-line="36" selection-end-column="32" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/ProgressionManager.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
-          <caret line="36" column="38" lean-forward="false" selection-start-line="36" selection-start-column="38" selection-end-line="36" selection-end-column="38" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/inventories/InventoryManager.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="8908">
-          <caret line="552" column="8" lean-forward="false" selection-start-line="552" selection-start-column="8" selection-end-line="552" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/DependencyManager.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="204">
-          <caret line="18" column="50" lean-forward="false" selection-start-line="18" selection-start-column="50" selection-end-line="18" selection-end-column="50" />
-          <folding>
-            <element signature="imports" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/object/Gamemode.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="51">
-          <caret line="3" column="57" lean-forward="false" selection-start-line="3" selection-start-column="57" selection-end-line="3" selection-end-column="57" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/api/StatRetrieval.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="153">
-          <caret line="9" column="21" lean-forward="false" selection-start-line="9" selection-start-column="21" selection-end-line="9" selection-end-column="21" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/analytics/CollectAnalytics.java" />
     <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/Main.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1462">
-          <caret line="109" column="42" lean-forward="false" selection-start-line="109" selection-start-column="42" selection-end-line="109" selection-end-column="42" />
-          <folding>
-            <element signature="imports" expanded="false" />
-            <element signature="e#844#845#0" expanded="false" />
-            <element signature="e#920#921#0" expanded="false" />
-            <element signature="e#30132#30133#0" expanded="false" />
-            <element signature="e#30166#30167#0" expanded="false" />
-            <element signature="e#30895#30896#0" expanded="false" />
-            <element signature="e#30925#30926#0" expanded="false" />
-            <element signature="e#30972#30973#0" expanded="false" />
-            <element signature="e#31008#31009#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/plugin.yml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="34">
-          <caret line="2" column="12" lean-forward="false" selection-start-line="2" selection-start-column="12" selection-end-line="2" selection-end-column="12" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/config.yml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="578">
-          <caret line="34" column="12" lean-forward="false" selection-start-line="34" selection-start-column="12" selection-end-line="34" selection-end-column="12" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/object/GameInstance.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
-          <caret line="1481" column="146" lean-forward="false" selection-start-line="1481" selection-start-column="146" selection-end-line="1481" selection-end-column="146" />
-          <folding>
-            <element signature="imports" expanded="false" />
-            <element signature="e#4373#4374#0" expanded="false" />
-            <element signature="e#4394#4395#0" expanded="false" />
-            <element signature="e#6002#6003#0" expanded="false" />
-            <element signature="e#6029#6030#0" expanded="false" />
-            <element signature="e#6060#6061#0" expanded="false" />
-            <element signature="e#6086#6087#0" expanded="false" />
-            <element signature="e#7812#7813#0" expanded="false" />
-            <element signature="e#7878#7879#0" expanded="false" />
-            <element signature="e#23250#23251#0" expanded="false" />
-            <element signature="e#23276#23277#0" expanded="false" />
-            <element signature="e#26425#26426#0" expanded="false" />
-            <element signature="e#26463#26464#0" expanded="false" />
-            <element signature="e#26817#26818#0" expanded="false" />
-            <element signature="e#26843#26844#0" expanded="false" />
-            <element signature="e#26892#26893#0" expanded="false" />
-            <element signature="e#26931#26932#0" expanded="false" />
-            <element signature="e#26964#26965#0" expanded="false" />
-            <element signature="e#26983#26984#0" expanded="false" />
-            <element signature="e#27026#27027#0" expanded="false" />
-            <element signature="e#27051#27052#0" expanded="false" />
-            <element signature="e#27086#27087#0" expanded="false" />
-            <element signature="e#27127#27128#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/ShopManager.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2006">
-          <caret line="133" column="0" lean-forward="false" selection-start-line="133" selection-start-column="0" selection-end-line="133" selection-end-column="0" />
-          <folding>
-            <element signature="imports" expanded="false" />
-            <element signature="e#6596#6626#0" expanded="false" />
-            <element signature="e#9151#9152#0" expanded="false" />
-            <element signature="e#9176#9177#0" expanded="false" />
-            <element signature="e#9231#9232#0" expanded="false" />
-            <element signature="e#9268#9269#0" expanded="false" />
-            <element signature="e#9316#9317#0" expanded="false" />
-            <element signature="e#9343#9344#0" expanded="false" />
-            <element signature="e#9402#9403#0" expanded="false" />
-            <element signature="e#9443#9444#0" expanded="false" />
-            <element signature="e#9494#9495#0" expanded="false" />
-            <element signature="e#9521#9522#0" expanded="false" />
-            <element signature="e#9583#9584#0" expanded="false" />
-            <element signature="e#9624#9625#0" expanded="false" />
-            <element signature="e#9677#9678#0" expanded="false" />
-            <element signature="e#9706#9707#0" expanded="false" />
-            <element signature="e#9772#9773#0" expanded="false" />
-            <element signature="e#9817#9818#0" expanded="false" />
-            <element signature="e#9882#9883#0" expanded="false" />
-            <element signature="e#9909#9910#0" expanded="false" />
-            <element signature="e#9993#9994#0" expanded="false" />
-            <element signature="e#10034#10035#0" expanded="false" />
-            <element signature="e#10105#10106#0" expanded="false" />
-            <element signature="e#10135#10136#0" expanded="false" />
-            <element signature="e#13825#13826#0" expanded="false" />
-            <element signature="e#13860#13861#0" expanded="false" />
-            <element signature="e#13921#13922#0" expanded="false" />
-            <element signature="e#13961#13962#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/object/CodMap.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
-          <caret line="49" column="77" lean-forward="false" selection-start-line="49" selection-start-column="77" selection-end-line="49" selection-end-column="77" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/GameManager.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
-          <caret line="56" column="56" lean-forward="false" selection-start-line="56" selection-start-column="56" selection-end-line="56" selection-end-column="56" />
+        <state relative-caret-position="119">
+          <caret line="7" column="33" lean-forward="false" selection-start-line="7" selection-start-column="33" selection-end-line="7" selection-end-column="33" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/pom.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3383">
-          <caret line="199" column="48" lean-forward="false" selection-start-line="199" selection-start-column="48" selection-end-line="199" selection-end-column="48" />
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/Main.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="153">
+          <caret line="32" column="29" lean-forward="false" selection-start-line="32" selection-start-column="29" selection-end-line="32" selection-end-column="29" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/Main.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="153">
+          <caret line="32" column="29" lean-forward="false" selection-start-line="32" selection-start-column="29" selection-end-line="32" selection-end-column="29" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/Main.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="153">
+          <caret line="32" column="29" lean-forward="false" selection-start-line="32" selection-start-column="29" selection-end-line="32" selection-end-column="29" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/Main.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="153">
+          <caret line="32" column="29" lean-forward="false" selection-start-line="32" selection-start-column="29" selection-end-line="32" selection-end-column="29" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1819">
+          <caret line="107" column="45" lean-forward="false" selection-start-line="107" selection-start-column="45" selection-end-line="107" selection-end-column="45" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/rhetorical/cod/Main.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="17">
+          <caret line="7" column="33" lean-forward="false" selection-start-line="7" selection-start-column="33" selection-end-line="7" selection-end-column="33" />
           <folding />
         </state>
       </provider>
@@ -1343,11 +752,10 @@
       <state key="ArtifactsStructureConfigurable.UI">
         <settings>
           <artifact-editor />
-          <last-edited>COMR:jar</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>
-                <option value="0.2045977" />
+                <option value="0.2" />
               </list>
             </option>
           </splitter-proportions>
@@ -1359,7 +767,7 @@
           <splitter-proportions>
             <option name="proportions">
               <list>
-                <option value="0.2045977" />
+                <option value="0.2" />
               </list>
             </option>
           </splitter-proportions>
@@ -1382,7 +790,7 @@
           <splitter-proportions>
             <option name="proportions">
               <list>
-                <option value="0.2045977" />
+                <option value="0.2" />
               </list>
             </option>
           </splitter-proportions>
@@ -1390,12 +798,11 @@
       </state>
       <state key="ModuleStructureConfigurable.UI">
         <settings>
-          <last-edited>COMR</last-edited>
+          <last-edited>COM-Warfare</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>
                 <option value="0.2045977" />
-                <option value="0.6" />
               </list>
             </option>
           </splitter-proportions>
@@ -1403,7 +810,7 @@
       </state>
       <state key="ProjectJDKs.UI">
         <settings>
-          <last-edited>1.8.0_60</last-edited>
+          <last-edited>1.8</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>
@@ -1415,7 +822,7 @@
       </state>
       <state key="ProjectLibrariesConfigurable.UI">
         <settings>
-          <last-edited>Maven: com.fasterxml.jackson.core:jackson-core:2.1.3</last-edited>
+          <last-edited>Maven: org.spigotmc:spigot-api:1.13-R0.1-SNAPSHOT</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>
