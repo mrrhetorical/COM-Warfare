@@ -4,7 +4,7 @@
     <groupId>com.rhetorical</groupId>
     <artifactId>com-warfare</artifactId>
     <packaging>jar</packaging>
-    <version>RELEASE-2.4.${vS}</version>
+    <version>RELEASE-2.4.${v}</version>
     <name>COM-Warfare</name>
 
     <repositories>
