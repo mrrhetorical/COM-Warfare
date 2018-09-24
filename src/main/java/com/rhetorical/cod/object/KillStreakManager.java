@@ -48,7 +48,7 @@ public class KillStreakManager {
 		List<String> counterUavLore = counterUavMeta.getLore();
 		if (counterUavLore == null)
 			counterUavLore = new ArrayList<String>();
-		counterUavLore.add("\u00A7f\u00A7lRequred kills: \u00A7a" + 4);
+		counterUavLore.add("\u00A7f\u00A7lRequired kills: \u00A7a" + 4);
 		counterUavMeta.setLore(counterUavLore);
 		counterUavItem.setItemMeta(counterUavMeta);
 
