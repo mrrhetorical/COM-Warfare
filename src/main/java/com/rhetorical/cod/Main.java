@@ -142,7 +142,8 @@ public class Main extends JavaPlugin {
 			CreditManager.loadCredits(p);
 		}
 
-		minPlayers = getPlugin().getConfig().getInt("minPlayers");
+		minPlayers = getPlugin().getConfig().getInt("players.min");
+		maxPlayers = getPlugin().getConfig().getInt("players.max");
 		lobbyLoc = (Location) getPlugin().getConfig().get("com.lobby");
 		defaultHealth = getPlugin().getConfig().getDouble("defaultHealth");
 		translate_api_key = getPlugin().getConfig().getString("translate.api_key");
