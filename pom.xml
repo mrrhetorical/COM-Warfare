@@ -6,6 +6,9 @@
     <packaging>jar</packaging>
     <version>RELEASE-2.4.${v}</version>
     <name>COM-Warfare</name>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
 
     <repositories>
         <repository>

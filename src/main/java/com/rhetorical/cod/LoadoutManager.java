@@ -2,6 +2,7 @@ package com.rhetorical.cod;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Objects;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -244,10 +245,8 @@ public class LoadoutManager {
 			CodGun secondary = null;
 
 			for (CodGun gun : Main.shopManager.getSecondaryGuns()) {
-				if (gun.getName() == LoadoutsFile.getData()
-						.getString("Loadouts." + p.getName() + "." + k + ".Secondary")) {
-					if (gun.getName().equals(
-							LoadoutsFile.getData().getString("Loadouts." + p.getName() + "." + k + ".Secondary"))) {
+				if (Objects.equals(gun.getName(), LoadoutsFile.getData().getString("Loadouts." + p.getName() + "." + k + ".Secondary"))) {
+					if (gun.getName().equals(LoadoutsFile.getData().getString("Loadouts." + p.getName() + "." + k + ".Secondary"))) {
 						secondary = gun;
 					}
 				}
