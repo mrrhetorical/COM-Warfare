@@ -256,8 +256,8 @@ public class GameInstance implements Listener {
 
 	private void startGame() {
 
-		if (this.isForceStarted()) {
-			this.forceStart(false);
+		if (forceStarted) {
+			forceStarted = false;
 		}
 
 		assignTeams();
@@ -531,8 +531,8 @@ public class GameInstance implements Listener {
 
 	private void startLobbyTimer(int time) {
 
-		if (this.isForceStarted()) {
-			this.forceStart(false);
+		if (forceStarted) {
+			forceStarted = false;
 		}
 
 		this.setState(GameState.STARTING);
@@ -574,12 +574,14 @@ public class GameInstance implements Listener {
 					}
 				}
 
-				if (t <= 0 || game.isForceStarted()) {
+				if (t <= 0 || forceStarted) {
 
 					startGame();
 
 					this.cancel();
 				}
+
+				t--;
 			}
 		};
 
@@ -961,10 +963,6 @@ public class GameInstance implements Listener {
 		}
 
 		return this.currentMap;
-	}
-
-	private boolean isForceStarted() {
-		return forceStarted;
 	}
 
 	public void forceStart(boolean forceStarted) {
