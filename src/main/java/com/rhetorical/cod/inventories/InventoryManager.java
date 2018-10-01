@@ -35,9 +35,9 @@ public class InventoryManager implements Listener {
 	public ItemStack closeInv = new ItemStack(Material.BARRIER);
 	private ItemStack backInv = new ItemStack(Material.REDSTONE);
 
-	public Inventory mainInventory = Bukkit.createInventory(null, 18, "COM-Warfare");
-	public Inventory mainShopInventory = Bukkit.createInventory(null, 9, "Shop Menu");
-	private Inventory leaderboardInventory = Bukkit.createInventory(null, 36, "Leaderboard");
+	public Inventory mainInventory;
+	public Inventory mainShopInventory;
+	private Inventory leaderboardInventory;
 	public HashMap<Player, Inventory> createClassInventory = new HashMap<>();
 	private HashMap<Player, Inventory> selectClassInventory = new HashMap<>();
 	private HashMap<Player, Inventory> personalStatistics = new HashMap<>();
@@ -76,6 +76,10 @@ public class InventoryManager implements Listener {
 	}
 
 	public InventoryManager() {
+
+		mainInventory = Bukkit.createInventory(null, 18, "COM-Warfare");
+		mainShopInventory = Bukkit.createInventory(null, 9, "Shop Menu");
+		leaderboardInventory = Bukkit.createInventory(null, 36, "Leaderboard");
 
 		setupCloseInvButton();
 		setupMainInventories();
@@ -279,7 +283,7 @@ public class InventoryManager implements Listener {
 			ItemStack secondary = loadout.getSecondary().getGun();
 			ItemMeta secondaryMeta = secondary.getItemMeta();
 			secondaryMeta.setDisplayName("\u00A76Secondary Weapon\u00A7f: \u00A7r\u00A7f" + loadout.getSecondary().getName());
-			ArrayList<String> secondaryLore = new ArrayList<String>();
+			ArrayList<String> secondaryLore = new ArrayList<>();
 			secondaryLore.add("\u00A76This is your secondary weapon. During games,");
 			secondaryLore.add("\u00A76this should be used as a backup weapon.");
 			secondaryMeta.setLore(secondaryLore);
@@ -288,7 +292,7 @@ public class InventoryManager implements Listener {
 			ItemStack lethal = loadout.getLethal().getWeapon();
 			ItemMeta lethalMeta = lethal.getItemMeta();
 			lethalMeta.setDisplayName("\u00A76Lethal Grenade\u00A7f: \u00A7r\u00A7f" + loadout.getLethal().getName());
-			ArrayList<String> lethalLore = new ArrayList<String>();
+			ArrayList<String> lethalLore = new ArrayList<>();
 			lethalLore.add("\u00A76This is your lethal grenade. Use it");
 			lethalLore.add("\u00A76during games to kill players.");
 			lethalMeta.setLore(lethalLore);

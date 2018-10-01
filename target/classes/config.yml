@@ -4,8 +4,10 @@ auto-download-dependency: false
 lang: EN
 #Lobby Time: The amount of time players should wait in the lobby before the match starts.
 lobbyTime: 70
-#Minimum player count: The amount of players that are required to start a game.
-minPlayers: 6
+#Players: the min and max amount of players allowed in a single game.
+players:
+  min: 2
+  max: 12
 #Game time: The amount of time (in seconds) players should spend inside of a match, separated by gamemode.
 gameTime:
   TDM: 600

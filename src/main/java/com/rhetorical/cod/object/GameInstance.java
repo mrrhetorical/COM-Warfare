@@ -834,6 +834,9 @@ public class GameInstance implements Listener {
 	private int getAlivePlayers(ArrayList<Player> team) {
 		int count = 0;
 
+		if (getGamemode() != Gamemode.DESTROY || getGamemode() != Gamemode.RESCUE)
+			return 0;
+
 		for (Player p : team) {
 			if (isAlive.get(p)) {
 				count++;
@@ -965,8 +968,9 @@ public class GameInstance implements Listener {
 		return this.currentMap;
 	}
 
-	public void forceStart(boolean forceStarted) {
+	public boolean forceStart(boolean forceStarted) {
 		this.forceStarted = forceStarted;
+		return forceStarted;
 	}
 
 	private GameState getState() {

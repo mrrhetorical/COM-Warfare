@@ -56,7 +56,7 @@ public class Main extends JavaPlugin {
 	public static Location lobbyLoc;
 	private static HashMap<Player, Location> lastLoc = new HashMap<>();
 
-	private Metrics bMetrics;
+	private Object bMetrics;
 
 	@Override
 	public void onEnable() {
@@ -603,12 +603,12 @@ public class Main extends JavaPlugin {
 						amount = Integer.parseInt(args[3]);
 					} catch (Exception e) {
 						amount = 0;
-						sendMessage(p, Main.codPrefix + "\u00A7cIncorrect usage! Proper usage: '/cod credits set {name} [amount]'");
+						sendMessage(p, Main.codPrefix + ChatColor.RED + "Incorrect usage! Proper usage: '/cod credits set {name} [amount]'");
 						return true;
 					}
 
 					CreditManager.setCredits(playerName, amount);
-					sendMessage(p, Main.codPrefix + "\u00A7aSuccessfully set " + playerName + "'s credit count to " + Integer.toString(amount) + "!", lang);
+					sendMessage(p, Main.codPrefix + ChatColor.GREEN + "Successfully set " + playerName + "'s credit count to " + Integer.toString(amount) + "!", lang);
 					return true;
 				}
 			} else if (args[0].equalsIgnoreCase("createGun") && hasPerm(p, "com.createGun")) {
@@ -617,7 +617,7 @@ public class Main extends JavaPlugin {
 					createGun(p, args);
 					return true;
 				} else {
-					sendMessage(p, Main.codPrefix + "\u00A7cIncorrect usage! Correct usage: '/cod createGun (Gun name) (Primary/Secondary) (Unlock type: level/credit/both) (Ammo Amount) (Gun Material) (Ammo Material) (Level Unlock) (Cost)'");
+					sendMessage(p, Main.codPrefix + ChatColor.RED + "Incorrect usage! Correct usage: '/cod createGun (Gun name) (Primary/Secondary) (Unlock type: level/credit/both) (Ammo Amount) (Gun Material) (Ammo Material) (Level Unlock) (Cost)'");
 					return true;
 				}
 			} else if ((args[0].equalsIgnoreCase("createWeapon") || args[0].equalsIgnoreCase("createGrenade")) && hasPerm(p, "com.createWeapon")) {
@@ -625,19 +625,20 @@ public class Main extends JavaPlugin {
 					createWeapon(p, args);
 					return true;
 				} else {
-					sendMessage(p, Main.codPrefix + "\u00A7cIncorrect usage! Correct usage: '/cod createWeapon (name) (Lethal/Tactical) (Unlock Type: level/credit/both) (Grenade Material) (Level Unlock) (Cost)'");
+					sendMessage(p, Main.codPrefix + ChatColor.RED + "Incorrect usage! Correct usage: '/cod createWeapon (name) (Lethal/Tactical) (Unlock Type: level/credit/both) (Grenade Material) (Level Unlock) (Cost)'");
 					return true;
 				}
 			} else if (args[0].equalsIgnoreCase("start") && hasPerm(p, "com.forceStart")) {
 				if (GameManager.isInMatch(p)) {
 					try {
-						GameManager.getMatchWhichContains(p).forceStart(true);
+						if (GameManager.getMatchWhichContains(p) != null)
+							GameManager.getMatchWhichContains(p).forceStart(true);
 					} catch(Exception e) {
-						sendMessage(Main.cs, Main.codPrefix + "\u00A7cCould not find the game that the player is in!", Main.lang	);
+						sendMessage(Main.cs, Main.codPrefix + ChatColor.RED + "Could not find the game that the player is in!", Main.lang	);
 					}
 					return true;
 				} else {
-					sendMessage(p, Main.codPrefix + "\u00A7cYou must be in a game to use that command!", lang);
+					sendMessage(p, Main.codPrefix + ChatColor.RED + "You must be in a game to use that command!", lang);
 				}
 
 				return true;
@@ -648,8 +649,10 @@ public class Main extends JavaPlugin {
 				p.closeInventory();
 				p.openInventory(invManager.mainShopInventory);
 				return true;
+			} else {
+				p.sendMessage(Main.codPrefix + ChatColor.RED + "Unknown command! Try using '/cod help' for a list of commands!");
+				return true;
 			}
-			return true;
 		}
 
 		return true;
@@ -839,7 +842,7 @@ public class Main extends JavaPlugin {
 
 	public static void sendMessage(CommandSender target, String message, Object targetLang) {
 
-		if (targetLang.equals(McLang.EN)) {
+		if ((McLang) targetLang == McLang.EN) {
 			sendMessage(target, message);
 			return;
 		}

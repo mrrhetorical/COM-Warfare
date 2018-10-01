@@ -1,13 +1,13 @@
 <component name="libraryTable">
   <library name="Maven: org.spigotmc:spigot-api:1.13.1-R0.1-SNAPSHOT">
     <CLASSES>
-      <root url="jar://$MAVEN_REPOSITORY$/org/spigotmc/spigot-api/1.13.1-R0.1-SNAPSHOT/spigot-api-1.13.1-R0.1-20180922.071831-67.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/spigotmc/spigot-api/1.13.1-R0.1-SNAPSHOT/spigot-api-1.13.1-R0.1-20180930.020416-83.jar!/" />
     </CLASSES>
     <JAVADOC>
-      <root url="jar://$MAVEN_REPOSITORY$/org/spigotmc/spigot-api/1.13.1-R0.1-SNAPSHOT/spigot-api-1.13.1-R0.1-20180922.071831-67-javadoc.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/spigotmc/spigot-api/1.13.1-R0.1-SNAPSHOT/spigot-api-1.13.1-R0.1-20180930.020416-83-javadoc.jar!/" />
     </JAVADOC>
     <SOURCES>
-      <root url="jar://$MAVEN_REPOSITORY$/org/spigotmc/spigot-api/1.13.1-R0.1-SNAPSHOT/spigot-api-1.13.1-R0.1-20180922.071831-67-sources.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/spigotmc/spigot-api/1.13.1-R0.1-SNAPSHOT/spigot-api-1.13.1-R0.1-20180930.020416-83-sources.jar!/" />
     </SOURCES>
   </library>
 </component>
