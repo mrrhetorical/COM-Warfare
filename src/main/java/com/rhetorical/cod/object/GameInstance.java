@@ -757,11 +757,13 @@ public class GameInstance implements Listener {
 						if (BlueTeamScore >= maxScore_DESTROY) {
 							if (getGamemode().equals(Gamemode.DESTROY)) {
 								endGameByScore(this);
+								cancel();
 								return;
 							}
 						} else if (BlueTeamScore >= maxScore_RESCUE) {
 							if (getGamemode().equals(Gamemode.RESCUE)) {
 								endGameByScore(this);
+								cancel();
 								return;
 							}
 						}
@@ -776,13 +778,17 @@ public class GameInstance implements Listener {
 						if (RedTeamScore >= maxScore_DESTROY) {
 							if (getGamemode().equals(Gamemode.DESTROY)) {
 								endGameByScore(this);
+								cancel();
 								return;
 							}
+
 						} else if (RedTeamScore >= maxScore_RESCUE) {
 							if (getGamemode().equals(Gamemode.RESCUE)) {
 								endGameByScore(this);
+								cancel();
 								return;
 							}
+
 						}
 						startNewRound(7, redTeam);
 						for (Player pp : players) {

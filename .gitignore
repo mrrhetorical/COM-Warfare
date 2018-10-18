@@ -2,3 +2,5 @@
 *.class
 
 \.idea/workspace\.xml
+
+target/
