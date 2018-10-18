@@ -39,6 +39,7 @@ com\rhetorical\cod\Main.class
 com\rhetorical\cod\files\GunsFile.class
 com\rhetorical\cod\object\GameInstance$3.class
 com\rhetorical\cod\object\GameState.class
+com\rhetorical\cod\object\GameInstance$5.class
 com\rhetorical\cod\object\ScoreStreakCost.class
 com\rhetorical\cod\PerkManager.class
 com\rhetorical\cod\object\CodScore.class

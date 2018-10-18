@@ -61,7 +61,6 @@ public class GameManager {
 		Main.progManager.saveData(p);
 		
 		if (Main.lobbyLoc == null) {
-			
 			Main.sendMessage(p, Main.codPrefix + "\u00A7cNo lobby set! You cannot start a game without a lobby location set!", Main.lang);
 			Main.sendMessage(p, Main.codPrefix + "\u00A77Could not create a match because there is no lobby location!", Main.lang);
 			return false;

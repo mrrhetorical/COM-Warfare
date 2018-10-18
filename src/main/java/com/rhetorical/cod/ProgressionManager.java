@@ -10,13 +10,13 @@ import com.rhetorical.cod.files.ProgressionFile;
 
 public class ProgressionManager {
 
-	private HashMap<Player, Integer> prestigeLevel = new HashMap<Player, Integer>();
+	private HashMap<Player, Integer> prestigeLevel = new HashMap<>();
 	// Start from 0
 
-	private HashMap<Player, Integer> level = new HashMap<Player, Integer>();
+	private HashMap<Player, Integer> level = new HashMap<>();
 	// Start from 1
 
-	private HashMap<Player, Double> experience = new HashMap<Player, Double>();
+	private HashMap<Player, Double> experience = new HashMap<>();
 	// Start from 0
 
 	private final int maxLevel;
@@ -108,7 +108,6 @@ public class ProgressionManager {
 				+ Integer.toString(getLevel(p)) + "\u00A7r\u00A77!");
 		p.sendMessage(Main.codPrefix + "\u00A77Your rank has been reset!");
 		setLevel(p, 1, false);
-		return;
 	}
 
 	int getPrestigeLevel(Player p) {
@@ -206,7 +205,7 @@ public class ProgressionManager {
 
 	public void saveData(Player p) {
 
-		int k = 0;
+		int k;
 		for (k = 0; ProgressionFile.getData().contains("Players." + k); k++) {
 			if (Bukkit.getPlayer(ProgressionFile.getData().getString("Players." + k + ".name")) == p) {
 				ProgressionFile.getData().set("Players." + k + ".level", getLevel(p));
@@ -228,7 +227,7 @@ public class ProgressionManager {
 
 	public ArrayList<Player> getPlayerRankings() {
 
-		return new ArrayList<Player>();
+		return new ArrayList<>();
 	}
 
 }
