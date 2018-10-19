@@ -15,6 +15,9 @@ gameTime:
   CTF: 600
   FFA: 600
   RSB: 600
+  KC: 600
+  RESCUE: 120
+  DESTROY: 120
 #Default health: How much health should the player start with? (Default is 20 in minecraft, but 100 can be used to make guns do more precise damage amounts.)
 defaultHealth: 100
 #Max level: What is the maximum level that a player can reach before they stop to level up?
