@@ -527,6 +527,7 @@ public class GameInstance implements Listener {
 						} else if (getWinningTeam().equalsIgnoreCase("nobody") || getWinningTeam().equalsIgnoreCase("tie")) {
 							Main.sendMessage(p, Main.codPrefix + ChatColor.GRAY + "Nobody won the match! It was a tie!", Main.lang);
 							Main.sendMessage(p, Main.codPrefix + ChatColor.WHITE + "Returning to the lobby in " + Integer.toString(t) + " seconds!", Main.lang);
+							playerScores.computeIfAbsent(p, k -> new CodScore(p));
 							CodScore score = playerScores.get(p);
 
 							float kd = ((float) score.getKills() / (float) score.getDeaths());
@@ -677,7 +678,7 @@ public class GameInstance implements Listener {
 			@Override
 			public void run() {
 
-				if (t <= 0) {
+				if (t == 0) {
 
 					stopGame();
 
@@ -754,43 +755,22 @@ public class GameInstance implements Listener {
 				if (getGamemode() == Gamemode.DESTROY || getGamemode() == Gamemode.RESCUE) {
 					if (getAlivePlayers(redTeam) == 0) {
 						addBluePoint();
-						if (BlueTeamScore >= maxScore_DESTROY) {
-							if (getGamemode().equals(Gamemode.DESTROY)) {
-								endGameByScore(this);
-								cancel();
-								return;
-							}
-						} else if (BlueTeamScore >= maxScore_RESCUE) {
-							if (getGamemode().equals(Gamemode.RESCUE)) {
-								endGameByScore(this);
-								cancel();
-								return;
-							}
+
+						if (!(BlueTeamScore >= maxScore_DESTROY) && !(BlueTeamScore >= maxScore_RESCUE)) {
+							startNewRound(7, blueTeam);
 						}
 
-						startNewRound(7, blueTeam);
 						for (Player pp : players) {
 							isAlive.put(pp, true);
 						}
 						cancel();
 					} else if (getAlivePlayers(blueTeam) == 0) {
 						addRedPoint();
-						if (RedTeamScore >= maxScore_DESTROY) {
-							if (getGamemode().equals(Gamemode.DESTROY)) {
-								endGameByScore(this);
-								cancel();
-								return;
-							}
 
-						} else if (RedTeamScore >= maxScore_RESCUE) {
-							if (getGamemode().equals(Gamemode.RESCUE)) {
-								endGameByScore(this);
-								cancel();
-								return;
-							}
-
+						if (!(RedTeamScore >= maxScore_DESTROY) && !(RedTeamScore >= maxScore_RESCUE)) {
+							startNewRound(7, redTeam);
 						}
-						startNewRound(7, redTeam);
+
 						for (Player pp : players) {
 							isAlive.put(pp, true);
 						}
@@ -799,9 +779,11 @@ public class GameInstance implements Listener {
 
 					if (BlueTeamScore >= maxScore_DESTROY || RedTeamScore >= maxScore_DESTROY && getGamemode().equals(Gamemode.DESTROY)) {
 						endGameByScore(this);
+						cancel();
 						return;
 					}else if (BlueTeamScore >= maxScore_RESCUE || RedTeamScore >= maxScore_RESCUE && getGamemode().equals(Gamemode.RESCUE)) {
 						endGameByScore(this);
+						cancel();
 						return;
 					}
 				}
@@ -1124,7 +1106,7 @@ public class GameInstance implements Listener {
 				Main.progManager.addExperience(killer, xp);
 				CreditManager.setCredits(killer, CreditManager.getCredits(killer) + rank.getKillCredits());
 				kill(victim, killer);
-				if (getGamemode() != Gamemode.RESCUE && getGamemode() != Gamemode.DESTROY) {
+				if (getGamemode() != Gamemode.RESCUE && getGamemode() != Gamemode.DESTROY && getGamemode() != Gamemode.KC) {
 					addRedPoint();
 				}
 				updateScores(victim, killer, rank);
@@ -1140,7 +1122,7 @@ public class GameInstance implements Listener {
 				Main.sendTitle(killer, "", ChatColor.YELLOW + "+" + xp + "xp");
 				Main.progManager.addExperience(killer, xp);
 				kill(victim, killer);
-				if (getGamemode() != Gamemode.RESCUE && getGamemode() != Gamemode.DESTROY) {
+				if (getGamemode() != Gamemode.RESCUE && getGamemode() != Gamemode.DESTROY && getGamemode() != Gamemode.KC) {
 					addBluePoint();
 				}
 				updateScores(victim, killer, rank);

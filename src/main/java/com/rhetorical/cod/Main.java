@@ -210,17 +210,11 @@ public class Main extends JavaPlugin {
 				m.save();
 			}
 
-			for (GameInstance i : GameManager.RunningGames) {
-				if (i != null) {
-					for (Player p : i.getPlayers()) {
-						GameManager.leaveMatch(p);
-					}
-				}
-			}
+			bootPlayers();
 		}
 	}
 
-	public static boolean hasPerm(Player p, String s) {
+	private static boolean hasPerm(Player p, String s) {
 		if (p.hasPermission(s) || p.hasPermission("com.*")) {
 			return true;
 		} else {
@@ -339,6 +333,7 @@ public class Main extends JavaPlugin {
 					case 3:
 						sendMessage(p, cColor + "/cod class | " + dColor + "Opens the class selection menu.");
 						sendMessage(p, cColor + "/cod start | " + dColor + "Auto-starts the match if the lobby timer is started.");
+						sendMessage(p, cColor + "/cod boot | " + dColor + "Forces all players in all matches to leave.");
 						break;
 					default:
 						break;
@@ -649,12 +644,35 @@ public class Main extends JavaPlugin {
 				p.closeInventory();
 				p.openInventory(invManager.mainShopInventory);
 				return true;
+			} else if (args[0].equalsIgnoreCase("boot") && hasPerm(p, "com.bootAll")) {
+				boolean result = bootPlayers();
+				if (result) {
+					p.sendMessage(Main.codPrefix + ChatColor.GREEN + "All players booted!");
+				} else {
+					p.sendMessage(Main.codPrefix + ChatColor.RED + "Couldn't boot all players!");
+				}
 			} else {
 				p.sendMessage(Main.codPrefix + ChatColor.RED + "Unknown command! Try using '/cod help' for a list of commands!");
 				return true;
 			}
 		}
 
+		return true;
+	}
+
+	private boolean bootPlayers() {
+		for (GameInstance i : GameManager.RunningGames) {
+			if (i != null) {
+				try {
+					for (Player p : i.getPlayers()) {
+						GameManager.leaveMatch(p);
+					}
+				} catch(Exception e) {
+					sendMessage(cs, Main.codPrefix + ChatColor.RED + "Couldn't successfully boot all players.");
+					return false;
+				}
+			}
+		}
 		return true;
 	}
 
