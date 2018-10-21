@@ -276,6 +276,12 @@ public class Main extends JavaPlugin {
 			}
 		}
 
+		if (args[0].equalsIgnoreCase("version") && (!(sender instanceof Player) || hasPerm((Player) sender, "com.version"))) {
+			String version = getPlugin().getDescription().getVersion();
+			sender.sendMessage(Main.codPrefix + ChatColor.GREEN + ChatColor.BOLD + "COM-Warfare version " + ChatColor.RESET + ChatColor.WHITE + version + ChatColor.RESET + ChatColor.GREEN + ChatColor.BOLD + " is currently installed on the server!");
+			return true;
+		}
+
 		// Console commands ^^ | Player commands vv
 
 		if (!(sender instanceof Player)) {
