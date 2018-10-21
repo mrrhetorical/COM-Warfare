@@ -194,8 +194,8 @@ public class Main extends JavaPlugin {
 		}
 	}
 
-	private static boolean hasPerm(Player p, String s) {
-		if (p.hasPermission(s) || p.hasPermission("com.*")) {
+	private static boolean hasPerm(CommandSender p, String s) {
+		if (p.hasPermission(s) || p.hasPermission("com.*") || p instanceof ConsoleCommandSender || p.isOp()) {
 			return true;
 		} else {
 			sendMessage(p, Main.codPrefix + ChatColor.RED + "You don't have permission to do that!", lang);
@@ -256,11 +256,11 @@ public class Main extends JavaPlugin {
 			}
 		}
 
-		if (args[0].equalsIgnoreCase("version") && (!(sender instanceof Player) || hasPerm((Player) sender, "com.version"))) {
+		if (args[0].equalsIgnoreCase("version") && hasPerm(sender, "com.version")) {
 			String version = getPlugin().getDescription().getVersion();
 			sender.sendMessage(Main.codPrefix + ChatColor.GREEN + ChatColor.BOLD + "COM-Warfare version " + ChatColor.RESET + ChatColor.WHITE + version + ChatColor.RESET + ChatColor.GREEN + ChatColor.BOLD + " is currently installed on the server!");
 			return true;
-		} else if (args[0].equalsIgnoreCase("connectToTranslate") && (!(sender instanceof Player) || hasPerm((Player) sender, "com.connectToTranslate"))) {
+		} else if (args[0].equalsIgnoreCase("connectToTranslate") && hasPerm(sender, "com.connectToTranslate")) {
 			sender.sendMessage(Main.codPrefix + ChatColor.GRAY + "Attempting to connect to translate service again...");
 			connectToTranslationService();
 			return true;
