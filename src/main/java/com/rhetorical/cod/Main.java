@@ -56,7 +56,7 @@ public class Main extends JavaPlugin {
 	public static Location lobbyLoc;
 	private static HashMap<Player, Location> lastLoc = new HashMap<>();
 
-	private Object bMetrics;
+	private Metrics bMetrics;
 
 	@Override
 	public void onEnable() {
