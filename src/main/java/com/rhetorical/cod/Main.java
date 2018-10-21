@@ -225,6 +225,14 @@ public class Main extends JavaPlugin {
 					sendMessage(cs, cColor + "/cod version | " + dColor + "Shows you the current version COM-Warfare is running on.");
 					sendMessage(cs, cColor + "/cod connectToTranslate | " + dColor + "Attempts to manually connect to the translate service.");
 					return true;
+				} else if (args[0].equalsIgnoreCase("version") && hasPerm(sender, "com.version")) {
+					String version = getPlugin().getDescription().getVersion();
+					sender.sendMessage(Main.codPrefix + ChatColor.GREEN + ChatColor.BOLD + "COM-Warfare version " + ChatColor.RESET + ChatColor.WHITE + version + ChatColor.RESET + ChatColor.GREEN + ChatColor.BOLD + " is currently installed on the server!");
+					return true;
+				} else if (args[0].equalsIgnoreCase("connectToTranslate") && hasPerm(sender, "com.connectToTranslate")) {
+					sender.sendMessage(Main.codPrefix + ChatColor.GRAY + "Attempting to connect to translate service again...");
+					connectToTranslationService();
+					return true;
 				}
 			} else if (args.length >= 3) {
 				if (args[0].equalsIgnoreCase("giveCredits")) {
@@ -255,14 +263,6 @@ public class Main extends JavaPlugin {
 					CreditManager.setCredits(playerName, amount);
 					return true;
 				}
-			} else if (args[0].equalsIgnoreCase("version") && hasPerm(sender, "com.version")) {
-				String version = getPlugin().getDescription().getVersion();
-				sender.sendMessage(Main.codPrefix + ChatColor.GREEN + ChatColor.BOLD + "COM-Warfare version " + ChatColor.RESET + ChatColor.WHITE + version + ChatColor.RESET + ChatColor.GREEN + ChatColor.BOLD + " is currently installed on the server!");
-				return true;
-			} else if (args[0].equalsIgnoreCase("connectToTranslate") && hasPerm(sender, "com.connectToTranslate")) {
-				sender.sendMessage(Main.codPrefix + ChatColor.GRAY + "Attempting to connect to translate service again...");
-				connectToTranslationService();
-				return true;
 			}
 		}
 
