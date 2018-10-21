@@ -178,27 +178,7 @@ public class Main extends JavaPlugin {
 			sendMessage(cs, Main.codPrefix + "Rank registered: " + r.getName(), lang);
 		}
 		
-		try {
-			translate = new McTranslate(Main.getPlugin(), Main.translate_api_key);
-		} catch(Exception e) {
-			Main.sendMessage(cs, Main.codPrefix + "Attempting to reconnect to McTranslate++ API...");
-			BukkitRunnable tryTranslateAgain = new BukkitRunnable() {
-				public void run() {
-					try {
-						translate = new McTranslate(Main.getPlugin(), Main.translate_api_key);
-					} catch(Exception e) {
-						Main.sendMessage(Main.cs, Main.codPrefix + ChatColor.RED + "Could not start McTranslate++ API!");
-						return;
-					}
-					
-					Main.sendMessage(Main.cs, Main.codPrefix + ChatColor.YELLOW + "Successfully started McTranslate++ API!");
-					this.cancel();
-					
-				}
-			};
-			
-			tryTranslateAgain.runTaskTimer(getPlugin(), 200L, 200L);
-		}
+		connectToTranslationService();
 
 		Main.cs.sendMessage(Main.codPrefix + ChatColor.GREEN + ChatColor.BOLD + "COM-Warfare version " + ChatColor.RESET + ChatColor.WHITE + version + ChatColor.RESET + ChatColor.GREEN + ChatColor.BOLD + " is now up and running!");
 	}
@@ -279,6 +259,10 @@ public class Main extends JavaPlugin {
 		if (args[0].equalsIgnoreCase("version") && (!(sender instanceof Player) || hasPerm((Player) sender, "com.version"))) {
 			String version = getPlugin().getDescription().getVersion();
 			sender.sendMessage(Main.codPrefix + ChatColor.GREEN + ChatColor.BOLD + "COM-Warfare version " + ChatColor.RESET + ChatColor.WHITE + version + ChatColor.RESET + ChatColor.GREEN + ChatColor.BOLD + " is currently installed on the server!");
+			return true;
+		} else if (args[0].equalsIgnoreCase("connectToTranslate") && (!(sender instanceof Player) || hasPerm((Player) sender, "com.connectToTranslate"))) {
+			sender.sendMessage(Main.codPrefix + ChatColor.GRAY + "Attempting to connect to translate service again...");
+			connectToTranslationService();
 			return true;
 		}
 
@@ -669,6 +653,30 @@ public class Main extends JavaPlugin {
 		}
 
 		return true;
+	}
+
+	private void connectToTranslationService() {
+		try {
+			translate = new McTranslate(Main.getPlugin(), Main.translate_api_key);
+		} catch(Exception e) {
+			Main.sendMessage(cs, Main.codPrefix + "Attempting to reconnect to McTranslate++ API...");
+			BukkitRunnable tryTranslateAgain = new BukkitRunnable() {
+				public void run() {
+					try {
+						translate = new McTranslate(Main.getPlugin(), Main.translate_api_key);
+					} catch(Exception e) {
+						Main.sendMessage(Main.cs, Main.codPrefix + ChatColor.RED + "Could not start McTranslate++ API!");
+						return;
+					}
+
+					Main.sendMessage(Main.cs, Main.codPrefix + ChatColor.YELLOW + "Successfully started McTranslate++ API!");
+					this.cancel();
+
+				}
+			};
+
+			tryTranslateAgain.runTaskLater(getPlugin(), 20L * (5L));
+		}
 	}
 
 	private boolean bootPlayers() {
