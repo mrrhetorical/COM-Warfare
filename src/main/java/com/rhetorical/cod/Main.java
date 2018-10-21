@@ -229,7 +229,7 @@ public class Main extends JavaPlugin {
 		if (!label.equalsIgnoreCase("cod") && !label.equalsIgnoreCase("comr") && !label.equalsIgnoreCase("war") && !label.equalsIgnoreCase("com"))
 			return false;
 
-		Player p = null;
+		Player p;
 
 		String cColor = "" + ChatColor.GREEN + ChatColor.BOLD;
 		String dColor = "" + ChatColor.WHITE + ChatColor.BOLD;
@@ -298,7 +298,7 @@ public class Main extends JavaPlugin {
 			if (args[0].equalsIgnoreCase("help") && hasPerm(p, "com.help")) {
 
 				if (args.length == 2) {
-					int page = 0;
+					int page;
 					try {
 						page = Integer.parseInt(args[1]);
 					} catch (Exception e) {
@@ -374,7 +374,7 @@ public class Main extends JavaPlugin {
 					p.teleport(lastLoc.get(p));
 					lastLoc.remove(p);
 				} else {
-					if (!(lobbyLoc == null || lobbyLoc.equals(null))) {
+					if (lobbyLoc != null) {
 						p.teleport(lobbyLoc);
 					}
 				}
@@ -632,8 +632,13 @@ public class Main extends JavaPlugin {
 			} else if (args[0].equalsIgnoreCase("start") && hasPerm(p, "com.forceStart")) {
 				if (GameManager.isInMatch(p)) {
 					try {
-						if (GameManager.getMatchWhichContains(p) != null)
-							GameManager.getMatchWhichContains(p).forceStart(true);
+						if (GameManager.getMatchWhichContains(p) != null) {
+							try {
+								GameManager.getMatchWhichContains(p).forceStart(true);
+							} catch(Exception e) {
+								p.sendMessage(codPrefix + ChatColor.RED + "Could not force start arena!");
+							}
+						}
 					} catch(Exception e) {
 						sendMessage(Main.cs, Main.codPrefix + ChatColor.RED + "Could not find the game that the player is in!", Main.lang	);
 					}
@@ -835,11 +840,10 @@ public class Main extends JavaPlugin {
 				Main.shopManager.setSecondaryGuns(sList);
 				break;
 			default:
-				return;
+				break;
 			}
 		} else {
 			sendMessage(p, Main.codPrefix + "\u00A7cIncorrect usage! Correct usage: '/cod createGun (Gun name) (Primary/Secondary) (Unlock type: level/credit/both) (Ammo Amount) (Gun Material) (Ammo Material) (Level Unlock) (Cost)'");
-			return;
 		}
 
 	}
@@ -866,7 +870,7 @@ public class Main extends JavaPlugin {
 
 	public static void sendMessage(CommandSender target, String message, Object targetLang) {
 
-		if ((McLang) targetLang == McLang.EN) {
+		if (targetLang == McLang.EN) {
 			sendMessage(target, message);
 			return;
 		}
