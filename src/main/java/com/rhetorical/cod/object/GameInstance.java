@@ -186,6 +186,7 @@ public class GameInstance implements Listener {
 		if (map == null)
 			return;
 
+		map.changeGamemode();
 		Gamemode gameMode = getGamemode();
 		gameTime = Main.getPlugin().getConfig().getInt("gameTime." + gameMode.toString());
 	}

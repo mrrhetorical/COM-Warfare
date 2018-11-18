@@ -2,6 +2,7 @@ package com.rhetorical.cod.object;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import org.bukkit.Location;
 
@@ -11,7 +12,6 @@ import com.rhetorical.cod.files.ArenasFile;
 public class CodMap {
 	
 	private String name;
-	private Gamemode gm;
 	private boolean enabled = false;
 	
 	
@@ -23,11 +23,14 @@ public class CodMap {
 	private Location Flag_A;
 	private Location Flag_B;
 	private Location Flag_C;
+
+	private List<Gamemode> availableGamemodes = new ArrayList<>();
+
+	private Gamemode currentGamemode;
 	
 	
-	public CodMap(String name, Gamemode gm) {
+	public CodMap(String name) {
 		this.name = name;
-		this.setGamemode(gm);
 	}
 	
 	public void save() {
@@ -43,7 +46,6 @@ public class CodMap {
 		ArenasFile.getData().set("Maps." + k + ".blueFlagSpawn", getBlueFlagSpawn());
 		ArenasFile.getData().set("Maps." + k + ".blueSpawns", getBlueSpawns());
 		ArenasFile.getData().set("Maps." + k + ".enabled", isEnabled());
-		ArenasFile.getData().set("Maps." + k + ".gm", getGamemode().toString());
 		ArenasFile.getData().set("Maps." + k + ".name", this.name);
 		ArenasFile.getData().set("Maps." + k + ".pinkSpawns", getPinkSpawns());
 		ArenasFile.getData().set("Maps." + k + ".redFlagSpawn", getRedFlagSpawn());
@@ -72,66 +74,38 @@ public class CodMap {
 		getPinkSpawns().add(l);
 		setEnable();
 	}
-	
-	//Check if enabled
+
 	public boolean setEnable() {
-		
-		if (getGamemode().equals(Gamemode.TDM) || getGamemode().equals(Gamemode.RSB) || getGamemode().equals(Gamemode.INFECT) || getGamemode().equals(Gamemode.KC) || getGamemode().equals(Gamemode.RESCUE)) {
-			if (getBlueSpawns() != null && getRedSpawns() != null) {
-				if (getBlueSpawns().size() >= 1 && getRedSpawns().size() >= 1) {
-					this.setEnabled(true);
-					this.save();
-					return true;
-				}
-				this.setEnabled(false);
-				this.save();
-				return false;
-			}
-			this.setEnabled(false);
-			this.save();
-			return false;
-		} else if (getGamemode().equals(Gamemode.FFA) || getGamemode().equals(Gamemode.OITC) || getGamemode().equals(Gamemode.GUN)) {
-			if (getPinkSpawns() != null && getPinkSpawns().size() >= Main.maxPlayers) {
-				this.setEnabled(true);
-				this.save();
-				return true;
-			}
-			
-			this.setEnabled(false);
-			this.save();
-			return false;
-		} else if (getGamemode().equals(Gamemode.CTF)) {
-			if (getBlueSpawns() != null && getRedSpawns() != null && getBlueFlagSpawn() != null && getRedFlagSpawn() != null) {
-				if (getBlueSpawns().size() >= 1 && getRedSpawns().size() >= 1) {
-					this.setEnabled(true);
-					this.save();
-					return true;
-				}
-				this.setEnabled(false);
-				this.save();
-				return false;
-			}
+		if (getBlueSpawns() != null && getRedSpawns() != null) {
+			if (getBlueSpawns().size() >= 1 && getRedSpawns().size() >= 1) {
+				availableGamemodes.add(Gamemode.TDM);
+				availableGamemodes.add(Gamemode.RSB);
+				availableGamemodes.add(Gamemode.INFECT);
+				availableGamemodes.add(Gamemode.KC);
+				availableGamemodes.add(Gamemode.RESCUE);
 
-			this.setEnabled(false);
-			this.save();
-			return false;
-		} else if (getGamemode().equals(Gamemode.DOM)) {
-			if (getBlueSpawns() != null && getRedSpawns() != null && getAFlagSpawn() != null && getBFlagSpawn() != null && getCFlagSpawn() != null) {
-				if (getBlueSpawns().size() >= 1 && getRedSpawns().size() >= 1) {
-					this.setEnabled(true);
-					this.save();
-					return true;
+				if (getBlueFlagSpawn() != null && getRedFlagSpawn() != null) {
+					availableGamemodes.add(Gamemode.CTF);
 				}
 
-				this.setEnabled(false);
-				this.save();
-				return true;
+				if (getAFlagSpawn() != null && getBFlagSpawn() != null && getCFlagSpawn() != null) {
+					availableGamemodes.add(Gamemode.DOM);
+				}
 			}
 		}
-		
-		this.setEnabled(false);
+
+		if (getPinkSpawns() != null) {
+			if (getPinkSpawns().size() >= Main.maxPlayers) {
+				availableGamemodes.add(Gamemode.FFA);
+				availableGamemodes.add(Gamemode.OITC);
+				availableGamemodes.add(Gamemode.GUN);
+			}
+		}
+
 		this.save();
-		return false;
+		boolean shouldEnable = getAvailableGamemodes().size() > 0;
+		this.setEnabled(shouldEnable);
+		return shouldEnable;
 	}
 	
 	//Only removes most recent spawn
@@ -232,11 +206,18 @@ public class CodMap {
 	}
 
 	public Gamemode getGamemode() {
-		return gm;
+		return currentGamemode;
 	}
 
-	private void setGamemode(Gamemode gm) {
-		this.gm = gm;
+	// Gets a random gamemode from the list of available gamemodes
+	public Gamemode changeGamemode() {
+		int index = (int) Math.round(Math.random() * availableGamemodes.size());
+
+		if (availableGamemodes.get(index) != null) {
+			currentGamemode = availableGamemodes.get(index);
+			return availableGamemodes.get(index);
+		}
+		else return null;
 	}
 
 	public Location getAFlagSpawn() {
@@ -278,5 +259,9 @@ public class CodMap {
 
 	public void setCFlagSpawn(Location loc) {
 		this.Flag_C =  loc;
+	}
+
+	public List<Gamemode> getAvailableGamemodes() {
+		return this.availableGamemodes;
 	}
 }

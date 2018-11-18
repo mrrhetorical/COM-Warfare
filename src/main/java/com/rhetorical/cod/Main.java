@@ -32,7 +32,6 @@ public class Main extends JavaPlugin {
 	public static String codPrefix = "[COM] ";
 	public static ConsoleCommandSender cs = Bukkit.getConsoleSender();
 
-	private static String sql_api_key;
 	private static String translate_api_key;
 
 	public static ProgressionManager progManager;
@@ -380,30 +379,34 @@ public class Main extends JavaPlugin {
 				int k = 0;
 				for (CodMap m : GameManager.AddedMaps) {
 					k++;
+					StringBuilder gmr = new StringBuilder();
+					for(Gamemode gm : m.getAvailableGamemodes()) {
+						gmr.append(gm.toString());
+						if (!m.getAvailableGamemodes().get(m.getAvailableGamemodes().size() - 1).equals(gm)) {
+							gmr.append(", ");
+						}
+					}
+
+					if (m.getAvailableGamemodes().size() == 0) {
+						gmr.append("NONE");
+					}
+
 					if (GameManager.UsedMaps.contains(m)) {
-						sendMessage(p, Integer.toString(k) + " - \u00A76\u00A7lName: \u00A7r\u00A7a" + m.getName() + " \u00A7r\u00A76\u00A7lGamemode: \u00A7r\u00A7c" + m.getGamemode().toString() + " \u00A7r\u00A76\u00A7lStatus: \u00A7r\u00A74IN USE", lang);
+						sendMessage(p, Integer.toString(k) + " - \u00A76\u00A7lName: \u00A7r\u00A7a" + m.getName() + " \u00A7r\u00A76\u00A7lGamemode: \u00A7r\u00A7c" + gmr.toString() + " \u00A7r\u00A76\u00A7lStatus: \u00A7r\u00A74IN USE", lang);
 					} else {
 						if (m.isEnabled()) {
-							sendMessage(p, Integer.toString(k) + " - \u00A76\u00A7lName: \u00A7r\u00A7a" + m.getName() + " \u00A7r\u00A76\u00A7lGamemode: \u00A7r\u00A7c" + m.getGamemode().toString() + " \u00A7r\u00A76\u00A7lStatus: \u00A7r\u00A7aAVAILABLE", lang);
+							sendMessage(p, Integer.toString(k) + " - \u00A76\u00A7lName: \u00A7r\u00A7a" + m.getName() + " \u00A7r\u00A76\u00A7lGamemode: \u00A7r\u00A7c" + gmr.toString() + " \u00A7r\u00A76\u00A7lStatus: \u00A7r\u00A7aAVAILABLE", lang);
 							continue;
 						}
 
-						sendMessage(p, Integer.toString(k) + " - \u00A76\u00A7lName: \u00A7r\u00A7a" + m.getName() + " ea\u00A7r\u00A76\u00A7lGamemode: \u00A7r\u00A7c" + m.getGamemode().toString() + " \u00A7r\u00A76\u00A7lStatus: \u00A7r\u00A7aUNFINISHED", lang);
+						sendMessage(p, Integer.toString(k) + " - \u00A76\u00A7lName: \u00A7r\u00A7a" + m.getName() + " ea\u00A7r\u00A76\u00A7lGamemode: \u00A7r\u00A7c" + gmr.toString() + " \u00A7r\u00A76\u00A7lStatus: \u00A7r\u00A7aUNFINISHED", lang);
 					}
 				}
 				return true;
 			} else if (args[0].equalsIgnoreCase("createMap") && hasPerm(p, "com.map.create")) {
-				if (args.length >= 3) {
+				if (args.length >= 2) {
 					CodMap newMap;
 					String mapName = args[1];
-					String mapGm = args[2];
-					Gamemode mapGameMode;
-					try {
-						mapGameMode = Gamemode.valueOf(mapGm.toUpperCase());
-					} catch (Exception e) {
-						sendMessage(p, Main.codPrefix + "\u00A7cThat gamemode doesn't exist!", lang);
-						return true;
-					}
 
 					for (CodMap m : GameManager.AddedMaps) {
 						if (m.getName().equalsIgnoreCase(mapName)) {
@@ -412,14 +415,14 @@ public class Main extends JavaPlugin {
 						}
 					}
 
-					newMap = new CodMap(mapName, mapGameMode);
+					newMap = new CodMap(mapName);
 
 					GameManager.AddedMaps.add(newMap);
-					sendMessage(p, Main.codPrefix + "\u00A7aSuccessfully created map " + newMap.getName() + " with gamemode " + newMap.getGamemode().toString(), lang);
+					sendMessage(p, Main.codPrefix + "\u00A7aSuccessfully created map " + newMap.getName() + "!", lang);
 					newMap.setEnable();
 					return true;
 				} else {
-					sendMessage(p, Main.codPrefix + "\u00A7cIncorrect usage! Correct usage: /cod createMap (name) (gamemode)");
+					sendMessage(p, Main.codPrefix + "\u00A7cIncorrect usage! Correct usage: /cod createMap (name)");
 					return true;
 				}
 			} else if (args[0].equalsIgnoreCase("removeMap") && hasPerm(p, "com.map.remove")) {
@@ -436,7 +439,7 @@ public class Main extends JavaPlugin {
 							File aFile = new File(getPlugin().getDataFolder(), "arenas.yml");
 
 							if (aFile.exists()) {
-								aFile.delete();
+								boolean success = aFile.delete();
 							}
 
 							ArenasFile.setup(getPlugin());
@@ -583,7 +586,6 @@ public class Main extends JavaPlugin {
 					try {
 						amount = Integer.parseInt(args[3]);
 					} catch (Exception e) {
-						amount = 0;
 						sendMessage(p, Main.codPrefix + "\u00A7cIncorrect usage! Proper usage: '/cod credits give {player} (amount)'");
 						return true;
 
@@ -598,7 +600,6 @@ public class Main extends JavaPlugin {
 					try {
 						amount = Integer.parseInt(args[3]);
 					} catch (Exception e) {
-						amount = 0;
 						sendMessage(p, Main.codPrefix + ChatColor.RED + "Incorrect usage! Proper usage: '/cod credits set {name} [amount]'");
 						return true;
 					}
@@ -628,9 +629,10 @@ public class Main extends JavaPlugin {
 				if (GameManager.isInMatch(p)) {
 					try {
 						if (GameManager.getMatchWhichContains(p) != null) {
-							try {
-								GameManager.getMatchWhichContains(p).forceStart(true);
-							} catch(Exception e) {
+							GameInstance game = GameManager.getMatchWhichContains(p);
+							if (game != null) {
+								game.forceStart(true);
+							} else {
 								p.sendMessage(codPrefix + ChatColor.RED + "Could not force start arena!");
 							}
 						}
@@ -914,10 +916,6 @@ public class Main extends JavaPlugin {
 
 	public static void sendActionBar(Player p, String message) {
 		//TODO: Implement
-	}
-
-	public static String getSQLApiKey() {
-		return Main.sql_api_key;
 	}
 
 	public static String getTranslatorApiKey() {

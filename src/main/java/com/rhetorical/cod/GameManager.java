@@ -26,11 +26,11 @@ public class GameManager {
 		while (ArenasFile.getData().contains("Maps." + k)) {
 			CodMap m;
 			String name = ArenasFile.getData().getString("Maps." + k + ".name");
-			String gm1 = ArenasFile.getData().getString("Maps." + k + ".gm");
+//			String gm1 = ArenasFile.getData().getString("Maps." + k + ".gm");
 
-			Gamemode gm = Gamemode.valueOf(gm1);
+//			Gamemode gm = Gamemode.valueOf(gm1);
 
-			m = new CodMap(name, gm);
+			m = new CodMap(name);
 
 			m.setAFlagSpawn((Location) ArenasFile.getData().get("Maps." + k + ".AFlag"));
 			m.setBFlagSpawn((Location) ArenasFile.getData().get("Maps." + k + ".BFlag"));
@@ -98,11 +98,12 @@ public class GameManager {
 			Main.sendMessage(p, Main.codPrefix + "\u00A77Creating match. . .", Main.lang);
 
 			CodMap map = pickRandomMap();
-			
 			if (map == null) {
 				Main.sendMessage(p, Main.codPrefix + "\u00A77Could not create a match because there are not enough maps!", Main.lang);
 				return false;
 			}
+
+			map.changeGamemode();
 
 			newGame = new GameInstance(new ArrayList<>(), map);
 
