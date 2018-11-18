@@ -399,7 +399,7 @@ public class Main extends JavaPlugin {
 							continue;
 						}
 
-						sendMessage(p, Integer.toString(k) + " - \u00A76\u00A7lName: \u00A7r\u00A7a" + m.getName() + " ea\u00A7r\u00A76\u00A7lGamemode: \u00A7r\u00A7c" + gmr.toString() + " \u00A7r\u00A76\u00A7lStatus: \u00A7r\u00A7aUNFINISHED", lang);
+						sendMessage(p, Integer.toString(k) + " - \u00A76\u00A7lName: \u00A7r\u00A7a" + m.getName() + " \u00A7r\u00A76\u00A7lGamemode: \u00A7r\u00A7c" + gmr.toString() + " \u00A7r\u00A76\u00A7lStatus: \u00A7r\u00A7aUNFINISHED", lang);
 					}
 				}
 				return true;
@@ -457,7 +457,7 @@ public class Main extends JavaPlugin {
 					return true;
 
 				} else {
-					sendMessage(p, Main.codPrefix + "\u00A7cIncorrect useage! Correct usage: /cod removeMap (name)");
+					sendMessage(p, Main.codPrefix + "\u00A7cIncorrect usage! Correct usage: /cod removeMap (name)");
 					return true;
 				}
 

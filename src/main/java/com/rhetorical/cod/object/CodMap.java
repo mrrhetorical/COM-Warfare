@@ -78,27 +78,37 @@ public class CodMap {
 	public boolean setEnable() {
 		if (getBlueSpawns() != null && getRedSpawns() != null) {
 			if (getBlueSpawns().size() >= 1 && getRedSpawns().size() >= 1) {
-				availableGamemodes.add(Gamemode.TDM);
-				availableGamemodes.add(Gamemode.RSB);
-				availableGamemodes.add(Gamemode.INFECT);
-				availableGamemodes.add(Gamemode.KC);
-				availableGamemodes.add(Gamemode.RESCUE);
+				if (!availableGamemodes.contains(Gamemode.TDM))
+					availableGamemodes.add(Gamemode.TDM);
+				if (!availableGamemodes.contains(Gamemode.RSB))
+					availableGamemodes.add(Gamemode.RSB);
+				if (!availableGamemodes.contains(Gamemode.INFECT))
+					availableGamemodes.add(Gamemode.INFECT);
+				if (!availableGamemodes.contains(Gamemode.KC))
+					availableGamemodes.add(Gamemode.KC);
+				if (!availableGamemodes.contains(Gamemode.RESCUE))
+					availableGamemodes.add(Gamemode.RESCUE);
 
 				if (getBlueFlagSpawn() != null && getRedFlagSpawn() != null) {
-					availableGamemodes.add(Gamemode.CTF);
+					if (!availableGamemodes.contains(Gamemode.CTF))
+						availableGamemodes.add(Gamemode.CTF);
 				}
 
 				if (getAFlagSpawn() != null && getBFlagSpawn() != null && getCFlagSpawn() != null) {
-					availableGamemodes.add(Gamemode.DOM);
+					if (!availableGamemodes.contains(Gamemode.DOM))
+						availableGamemodes.add(Gamemode.DOM);
 				}
 			}
 		}
 
 		if (getPinkSpawns() != null) {
 			if (getPinkSpawns().size() >= Main.maxPlayers) {
-				availableGamemodes.add(Gamemode.FFA);
-				availableGamemodes.add(Gamemode.OITC);
-				availableGamemodes.add(Gamemode.GUN);
+				if (!availableGamemodes.contains(Gamemode.FFA))
+					availableGamemodes.add(Gamemode.FFA);
+				if(!availableGamemodes.contains(Gamemode.OITC))
+					availableGamemodes.add(Gamemode.OITC);
+				if (!availableGamemodes.contains(Gamemode.GUN))
+					availableGamemodes.add(Gamemode.GUN);
 			}
 		}
 
