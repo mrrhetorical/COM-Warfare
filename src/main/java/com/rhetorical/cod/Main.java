@@ -909,9 +909,19 @@ public class Main extends JavaPlugin {
 	}
 
 	public static void sendTitle(Player p, String title, String subtitle) {
-		//TODO: Add translation capability.
-
-		p.sendTitle(title, subtitle, 10, 0, 10);
+		try {
+			Object[] args = new Object[5];
+			args[0] = title;
+			args[1] = subtitle;
+			args[2] = 10;
+			args[3] = 0;
+			args[4] = 10;
+			p.getClass().getMethod("sendTitle", String.class, String.class, Integer.class, Integer.class, Integer.class).invoke(p, args);
+		} catch(Exception e) {
+			p.sendMessage(title);
+			p.sendMessage(subtitle);
+		}
+//		p.sendTitle(title, subtitle, 10, 0, 10);
 	}
 
 	public static void sendActionBar(Player p, String message) {

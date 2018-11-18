@@ -348,13 +348,13 @@ public class GameInstance implements Listener {
 	private void setupFlags(boolean red, boolean blue) {
 		if (red) {
 			Location spawn = currentMap.getRedFlagSpawn();
-			ItemStack flag = new ItemStack(Material.RED_BANNER);
+			ItemStack flag = new ItemStack(Material.valueOf("RED_BANNER"));
 			redFlag = spawn.getWorld().dropItem(spawn, flag);
 		}
 
 		if (blue) {
 			Location spawn = currentMap.getBlueFlagSpawn();
-			ItemStack flag = new ItemStack(Material.BLUE_BANNER);
+			ItemStack flag = new ItemStack(Material.valueOf("BLUE_BANNER"));
 			blueFlag = spawn.getWorld().dropItem(spawn, flag);
 		}
 	}
