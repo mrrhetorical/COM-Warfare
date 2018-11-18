@@ -18,6 +18,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
+import sun.plugin2.message.Conversation;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -49,7 +50,7 @@ public class Main extends JavaPlugin {
 	public static int minPlayers = 6;
 	public static int maxPlayers = 12;
 
-	public static double defaultHealth = 100D;
+	public static double defaultHealth = 20D;
 
 	private static ArrayList<RankPerks> serverRanks = new ArrayList<>();
 
@@ -60,6 +61,16 @@ public class Main extends JavaPlugin {
 
 	@Override
 	public void onEnable() {
+
+		ComVersion.setup(true);
+
+		if (ComVersion.getPurchased()) {
+			codPrefix = getPlugin().getConfig().getString("prefix") + " ";
+
+			if (codPrefix.equalsIgnoreCase("")) {
+				codPrefix = "[COD] ";
+			}
+		}
 
 		bMetrics = new Metrics(this);
 
@@ -142,40 +153,43 @@ public class Main extends JavaPlugin {
 			CreditManager.loadCredits(p);
 		}
 
-		minPlayers = getPlugin().getConfig().getInt("players.min");
-		maxPlayers = getPlugin().getConfig().getInt("players.max");
 		lobbyLoc = (Location) getPlugin().getConfig().get("com.lobby");
-		defaultHealth = getPlugin().getConfig().getDouble("defaultHealth");
-		translate_api_key = getPlugin().getConfig().getString("translate.api_key");
 
-		int i = 0;
+		if (ComVersion.getPurchased()) {
+			minPlayers = getPlugin().getConfig().getInt("players.min");
+			maxPlayers = getPlugin().getConfig().getInt("players.max");
+			defaultHealth = getPlugin().getConfig().getDouble("defaultHealth");
+			translate_api_key = getPlugin().getConfig().getString("translate.api_key");
+		}
 
-		while (getPlugin().getConfig().contains("RankTiers." + i)) {
-			String name = getPlugin().getConfig().getString("RankTiers." + i + ".name");
-			int killCredits = getPlugin().getConfig().getInt("RankTiers." + i + ".kill.credits");
-			double killExperience = getPlugin().getConfig().getDouble("RankTiers." + i + ".kill.xp");
-			int levelCredits = getPlugin().getConfig().getInt("RankTiers." + i + ".levelCredits");
 
-			RankPerks rank = new RankPerks(name, killCredits, killExperience, levelCredits);
+		if (ComVersion.getPurchased()) {
+			int i = 0;
 
+			while (getPlugin().getConfig().contains("RankTiers." + i)) {
+				String name = getPlugin().getConfig().getString("RankTiers." + i + ".name");
+				int killCredits = getPlugin().getConfig().getInt("RankTiers." + i + ".kill.credits");
+				double killExperience = getPlugin().getConfig().getDouble("RankTiers." + i + ".kill.xp");
+				int levelCredits = getPlugin().getConfig().getInt("RankTiers." + i + ".levelCredits");
+
+				RankPerks rank = new RankPerks(name, killCredits, killExperience, levelCredits);
+
+				Main.serverRanks.add(rank);
+
+				i++;
+			}
+
+			if (i == 0) {
+				getPlugin().getConfig().set("RankTiers.0.name", "default");
+				getPlugin().getConfig().set("RankTiers.0.kill.credits", 1);
+				getPlugin().getConfig().set("RankTiers.0.kill.xp", 100);
+				getPlugin().getConfig().set("RankTiers.0.levelCredits", 10);
+				getPlugin().saveConfig();
+				getPlugin().reloadConfig();
+			}
+		} else {
+			RankPerks rank = new RankPerks("default", 1, 100, 0);
 			Main.serverRanks.add(rank);
-
-			i++;
-		}
-
-		if (i == 0) {
-			getPlugin().getConfig().set("RankTiers.0.name", "default");
-			getPlugin().getConfig().set("RankTiers.0.kill.credits", 1);
-			getPlugin().getConfig().set("RankTiers.0.kill.xp", 100);
-			getPlugin().getConfig().set("RankTiers.0.levelCredits", 10);
-			getPlugin().saveConfig();
-			getPlugin().reloadConfig();
-			i++;
-		}
-
-		Main.cs.sendMessage(Main.codPrefix + "There are " + i + " ranks registered!");
-		for (RankPerks r : Main.serverRanks) {
-			sendMessage(cs, Main.codPrefix + "Rank registered: " + r.getName(), lang);
 		}
 		
 		connectToTranslationService();
@@ -876,7 +890,7 @@ public class Main extends JavaPlugin {
 
 	public static void sendMessage(CommandSender target, String message, Object targetLang) {
 
-		if (targetLang == McLang.EN) {
+		if (targetLang == McLang.EN || !ComVersion.getPurchased()) {
 			sendMessage(target, message);
 			return;
 		}

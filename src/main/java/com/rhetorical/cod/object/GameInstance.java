@@ -85,18 +85,39 @@ public class GameInstance implements Listener {
 
 		Main.getPlugin().reloadConfig();
 
-		gameTime = Main.getPlugin().getConfig().getInt("gameTime." + getGamemode().toString());
+		if (getGamemode() != Gamemode.INFECT) {
+			gameTime = Main.getPlugin().getConfig().getInt("gameTime." + getGamemode().toString());
+		} else {
+			if (ComVersion.getPurchased())
+				gameTime = Main.getPlugin().getConfig().getInt("maxScore.INFECT");
+			else
+				gameTime = 120;
+		}
 		lobbyTime = Main.getPlugin().getConfig().getInt("lobbyTime");
-		maxScore_TDM = Main.getPlugin().getConfig().getInt("maxScore.TDM");
-		maxScore_CTF = Main.getPlugin().getConfig().getInt("maxScore.CTF");
-		maxScore_DOM = Main.getPlugin().getConfig().getInt("maxScore.DOM");
-		maxScore_FFA = Main.getPlugin().getConfig().getInt("maxScore.FFA");
-		maxScore_RSB = Main.getPlugin().getConfig().getInt("maxScore.RSB");
-		maxScore_KC = Main.getPlugin().getConfig().getInt("maxScore.KC");
-		maxScore_GUN = Main.getPlugin().getConfig().getInt("maxScore.GUN");
-		maxScore_OITC = Main.getPlugin().getConfig().getInt("maxScore.OITC");
-		maxScore_DESTROY = Main.getPlugin().getConfig().getInt("maxScore.DESTROY");
-		maxScore_RESCUE = Main.getPlugin().getConfig().getInt("maxScore.RESCUE");
+
+		if (ComVersion.getPurchased()) {
+			maxScore_TDM = Main.getPlugin().getConfig().getInt("maxScore.TDM");
+			maxScore_CTF = Main.getPlugin().getConfig().getInt("maxScore.CTF");
+			maxScore_DOM = Main.getPlugin().getConfig().getInt("maxScore.DOM");
+			maxScore_FFA = Main.getPlugin().getConfig().getInt("maxScore.FFA");
+			maxScore_RSB = Main.getPlugin().getConfig().getInt("maxScore.RSB");
+			maxScore_KC = Main.getPlugin().getConfig().getInt("maxScore.KC");
+			maxScore_GUN = Main.getPlugin().getConfig().getInt("maxScore.GUN");
+			maxScore_OITC = Main.getPlugin().getConfig().getInt("maxScore.OITC");
+			maxScore_DESTROY = Main.getPlugin().getConfig().getInt("maxScore.DESTROY");
+			maxScore_RESCUE = Main.getPlugin().getConfig().getInt("maxScore.RESCUE");
+		} else {
+			maxScore_TDM = 75;
+			maxScore_RSB = 75;
+			maxScore_FFA = 30;
+			maxScore_KC = 50;
+			maxScore_DOM = 200;
+			maxScore_CTF = 3;
+			maxScore_OITC = 3;
+			maxScore_DESTROY = 4;
+			maxScore_RESCUE = 4;
+			maxScore_GUN = 20;
+		}
 
 		setState(GameState.WAITING);
 

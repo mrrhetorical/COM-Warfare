@@ -29,7 +29,7 @@ public class ProgressionManager {
 		}
 
 		int maxLevelFromConfig = Main.getPlugin().getConfig().getInt("maxLevel");
-		int maxPrestigeLevelFromConfig = Main.getPlugin().getConfig().getInt("maxPrestigeLevel");
+		int maxPrestigeLevelFromConfig = ComVersion.getPurchased() ? Main.getPlugin().getConfig().getInt("maxPrestigeLevel") : 0;
 
 		if (maxLevelFromConfig <= 0) {
 			this.maxLevel = 55;
@@ -152,7 +152,7 @@ public class ProgressionManager {
 	}
 
 	private double getExperienceForLevel(int level) {
-		double exp = 0D;
+		double exp;
 
 		if (level <= 0) {
 			return 0D;
