@@ -1,9 +1,6 @@
 package com.rhetorical.cod.object;
 
-import com.rhetorical.cod.CreditManager;
-import com.rhetorical.cod.GameManager;
-import com.rhetorical.cod.Main;
-import com.rhetorical.cod.StatHandler;
+import com.rhetorical.cod.*;
 import org.bukkit.*;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
@@ -75,6 +72,10 @@ public class GameInstance implements Listener {
 
 	private HashMap<Player, CodScore> playerScores = new HashMap<>();
 
+	private CodGun oneShotGun;
+
+	private boolean oneShotReady;
+
 	public GameInstance(ArrayList<Player> pls, CodMap map) {
 
 		id = System.currentTimeMillis();
@@ -106,6 +107,25 @@ public class GameInstance implements Listener {
 		for (Player p : pls) {
 			health.update(p);
 		}
+
+		String oneShotGunName = Main.getPlugin().getConfig().getString("OITC_Gun");
+
+		for (CodGun gun : Main.shopManager.getSecondaryGuns()) {
+			if (gun.getName().equalsIgnoreCase(oneShotGunName)) {
+				oneShotGun = gun;
+				break;
+			}
+		}
+
+		if (oneShotGun == null)
+			for (CodGun gun : Main.shopManager.getPrimaryGuns()) {
+				if (gun.getName().equals(oneShotGunName)) {
+					oneShotGun = gun;
+					break;
+				}
+			}
+
+		oneShotReady = oneShotGun != null;
 
 		System.gc();
 
@@ -341,25 +361,12 @@ public class GameInstance implements Listener {
 		if (getGamemode() == Gamemode.RSB) {
 
 			CodGun primary = Main.loadManager.getRandomPrimary();
+
 			CodGun secondary = Main.loadManager.getRandomSecondary();
 
 			CodWeapon lethal = Main.loadManager.getRandomLethal();
 
 			CodWeapon tactical = Main.loadManager.getRandomTactical();
-
-			p.getInventory().setItem(0, Main.loadManager.knife);
-			p.getInventory().setItem(1, primary.getGun());
-			p.getInventory().setItem(2, secondary.getGun());
-
-			if (Math.random() > 0.5) {
-				p.getInventory().setItem(3, lethal.getWeapon());
-			}
-
-			if (Math.random() > 0.5) {
-				p.getInventory().setItem(4, tactical.getWeapon());
-			}
-
-			// Ammo
 
 			ItemStack primaryAmmo = primary.getAmmo();
 			primaryAmmo.setAmount(primary.getAmmoCount());
@@ -367,8 +374,25 @@ public class GameInstance implements Listener {
 			ItemStack secondaryAmmo = secondary.getAmmo();
 			secondaryAmmo.setAmount(secondary.getAmmoCount());
 
-			p.getInventory().setItem(19, primaryAmmo);
-			p.getInventory().setItem(25, secondaryAmmo);
+
+			p.getInventory().setItem(0, Main.loadManager.knife);
+			if (!primary.equals(Main.shopManager.blankPrimary)) {
+				p.getInventory().setItem(1, primary.getGun());
+				p.getInventory().setItem(19, primaryAmmo);
+			}
+
+			if (!secondary.equals(Main.shopManager.blankSecondary)) {
+				p.getInventory().setItem(2, secondary.getGun());
+				p.getInventory().setItem(25, secondaryAmmo);
+			}
+
+			if (Math.random() > 0.5 && !lethal.equals(Main.shopManager.blankLethal)) {
+				p.getInventory().setItem(3, lethal.getWeapon());
+			}
+
+			if (Math.random() > 0.5 && !lethal.equals(Main.shopManager.blankTactical)) {
+				p.getInventory().setItem(4, tactical.getWeapon());
+			}
 
 		} else if (getGamemode() == Gamemode.DOM
 				|| getGamemode() == Gamemode.CTF
@@ -382,23 +406,29 @@ public class GameInstance implements Listener {
 			p.getInventory().setItem(0, Main.loadManager.knife);
 
 			if (getGamemode() != Gamemode.INFECT || (getGamemode() == Gamemode.INFECT && blueTeam.contains(p))) {
-				p.getInventory().setItem(1, loadout.getPrimary().getGun());
-				p.getInventory().setItem(2, loadout.getSecondary().getGun());
-				p.getInventory().setItem(3, loadout.getLethal().getWeapon());
-				p.getInventory().setItem(4, loadout.getTactical().getWeapon());
+				if (!loadout.getPrimary().equals(Main.shopManager.blankPrimary)) {
+					p.getInventory().setItem(1, loadout.getPrimary().getGun());
+
+					ItemStack primaryAmmo = loadout.getPrimary().getAmmo();
+					primaryAmmo.setAmount(loadout.getPrimary().getAmmoCount());
+					p.getInventory().setItem(19, primaryAmmo);
+				}
+
+				if (!loadout.getSecondary().equals(Main.shopManager.blankSecondary)) {
+					p.getInventory().setItem(2, loadout.getSecondary().getGun());
+					if (!loadout.hasPerk(Perk.ONE_MAN_ARMY)) {
+						ItemStack secondaryAmmo = loadout.getSecondary().getAmmo();
+						secondaryAmmo.setAmount(loadout.getSecondary().getAmmoCount());
+						p.getInventory().setItem(25, secondaryAmmo);
+					}
+				}
+
+				if (!loadout.getLethal().equals(Main.shopManager.blankLethal))
+					p.getInventory().setItem(3, loadout.getLethal().getWeapon());
+
+				if (!loadout.getTactical().equals(Main.shopManager.blankTactical))
+					p.getInventory().setItem(4, loadout.getTactical().getWeapon());
 			}
-			// Ammo
-
-			ItemStack primaryAmmo = loadout.getPrimary().getAmmo();
-			primaryAmmo.setAmount(loadout.getPrimary().getAmmoCount());
-
-			if (!loadout.hasPerk(Perk.ONE_MAN_ARMY)) {
-				ItemStack secondaryAmmo = loadout.getSecondary().getAmmo();
-				secondaryAmmo.setAmount(loadout.getSecondary().getAmmoCount());
-				p.getInventory().setItem(25, secondaryAmmo);
-			}
-
-			p.getInventory().setItem(19, primaryAmmo);
 
 			if (getGamemode() == Gamemode.INFECT && redTeam.contains(p)) {
 				p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 20 * gameTime, 1));

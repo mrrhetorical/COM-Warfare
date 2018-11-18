@@ -40,6 +40,9 @@ maxScore:
   DESTROY: 4
   RESCUE: 4
 
+#OITC Gun: The gun to be used in One In The Chamber. If no gun is found by the name given, it will use the default secondary.
+OITC_Gun: 'default'
+
 #Rank Tiers: The tiers at which players can recieve different rewards. All players can get the default one. The permission for each tier are 'com.'
 RankTiers:
   0:

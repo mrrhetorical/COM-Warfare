@@ -154,8 +154,8 @@ public class LoadoutManager {
 
 		if (!GunsFile.getData().contains("Guns.Primary.default")) {
 
-			Main.sendMessage(Main.cs,  Main.codPrefix + "\u00A7cCan't start COM-Warfare without a default PRIMARY weapon!", Main.lang);
-			return null;
+//			Main.sendMessage(Main.cs,  Main.codPrefix + "\u00A7cCan't start COM-Warfare without a default PRIMARY weapon!", Main.lang);
+			return Main.shopManager.blankPrimary;
 		}
 
 		String gunName = GunsFile.getData().getString("Guns.Primary.default.name");
@@ -174,8 +174,9 @@ public class LoadoutManager {
 
 		if (!GunsFile.getData().contains("Guns.Secondary.default")) {
 
-			Main.sendMessage(Main.cs,  Main.codPrefix + "\u00A7cCan't start COM-Warfare without a default SECONDARY weapon!", Main.lang);
-			return null;
+//			Main.sendMessage(Main.cs,  Main.codPrefix + "\u00A7cCan't start COM-Warfare without a default SECONDARY weapon!", Main.lang);
+
+			return Main.shopManager.blankSecondary;
 		}
 
 		String gunName = GunsFile.getData().getString("Guns.Secondary.default.name");
@@ -194,8 +195,8 @@ public class LoadoutManager {
 
 		if (!GunsFile.getData().contains("Weapons.LETHAL.default")) {
 
-			Main.sendMessage(Main.cs,  Main.codPrefix + "\u00A7cCan't start COM-Warfare without a default LETHAL weapon!", Main.lang);
-			return null;
+//			Main.sendMessage(Main.cs,  Main.codPrefix + "\u00A7cCan't start COM-Warfare without a default LETHAL weapon!", Main.lang);
+			return Main.shopManager.blankLethal;
 		}
 
 		String weaponName = GunsFile.getData().getString("Weapons.LETHAL.default.name");
@@ -209,8 +210,8 @@ public class LoadoutManager {
 
 		if (!GunsFile.getData().contains("Weapons.TACTICAL.default")) {
 
-			Main.sendMessage(Main.cs,  Main.codPrefix + "\u00A7cCan't start COM-Warfare without a default TACTICAL weapon!", Main.lang);
-			return null;
+//			Main.sendMessage(Main.cs,  Main.codPrefix + "\u00A7cCan't start COM-Warfare without a default TACTICAL weapon!", Main.lang);
+			return Main.shopManager.blankTactical;
 		}
 
 		String weaponName = GunsFile.getData().getString("Weapons.TACTICAL.default.name");
@@ -222,19 +223,18 @@ public class LoadoutManager {
 
 	public boolean load(Player p) {
 
-		ArrayList<Loadout> l = new ArrayList<Loadout>();
+		ArrayList<Loadout> l = new ArrayList<>();
 
 		int k = 0;
 		while (LoadoutsFile.getData().contains("Loadouts." + p.getName() + "." + k)) {
 
-			Loadout loadout = null;
+			Loadout loadout;
 
 			String name = LoadoutsFile.getData().getString("Loadouts." + p.getName() + "." + k + ".Name");
 			CodGun primary = null;
 
 			for (CodGun gun : Main.shopManager.getPrimaryGuns()) {
-				if (gun.getName() == LoadoutsFile.getData()
-						.getString("Loadouts." + p.getName() + "." + k + ".Primary")) {
+				if (gun.getName().equals(LoadoutsFile.getData().getString("Loadouts." + p.getName() + "." + k + ".Primary"))) {
 					if (gun.getName().equals(
 							LoadoutsFile.getData().getString("Loadouts." + p.getName() + "." + k + ".Primary"))) {
 						primary = gun;
@@ -245,7 +245,7 @@ public class LoadoutManager {
 			CodGun secondary = null;
 
 			for (CodGun gun : Main.shopManager.getSecondaryGuns()) {
-				if (Objects.equals(gun.getName(), LoadoutsFile.getData().getString("Loadouts." + p.getName() + "." + k + ".Secondary"))) {
+				if (gun.getName().equals(LoadoutsFile.getData().getString("Loadouts." + p.getName() + "." + k + ".Secondary"))) {
 					if (gun.getName().equals(LoadoutsFile.getData().getString("Loadouts." + p.getName() + "." + k + ".Secondary"))) {
 						secondary = gun;
 					}
@@ -255,8 +255,7 @@ public class LoadoutManager {
 			CodWeapon lethal = null;
 
 			for (CodWeapon grenade : Main.shopManager.getLethalWeapons()) {
-				if (grenade.getName() == LoadoutsFile.getData()
-						.getString("Loadouts." + p.getName() + "." + k + ".Lethal")) {
+				if (grenade.getName().equals(LoadoutsFile.getData().getString("Loadouts." + p.getName() + "." + k + ".Lethal"))) {
 					if (grenade.getName().equals(
 							LoadoutsFile.getData().getString("Loadouts." + p.getName() + "." + k + ".Lethal"))) {
 						lethal = grenade;
@@ -267,8 +266,7 @@ public class LoadoutManager {
 			CodWeapon tactical = null;
 
 			for (CodWeapon grenade : Main.shopManager.getTacticalWeapons()) {
-				if (grenade.getName() == LoadoutsFile.getData()
-						.getString("Loadouts." + p.getName() + "." + k + ".tactical")) {
+				if (grenade.getName().equals(LoadoutsFile.getData().getString("Loadouts." + p.getName() + "." + k + ".tactical"))) {
 					tactical = grenade;
 				}
 			}
@@ -276,33 +274,6 @@ public class LoadoutManager {
 			CodPerk perkOne = null;
 			CodPerk perkTwo = null;
 			CodPerk perkThree = null;
-
-			/*
-			 * TODO: - Load perks from the config ======= if
-			 * (grenade.getName().equals(LoadoutsFile.getData().
-			 * getString("Loadouts." + p.getName() + "." + k + ".Tactical"))) {
-			 * tactical = grenade; } }
-			 * 
-			 * CodPerk perkOne = null, perkTwo = null, perkThree = null;
-			 * 
-			 * for (CodPerk perk : Main.perkManager.getAvailablePerks()) {
-			 * String perkNameOne = LoadoutsFile.getData().getString("Loadouts."
-			 * + p.getName() + "." + k + ".Perk1"); String perkNameTwo =
-			 * LoadoutsFile.getData().getString("Loadouts." + p.getName() + "."
-			 * + k + ".Perk2"); String perkNameThree =
-			 * LoadoutsFile.getData().getString("Loadouts." + p.getName() + "."
-			 * + k + ".Perk3");
-			 * 
-			 * if (perk.getPerk().getName().equals(perkNameOne)) { perkOne =
-			 * perk; } else if (perk.getPerk().getName().equals(perkNameTwo)) {
-			 * perkTwo = perk; } else if
-			 * (perk.getPerk().getName().equals(perkNameThree)) { perkThree =
-			 * perk; } }
-			 * 
-			 * /* TODO: - Load perks from the config >>>>>>>
-			 * 5daf9ae813811dfda7c476a3998e269335f6da14
-			 * 
-			 */
 
 			if (primary == null) {
 				primary = Main.loadManager.getDefaultPrimary();
@@ -412,10 +383,12 @@ public class LoadoutManager {
 
 	public CodGun getRandomPrimary() {
 		int size = Main.shopManager.getPrimaryGuns().size();
-		int position = 0;
+		int position;
 
 		if (size != 0) {
 			position = (int) Math.round(Math.random() * size);
+		} else {
+			return Main.shopManager.blankPrimary;
 		}
 
 		return Main.shopManager.getPrimaryGuns().get(position);
@@ -423,10 +396,12 @@ public class LoadoutManager {
 
 	public CodGun getRandomSecondary() {
 		int size = Main.shopManager.getSecondaryGuns().size();
-		int position = 0;
+		int position;
 
 		if (size != 0) {
 			position = (int) Math.round(Math.random() * size);
+		} else {
+			return Main.shopManager.blankSecondary;
 		}
 
 		return Main.shopManager.getSecondaryGuns().get(position);
@@ -434,10 +409,12 @@ public class LoadoutManager {
 
 	public CodWeapon getRandomLethal() {
 		int size = Main.shopManager.getLethalWeapons().size();
-		int position = 0;
+		int position;
 
 		if (size != 0) {
 			position = (int) Math.round(Math.random() * size);
+		} else {
+			return Main.shopManager.blankLethal;
 		}
 
 		return Main.shopManager.getLethalWeapons().get(position);
@@ -445,10 +422,12 @@ public class LoadoutManager {
 
 	public CodWeapon getRandomTactical() {
 		int size = Main.shopManager.getTacticalWeapons().size();
-		int position = 0;
+		int position;
 
 		if (size != 0) {
 			position = (int) Math.round(Math.random() * size);
+		} else {
+			return Main.shopManager.blankTactical;
 		}
 
 		return Main.shopManager.getTacticalWeapons().get(position);

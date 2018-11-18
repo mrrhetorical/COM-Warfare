@@ -241,7 +241,6 @@ public class Main extends JavaPlugin {
 					try {
 						amount = Integer.parseInt(args[1]);
 					} catch (Exception e) {
-						amount = 0;
 						sendMessage(cs, Main.codPrefix + "Incorrect usage! Proper usage: '/cod giveCredits {name} [amount]");
 						return true;
 
@@ -255,7 +254,6 @@ public class Main extends JavaPlugin {
 					try {
 						amount = Integer.parseInt(args[1]);
 					} catch (Exception e) {
-						amount = 0;
 						sendMessage(cs, Main.codPrefix + "Incorrect usage! Proper usage: '/cod setCredits {name} [amount]'");
 						return true;
 					}
