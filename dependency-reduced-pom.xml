@@ -4,7 +4,7 @@
   <groupId>com.rhetorical</groupId>
   <artifactId>com-warfare</artifactId>
   <name>COM-Warfare</name>
-  <version>RELEASE-2.4.${v}</version>
+  <version>RELEASE-2.5.${v}</version>
   <build>
     <resources>
       <resource>
@@ -55,7 +55,7 @@
             <artifactId>maven-jar-plugin</artifactId>
             <version>2.3.2</version>
             <configuration>
-              <finalName>com-warfare-2.4.${v}-1.12</finalName>
+              <finalName>com-warfare-2.5.${v}-1.12</finalName>
             </configuration>
           </plugin>
           <plugin>
@@ -133,12 +133,12 @@
                   <goal>jar</goal>
                 </goals>
                 <configuration>
-                  <finalName>com-warfare-2.4.${v}-1.13</finalName>
+                  <finalName>com-warfare-2.5.${v}-1.13</finalName>
                 </configuration>
               </execution>
             </executions>
             <configuration>
-              <finalName>com-warfare-2.4.${v}-1.13</finalName>
+              <finalName>com-warfare-2.5.${v}-1.13</finalName>
             </configuration>
           </plugin>
         </plugins>

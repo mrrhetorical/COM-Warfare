@@ -35,39 +35,7 @@ public class ShopManager {
 	public HashMap<Player, Inventory> weaponShop = new HashMap<>();
 	public HashMap<Player, Inventory> perkShop = new HashMap<>();
 
-	public CodGun blankPrimary,
-			blankSecondary;
-
-	public CodWeapon blankLethal,
-			blankTactical;
-
-	private ItemStack emptyPrimary = new ItemStack(Material.BARRIER);
-	private ItemStack emptySecondary = new ItemStack(Material.BARRIER);
-	private ItemStack emptyLethal = new ItemStack(Material.BARRIER);
-	private ItemStack emptyTactical = new ItemStack(Material.BARRIER);
-
 	ShopManager() {
-
-		ItemMeta primaryMeta = emptyPrimary.getItemMeta(),
-				secondaryMeta = emptySecondary.getItemMeta(),
-				lethalMeta = emptyLethal.getItemMeta(),
-				tacticalMeta = emptyTactical.getItemMeta();
-
-		primaryMeta.setDisplayName(ChatColor.RED + "No Primary");
-		secondaryMeta.setDisplayName(ChatColor.RED + "No Secondary");
-		lethalMeta.setDisplayName(ChatColor.RED + "No Lethal");
-		tacticalMeta.setDisplayName(ChatColor.RED + "No Tactical");
-
-		blankPrimary = new CodGun("No Primary", GunType.Primary, UnlockType.LEVEL, 0, new ItemStack(Material.AIR), emptyPrimary, 0);
-		blankSecondary = new CodGun("No Secondary", GunType.Secondary, UnlockType.LEVEL, 0, new ItemStack(Material.AIR), emptySecondary, 0);
-		blankLethal = new CodWeapon("No Lethal", WeaponType.LETHAL, UnlockType.LEVEL, emptyLethal, 0);
-		blankTactical = new CodWeapon("No Tactical", WeaponType.TACTICAL, UnlockType.LEVEL, emptyTactical, 0);
-
-		emptyPrimary.setItemMeta(primaryMeta);
-		emptySecondary.setItemMeta(secondaryMeta);
-		emptyLethal.setItemMeta(lethalMeta);
-		emptyTactical.setItemMeta(tacticalMeta);
-
 
 		this.loadGuns();
 		this.loadWeapons();

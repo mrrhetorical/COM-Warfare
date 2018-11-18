@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Objects;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -29,7 +30,39 @@ public class LoadoutManager {
 
 	public ItemStack knife;
 
+	public CodGun blankPrimary,
+			blankSecondary;
+
+	public CodWeapon blankLethal,
+			blankTactical;
+
+	private ItemStack emptyPrimary = new ItemStack(Material.BARRIER);
+	private ItemStack emptySecondary = new ItemStack(Material.BARRIER);
+	private ItemStack emptyLethal = new ItemStack(Material.BARRIER);
+	private ItemStack emptyTactical = new ItemStack(Material.BARRIER);
+
 	LoadoutManager(HashMap<Player, ArrayList<Loadout>> pL) {
+
+		ItemMeta primaryMeta = emptyPrimary.getItemMeta(),
+				secondaryMeta = emptySecondary.getItemMeta(),
+				lethalMeta = emptyLethal.getItemMeta(),
+				tacticalMeta = emptyTactical.getItemMeta();
+
+		primaryMeta.setDisplayName(ChatColor.RED + "No Primary");
+		secondaryMeta.setDisplayName(ChatColor.RED + "No Secondary");
+		lethalMeta.setDisplayName(ChatColor.RED + "No Lethal");
+		tacticalMeta.setDisplayName(ChatColor.RED + "No Tactical");
+
+		blankPrimary = new CodGun("No Primary", GunType.Primary, UnlockType.LEVEL, 0, new ItemStack(Material.AIR), emptyPrimary, 0);
+		blankSecondary = new CodGun("No Secondary", GunType.Secondary, UnlockType.LEVEL, 0, new ItemStack(Material.AIR), emptySecondary, 0);
+		blankLethal = new CodWeapon("No Lethal", WeaponType.LETHAL, UnlockType.LEVEL, emptyLethal, 0);
+		blankTactical = new CodWeapon("No Tactical", WeaponType.TACTICAL, UnlockType.LEVEL, emptyTactical, 0);
+
+		emptyPrimary.setItemMeta(primaryMeta);
+		emptySecondary.setItemMeta(secondaryMeta);
+		emptyLethal.setItemMeta(lethalMeta);
+		emptyTactical.setItemMeta(tacticalMeta);
+
 		this.playerLoadouts = pL;
 		for (Player p : Bukkit.getOnlinePlayers()) {
 			allowedClasses.put(p, getAllowedClasses(p));
@@ -155,7 +188,7 @@ public class LoadoutManager {
 		if (!GunsFile.getData().contains("Guns.Primary.default")) {
 
 //			Main.sendMessage(Main.cs,  Main.codPrefix + "\u00A7cCan't start COM-Warfare without a default PRIMARY weapon!", Main.lang);
-			return Main.shopManager.blankPrimary;
+			return blankPrimary;
 		}
 
 		String gunName = GunsFile.getData().getString("Guns.Primary.default.name");
@@ -176,7 +209,7 @@ public class LoadoutManager {
 
 //			Main.sendMessage(Main.cs,  Main.codPrefix + "\u00A7cCan't start COM-Warfare without a default SECONDARY weapon!", Main.lang);
 
-			return Main.shopManager.blankSecondary;
+			return blankSecondary;
 		}
 
 		String gunName = GunsFile.getData().getString("Guns.Secondary.default.name");
@@ -196,7 +229,7 @@ public class LoadoutManager {
 		if (!GunsFile.getData().contains("Weapons.LETHAL.default")) {
 
 //			Main.sendMessage(Main.cs,  Main.codPrefix + "\u00A7cCan't start COM-Warfare without a default LETHAL weapon!", Main.lang);
-			return Main.shopManager.blankLethal;
+			return blankLethal;
 		}
 
 		String weaponName = GunsFile.getData().getString("Weapons.LETHAL.default.name");
@@ -211,7 +244,7 @@ public class LoadoutManager {
 		if (!GunsFile.getData().contains("Weapons.TACTICAL.default")) {
 
 //			Main.sendMessage(Main.cs,  Main.codPrefix + "\u00A7cCan't start COM-Warfare without a default TACTICAL weapon!", Main.lang);
-			return Main.shopManager.blankTactical;
+			return blankTactical;
 		}
 
 		String weaponName = GunsFile.getData().getString("Weapons.TACTICAL.default.name");
@@ -388,7 +421,7 @@ public class LoadoutManager {
 		if (size != 0) {
 			position = (int) Math.round(Math.random() * size);
 		} else {
-			return Main.shopManager.blankPrimary;
+			return blankPrimary;
 		}
 
 		return Main.shopManager.getPrimaryGuns().get(position);
@@ -401,7 +434,7 @@ public class LoadoutManager {
 		if (size != 0) {
 			position = (int) Math.round(Math.random() * size);
 		} else {
-			return Main.shopManager.blankSecondary;
+			return blankSecondary;
 		}
 
 		return Main.shopManager.getSecondaryGuns().get(position);
@@ -414,7 +447,7 @@ public class LoadoutManager {
 		if (size != 0) {
 			position = (int) Math.round(Math.random() * size);
 		} else {
-			return Main.shopManager.blankLethal;
+			return blankLethal;
 		}
 
 		return Main.shopManager.getLethalWeapons().get(position);
@@ -427,7 +460,7 @@ public class LoadoutManager {
 		if (size != 0) {
 			position = (int) Math.round(Math.random() * size);
 		} else {
-			return Main.shopManager.blankTactical;
+			return blankTactical;
 		}
 
 		return Main.shopManager.getTacticalWeapons().get(position);

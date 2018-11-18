@@ -132,12 +132,12 @@ public class Main extends JavaPlugin {
 		getPlugin().reloadConfig();
 
 		progManager = new ProgressionManager();
-		loadManager = new LoadoutManager(new HashMap<>());
 		perkManager = new PerkManager();
-		invManager = new InventoryManager();
+		loadManager = new LoadoutManager(new HashMap<>());
 		shopManager = new ShopManager();
 		perkListener = new PerkListener();
 		killstreakManager = new KillStreakManager();
+		invManager = new InventoryManager();
 
 		KillStreakManager.setup();
 

@@ -397,21 +397,21 @@ public class GameInstance implements Listener {
 
 
 			p.getInventory().setItem(0, Main.loadManager.knife);
-			if (!primary.equals(Main.shopManager.blankPrimary)) {
+			if (!primary.equals(Main.loadManager.blankPrimary)) {
 				p.getInventory().setItem(1, primary.getGun());
 				p.getInventory().setItem(19, primaryAmmo);
 			}
 
-			if (!secondary.equals(Main.shopManager.blankSecondary)) {
+			if (!secondary.equals(Main.loadManager.blankSecondary)) {
 				p.getInventory().setItem(2, secondary.getGun());
 				p.getInventory().setItem(25, secondaryAmmo);
 			}
 
-			if (Math.random() > 0.5 && !lethal.equals(Main.shopManager.blankLethal)) {
+			if (Math.random() > 0.5 && !lethal.equals(Main.loadManager.blankLethal)) {
 				p.getInventory().setItem(3, lethal.getWeapon());
 			}
 
-			if (Math.random() > 0.5 && !lethal.equals(Main.shopManager.blankTactical)) {
+			if (Math.random() > 0.5 && !lethal.equals(Main.loadManager.blankTactical)) {
 				p.getInventory().setItem(4, tactical.getWeapon());
 			}
 
@@ -427,7 +427,7 @@ public class GameInstance implements Listener {
 			p.getInventory().setItem(0, Main.loadManager.knife);
 
 			if (getGamemode() != Gamemode.INFECT || (getGamemode() == Gamemode.INFECT && blueTeam.contains(p))) {
-				if (!loadout.getPrimary().equals(Main.shopManager.blankPrimary)) {
+				if (!loadout.getPrimary().equals(Main.loadManager.blankPrimary)) {
 					p.getInventory().setItem(1, loadout.getPrimary().getGun());
 
 					ItemStack primaryAmmo = loadout.getPrimary().getAmmo();
@@ -435,7 +435,7 @@ public class GameInstance implements Listener {
 					p.getInventory().setItem(19, primaryAmmo);
 				}
 
-				if (!loadout.getSecondary().equals(Main.shopManager.blankSecondary)) {
+				if (!loadout.getSecondary().equals(Main.loadManager.blankSecondary)) {
 					p.getInventory().setItem(2, loadout.getSecondary().getGun());
 					if (!loadout.hasPerk(Perk.ONE_MAN_ARMY)) {
 						ItemStack secondaryAmmo = loadout.getSecondary().getAmmo();
@@ -444,10 +444,10 @@ public class GameInstance implements Listener {
 					}
 				}
 
-				if (!loadout.getLethal().equals(Main.shopManager.blankLethal))
+				if (!loadout.getLethal().equals(Main.loadManager.blankLethal))
 					p.getInventory().setItem(3, loadout.getLethal().getWeapon());
 
-				if (!loadout.getTactical().equals(Main.shopManager.blankTactical))
+				if (!loadout.getTactical().equals(Main.loadManager.blankTactical))
 					p.getInventory().setItem(4, loadout.getTactical().getWeapon());
 			}
 
