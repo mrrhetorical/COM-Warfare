@@ -245,6 +245,9 @@ public class GameInstance implements Listener {
 					}
 				}
 			}
+		} else {
+			p.getInventory().setItem(0, Main.invManager.codItem);
+			p.getInventory().setItem(8, Main.invManager.leaveItem);
 		}
 
 		if ((players.size() >= Main.minPlayers) && getState() == GameState.WAITING) {

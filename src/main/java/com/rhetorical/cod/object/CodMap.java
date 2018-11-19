@@ -221,7 +221,7 @@ public class CodMap {
 
 	// Gets a random gamemode from the list of available gamemodes
 	public Gamemode changeGamemode() {
-		int index = (int) Math.round(Math.random() * availableGamemodes.size() - 1);
+		int index = (int) Math.floor(Math.random() * availableGamemodes.size() - 1);
 
 
 		//TEMP until OITC and GUN are fully implemented.
