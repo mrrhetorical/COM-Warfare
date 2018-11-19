@@ -139,8 +139,6 @@ public class Main extends JavaPlugin {
 
 		Bukkit.getServer().getPluginManager().registerEvents(new Listeners(), getPlugin());
 
-		// Set up all plugin functions loaded from the config are below.
-
 		GameManager.loadMaps();
 
 		for (Player p : Bukkit.getOnlinePlayers()) {
