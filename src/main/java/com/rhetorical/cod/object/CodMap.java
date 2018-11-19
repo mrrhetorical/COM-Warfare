@@ -221,13 +221,15 @@ public class CodMap {
 
 	// Gets a random gamemode from the list of available gamemodes
 	public Gamemode changeGamemode() {
-		int index = (int) Math.round(Math.random() * availableGamemodes.size());
+		int index = (int) Math.round(Math.random() * availableGamemodes.size() - 1);
 
-		if (availableGamemodes.get(index) != null) {
-			currentGamemode = availableGamemodes.get(index);
-			return availableGamemodes.get(index);
+
+		//TEMP until OITC and GUN are fully implemented.
+		if (availableGamemodes.get(index) == Gamemode.OITC || availableGamemodes.get(index) == Gamemode.GUN) {
+			return Gamemode.FFA;
 		}
-		else return null;
+
+		return availableGamemodes.get(index);
 	}
 
 	public Location getAFlagSpawn() {

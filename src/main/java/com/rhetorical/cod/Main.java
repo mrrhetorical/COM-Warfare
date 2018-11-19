@@ -6,10 +6,7 @@ import com.rhetorical.cod.object.*;
 import com.rhetorical.tpp.McLang;
 import com.rhetorical.tpp.api.McTranslate;
 import org.bstats.bukkit.Metrics;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.Material;
+import org.bukkit.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
@@ -53,7 +50,7 @@ public class Main extends JavaPlugin {
 	private static ArrayList<RankPerks> serverRanks = new ArrayList<>();
 
 	public static Location lobbyLoc;
-	private static HashMap<Player, Location> lastLoc = new HashMap<>();
+	public static HashMap<Player, Location> lastLoc = new HashMap<>();
 
 	private Metrics bMetrics;
 
@@ -286,7 +283,7 @@ public class Main extends JavaPlugin {
 		p = (Player) sender;
 
 		if (args.length == 0) {
-			p.openInventory(invManager.mainInventory);
+			openMainMenu(p);
 			return true;
 		} else if (args.length >= 1) {
 			if (args[0].equalsIgnoreCase("help") && hasPerm(p, "com.help")) {
@@ -926,6 +923,11 @@ public class Main extends JavaPlugin {
 
 	public static void sendActionBar(Player p, String message) {
 		//TODO: Implement
+	}
+
+	public static void openMainMenu(Player p) {
+		p.openInventory(invManager.mainInventory);
+		p.playSound(p.getLocation(), Sound.BLOCK_CHEST_OPEN, 4f, 1f);
 	}
 
 	public static String getTranslatorApiKey() {

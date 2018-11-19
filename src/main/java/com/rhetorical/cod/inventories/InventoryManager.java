@@ -2,14 +2,19 @@ package com.rhetorical.cod.inventories;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.TreeMap;
 
+import com.rhetorical.cod.object.*;
+import org.bukkit.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -18,17 +23,9 @@ import com.rhetorical.cod.CreditManager;
 import com.rhetorical.cod.GameManager;
 import com.rhetorical.cod.Main;
 import com.rhetorical.cod.StatHandler;
-import com.rhetorical.cod.object.CodGun;
-import com.rhetorical.cod.object.CodPerk;
-import com.rhetorical.cod.object.CodWeapon;
-import com.rhetorical.cod.object.GunType;
-import com.rhetorical.cod.object.KillStreak;
-import com.rhetorical.cod.object.KillStreakManager;
-import com.rhetorical.cod.object.Loadout;
-import com.rhetorical.cod.object.Perk;
-import com.rhetorical.cod.object.PerkSlot;
-import com.rhetorical.cod.object.UnlockType;
-import com.rhetorical.cod.object.WeaponType;
+
+import static com.rhetorical.cod.Main.lastLoc;
+import static com.rhetorical.cod.Main.lobbyLoc;
 
 public class InventoryManager implements Listener {
 
@@ -53,6 +50,9 @@ public class InventoryManager implements Listener {
 	private ItemStack gunShopItem = new ItemStack(Material.CHEST);
 	private ItemStack grenadeShopItem = new ItemStack(Material.CHEST);
 	private ItemStack perkShopItem = new ItemStack(Material.CHEST);
+
+	public ItemStack codItem = new ItemStack(Material.ENDER_PEARL);
+	public ItemStack leaveItem = new ItemStack(Material.BARRIER);
 
 	public boolean shouldCancelClick(Inventory i, Player p) {
 		if (i.equals(mainInventory)) {
@@ -81,16 +81,32 @@ public class InventoryManager implements Listener {
 		mainShopInventory = Bukkit.createInventory(null, 9, "Shop Menu");
 		leaderboardInventory = Bukkit.createInventory(null, 36, "Leaderboard");
 
-		setupCloseInvButton();
+		setupStaticItems();
 		setupMainInventories();
 
 		Bukkit.getServer().getPluginManager().registerEvents(this, Main.getPlugin());
 	}
 
-	private void setupCloseInvButton() {
+	private void setupStaticItems() {
 		ItemMeta closeInvMeta = closeInv.getItemMeta();
-		closeInvMeta.setDisplayName("\u00A7c\u00A7lClose");
+		closeInvMeta.setDisplayName(ChatColor.RED + "" +  ChatColor.BOLD + "Close");
 		closeInv.setItemMeta(closeInvMeta);
+
+		ItemMeta leaveMeta = leaveItem.getItemMeta();
+		leaveMeta.setDisplayName("" + ChatColor.RED + ChatColor.BOLD + "Leave Game");
+		List<String> leaveLore = new ArrayList<>();
+		leaveLore.add(ChatColor.GOLD + "Right or left click this");
+		leaveLore.add(ChatColor.GOLD + "item to leave the lobby.");
+		leaveMeta.setLore(leaveLore);
+		leaveItem.setItemMeta(leaveMeta);
+
+		ItemMeta codMeta = codItem.getItemMeta();
+		codMeta.setDisplayName("" + ChatColor.GOLD + ChatColor.BOLD + "Open Menu");
+		List<String> codLore = new ArrayList<>();
+		codLore.add(ChatColor.WHITE + "Right or left click this");
+		codLore.add(ChatColor.WHITE + "item to open the cod menu.");
+		codMeta.setLore(codLore);
+		codItem.setItemMeta(codMeta);
 	}
 
 	public void setupBackInvButton() {
@@ -1108,6 +1124,32 @@ public class InventoryManager implements Listener {
 
 		}
 
+	}
+
+	@EventHandler
+	public void itemUseListener(PlayerInteractEvent e) {
+		if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK || e.getAction() == Action.LEFT_CLICK_AIR || e.getAction() == Action.LEFT_CLICK_BLOCK) {
+
+			if (e.getPlayer().getInventory().getItemInMainHand().equals(leaveItem) || e.getPlayer().getInventory().getItemInOffHand().equals(leaveItem)) {
+				if (!GameManager.isInMatch(e.getPlayer())) return;
+				GameManager.leaveMatch(e.getPlayer());
+				if (Main.lastLoc.containsKey(e.getPlayer())) {
+					e.getPlayer().teleport(lastLoc.get(e.getPlayer()));
+					lastLoc.remove(e.getPlayer());
+				} else {
+					if (lobbyLoc != null) {
+						e.getPlayer().teleport(lobbyLoc);
+					}
+				}
+				e.setCancelled(true);
+				return;
+			}
+			if (e.getPlayer().getInventory().getItemInMainHand().equals(codItem) || e.getPlayer().getInventory().getItemInOffHand().equals(codItem)) {
+				Main.openMainMenu(e.getPlayer());
+				e.setCancelled(true);
+//				return;
+			}
+		}
 	}
 
 }

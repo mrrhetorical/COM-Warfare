@@ -127,7 +127,7 @@ public class GameManager {
 		// Found match!
 	}
 
-	static void leaveMatch(Player p) {
+	public static void leaveMatch(Player p) {
 		for (GameInstance i : RunningGames) {
 			if (i.getPlayers().contains(p)) {
 				i.removePlayer(p);
@@ -153,7 +153,7 @@ public class GameManager {
 
 	}
 	
-	static GameInstance getMatchWhichContains(Player p) {
+	public static GameInstance getMatchWhichContains(Player p) {
 		for (GameInstance game : RunningGames) {
 			if(game.getPlayers().contains(p)) {
 				return game;

@@ -641,6 +641,8 @@ public class GameInstance implements Listener {
 		scoreBar.removeAll();
 		for (Player p : players) {
 			scoreBar.addPlayer(p);
+			p.getInventory().setItem(0, Main.invManager.codItem);
+			p.getInventory().setItem(8, Main.invManager.leaveItem);
 		}
 
 		GameInstance game = this;
