@@ -226,10 +226,12 @@ public class CodMap {
 
 		//TEMP until OITC and GUN are fully implemented.
 		if (availableGamemodes.get(index) == Gamemode.OITC || availableGamemodes.get(index) == Gamemode.GUN) {
+			currentGamemode = Gamemode.FFA;
 			return Gamemode.FFA;
 		}
 
-		return availableGamemodes.get(index);
+		currentGamemode = availableGamemodes.get(index);
+		return getGamemode();
 	}
 
 	public Location getAFlagSpawn() {
