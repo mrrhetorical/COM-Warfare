@@ -10,6 +10,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 import com.rhetorical.cod.object.GameInstance;
@@ -35,6 +36,16 @@ public class Listeners implements Listener {
 				i.removePlayer(p);
 				break;
 			}
+		}
+	}
+
+	@EventHandler
+	public void playerJoinGame(PlayerJoinEvent e) {
+		Player p = e.getPlayer();
+		CreditManager.loadCredits(p);
+
+		if (Main.serverMode) {
+			GameManager.findMatch(p);
 		}
 	}
 

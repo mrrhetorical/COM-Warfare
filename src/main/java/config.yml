@@ -4,6 +4,8 @@ prefix: [COM]
 auto-download-dependency: false
 #Lang: The two letter abbreviation for what language the plugin will be translated to. Set to 'none' if you don't want to use the translation service. Default: EN {PREMIUM-ONLY}
 lang: EN
+#Server Mode: If set to true, when joining the server, players will be automatically put into a match.
+serverMode: false
 #Lobby Time: The amount of time players should wait in the lobby before the match starts.
 lobbyTime: 70
 #Players: the min and max amount of players allowed in a single game. Default range:  (2, 12) {PREMIUM-ONLY}

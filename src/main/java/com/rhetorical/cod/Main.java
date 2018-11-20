@@ -45,6 +45,8 @@ public class Main extends JavaPlugin {
 	public static int minPlayers = 6;
 	public static int maxPlayers = 12;
 
+	public static boolean serverMode = false;
+
 	public static double defaultHealth = 20D;
 
 	private static ArrayList<RankPerks> serverRanks = new ArrayList<>();
@@ -151,6 +153,7 @@ public class Main extends JavaPlugin {
 		if (ComVersion.getPurchased()) {
 			minPlayers = getPlugin().getConfig().getInt("players.min");
 			maxPlayers = getPlugin().getConfig().getInt("players.max");
+			serverMode = getPlugin().getConfig().getBoolean("serverMode");
 			defaultHealth = getPlugin().getConfig().getDouble("defaultHealth");
 			translate_api_key = getPlugin().getConfig().getString("translate.api_key");
 		}
@@ -318,6 +321,7 @@ public class Main extends JavaPlugin {
 						break;
 					case 2:
 						sendMessage(p, cColor + "/cod set [lobby/spawn/flag] | " + dColor + "Opens a page in the help menu.");
+						sendMessage(p, cColor + "/cod balance | " + dColor + "Shows your credit balance.");
 						sendMessage(p, cColor + "/cod credits give | " + dColor + "Gives credits to a person.");
 						sendMessage(p, cColor + "/cod credits set | " + dColor + "Sets amount of credits for a player.");
 						sendMessage(p, cColor + "/cod lobby | " + dColor + "Teleports you to the lobby.");
@@ -570,6 +574,9 @@ public class Main extends JavaPlugin {
 				} else {
 					sendMessage(p, Main.codPrefix + "\u00A7cThere's no lobby to send you to!", lang);
 				}
+			} else if (args[0].equalsIgnoreCase("balance")) {
+				int credits = CreditManager.getCredits(p);
+				sendMessage(p, codPrefix + ChatColor.GREEN + "You have " + credits + " credits!", lang);
 			} else if (args[0].equalsIgnoreCase("credits")) {
 				if (!(args.length >= 3)) {
 					sendMessage(p, Main.codPrefix + "\u00A7cIncorrect usage! Proper usage: '/cod credits [give/set] {player} (amount)'");

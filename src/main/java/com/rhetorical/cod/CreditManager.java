@@ -40,6 +40,7 @@ public class CreditManager {
 	}
 
 	public static int getCredits(Player p) {
+		loadCredits(p);
 		if (!creditMap.containsKey(p)) {
 			creditMap.put(p, 0);
 			return 0;
@@ -50,14 +51,15 @@ public class CreditManager {
 	
 	static int getCredits(String name) {
 		
-		if (Bukkit.getPlayer(name) != null) {
+		if (Bukkit.getPlayer(name) == null) {
 			return -1;
 		}
 		
 		Player p = Bukkit.getPlayer(name);
-		
+
 		if (!creditMap.containsKey(p)) {
 			creditMap.put(p, 0);
+			saveCredits(p);
 			return 0;
 		} else {
 			return creditMap.get(p);
