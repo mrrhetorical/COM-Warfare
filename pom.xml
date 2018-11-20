@@ -4,7 +4,7 @@
     <groupId>com.rhetorical</groupId>
     <artifactId>com-warfare</artifactId>
     <packaging>jar</packaging>
-    <version>RELEASE-2.6.1</version>
+    <version>RELEASE-2.6.2</version>
     <name>COM-Warfare</name>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
