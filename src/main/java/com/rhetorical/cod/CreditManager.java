@@ -24,10 +24,12 @@ public class CreditManager {
 	}
 
 	private static void saveCredits(Player p) {
-		int k = 0;
+		int k;
 		for (k = 0; CreditsFile.getData().contains("Credits.players." + k); k++) {
 			if (p.getName().equals(CreditsFile.getData().get("Credits.players." + k + ".player"))) {
 				CreditsFile.getData().set("Credits.players." + k + ".amount", getCredits(p));
+				CreditsFile.saveData();
+				CreditsFile.reloadData();
 				return;
 			}
 		}
@@ -40,7 +42,6 @@ public class CreditManager {
 	}
 
 	public static int getCredits(Player p) {
-		loadCredits(p);
 		if (!creditMap.containsKey(p)) {
 			creditMap.put(p, 0);
 			return 0;
