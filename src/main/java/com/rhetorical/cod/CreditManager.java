@@ -73,7 +73,7 @@ public class CreditManager {
 	}
 	
 	static void setCredits(String name, int amt) {
-		if (Bukkit.getPlayer(name) != null) {
+		if (Bukkit.getPlayer(name) == null) {
 			return;
 		}
 		
