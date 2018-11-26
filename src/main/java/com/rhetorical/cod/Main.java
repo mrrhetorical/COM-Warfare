@@ -937,7 +937,12 @@ public class Main extends JavaPlugin {
 
 	public static void openMainMenu(Player p) {
 		p.openInventory(invManager.mainInventory);
-		p.playSound(p.getLocation(), Sound.BLOCK_CHEST_OPEN, 4f, 1f);
+		try {
+			p.playSound(p.getLocation(), Sound.BLOCK_CHEST_OPEN, 4f, 1f);
+		}catch(Exception e) {
+			//fail silently and play legacy sound
+			p.playSound(p.getLocation(), Sound.valueOf("CHEST_OPEN"), 4f, 1f);
+		}
 	}
 
 	public static String getTranslatorApiKey() {

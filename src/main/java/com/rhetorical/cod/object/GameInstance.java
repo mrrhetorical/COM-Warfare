@@ -2,6 +2,7 @@ package com.rhetorical.cod.object;
 
 import com.rhetorical.cod.*;
 import org.bukkit.*;
+import org.bukkit.block.Banner;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
@@ -397,13 +398,29 @@ public class GameInstance implements Listener {
 	private void setupFlags(boolean red, boolean blue) {
 		if (red) {
 			Location spawn = currentMap.getRedFlagSpawn();
-			ItemStack flag = new ItemStack(Material.valueOf("RED_BANNER"));
+			ItemStack flag;
+			try {
+				flag = new ItemStack(Material.RED_BANNER);
+			} catch(Exception e) {
+				flag = new ItemStack(Material.valueOf("BANNER"));
+				Banner banner = (Banner) flag.getData();
+				banner.setBaseColor(DyeColor.RED);
+				banner.update();
+			}
 			redFlag = spawn.getWorld().dropItem(spawn, flag);
 		}
 
 		if (blue) {
 			Location spawn = currentMap.getBlueFlagSpawn();
-			ItemStack flag = new ItemStack(Material.valueOf("BLUE_BANNER"));
+			ItemStack flag;
+			try {
+				flag = new ItemStack(Material.BLUE_BANNER);
+			} catch(Exception e) {
+				flag = new ItemStack(Material.valueOf("BANNER"));
+				Banner banner = (Banner) flag.getData();
+				banner.setBaseColor(DyeColor.BLUE);
+				banner.update();
+			}
 			blueFlag = spawn.getWorld().dropItem(spawn, flag);
 		}
 	}
@@ -1333,18 +1350,28 @@ public class GameInstance implements Listener {
 
 		ItemStack heldWeapon = attacker.getInventory().getItemInMainHand();
 
-		if (heldWeapon.getType() == Material.DIAMOND_SWORD || heldWeapon.getType() == Material.GOLDEN_SWORD || heldWeapon.getType() == Material.IRON_SWORD || heldWeapon.getType() == Material.STONE_SWORD || heldWeapon.getType() == Material.WOODEN_SWORD) {
+		Material gSwordMat;
+		Material wSwordMat;
+
+		try {
+			gSwordMat = Material.GOLDEN_SWORD;
+		} catch(Exception silent) {
+			gSwordMat = Material.valueOf("GOLD_SWORD");
+		}
+
+		try {
+			wSwordMat = Material.WOODEN_SWORD;
+		} catch(Exception silent) {
+			wSwordMat = Material.valueOf("WOOD_SWORD");
+		}
+
+		if (heldWeapon.getType() == Material.DIAMOND_SWORD || heldWeapon.getType() == gSwordMat || heldWeapon.getType() == Material.IRON_SWORD || heldWeapon.getType() == Material.STONE_SWORD || heldWeapon.getType() == wSwordMat) {
 			damage = Main.defaultHealth;
 		} else {
 			damage = Math.round(Main.defaultHealth / 4);
 		}
 
 		health.damage(victim, damage);
-
-		//TODO:
-		// - Send kill notification messages to players above action bar
-		// - Add GunGame support
-		// - Add one in the chamber support
 
 		if (health.isDead(victim)) {
 			if (!Main.loadManager.getCurrentLoadout(victim).hasPerk(Perk.LAST_STAND)) {
@@ -1564,14 +1591,30 @@ public class GameInstance implements Listener {
 		if (blueFlagHolder != null) {
 
 
-			ItemStack flag = new ItemStack(Material.RED_BANNER);
+			ItemStack flag;
+			try {
+				flag = new ItemStack(Material.RED_BANNER);
+			} catch(Exception e) {
+				flag = new ItemStack(Material.valueOf("BANNER"));
+				Banner banner = (Banner) flag.getData();
+				banner.setBaseColor(DyeColor.RED);
+				banner.update();
+			}
 
 			blueFlagHolder.getInventory().setHelmet(flag);
 		}
 
 		if(redFlagHolder != null) {
 
-			ItemStack flag = new ItemStack(Material.BLUE_BANNER);
+			ItemStack flag;
+			try {
+				flag = new ItemStack(Material.BLUE_BANNER);
+			} catch(Exception e) {
+				flag = new ItemStack(Material.valueOf("BANNER"));
+				Banner banner = (Banner) flag.getData();
+				banner.setBaseColor(DyeColor.BLUE);
+				banner.update();
+			}
 
 			redFlagHolder.getInventory().setHelmet(flag);
 		}

@@ -222,7 +222,12 @@ public class InventoryManager implements Listener {
 
 		mainInventory.setItem(9, shopItem);
 
-		ItemStack gunItem = new ItemStack(Material.WOODEN_HOE);
+		ItemStack gunItem;
+		try {
+			gunItem = new ItemStack(Material.WOODEN_HOE);
+		} catch(Exception e) {
+			gunItem = new ItemStack(Material.valueOf("WOOD_HOE"));
+		}
 		ItemMeta gunMeta = gunItem.getItemMeta();
 		gunMeta.setDisplayName("\u00A79Gun Shop");
 		ArrayList<String> gunLore = new ArrayList<>();
@@ -279,7 +284,12 @@ public class InventoryManager implements Listener {
 
 			Loadout loadout = Main.loadManager.getLoadouts(p).get(i);
 
-			ItemStack header = new ItemStack(Material.CRAFTING_TABLE);
+			ItemStack header;
+			try {
+				header = new ItemStack(Material.CRAFTING_TABLE);
+			} catch(Exception e) {
+				header = new ItemStack(Material.valueOf("WORKBENCH"));
+			}
 			ItemMeta headerMeta = header.getItemMeta();
 			headerMeta.setDisplayName(loadout.getName());
 			ArrayList<String> headerLore = new ArrayList<>();
@@ -571,7 +581,12 @@ public class InventoryManager implements Listener {
 		HashMap<String, ItemStack> leaderboardOrder = new HashMap<>();
 
 		for (String name : pls) {
-			ItemStack player = new ItemStack(Material.SKELETON_SKULL);
+			ItemStack player;
+			try {
+				player = new ItemStack(Material.SKELETON_SKULL);
+			} catch(Exception e) {
+				player = new ItemStack(Material.valueOf("SKULL"));
+			}
 			ItemMeta playerMeta = player.getItemMeta();
 			playerMeta.setDisplayName("\u00A7f\u00A7lPlayer: " + name);
 
@@ -639,7 +654,12 @@ public class InventoryManager implements Listener {
 		killsMeta.setDisplayName("\u00A7a\u00A7lKills: \u00A7r\u00A7f" + totalKills);
 		kills.setItemMeta(killsMeta);
 
-		ItemStack deaths = new ItemStack(Material.SKELETON_SKULL);
+		ItemStack deaths;
+		try {
+			deaths = new ItemStack(Material.SKELETON_SKULL);
+		} catch(Exception e) {
+			deaths = new ItemStack(Material.valueOf("SKULL"));
+		}
 		ItemMeta deathsMeta = deaths.getItemMeta();
 		deathsMeta.setDisplayName("\u00A7c\u00A7lDeaths: \u00A7r\u00A7f" + totalDeaths);
 		deaths.setItemMeta(deathsMeta);

@@ -12,7 +12,7 @@ public class HealthManager {
 	
 	double defaultHealth;
 	
-	HealthManager(ArrayList<Player> pls, double health) {
+	public HealthManager(ArrayList<Player> pls, double health) {
 		
 		this.defaultHealth = health;
 		
@@ -22,12 +22,12 @@ public class HealthManager {
 		
 	}
 	
-	void addPlayer(Player p) {
+	public void addPlayer(Player p) {
 		getHealth(p);
 		update(p);
 	}
 	
-	void removePlayer(Player p) {
+	public void removePlayer(Player p) {
 		if (healthMap.containsKey(p)) {
 			healthMap.remove(p);
 		}
@@ -64,7 +64,7 @@ public class HealthManager {
 		return false;
 	}
 	
-	void update(Player p) {
+	public void update(Player p) {
 		p.setLevel((int) Math.round(getHealth(p)));
 	}
 	

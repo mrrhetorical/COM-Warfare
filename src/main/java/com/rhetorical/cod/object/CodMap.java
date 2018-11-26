@@ -136,18 +136,18 @@ public class CodMap {
 		setEnable();
 	}
 	
-	Location getBlueSpawn() {
+	public Location getBlueSpawn() {
 		Collections.shuffle(this.getBlueSpawns());
 		return this.getBlueSpawns().get(0);
 		
 	}
 	
-	Location getRedSpawn() {
+	public Location getRedSpawn() {
 		Collections.shuffle(this.getRedSpawns());
 		return this.getRedSpawns().get(0);
 	}
 	
-	Location getPinkSpawn() {
+	public Location getPinkSpawn() {
 		Collections.shuffle(this.getPinkSpawns());
 		return this.getPinkSpawns().get(0);
 	}

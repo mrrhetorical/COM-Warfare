@@ -13,7 +13,7 @@ public class CodScore {
 	private int killStreak;
 	private double score;
 
-	CodScore(Player p) {
+	public CodScore(Player p) {
 		this.owner = p;
 		this.deaths = 0;
 		this.kills = 0;

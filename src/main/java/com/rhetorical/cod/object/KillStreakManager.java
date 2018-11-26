@@ -128,7 +128,7 @@ public class KillStreakManager {
 		}
 	}
 
-	void loadStreaks(Player p) {
+	public void loadStreaks(Player p) {
 		if (!KillstreaksFile.getData().contains("Killstreaks." + p.getName())) {
 			this.saveStreaks(p);
 			KillStreak[] killStreaks = new KillStreak[3];
