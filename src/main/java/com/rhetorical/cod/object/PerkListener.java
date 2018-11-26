@@ -13,6 +13,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
+import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -93,11 +94,9 @@ public class PerkListener implements Listener {
 	}
 
 	@EventHandler
-	public void scavengerPickup(EntityPickupItemEvent e) {
-		if (!(e.getEntity() instanceof Player))
-			return;
+	public void scavengerPickup(PlayerPickupItemEvent e) {
 
-		Player p = (Player) e.getEntity();
+		Player p = e.getPlayer();
 		ItemStack i = e.getItem().getItemStack();
 
 		if (GameManager.isInMatch(p) && Main.loadManager.getCurrentLoadout(p).hasPerk(Perk.SCAVENGER) && i.getType().equals(Material.LAPIS_BLOCK)) {
