@@ -4,7 +4,7 @@
   <groupId>com.rhetorical</groupId>
   <artifactId>com-warfare</artifactId>
   <name>COM-Warfare</name>
-  <version>RELEASE-2.5.${v}</version>
+  <version>RELEASE-2.6.3</version>
   <build>
     <resources>
       <resource>
@@ -55,56 +55,7 @@
             <artifactId>maven-jar-plugin</artifactId>
             <version>2.3.2</version>
             <configuration>
-              <finalName>com-warfare-2.5.${v}-1.12</finalName>
-            </configuration>
-          </plugin>
-          <plugin>
-            <groupId>com.google.code.maven-replacer-plugin</groupId>
-            <artifactId>replacer</artifactId>
-            <version>1.5.1</version>
-            <executions>
-              <execution>
-                <phase>process-sources</phase>
-                <goals>
-                  <goal>replace</goal>
-                </goals>
-              </execution>
-            </executions>
-            <configuration>
-              <includes>
-                <include>src/main/java/com/rhetorical/cod/object/GameInstance.java</include>
-                <include>src/main/java/com/rhetorical/cod/inventories/InventoryManager.java</include>
-              </includes>
-              <replacements>
-                <replacement>
-                  <token>CRAFTING_TABLE</token>
-                  <value>WORKBENCH</value>
-                </replacement>
-                <replacement>
-                  <token>WOODEN_HOE</token>
-                  <value>WOOD_HOE</value>
-                </replacement>
-                <replacement>
-                  <token>SKELETON_SKULL</token>
-                  <value>SKULL</value>
-                </replacement>
-                <replacement>
-                  <token>BLUE_BANNER</token>
-                  <value>BANNER</value>
-                </replacement>
-                <replacement>
-                  <token>RED_BANNER</token>
-                  <value>BANNER</value>
-                </replacement>
-                <replacement>
-                  <token>GOLDEN_SWORD</token>
-                  <value>GOLD_SWORD</value>
-                </replacement>
-                <replacement>
-                  <token>WOODEN_SWORD</token>
-                  <value>WOOD_SWORD</value>
-                </replacement>
-              </replacements>
+              <finalName>com-warfare-1.12</finalName>
             </configuration>
           </plugin>
         </plugins>
@@ -114,6 +65,28 @@
           <groupId>org.spigotmc</groupId>
           <artifactId>spigot-api</artifactId>
           <version>1.12.2-R0.1-SNAPSHOT</version>
+          <scope>provided</scope>
+        </dependency>
+      </dependencies>
+    </profile>
+    <profile>
+      <id>1.8</id>
+      <build>
+        <plugins>
+          <plugin>
+            <artifactId>maven-jar-plugin</artifactId>
+            <version>2.3.2</version>
+            <configuration>
+              <finalName>com-warfare-1.8</finalName>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+      <dependencies>
+        <dependency>
+          <groupId>org.spigotmc</groupId>
+          <artifactId>spigot-api</artifactId>
+          <version>1.8.8-R0.1-SNAPSHOT</version>
           <scope>provided</scope>
         </dependency>
       </dependencies>
@@ -133,12 +106,12 @@
                   <goal>jar</goal>
                 </goals>
                 <configuration>
-                  <finalName>com-warfare-2.5.${v}-1.13</finalName>
+                  <finalName>com-warfare-1.13</finalName>
                 </configuration>
               </execution>
             </executions>
             <configuration>
-              <finalName>com-warfare-2.5.${v}-1.13</finalName>
+              <finalName>com-warfare-1.13</finalName>
             </configuration>
           </plugin>
         </plugins>
