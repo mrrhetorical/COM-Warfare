@@ -19,6 +19,7 @@ import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scoreboard.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,7 +30,7 @@ public class GameInstance implements Listener {
 
 	private long id;
 
-	private ArrayList<Player> players = new ArrayList<>();
+	private ArrayList<Player> players;
 	private CodMap currentMap;
 	private int gameTime;
 	private int lobbyTime;
@@ -64,9 +65,12 @@ public class GameInstance implements Listener {
 
 	// Score management and game information system for FFA (Free for all)
 	private HashMap<Player, Integer> ffaPlayerScores = new HashMap<>();
-	private HashMap<Player, BossBar> freeForAllBar = new HashMap<>();
+	private HashMap<Player, org.bukkit.boss.BossBar> freeForAllBar = new HashMap<>();
 
-	private BossBar scoreBar = Bukkit.createBossBar(ChatColor.GRAY + "«" + ChatColor.WHITE + getFancyTime(Main.getPlugin().getConfig().getInt("lobbyTime")) + ChatColor.RESET + "" + ChatColor.GRAY + "»", BarColor.PINK, BarStyle.SOLID);
+	private BossBar scoreBar = Bukkit.createBossBar(ChatColor.GRAY + "«" + ChatColor.WHITE + getFancyTime(Main.getPlugin().getConfig().getInt("lobbyTime")) + ChatColor.RESET + "" + ChatColor.GRAY + "»", org.bukkit.boss.BarColor.PINK, org.bukkit.boss.BarStyle.SOLID);;
+
+	private Scoreboard scoreboard = Bukkit.getScoreboardManager().getNewScoreboard(); //TODO: Update only on player join in-game arena or leave
+	private Objective scoreboardObjective = scoreboard.registerNewObjective("game_stats", "dummy");
 
 	public HealthManager health;
 
@@ -75,6 +79,8 @@ public class GameInstance implements Listener {
 	private CodGun oneShotGun;
 
 	private boolean oneShotReady;
+
+	private boolean isLegacy = Main.isLegacy();
 
 	public GameInstance(ArrayList<Player> pls, CodMap map) {
 
@@ -148,9 +154,33 @@ public class GameInstance implements Listener {
 
 		oneShotReady = oneShotGun != null;
 
+		scoreboardObjective.setDisplaySlot(DisplaySlot.SIDEBAR);
+
 		System.gc();
 
 		Main.cs.sendMessage(Main.codPrefix + ChatColor.GRAY + "Game lobby with id " + getId() + " created with map " + getMap().getName() + " with gamemode " + getGamemode() + ".");
+	}
+
+	private void updateScoreBoard(String time) {
+		if (!isLegacy)
+			return;
+
+		scoreboardObjective.setDisplayName("" + ChatColor.WHITE + ChatColor.BOLD + time);
+		if (getGamemode() != Gamemode.FFA && getGamemode() != Gamemode.OITC && getGamemode() != Gamemode.GUN) {
+			Score redScore = scoreboardObjective.getScore("" + ChatColor.RED + ChatColor.BOLD + "RED: ");
+			Score blueScore = scoreboardObjective.getScore("" + ChatColor.DARK_BLUE + ChatColor.BOLD + "BLUE: ");
+			redScore.setScore(RedTeamScore);
+			blueScore.setScore(BlueTeamScore);
+		} else {
+			Score infoScore = scoreboardObjective.getScore("Press 'TAB' to check");
+			Score infoScore2 = scoreboardObjective.getScore("your scores!");
+			infoScore.setScore(2);
+			infoScore2.setScore(1);
+		}
+	}
+
+	private void resetScoreboard() {
+		scoreboardObjective = scoreboard.registerNewObjective("game_stats", "dummy");
 	}
 
 	private void reset() {
@@ -165,7 +195,11 @@ public class GameInstance implements Listener {
 
 		health = new HealthManager(players, Main.defaultHealth);
 
+		if (isLegacy)
+			resetScoreBoard();
+
 		for (Player p : players) {
+			p.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
 			health.update(p);
 			p.getInventory().clear();
 			p.teleport(Main.lobbyLoc);
@@ -220,8 +254,13 @@ public class GameInstance implements Listener {
 
 		scoreBar.addPlayer(p);
 
+
 		if (getState() == GameState.INGAME) {
 			assignTeams();
+
+			if (isLegacy) {
+				p.setScoreboard(scoreboard);
+			}
 
 			if (getGamemode() != Gamemode.DESTROY && getGamemode() != Gamemode.RESCUE) {
 
@@ -276,6 +315,10 @@ public class GameInstance implements Listener {
 		if (!players.contains(p))
 			return;
 
+		if (isLegacy) {
+			p.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
+		}
+
 		if (scoreBar.getPlayers().contains(p)) {
 			scoreBar.removePlayer(p);
 		}
@@ -318,6 +361,9 @@ public class GameInstance implements Listener {
 		playerScores.clear();
 
 		for (Player p : players) {
+			if (isLegacy) {
+				p.setScoreboard(scoreboard);
+			}
 
 			playerScores.put(p, new CodScore(p));
 
@@ -747,6 +793,8 @@ public class GameInstance implements Listener {
 
 				String counter = getFancyTime(t);
 
+				if (isLegacy)
+					updateScoreBoard(counter);
 
 				if (currentMap.getGamemode() != Gamemode.FFA) {
 					scoreBar.setTitle(ChatColor.RED + "RED: " + RedTeamScore + ChatColor.GRAY + " «" + ChatColor.WHITE + counter + ChatColor.RESET + ChatColor.GRAY + "»" + ChatColor.DARK_BLUE + " BLU: " + BlueTeamScore);
