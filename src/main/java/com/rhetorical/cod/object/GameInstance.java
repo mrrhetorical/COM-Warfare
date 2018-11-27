@@ -201,6 +201,7 @@ public class GameInstance implements Listener {
 
 		GameManager.UsedMaps.remove(getMap());
 
+		currentMap = map;
 		map.changeGamemode();
 		Gamemode gameMode = getGamemode();
 		gameTime = Main.getPlugin().getConfig().getInt("gameTime." + gameMode.toString());
