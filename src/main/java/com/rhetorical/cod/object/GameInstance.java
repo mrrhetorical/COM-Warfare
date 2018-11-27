@@ -754,17 +754,18 @@ public class GameInstance implements Listener {
 				if (t % 30 == 0 || (t % 10 == 0 && t < 30) || (t % 5 == 0 && t < 15)) {
 					for (Player p : game.players) {
 
-						if (t == 0) {
-							Main.sendMessage(p, Main.codPrefix + ChatColor.GRAY + "Game starting now!", Main.lang);
-							continue;
-						}
-
 						Main.sendMessage(p, Main.codPrefix + ChatColor.GRAY + "Game starting in " + getFancyTime(t) + "!", Main.lang);
 						Main.sendMessage(p, Main.codPrefix + ChatColor.GRAY + "Map: " + ChatColor.GREEN + game.currentMap.getName() + ChatColor.RESET + ChatColor.GRAY + " Gamemode: " + ChatColor.RED + game.currentMap.getGamemode().toString(), Main.lang);
 					}
 				}
 
-				if (t <= 0 || forceStarted) {
+				if (t == 0 || forceStarted) {
+
+					for (Player p : getPlayers()) {
+						if (t == 0) {
+							Main.sendMessage(p, Main.codPrefix + ChatColor.GRAY + "Game starting now!", Main.lang);
+						}
+					}
 
 					startGame();
 
