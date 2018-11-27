@@ -344,6 +344,7 @@ public class Main extends JavaPlugin {
 							break;
 						case 4:
 							sendMessage(p, cColor + "/cod add [oitc/gun] (gun name) | " + dColor + "Sets the gun for OITC or adds a gun to Gun Game.");
+							sendMessage(p, cColor + "/cod changeMap/changeMode [map name/gamemode] | " + dColor + "Changes the current map/mode.");
 							sendMessage(p, cColor + "/cod class | " + dColor + "Opens the class selection menu.");
 							sendMessage(p, cColor + "/cod start | " + dColor + "Auto-starts the match if the lobby timer is started.");
 							sendMessage(p, cColor + "/cod boot | " + dColor + "Forces all players in all matches to leave.");
