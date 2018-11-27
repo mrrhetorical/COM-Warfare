@@ -2,7 +2,6 @@ package com.rhetorical.cod;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Objects;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -158,7 +157,7 @@ public class LoadoutManager {
 
 		int classes = 5;
 
-		for (int i = 0; i < Main.progManager.getPrestigeLevel(p); i++) {
+		for (int i = 0; i < Main.progressionManager.getPrestigeLevel(p); i++) {
 			switch (i) {
 			case 1:
 				classes++;

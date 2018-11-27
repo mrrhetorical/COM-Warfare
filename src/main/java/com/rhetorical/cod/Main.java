@@ -10,6 +10,7 @@ import org.bukkit.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.entity.Cod;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
@@ -19,6 +20,8 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Objects;
 
 public class Main extends JavaPlugin {
 
@@ -31,7 +34,7 @@ public class Main extends JavaPlugin {
 
 	private static String translate_api_key;
 
-	public static ProgressionManager progManager;
+	public static ProgressionManager progressionManager;
 	public static LoadoutManager loadManager;
 	public static PerkManager perkManager;
 	public static InventoryManager invManager;
@@ -45,7 +48,7 @@ public class Main extends JavaPlugin {
 	public static int minPlayers = 6;
 	public static int maxPlayers = 12;
 
-	public static boolean serverMode = false;
+	static boolean serverMode = false;
 
 	public static double defaultHealth = 20D;
 
@@ -129,7 +132,7 @@ public class Main extends JavaPlugin {
 		getPlugin().saveDefaultConfig();
 		getPlugin().reloadConfig();
 
-		progManager = new ProgressionManager();
+		progressionManager = new ProgressionManager();
 		perkManager = new PerkManager();
 		loadManager = new LoadoutManager(new HashMap<>());
 		shopManager = new ShopManager();
@@ -138,6 +141,9 @@ public class Main extends JavaPlugin {
 		invManager = new InventoryManager();
 
 		KillStreakManager.setup();
+
+		GameManager.setupOITC();
+		GameManager.setupGunGame();
 
 		Bukkit.getServer().getPluginManager().registerEvents(new Listeners(), getPlugin());
 
@@ -291,7 +297,7 @@ public class Main extends JavaPlugin {
 		if (args.length == 0) {
 			openMainMenu(p);
 			return true;
-		} else if (args.length >= 1) {
+		} else {
 			if (args[0].equalsIgnoreCase("help") && hasPerm(p, "com.help")) {
 
 				if (args.length == 2) {
@@ -303,7 +309,7 @@ public class Main extends JavaPlugin {
 						return true;
 					}
 
-					if (!(page > 0 && page <= 3)) {
+					if (!(page > 0 && page <= 4)) {
 						sendMessage(p, Main.codPrefix + ChatColor.RED + "You didn't give a proper page number!", lang);
 						return true;
 					}
@@ -311,49 +317,50 @@ public class Main extends JavaPlugin {
 					//FIXME: Left off here converting to ChatColor!
 
 					sendMessage(p, "-===\u00A76\u00A7lCOM-Warfare Help\u00A7r===-", lang);
-					sendMessage(p, "\u00A7f[\u00A7lPage " + page + " of 3\u00A7r\u00A7l]", lang);
+					sendMessage(p, "\u00A7f[\u00A7lPage " + page + " of 4\u00A7r\u00A7l]", lang);
 
 					switch (page) {
-					case 1:
-						sendMessage(p, "\u00A7f\u00A7lType the command to see specifics.", lang);
-						sendMessage(p, cColor + "/cod help [page number] | " + dColor + "Opens a help page.");
-						sendMessage(p, cColor + "/cod | " + dColor + "Opens the main menu.");
-						sendMessage(p, cColor + "/cod join | " + dColor + "Joins a game through the matchmaker.");
-						sendMessage(p, cColor + "/cod leave | " + dColor + "Leaves the current game.");
-						sendMessage(p, cColor + "/cod listMaps | " + dColor + "Lists the available maps.");
-						sendMessage(p, cColor + "/cod createMap [args] | " + dColor + "Create a map.");
-						sendMessage(p, cColor + "/cod removeMap [name] | " + dColor + "Command to remove a map.");
-						break;
-					case 2:
-						sendMessage(p, cColor + "/cod set [lobby/spawn/flag] | " + dColor + "Opens a page in the help menu.");
-						sendMessage(p, cColor + "/cod balance | " + dColor + "Shows your credit balance.");
-						sendMessage(p, cColor + "/cod credits give | " + dColor + "Gives credits to a person.");
-						sendMessage(p, cColor + "/cod credits set | " + dColor + "Sets amount of credits for a player.");
-						sendMessage(p, cColor + "/cod lobby | " + dColor + "Teleports you to the lobby.");
-						sendMessage(p, cColor + "/cod createGun [args] | " + dColor + "Creates a gun.");
-						sendMessage(p, cColor + "/cod shop | " + dColor + "Opens the shop.");
-
-						break;
-					case 3:
-						sendMessage(p, cColor + "/cod class | " + dColor + "Opens the class selection menu.");
-						sendMessage(p, cColor + "/cod start | " + dColor + "Auto-starts the match if the lobby timer is started.");
-						sendMessage(p, cColor + "/cod boot | " + dColor + "Forces all players in all matches to leave.");
-						break;
-					default:
-						break;
+						case 1:
+							sendMessage(p, "\u00A7f\u00A7lType the command to see specifics.", lang);
+							sendMessage(p, cColor + "/cod help [page number] | " + dColor + "Opens a help page.");
+							sendMessage(p, cColor + "/cod | " + dColor + "Opens the main menu.");
+							sendMessage(p, cColor + "/cod join | " + dColor + "Joins a game through the matchmaker.");
+							sendMessage(p, cColor + "/cod leave | " + dColor + "Leaves the current game.");
+							sendMessage(p, cColor + "/cod shop | " + dColor + "Opens the shop.");
+							break;
+						case 2:
+							sendMessage(p, cColor + "/cod createMap [name] | " + dColor + "Create a map.");
+							sendMessage(p, cColor + "/cod removeMap [name] | " + dColor + "Command to remove a map.");
+							sendMessage(p, cColor + "/cod listMaps | " + dColor + "Lists the available maps.");
+							sendMessage(p, cColor + "/cod set [lobby/spawn/flag] | " + dColor + "Command to set spawns, flags, and lobby location.");
+							sendMessage(p, cColor + "/cod lobby | " + dColor + "Teleports you to the lobby.");
+							break;
+						case 3:
+							sendMessage(p, cColor + "/cod shop | " + dColor + "Opens the shop.");
+							sendMessage(p, cColor + "/cod createGun | " + dColor + "Creates a gun. Type command to see a full list of arguments.");
+							sendMessage(p, cColor + "/cod credits give [player] (amt) | " + dColor + "Gives credits to a person.");
+							sendMessage(p, cColor + "/cod credits set [player] (amt) | " + dColor + "Sets amount of credits for a player.");
+							sendMessage(p, cColor + "/cod balance | " + dColor + "Shows your credit balance.");
+							break;
+						case 4:
+							sendMessage(p, cColor + "/cod add [oitc/gun] (gun name) | " + dColor + "Sets the gun for OITC or adds a gun to Gun Game.");
+							sendMessage(p, cColor + "/cod class | " + dColor + "Opens the class selection menu.");
+							sendMessage(p, cColor + "/cod start | " + dColor + "Auto-starts the match if the lobby timer is started.");
+							sendMessage(p, cColor + "/cod boot | " + dColor + "Forces all players in all matches to leave.");
+							break;
+						default:
+							break;
 					}
 				} else {
 					sendMessage(p, "-===\u00A76\u00A7lCOM-Warfare Help\u00A7r===-");
-					sendMessage(p, "\u00A7f[\u00A7lPage 1 of 3\u00A7r\u00A7l]");
+					sendMessage(p, "\u00A7f[\u00A7lPage 1 of 4\u00A7r\u00A7l]");
 
-					sendMessage(p, "\u00A7f\u00A7lType the command to see specifics.");
+					sendMessage(p, "\u00A7f\u00A7lType the command to see specifics.", lang);
 					sendMessage(p, cColor + "/cod help [page number] | " + dColor + "Opens a help page.");
 					sendMessage(p, cColor + "/cod | " + dColor + "Opens the main menu.");
 					sendMessage(p, cColor + "/cod join | " + dColor + "Joins a game through the matchmaker.");
 					sendMessage(p, cColor + "/cod leave | " + dColor + "Leaves the current game.");
-					sendMessage(p, cColor + "/cod listMaps | " + dColor + "Lists the available maps.");
-					sendMessage(p, cColor + "/cod createMap [args] | " + dColor + "Create a map.");
-					sendMessage(p, cColor + "/cod removeMap [name] | " + dColor + "Command to remove a map.");
+					sendMessage(p, cColor + "/cod shop | " + dColor + "Opens the shop.");
 
 				}
 
@@ -362,7 +369,7 @@ public class Main extends JavaPlugin {
 				if (b) {
 					loadManager.load(p);
 					Location l = p.getLocation();
-					Main.progManager.update(p);
+					Main.progressionManager.update(p);
 					Main.lastLoc.put(p, l);
 				}
 				return true;
@@ -396,14 +403,14 @@ public class Main extends JavaPlugin {
 					}
 
 					if (GameManager.UsedMaps.contains(m)) {
-						sendMessage(p, Integer.toString(k) + " - \u00A76\u00A7lName: \u00A7r\u00A7a" + m.getName() + " \u00A7r\u00A76\u00A7lGamemode: \u00A7r\u00A7c" + gmr.toString() + " \u00A7r\u00A76\u00A7lStatus: \u00A7r\u00A74IN USE", lang);
+						sendMessage(p, k + " - \u00A76\u00A7lName: \u00A7r\u00A7a" + m.getName() + " \u00A7r\u00A76\u00A7lGamemode: \u00A7r\u00A7c" + gmr.toString() + " \u00A7r\u00A76\u00A7lStatus: \u00A7r\u00A74IN USE", lang);
 					} else {
 						if (m.isEnabled()) {
-							sendMessage(p, Integer.toString(k) + " - \u00A76\u00A7lName: \u00A7r\u00A7a" + m.getName() + " \u00A7r\u00A76\u00A7lGamemode: \u00A7r\u00A7c" + gmr.toString() + " \u00A7r\u00A76\u00A7lStatus: \u00A7r\u00A7aAVAILABLE", lang);
+							sendMessage(p, k + " - \u00A76\u00A7lName: \u00A7r\u00A7a" + m.getName() + " \u00A7r\u00A76\u00A7lGamemode: \u00A7r\u00A7c" + gmr.toString() + " \u00A7r\u00A76\u00A7lStatus: \u00A7r\u00A7aAVAILABLE", lang);
 							continue;
 						}
 
-						sendMessage(p, Integer.toString(k) + " - \u00A76\u00A7lName: \u00A7r\u00A7a" + m.getName() + " \u00A7r\u00A76\u00A7lGamemode: \u00A7r\u00A7c" + gmr.toString() + " \u00A7r\u00A76\u00A7lStatus: \u00A7r\u00A7aUNFINISHED", lang);
+						sendMessage(p, k + " - \u00A76\u00A7lName: \u00A7r\u00A7a" + m.getName() + " \u00A7r\u00A76\u00A7lGamemode: \u00A7r\u00A7c" + gmr.toString() + " \u00A7r\u00A76\u00A7lStatus: \u00A7r\u00A7aUNFINISHED", lang);
 					}
 				}
 				return true;
@@ -666,6 +673,92 @@ public class Main extends JavaPlugin {
 				} else {
 					p.sendMessage(Main.codPrefix + ChatColor.RED + "Couldn't boot all players!");
 				}
+			} else if (args[0].equalsIgnoreCase("add") && hasPerm(p, "com.add")) {
+				if (args.length	< 3) {
+					sendMessage(p, ChatColor.RED + "Incorrect usage! Correct usage: '/cod add [oitc/gun] (gun name)'");
+					return true;
+				}
+
+				String type = args[1];
+				String gunName = args[2];
+				CodWeapon weapon = shopManager.getWeaponForName(gunName);
+
+				if (!(weapon instanceof CodGun)) {
+					sendMessage(p, ChatColor.RED + "Could not find a weapon with the name: \"" + gunName + "\"!");
+					return true;
+				}
+
+				if (type.equalsIgnoreCase("oitc")) {
+					getConfig().set("OITC_Gun", weapon.getName());
+					saveConfig();
+					reloadConfig();
+					GameManager.setupOITC();
+					sendMessage(p, Main.codPrefix + ChatColor.GREEN + "Successfully set OITC gun to \"" + weapon.getName() + "\"!");
+					return true;
+				} else if (type.equalsIgnoreCase("gun")) {
+					GameManager.gunGameGuns.add((CodGun) weapon);
+					List<String> gunList = new ArrayList<>();
+					for(CodGun g : GameManager.gunGameGuns) {
+						gunList.add(g.getName());
+					}
+					getConfig().set("GunProgression", gunList);
+					saveConfig();
+					reloadConfig();
+					sendMessage(p, Main.codPrefix + ChatColor.GREEN + "Successfully added gun to the Gun Game progression!");
+					return true;
+				}
+				sendMessage(p, Main.codPrefix + ChatColor.RED + "Incorrect usage! Correct usage: '/cod add [oitc/gun] (gun name)'");
+				return true;
+			} else if (args[0].equalsIgnoreCase("changeMap") && hasPerm(p, "com.changeMap")) {
+
+				if (args.length < 2) {
+					sendMessage(p, codPrefix + ChatColor.RED + "Incorrect usage! Correct usage: '/cod changeMap (name)'");
+					return true;
+				}
+
+				if (!GameManager.isInMatch(p)) {
+					sendMessage(p, codPrefix + ChatColor.RED + "You aren't in a game!");
+					return true;
+				}
+
+				CodMap map = GameManager.getMapForName(args[1]);
+
+				if (map == null) {
+					sendMessage(p, codPrefix + ChatColor.RED + "No map with that name exists!");
+					return true;
+				}
+
+				GameManager.changeMap(Objects.requireNonNull(GameManager.getMatchWhichContains(p)), map);
+				sendMessage(p, codPrefix + ChatColor.GREEN + "Successfully changed map to " + ChatColor.GOLD + ChatColor.BOLD + map.getName() + ChatColor.RESET + ChatColor.GREEN + "!");
+				return true;
+			} else if (args[0].equalsIgnoreCase("changeMode") && hasPerm(p, "com.changeMode")) {
+				if (args.length < 2) {
+					sendMessage(p, codPrefix + ChatColor.RED + "Incorrect usage! Correct usage: '/cod changeMode (name)'");
+					return true;
+				}
+
+				if (!GameManager.isInMatch(p)) {
+					sendMessage(p, codPrefix + ChatColor.RED + "You aren't in a game!");
+					return true;
+				}
+
+				Gamemode mode;
+
+				try {
+					mode = Gamemode.valueOf(args[1]);
+				} catch(Exception e) {
+					sendMessage(p, codPrefix + ChatColor.RED + "No gamemode with that name exists!");
+					return true;
+				}
+
+				if (!Objects.requireNonNull(GameManager.getMatchWhichContains(p)).getMap().getAvailableGamemodes().contains(mode)) {
+					sendMessage(p, codPrefix + ChatColor.RED + "That gamemode is not set up on that map!");
+					return true;
+				}
+
+				Objects.requireNonNull(GameManager.getMatchWhichContains(p)).getMap().changeGamemode(mode);
+				sendMessage(p, codPrefix + ChatColor.GREEN + "Successfully changed game mode to " + ChatColor.GOLD + ChatColor.BOLD + mode.toString() + ChatColor.RESET + ChatColor.GREEN + "!");
+				return true;
 			} else {
 				p.sendMessage(Main.codPrefix + ChatColor.RED + "Unknown command! Try using '/cod help' for a list of commands!");
 				return true;

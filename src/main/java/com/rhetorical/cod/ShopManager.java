@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -18,7 +16,6 @@ import com.rhetorical.cod.object.CodWeapon;
 import com.rhetorical.cod.object.GunType;
 import com.rhetorical.cod.object.UnlockType;
 import com.rhetorical.cod.object.WeaponType;
-import org.bukkit.inventory.meta.ItemMeta;
 
 public class ShopManager {
 
@@ -314,7 +311,7 @@ public class ShopManager {
 
 		if (gun.getType() == UnlockType.LEVEL || gun.getType() == UnlockType.BOTH) {
 
-			if (Main.progManager.getLevel(p) >= gun.getLevelUnlock()) {
+			if (Main.progressionManager.getLevel(p) >= gun.getLevelUnlock()) {
 				return true;
 			}
 
@@ -345,7 +342,7 @@ public class ShopManager {
 
 			if (!purchased.get(p).contains(grenade)) {
 
-				if (Main.progManager.getLevel(p) == grenade.getLevelUnlock()) {
+				if (Main.progressionManager.getLevel(p) == grenade.getLevelUnlock()) {
 
 					ArrayList<CodWeapon> grenades = purchased.get(p);
 
@@ -360,7 +357,7 @@ public class ShopManager {
 				}
 			}
 		} else if (grenade.getType() == UnlockType.BOTH) {
-			if (Main.progManager.getLevel(p) == grenade.getLevelUnlock()) {
+			if (Main.progressionManager.getLevel(p) == grenade.getLevelUnlock()) {
 				Main.sendMessage(p,
 						Main.codPrefix + "\u00A7aThe \u00A76" + grenade.getName() + "\u00A7a is now available for purchase!", Main.lang);
 			}
@@ -377,13 +374,13 @@ public class ShopManager {
 
 				if (!purchased.get(p).contains(gun)) {
 
-					if (Main.progManager.getLevel(p) == gun.getLevelUnlock()) {
+					if (Main.progressionManager.getLevel(p) == gun.getLevelUnlock()) {
 
 						unlockGun(purchased, p, gun);
 					}
 				}
 			} else if (gun.getType() == UnlockType.BOTH) {
-				if (Main.progManager.getLevel(p) == gun.getLevelUnlock()) {
+				if (Main.progressionManager.getLevel(p) == gun.getLevelUnlock()) {
 					Main.sendMessage(p, Main.codPrefix + "\u00A7aThe \u00A76" + gun.getName() + "\u00A7a is now available for purchase!", Main.lang);
 				}
 			}
@@ -398,12 +395,12 @@ public class ShopManager {
 
 				if (!purchased.get(p).contains(gun)) {
 
-					if (Main.progManager.getLevel(p) == gun.getLevelUnlock()) {
+					if (Main.progressionManager.getLevel(p) == gun.getLevelUnlock()) {
 						unlockGun(purchased, p, gun);
 					}
 				}
 			} else if (gun.getType() == UnlockType.BOTH) {
-				if (Main.progManager.getLevel(p) == gun.getLevelUnlock()) {
+				if (Main.progressionManager.getLevel(p) == gun.getLevelUnlock()) {
 					Main.sendMessage(p, Main.codPrefix + "\u00A7aThe \u00A76" + gun.getName() + "\u00A7a is now available for purchase!", Main.lang);
 				}
 			}
@@ -425,6 +422,31 @@ public class ShopManager {
 
 	public void setPerks(Player p, ArrayList<CodPerk> perks) {
 		this.purchasedPerks.put(p, perks);
+	}
+
+	public CodWeapon getWeaponForName(String name) {
+		for (CodGun g : getPrimaryGuns()) {
+			if (g.getName().equalsIgnoreCase(name))
+				return g;
+		}
+
+		for (CodGun g : getSecondaryGuns()) {
+			if (g.getName().equalsIgnoreCase(name))
+				return g;
+		}
+
+		for (CodWeapon w : getLethalWeapons()) {
+			if (w.getName().equalsIgnoreCase(name))
+				return w;
+		}
+
+		for (CodWeapon w : getTacticalWeapons()) {
+			if (w.getName().equalsIgnoreCase(name))
+				return w;
+		}
+
+		//No weapon by the name was found.
+		return null;
 	}
 
 }

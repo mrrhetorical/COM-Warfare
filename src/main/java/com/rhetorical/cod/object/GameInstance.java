@@ -77,10 +77,6 @@ public class GameInstance implements Listener {
 
 	private HashMap<Player, CodScore> playerScores = new HashMap<>();
 
-	private CodGun oneShotGun;
-
-	private boolean oneShotReady;
-
 	private boolean isLegacy = Main.isLegacy();
 
 	public GameInstance(ArrayList<Player> pls, CodMap map) {
@@ -109,7 +105,7 @@ public class GameInstance implements Listener {
 			maxScore_FFA = Main.getPlugin().getConfig().getInt("maxScore.FFA");
 			maxScore_RSB = Main.getPlugin().getConfig().getInt("maxScore.RSB");
 			maxScore_KC = Main.getPlugin().getConfig().getInt("maxScore.KC");
-			maxScore_GUN = Main.getPlugin().getConfig().getInt("maxScore.GUN");
+			maxScore_GUN = GameManager.gunGameGuns.size();
 			maxScore_OITC = Main.getPlugin().getConfig().getInt("maxScore.OITC");
 			maxScore_DESTROY = Main.getPlugin().getConfig().getInt("maxScore.DESTROY");
 			maxScore_RESCUE = Main.getPlugin().getConfig().getInt("maxScore.RESCUE");
@@ -135,25 +131,6 @@ public class GameInstance implements Listener {
 		for (Player p : pls) {
 			health.update(p);
 		}
-
-		String oneShotGunName = Main.getPlugin().getConfig().getString("OITC_Gun");
-
-		for (CodGun gun : Main.shopManager.getSecondaryGuns()) {
-			if (gun.getName().equalsIgnoreCase(oneShotGunName)) {
-				oneShotGun = gun;
-				break;
-			}
-		}
-
-		if (oneShotGun == null)
-			for (CodGun gun : Main.shopManager.getPrimaryGuns()) {
-				if (gun.getName().equals(oneShotGunName)) {
-					oneShotGun = gun;
-					break;
-				}
-			}
-
-		oneShotReady = oneShotGun != null;
 
 		scoreboardObjective.setDisplaySlot(DisplaySlot.SIDEBAR);
 
@@ -217,13 +194,26 @@ public class GameInstance implements Listener {
 		return id;
 	}
 
-	private void changeMap(CodMap map) {
+	public void changeMap(CodMap map) {
+
 		if (map == null)
 			return;
+
+		GameManager.UsedMaps.remove(getMap());
 
 		map.changeGamemode();
 		Gamemode gameMode = getGamemode();
 		gameTime = Main.getPlugin().getConfig().getInt("gameTime." + gameMode.toString());
+	}
+
+	private void changeGamemode(Gamemode gm) {
+		if (getState() != GameState.WAITING && getState() != GameState.STARTING)
+			return;
+
+		if (!getMap().getAvailableGamemodes().contains(gm))
+			return;
+
+		currentMap.changeGamemode(gm);
 	}
 
 	public void addPlayer(Player p) {
@@ -236,7 +226,7 @@ public class GameInstance implements Listener {
 
 		health.addPlayer(p);
 
-		Main.progManager.update(p);
+		Main.progressionManager.update(p);
 
 		p.getInventory().clear();
 
@@ -245,7 +235,7 @@ public class GameInstance implements Listener {
 		p.setGameMode(GameMode.SURVIVAL);
 		p.setHealth(20D);
 		p.setFoodLevel(20);
-		Main.progManager.update(p);
+		Main.progressionManager.update(p);
 
 		p.teleport(Main.lobbyLoc);
 
@@ -261,6 +251,10 @@ public class GameInstance implements Listener {
 
 			if (isLegacy) {
 				p.setScoreboard(scoreboard);
+			}
+
+			if (getGamemode() == Gamemode.OITC) {
+				ffaPlayerScores.put(p, maxScore_OITC);
 			}
 
 			if (getGamemode() != Gamemode.DESTROY && getGamemode() != Gamemode.RESCUE) {
@@ -312,6 +306,15 @@ public class GameInstance implements Listener {
 		ffaPlayerScores.put(p, ffaPlayerScores.get(p) + 1);
 	}
 
+	private void removePointForPlayer(Player p) {
+		if (!ffaPlayerScores.containsKey(p)) {
+			ffaPlayerScores.put(p, 0);
+			return;
+		}
+
+		ffaPlayerScores.put(p, ffaPlayerScores.get(p) - 1);
+	}
+
 	public void removePlayer(Player p) {
 		if (!players.contains(p))
 			return;
@@ -338,9 +341,7 @@ public class GameInstance implements Listener {
 
 		health.removePlayer(p);
 
-		if (playerScores.containsKey(p)) {
-			playerScores.remove(p);
-		}
+		playerScores.remove(p);
 
 		players.remove(p);
 		ffaPlayerScores.remove(p);
@@ -522,6 +523,21 @@ public class GameInstance implements Listener {
 				p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 20 * gameTime, 1));
 			}
 
+		} else if (getGamemode() == Gamemode.OITC) {
+			p.getInventory().setItem(0, Main.loadManager.knife);
+			p.getInventory().setItem(1, GameManager.oitcGun.getGun());
+			ItemStack ammo = GameManager.oitcGun.getAmmo();
+			ammo.setAmount(1);
+			p.getInventory().setItem(8, ammo);
+		} else if (getGamemode() == Gamemode.GUN) {
+			p.getInventory().setItem(0, Main.loadManager.knife);
+			CodGun gun = GameManager.gunGameGuns.get(ffaPlayerScores.get(p));
+			ItemStack gunItem = gun.getGun();
+			ItemStack ammo = gun.getAmmo();
+			ammo.setAmount(gun.getAmmoCount());
+
+			p.getInventory().setItem(1, gunItem);
+			p.getInventory().setItem(19, ammo);
 		}
 	}
 
@@ -613,7 +629,7 @@ public class GameInstance implements Listener {
 
 			p.getInventory().clear();
 
-			Main.progManager.saveData(p);
+			Main.progressionManager.saveData(p);
 
 			StatHandler.saveStatData();
 		}
@@ -765,10 +781,10 @@ public class GameInstance implements Listener {
 			scoreBar.removeAll();
 
 			for (Player p : players) {
-				if (!currentMap.getGamemode().equals(Gamemode.FFA)) {
+				if (!currentMap.getGamemode().equals(Gamemode.FFA) && !currentMap.getGamemode().equals(Gamemode.OITC) && !currentMap.getGamemode().equals(Gamemode.GUN)) {
 					scoreBar.addPlayer(p);
 				} else {
-					freeForAllBar.put(p, Bukkit.createBossBar(ChatColor.GRAY + "«" + ChatColor.WHITE + getFancyTime(Main.getPlugin().getConfig().getInt("gameTime.FFA")) + ChatColor.RESET + ChatColor.WHITE + "»", BarColor.PINK, BarStyle.SOLID));
+					freeForAllBar.put(p, Bukkit.createBossBar(ChatColor.GRAY + "«" + ChatColor.WHITE + getFancyTime(Main.getPlugin().getConfig().getInt("gameTime." + getGamemode().toString())) + ChatColor.RESET + ChatColor.WHITE + "»", BarColor.PINK, BarStyle.SOLID));
 					freeForAllBar.get(p).addPlayer(p);
 				}
 			}
@@ -813,13 +829,13 @@ public class GameInstance implements Listener {
 				if (isLegacy)
 					updateScoreBoard(counter);
 
+				if (currentMap.getGamemode() == Gamemode.DOM) {
+					game.checkFlags();
+				}
+
 				if (currentMap.getGamemode() != Gamemode.FFA) {
 					scoreBar.setTitle(ChatColor.RED + "RED: " + RedTeamScore + ChatColor.GRAY + " «" + ChatColor.WHITE + counter + ChatColor.RESET + ChatColor.GRAY + "»" + ChatColor.DARK_BLUE + " BLU: " + BlueTeamScore);
 				} else {
-
-					if (currentMap.getGamemode() == Gamemode.DOM) {
-						game.checkFlags();
-					}
 
 					Player highestScorer = Bukkit.getPlayer(getWinningTeam());
 
@@ -920,8 +936,23 @@ public class GameInstance implements Listener {
 				}
 
 				if(currentMap.getGamemode().equals(Gamemode.OITC)) {
-					for (Player p : players) {
-						if (ffaPlayerScores.get(p) >= maxScore_OITC) {
+//					for (Player p : players) {
+//						if (ffaPlayerScores.get(p) >= maxScore_OITC) {
+//							endGameByScore(this);
+//							return;
+//						}
+//					}
+					for(Player p : getPlayers()) {
+						boolean lastManStanding = true;
+						for(Player other : getPlayers()) {
+							if (other.equals(p))
+								continue;
+
+							if (ffaPlayerScores.get(other) > 0)
+								lastManStanding = false;
+						}
+
+						if(lastManStanding) {
 							endGameByScore(this);
 							return;
 						}
@@ -1095,6 +1126,15 @@ public class GameInstance implements Listener {
 			redTeam.add(p);
 		}
 
+		if (getGamemode() == Gamemode.OITC) {
+			if (ffaPlayerScores.get(p) == 0) {
+				p.sendMessage(Main.codPrefix + ChatColor.RED + "You've ran out of lives!");
+				p.setGameMode(GameMode.SPECTATOR);
+				p.getInventory().clear();
+				return;
+			}
+		}
+
 		BukkitRunnable br = new BukkitRunnable() {
 			int t = 3;
 
@@ -1112,7 +1152,7 @@ public class GameInstance implements Listener {
 
 					if (t == 3)
 						Main.sendTitle(p, Main.codPrefix + ChatColor.RED + "You will respawn in " + t + " seconds!", "");
-				} else if (t <= 1) {
+				} else {
 					if (getState() == GameState.INGAME) {
 						if (getGamemode() != Gamemode.FFA) {
 							if (blueTeam.contains(p)) {
@@ -1135,8 +1175,6 @@ public class GameInstance implements Listener {
 						p.setFoodLevel(20);
 						cancel();
 					}
-				} else {
-					cancel();
 				}
 
 				t--;
@@ -1162,7 +1200,7 @@ public class GameInstance implements Listener {
 
 			CodScore score = playerScores.get(p);
 
-			p.setPlayerListName(teamColor + "[" + Main.progManager.getLevel(p) + "]" + p.getDisplayName() + " K " + score.getKills() + " / D " + score.getDeaths() + " / S " + score.getKillstreak());
+			p.setPlayerListName(teamColor + "[" + Main.progressionManager.getLevel(p) + "]" + p.getDisplayName() + " K " + score.getKills() + " / D " + score.getDeaths() + " / S " + score.getKillstreak());
 
 		}
 	}
@@ -1195,7 +1233,7 @@ public class GameInstance implements Listener {
 		return forceStarted;
 	}
 
-	private GameState getState() {
+	public GameState getState() {
 		return state;
 	}
 
@@ -1225,7 +1263,7 @@ public class GameInstance implements Listener {
 				Main.sendMessage(killer, "" + ChatColor.RED + ChatColor.BOLD + "YOU " + ChatColor.RESET + "" + ChatColor.WHITE + "[killed] " + ChatColor.RESET + ChatColor.DARK_BLUE + ChatColor.BOLD + victim.getDisplayName(), Main.lang);
 				Main.sendTitle(killer, "", ChatColor.YELLOW + "+" + xp + "xp");
 
-				Main.progManager.addExperience(killer, xp);
+				Main.progressionManager.addExperience(killer, xp);
 				CreditManager.setCredits(killer, CreditManager.getCredits(killer) + rank.getKillCredits());
 				kill(victim, killer);
 				if (getGamemode() != Gamemode.RESCUE && getGamemode() != Gamemode.DESTROY && getGamemode() != Gamemode.KC) {
@@ -1242,7 +1280,7 @@ public class GameInstance implements Listener {
 
 				Main.sendMessage(killer,  "" + ChatColor.DARK_BLUE + ChatColor.BOLD + "YOU " + ChatColor.RESET + ChatColor.WHITE + "[killed] " + ChatColor.RESET + ChatColor.RED + ChatColor.BOLD + victim.getDisplayName(), Main.lang);
 				Main.sendTitle(killer, "", ChatColor.YELLOW + "+" + xp + "xp");
-				Main.progManager.addExperience(killer, xp);
+				Main.progressionManager.addExperience(killer, xp);
 				kill(victim, killer);
 				if (getGamemode() != Gamemode.RESCUE && getGamemode() != Gamemode.DESTROY && getGamemode() != Gamemode.KC) {
 					addBluePoint();
@@ -1267,24 +1305,59 @@ public class GameInstance implements Listener {
 				Main.sendMessage(killer, "" + ChatColor.RED + ChatColor.BOLD + "YOU " + ChatColor.RESET + "" + ChatColor.WHITE + "[killed] " + ChatColor.RESET + ChatColor.DARK_BLUE + ChatColor.BOLD + victim.getDisplayName(), Main.lang);
 				Main.sendTitle(killer, "", ChatColor.YELLOW + "+" + rank.getKillExperience() + "xp");
 
-				Main.progManager.addExperience(killer, rank.getKillExperience());
+				Main.progressionManager.addExperience(killer, rank.getKillExperience());
 				CreditManager.setCredits(killer, CreditManager.getCredits(killer) + rank.getKillCredits());
 				kill(victim, killer);
 				updateScores(victim, killer, rank);
 			} else if (blueTeam.contains(killer)) {
 				Main.sendMessage(killer,  "" + ChatColor.DARK_BLUE + ChatColor.BOLD + "YOU " + ChatColor.RESET + ChatColor.WHITE + "[killed] " + ChatColor.RESET + ChatColor.RED + ChatColor.BOLD + victim.getDisplayName(), Main.lang);
 				Main.sendTitle(killer, "", ChatColor.YELLOW + "+" + rank.getKillExperience() + "xp");
-				Main.progManager.addExperience(killer, rank.getKillExperience());
+				Main.progressionManager.addExperience(killer, rank.getKillExperience());
 				kill(victim, killer);
 				updateScores(victim, killer, rank);
 			}
 
-		} else if (getGamemode().equals(Gamemode.FFA) || getGamemode().equals(Gamemode.GUN)) {
+		} else if (getGamemode().equals(Gamemode.FFA) || getGamemode().equals(Gamemode.GUN) || getGamemode().equals(Gamemode.OITC)) {
 			Main.sendMessage(killer, "" + ChatColor.GREEN + ChatColor.BOLD + "YOU " + ChatColor.RESET + ChatColor.WHITE + "[killed] " + ChatColor.RESET	 + ChatColor.GOLD + ChatColor.BOLD + victim.getDisplayName(), Main.lang);
 			Main.sendTitle(killer, "", ChatColor.YELLOW + "+" + rank.getKillExperience() + "xp");
-			Main.progManager.addExperience(killer, rank.getKillExperience());
+			Main.progressionManager.addExperience(killer, rank.getKillExperience());
 			kill(victim, killer);
-			addPointForPlayer(killer);
+			if (getGamemode() == Gamemode.OITC) {
+				removePointForPlayer(victim);
+				ItemStack ammo = GameManager.oitcGun.getAmmo();
+				ammo.setAmount(1);
+				if (killer.getInventory().getItem(8).getType() == ammo.getType()) {
+					killer.getInventory().addItem(ammo);
+				} else {
+					killer.getInventory().setItem(8, ammo);
+				}
+			} else {
+				addPointForPlayer(killer);
+			}
+
+
+
+			if (getGamemode() == Gamemode.GUN) {
+				if (killer.getInventory().getItemInMainHand().equals(Main.loadManager.knife)) {
+					removePointForPlayer(victim);
+				}
+
+				killer.getInventory().clear();
+				killer.getInventory().setItem(0, Main.loadManager.knife);
+				CodGun gun;
+				try {
+					gun = GameManager.gunGameGuns.get(ffaPlayerScores.get(killer));
+					ItemStack gunItem = gun.getGun();
+					ItemStack ammo = gun.getAmmo();
+					ammo.setAmount(gun.getAmmoCount());
+
+					killer.getInventory().setItem(1, gunItem);
+					killer.getInventory().setItem(19, ammo);
+				} catch(Exception ignored) {
+					killer.getInventory().clear();
+				}
+			}
+
 			updateScores(victim, killer, rank);
 		}
 	}
@@ -1564,7 +1637,7 @@ public class GameInstance implements Listener {
 			} else if (getGamemode() == Gamemode.KC) {
 				p.sendMessage(ChatColor.GRAY + "Kill Denied!");
 				Main.sendTitle(p, "", ChatColor.YELLOW + "+" + (Main.getRank(p).getKillExperience() / 2) + "xp!");
-				Main.progManager.addExperience(p, Main.getRank(p).getKillExperience() / 2);
+				Main.progressionManager.addExperience(p, Main.getRank(p).getKillExperience() / 2);
 			}
 		} else {
 			if (getGamemode() == Gamemode.RESCUE) {
@@ -1572,7 +1645,7 @@ public class GameInstance implements Listener {
 			} else if (getGamemode() == Gamemode.KC) {
 				p.sendMessage(ChatColor.GRAY + "Kill Confirmed!");
 				Main.sendTitle(p, "", ChatColor.YELLOW + "+" + Main.getRank(p).getKillExperience() + "xp!");
-				Main.progManager.addExperience(p, Main.getRank(p).getKillExperience());
+				Main.progressionManager.addExperience(p, Main.getRank(p).getKillExperience());
 				if (isOnRedTeam(p)) {
 					addRedPoint();
 				} else if (isOnBlueTeam(p)) {

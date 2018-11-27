@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import com.rhetorical.cod.GameManager;
 import org.bukkit.Location;
 
 import com.rhetorical.cod.Main;
@@ -105,10 +106,15 @@ public class CodMap {
 			if (getPinkSpawns().size() >= Main.maxPlayers) {
 				if (!availableGamemodes.contains(Gamemode.FFA))
 					availableGamemodes.add(Gamemode.FFA);
-				if(!availableGamemodes.contains(Gamemode.OITC))
-					availableGamemodes.add(Gamemode.OITC);
-				if (!availableGamemodes.contains(Gamemode.GUN))
-					availableGamemodes.add(Gamemode.GUN);
+				if(!availableGamemodes.contains(Gamemode.OITC)) {
+					if (GameManager.oitcGun != null)
+						availableGamemodes.add(Gamemode.OITC);
+				}
+				if (!availableGamemodes.contains(Gamemode.GUN)) {
+					if (GameManager.gunGameGuns != null && !GameManager.gunGameGuns.isEmpty()) {
+						availableGamemodes.add(Gamemode.GUN);
+					}
+				}
 			}
 		}
 
@@ -219,19 +225,21 @@ public class CodMap {
 		return currentGamemode;
 	}
 
-	// Gets a random gamemode from the list of available gamemodes
+	// Gets a random gamemode from the list of available game modes
 	public Gamemode changeGamemode() {
 		int index = (int) Math.floor(Math.random() * availableGamemodes.size() - 1);
 
-
-		//TEMP until OITC and GUN are fully implemented.
-		if (availableGamemodes.get(index) == Gamemode.OITC || availableGamemodes.get(index) == Gamemode.GUN) {
-			currentGamemode = Gamemode.FFA;
-			return Gamemode.FFA;
-		}
-
 		currentGamemode = availableGamemodes.get(index);
 		return getGamemode();
+	}
+
+	//Changes the gamemode (if possible) to the given gamemode.
+	public boolean changeGamemode(Gamemode toChange) {
+		if (!getAvailableGamemodes().contains(toChange))
+			return false;
+
+		currentGamemode = toChange;
+		return true;
 	}
 
 	public Location getAFlagSpawn() {

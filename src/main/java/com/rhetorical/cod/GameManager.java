@@ -1,23 +1,47 @@
 package com.rhetorical.cod;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.TreeMap;
+import java.util.*;
 
-import com.rhetorical.cod.object.CodGun;
+import com.rhetorical.cod.object.*;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import com.rhetorical.cod.files.ArenasFile;
-import com.rhetorical.cod.object.CodMap;
-import com.rhetorical.cod.object.GameInstance;
-import com.rhetorical.cod.object.Gamemode;
 
 public class GameManager {
 
 	static ArrayList<GameInstance> RunningGames = new ArrayList<>();
 	static ArrayList<CodMap> AddedMaps = new ArrayList<>();
-	static ArrayList<CodMap> UsedMaps = new ArrayList<>();
+	public static ArrayList<CodMap> UsedMaps = new ArrayList<>();
+
+	public static CodGun oitcGun = null;
+	public static List<CodGun> gunGameGuns = new ArrayList<>();
+
+	static void setupOITC() {
+		String oitcGunName = Main.getPlugin().getConfig().getString("OITC_Gun");
+		if (oitcGunName == null)
+			return;
+
+		CodWeapon weapon = Main.shopManager.getWeaponForName(oitcGunName);
+
+		if (!(weapon instanceof CodGun))
+			return;
+
+
+		//OITC can now be played
+		oitcGun = (CodGun) weapon;
+	}
+
+	static void setupGunGame() {
+		List<String> guns = Main.getPlugin().getConfig().getStringList("GunProgression");
+		for(String g : guns) {
+			if (Main.shopManager.getWeaponForName(g) instanceof CodGun) {
+				CodGun gun = (CodGun) Main.shopManager.getWeaponForName(g);
+				if (!gunGameGuns.contains(gun))
+					gunGameGuns.add(gun);
+			}
+		}
+	}
 
 	@SuppressWarnings("unchecked")
 	static void loadMaps() {
@@ -58,8 +82,8 @@ public class GameManager {
 			Main.sendMessage(Main.cs, Main.codPrefix + "\u00A7cCouldn't load loadouts from " + p.getDisplayName() + "!", Main.lang);
 		}
 		
-		Main.progManager.loadData(p);
-		Main.progManager.saveData(p);
+		Main.progressionManager.loadData(p);
+		Main.progressionManager.saveData(p);
 		
 		if (Main.lobbyLoc == null) {
 			Main.sendMessage(p, Main.codPrefix + "\u00A7cNo lobby set! You cannot start a game without a lobby location set!", Main.lang);
@@ -128,18 +152,16 @@ public class GameManager {
 	}
 
 	public static void leaveMatch(Player p) {
-		for (GameInstance i : RunningGames) {
-			if (i.getPlayers().contains(p)) {
-				i.removePlayer(p);
-				p.getInventory().clear();
-				p.setHealth(20D);
-				p.setFoodLevel(20);
-				Main.sendMessage(p, Main.codPrefix + "\u00A77You left the lobby!", Main.lang);
-				return;
-			}
+		if (!isInMatch(p) || getMatchWhichContains(p) == null) {
+			Main.sendMessage(p, Main.codPrefix + "\u00A77You aren't in a game!", Main.lang);
+			return;
 		}
 
-		Main.sendMessage(p, Main.codPrefix + "\u00A77You aren't in a lobby!", Main.lang);
+		Objects.requireNonNull(getMatchWhichContains(p)).removePlayer(p);
+		p.getInventory().clear();
+		p.setHealth(20D);
+		p.setFoodLevel(20);
+		Main.sendMessage(p, Main.codPrefix + "\u00A77You left the lobby!", Main.lang);
 	}
 
 	public static boolean isInMatch(Player p) {
@@ -151,6 +173,15 @@ public class GameManager {
 
 		return false;
 
+	}
+
+	public static CodMap getMapForName(String name) {
+		for(CodMap map : AddedMaps) {
+			if (map.getName().equalsIgnoreCase(name))
+				return map;
+		}
+
+		return null;
 	}
 	
 	public static GameInstance getMatchWhichContains(Player p) {
@@ -181,6 +212,24 @@ public class GameManager {
 		Main.sendMessage(Main.cs, "\u00A7cCOM-Warfare ran out of maps! (Maybe consider adding more maps?)", Main.lang);
 
 		return null;
+	}
+
+	public static boolean changeMap(GameInstance game, CodMap map) {
+
+		if (game.getMap() == map)
+			return false;
+
+		if (UsedMaps.contains(map))
+			return false;
+
+		if (!map.isEnabled())
+			return false;
+
+		if (game.getState() != GameState.WAITING && game.getState() != GameState.STARTING)
+			return false;
+
+		game.changeMap(map);
+		return true;
 	}
 
 	public static void removeInstance(GameInstance i) {

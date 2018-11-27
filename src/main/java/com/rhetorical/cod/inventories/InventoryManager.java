@@ -440,7 +440,7 @@ public class InventoryManager implements Listener {
 
 		for (CodGun gun : guns) {
 			if (gun.getType() == UnlockType.BOTH || gun.getType() == UnlockType.CREDITS) {
-				if (Main.progManager.getLevel(p) >= gun.getLevelUnlock()) {
+				if (Main.progressionManager.getLevel(p) >= gun.getLevelUnlock()) {
 
 					ItemStack item = gun.getGun();
 
@@ -470,7 +470,7 @@ public class InventoryManager implements Listener {
 				continue;
 
 			if (grenade.getType() == UnlockType.BOTH || grenade.getType() == UnlockType.CREDITS) {
-				if (Main.progManager.getLevel(p) >= grenade.getLevelUnlock()) {
+				if (Main.progressionManager.getLevel(p) >= grenade.getLevelUnlock()) {
 
 					ItemStack item = grenade.getWeapon();
 
