@@ -22,10 +22,7 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scoreboard.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class GameInstance implements Listener {
 
@@ -792,6 +789,9 @@ public class GameInstance implements Listener {
 				} else {
 					freeForAllBar.put(p, Bukkit.createBossBar(ChatColor.GRAY + "«" + ChatColor.WHITE + getFancyTime(Main.getPlugin().getConfig().getInt("gameTime." + getGamemode().toString())) + ChatColor.RESET + ChatColor.WHITE + "»", BarColor.PINK, BarStyle.SOLID));
 					freeForAllBar.get(p).addPlayer(p);
+					if (getGamemode() == Gamemode.OITC) {
+						ffaPlayerScores.put(p, maxScore_OITC);
+					}
 				}
 			}
 
@@ -851,12 +851,31 @@ public class GameInstance implements Listener {
 						}
 
 						if (!ffaPlayerScores.containsKey(p)) {
-							ffaPlayerScores.put(p, 0);
+							if (getGamemode() != Gamemode.OITC) {
+								ffaPlayerScores.put(p, 0);
+							} else {
+								ffaPlayerScores.put(p, maxScore_OITC);
+							}
 						}
 
 						if (!ffaPlayerScores.containsKey(highestScorer)) {
 							ffaPlayerScores.put(highestScorer, 0);
 						}
+
+						if (highestScorer == p) {
+							if (getPlayers().size() > 1) {
+								TreeMap<Integer, Player> scores = new TreeMap<>();
+								for (Player pl : ffaPlayerScores.keySet()) {
+									if (pl == highestScorer)
+										continue;
+									scores.put(ffaPlayerScores.get(pl), pl);
+								}
+
+								highestScorer = scores.lastEntry().getValue();
+							}
+						}
+
+
 						Double progress = (((double) t) / ((double) gameTime));
 						freeForAllBar.get(p).setTitle(ChatColor.GREEN + p.getDisplayName() + ": " + ffaPlayerScores.get(p) + ChatColor.GRAY + " «" + ChatColor.WHITE + counter + ChatColor.RESET + ChatColor.GRAY + "»" + " " + ChatColor.GOLD + highestScorer.getDisplayName() + ": " + ffaPlayerScores.get(highestScorer));
 						freeForAllBar.get(p).setProgress(progress);
