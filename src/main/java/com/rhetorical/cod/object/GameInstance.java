@@ -116,7 +116,7 @@ public class GameInstance implements Listener {
 			maxScore_OITC = 3;
 			maxScore_DESTROY = 4;
 			maxScore_RESCUE = 4;
-			maxScore_GUN = 20;
+			maxScore_GUN = GameManager.gunGameGuns.size();
 		}
 
 		setState(GameState.WAITING);
@@ -201,7 +201,11 @@ public class GameInstance implements Listener {
 		currentMap = map;
 		map.changeGamemode();
 		Gamemode gameMode = getGamemode();
-		gameTime = Main.getPlugin().getConfig().getInt("gameTime." + gameMode.toString());
+		if (gameMode == Gamemode.INFECT) {
+			gameTime = Main.getPlugin().getConfig().getInt("maxScore.INFECT");
+		} else {
+			gameTime = Main.getPlugin().getConfig().getInt("gameTime." + gameMode.toString());
+		}
 	}
 
 	private void changeGamemode(Gamemode gm) {
@@ -380,6 +384,11 @@ public class GameInstance implements Listener {
 					assignTeams();
 				}
 			} else {
+				if (getGamemode() != Gamemode.OITC) {
+					ffaPlayerScores.put(p, 0);
+				} else {
+					ffaPlayerScores.put(p, maxScore_OITC);
+				}
 				spawnCodPlayer(p, currentMap.getPinkSpawn());
 			}
 		}
@@ -532,6 +541,9 @@ public class GameInstance implements Listener {
 			ammo.setAmount(1);
 			p.getInventory().setItem(8, ammo);
 		} else if (getGamemode() == Gamemode.GUN) {
+			if(!ffaPlayerScores.containsKey(p)) {
+				ffaPlayerScores.put(p, 0);
+			}
 			p.getInventory().setItem(0, Main.loadManager.knife);
 			CodGun gun = GameManager.gunGameGuns.get(ffaPlayerScores.get(p));
 			ItemStack gunItem = gun.getGun();
@@ -791,6 +803,8 @@ public class GameInstance implements Listener {
 					freeForAllBar.get(p).addPlayer(p);
 					if (getGamemode() == Gamemode.OITC) {
 						ffaPlayerScores.put(p, maxScore_OITC);
+					} else {
+						ffaPlayerScores.put(p, 0);
 					}
 				}
 			}
