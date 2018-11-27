@@ -4,3 +4,5 @@
 \.idea/workspace\.xml
 
 target/
+
+dependency-reduced-pom\.xml
