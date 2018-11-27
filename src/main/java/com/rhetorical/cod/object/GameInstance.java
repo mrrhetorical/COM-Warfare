@@ -833,7 +833,7 @@ public class GameInstance implements Listener {
 					game.checkFlags();
 				}
 
-				if (currentMap.getGamemode() != Gamemode.FFA) {
+				if (currentMap.getGamemode() != Gamemode.FFA && currentMap.getGamemode() != Gamemode.OITC && currentMap.getGamemode() != Gamemode.GUN) {
 					scoreBar.setTitle(ChatColor.RED + "RED: " + RedTeamScore + ChatColor.GRAY + " «" + ChatColor.WHITE + counter + ChatColor.RESET + ChatColor.GRAY + "»" + ChatColor.DARK_BLUE + " BLU: " + BlueTeamScore);
 				} else {
 
