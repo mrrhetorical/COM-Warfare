@@ -312,6 +312,10 @@ public class GameInstance implements Listener {
 			return;
 		}
 
+		if (ffaPlayerScores.get(p) <= 0)
+			return;
+
+
 		ffaPlayerScores.put(p, ffaPlayerScores.get(p) - 1);
 	}
 
