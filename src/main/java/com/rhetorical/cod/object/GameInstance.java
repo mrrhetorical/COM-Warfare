@@ -1179,7 +1179,7 @@ public class GameInstance implements Listener {
 						Main.sendTitle(p, Main.codPrefix + ChatColor.RED + "You will respawn in " + t + " seconds!", "");
 				} else {
 					if (getState() == GameState.INGAME) {
-						if (getGamemode() != Gamemode.FFA) {
+						if (getGamemode() != Gamemode.FFA && getGamemode() != Gamemode.OITC && getGamemode() != Gamemode.GUN) {
 							if (blueTeam.contains(p)) {
 								spawnCodPlayer(p, getMap().getBlueSpawn());
 							} else if (redTeam.contains(p)) {
