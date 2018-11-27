@@ -414,7 +414,7 @@ public class LoadoutManager {
 	}
 
 	public CodGun getRandomPrimary() {
-		int size = Main.shopManager.getPrimaryGuns().size();
+		int size = Main.shopManager.getPrimaryGuns().size() - 1;
 		int position;
 
 		if (size != 0) {
@@ -427,7 +427,7 @@ public class LoadoutManager {
 	}
 
 	public CodGun getRandomSecondary() {
-		int size = Main.shopManager.getSecondaryGuns().size();
+		int size = Main.shopManager.getSecondaryGuns().size() - 1;
 		int position;
 
 		if (size != 0) {
@@ -440,7 +440,7 @@ public class LoadoutManager {
 	}
 
 	public CodWeapon getRandomLethal() {
-		int size = Main.shopManager.getLethalWeapons().size();
+		int size = Main.shopManager.getLethalWeapons().size() - 1;
 		int position;
 
 		if (size != 0) {
@@ -453,7 +453,7 @@ public class LoadoutManager {
 	}
 
 	public CodWeapon getRandomTactical() {
-		int size = Main.shopManager.getTacticalWeapons().size();
+		int size = Main.shopManager.getTacticalWeapons().size() - 1;
 		int position;
 
 		if (size != 0) {
