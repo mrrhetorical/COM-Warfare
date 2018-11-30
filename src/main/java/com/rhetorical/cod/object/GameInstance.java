@@ -754,9 +754,9 @@ public class GameInstance implements Listener {
 
 				String counter = getFancyTime(t);
 
-				scoreBar.setTitle(ChatColor.GREEN + "Map: " + ChatColor.GOLD + getMap().getName() + " " + ChatColor.GRAY + "«" + ChatColor.WHITE + counter + ChatColor.RESET + "" + ChatColor.GRAY + "» " + ChatColor.GREEN + "Mode: " + ChatColor.GOLD + getMap().getGamemode().toString());
+				scoreBar.setTitle(ChatColor.GOLD + getMap().getName() + " " + ChatColor.GRAY + "«" + ChatColor.WHITE + counter + ChatColor.RESET + "" + ChatColor.GRAY + "» " + ChatColor.GOLD + getMap().getGamemode().toString());
 
-				Double progress = (((double) t) / ((double) lobbyTime));
+				double progress = (((double) t) / ((double) lobbyTime));
 
 				scoreBar.setProgress(progress);
 

@@ -63,12 +63,15 @@ public class Listeners implements Listener {
 		Player sender = e.getPlayer();
 		String message = e.getMessage();
 
-		if (GameManager.isInMatch(sender) && !Main.hasPerm(sender, "com.chat")) {
+		if (GameManager.isInMatch(sender)) {
 			e.setCancelled(true);
 		}
 
+		if (!Main.hasPerm(sender, "com.chat"))
+			return;
+
 		for (Player receiver : Bukkit.getOnlinePlayers()) {
-			if (GameManager.isInMatch(sender) && GameManager.isInMatch(receiver)) {
+			if (GameManager.isInMatch(receiver)) {
 				if (GameManager.getMatchWhichContains(sender) == GameManager.getMatchWhichContains(receiver)) {
 					if (receiver == sender) {
 						receiver.sendMessage("\u00A7a" + sender.getDisplayName() + " \u00A7r\u00A7f»\u00A7r \u00A77" + message);
