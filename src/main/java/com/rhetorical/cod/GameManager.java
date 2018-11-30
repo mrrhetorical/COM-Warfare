@@ -50,9 +50,6 @@ public class GameManager {
 		while (ArenasFile.getData().contains("Maps." + k)) {
 			CodMap m;
 			String name = ArenasFile.getData().getString("Maps." + k + ".name");
-//			String gm1 = ArenasFile.getData().getString("Maps." + k + ".gm");
-
-//			Gamemode gm = Gamemode.valueOf(gm1);
 
 			m = new CodMap(name);
 
