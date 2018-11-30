@@ -4,7 +4,7 @@
     <groupId>com.rhetorical</groupId>
     <artifactId>com-warfare</artifactId>
     <packaging>jar</packaging>
-    <version>RELEASE-2.7.0</version>
+    <version>2.7.1</version>
     <name>COM-Warfare</name>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -93,62 +93,16 @@
                     </execution>
                 </executions>
             </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.3.2</version>
+                <configuration>
+                    <finalName>com-warfare-1.12-13</finalName>
+                </configuration>
+            </plugin>
+
         </plugins>
     </build>
-
-<profiles>
-
-    <!-- 1.13 Build Profile -->
-
-    <profile>
-        <id>1.13</id>
-
-        <build>
-            <plugins>
-
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-jar-plugin</artifactId>
-                    <version>2.3.2</version>
-                    <configuration>
-                        <finalName>com-warfare-1.13</finalName>
-                    </configuration>
-                </plugin>
-
-            </plugins>
-        </build>
-    </profile>
-
-    <!-- 1.8 Build Profile -->
-
-    <!--<profile>-->
-        <!--<id>1.8</id>-->
-
-        <!--<dependencies>-->
-            <!--<dependency>-->
-                <!--<groupId>org.spigotmc</groupId>-->
-                <!--<artifactId>spigot-api</artifactId>-->
-                <!--<version>1.8.8-R0.1-SNAPSHOT</version>-->
-                <!--<scope>provided</scope>-->
-            <!--</dependency>-->
-        <!--</dependencies>-->
-
-        <!--<build>-->
-
-            <!--<plugins>-->
-
-                <!--<plugin>-->
-                    <!--<groupId>org.apache.maven.plugins</groupId>-->
-                    <!--<artifactId>maven-jar-plugin</artifactId>-->
-                    <!--<version>2.3.2</version>-->
-                    <!--<configuration>-->
-                        <!--<finalName>com-warfare-1.8</finalName>-->
-                    <!--</configuration>-->
-                <!--</plugin>-->
-
-            <!--</plugins>-->
-        <!--</build>-->
-    <!--</profile>-->
-
-</profiles>
 </project>
