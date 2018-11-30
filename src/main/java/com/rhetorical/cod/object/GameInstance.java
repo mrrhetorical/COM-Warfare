@@ -1232,15 +1232,19 @@ public class GameInstance implements Listener {
 			if (isOnRedTeam(p)) {
 				teamColor = ChatColor.RED + "";
 			} else if (isOnBlueTeam(p)) {
-				teamColor = ChatColor.DARK_BLUE + "";
+				teamColor = ChatColor.BLUE + "";
 			} else {
 				teamColor = ChatColor.LIGHT_PURPLE + "";
 			}
 
 			CodScore score = playerScores.get(p);
 
-			p.setPlayerListName(teamColor + "[" + Main.progressionManager.getLevel(p) + "]" + p.getDisplayName() + " K " + score.getKills() + " / D " + score.getDeaths() + " / S " + score.getKillstreak());
-
+			p.setPlayerListHeader("[COM-War]");
+			p.setPlayerListFooter(ChatColor.WHITE + "Playing " + ChatColor.GOLD + getMap().getGamemode().toString() + ChatColor.WHITE + " on " + ChatColor.GOLD + getMap().getName() + ChatColor.WHITE + "!");
+			p.setPlayerListName(ChatColor.WHITE + "[P" + Main.progressionManager.getPrestigeLevel(p) + "L" +
+					Main.progressionManager.getLevel(p) + "] " + teamColor + p.getDisplayName() + " [K] " +
+					ChatColor.GREEN + score.getKills() + teamColor + " [D] " + ChatColor.GREEN + score.getDeaths() +
+					teamColor + " [S] " + ChatColor.GREEN + score.getKillstreak());
 		}
 	}
 

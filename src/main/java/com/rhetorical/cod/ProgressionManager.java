@@ -110,7 +110,7 @@ public class ProgressionManager {
 		setLevel(p, 1, false);
 	}
 
-	int getPrestigeLevel(Player p) {
+	public int getPrestigeLevel(Player p) {
 		if (!this.prestigeLevel.containsKey(p)) {
 			this.prestigeLevel.put(p, 0);
 		}
