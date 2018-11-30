@@ -63,28 +63,28 @@ public class Listeners implements Listener {
 		Player sender = e.getPlayer();
 		String message = e.getMessage();
 
-		if (GameManager.isInMatch(sender)) {
+		if (GameManager.isInMatch(sender) && !Main.hasPerm(sender, "com.chat")) {
 			e.setCancelled(true);
 		}
 
-		for (Player reciever : Bukkit.getOnlinePlayers()) {
-			if (GameManager.isInMatch(sender) && GameManager.isInMatch(reciever)) {
-				if (GameManager.getMatchWhichContains(sender) == GameManager.getMatchWhichContains(reciever)) {
-					if (reciever == sender) {
-						reciever.sendMessage("\u00A7a" + sender.getDisplayName() + " \u00A7r\u00A7f»\u00A7r \u00A77" + message);
+		for (Player receiver : Bukkit.getOnlinePlayers()) {
+			if (GameManager.isInMatch(sender) && GameManager.isInMatch(receiver)) {
+				if (GameManager.getMatchWhichContains(sender) == GameManager.getMatchWhichContains(receiver)) {
+					if (receiver == sender) {
+						receiver.sendMessage("\u00A7a" + sender.getDisplayName() + " \u00A7r\u00A7f»\u00A7r \u00A77" + message);
 						continue;
 					}
 
 					GameInstance i = GameManager.getMatchWhichContains(sender);
 
 					if (i.isOnBlueTeam(sender)) {
-						reciever.sendMessage("\u00A79" + sender.getDisplayName() + " \u00A7r\u00A7f»\u00A7r \u00A77" + message);
+						receiver.sendMessage("\u00A79" + sender.getDisplayName() + " \u00A7r\u00A7f»\u00A7r \u00A77" + message);
 					} else if (i.isOnRedTeam(sender)) {
-						reciever.sendMessage("\u00A7c" + sender.getDisplayName() + " \u00A7r\u00A7f»\u00A7r \u00A77" + message);
+						receiver.sendMessage("\u00A7c" + sender.getDisplayName() + " \u00A7r\u00A7f»\u00A7r \u00A77" + message);
 					} else if (i.isOnPinkTeam(sender)) {
-						reciever.sendMessage("\u00A7d" + sender.getDisplayName() + " \u00A7r\u00A7f»\u00A7r \u00A77" + message);
+						receiver.sendMessage("\u00A7d" + sender.getDisplayName() + " \u00A7r\u00A7f»\u00A7r \u00A77" + message);
 					} else {
-						reciever.sendMessage("\u00A77" + sender.getDisplayName() + " \u00A7r\u00A7f»\u00A7r \u00A77" + message);
+						receiver.sendMessage("\u00A77" + sender.getDisplayName() + " \u00A7r\u00A7f»\u00A7r \u00A77" + message);
 					}
 				}
 			} else {

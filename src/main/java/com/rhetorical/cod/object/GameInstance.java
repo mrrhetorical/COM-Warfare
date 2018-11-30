@@ -754,7 +754,7 @@ public class GameInstance implements Listener {
 
 				String counter = getFancyTime(t);
 
-				scoreBar.setTitle(ChatColor.GRAY + "«" + ChatColor.WHITE + counter + ChatColor.RESET + "" + ChatColor.GRAY + "»");
+				scoreBar.setTitle(ChatColor.GREEN + "Map: " + ChatColor.GOLD + getMap().getName() + " " + ChatColor.GRAY + "«" + ChatColor.WHITE + counter + ChatColor.RESET + "" + ChatColor.GRAY + "» " + ChatColor.GREEN + "Mode: " + ChatColor.GOLD + getMap().getGamemode().toString());
 
 				Double progress = (((double) t) / ((double) lobbyTime));
 
@@ -1250,7 +1250,6 @@ public class GameInstance implements Listener {
 
 	public boolean isOnBlueTeam(Player p) {
 		return blueTeam.contains(p);
-
 	}
 
 	public boolean isOnPinkTeam(Player p) {

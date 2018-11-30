@@ -210,7 +210,7 @@ public class Main extends JavaPlugin {
 		}
 	}
 
-	private static boolean hasPerm(CommandSender p, String s) {
+	static boolean hasPerm(CommandSender p, String s) {
 		if (p.hasPermission(s) || p.hasPermission("com.*") || p instanceof ConsoleCommandSender || p.isOp()) {
 			return true;
 		} else {
