@@ -57,6 +57,8 @@ public class Main extends JavaPlugin {
 	public static Location lobbyLoc;
 	public static HashMap<Player, Location> lastLoc = new HashMap<>();
 
+	public static String header = "[COM-Warfare]";
+
 	private Metrics bMetrics;
 
 	@Override
@@ -157,6 +159,7 @@ public class Main extends JavaPlugin {
 		lobbyLoc = (Location) getPlugin().getConfig().get("com.lobby");
 
 		if (ComVersion.getPurchased()) {
+			header = getPlugin().getConfig().getString("Scoreboard.Header");
 			minPlayers = getPlugin().getConfig().getInt("players.min");
 			maxPlayers = getPlugin().getConfig().getInt("players.max");
 			serverMode = getPlugin().getConfig().getBoolean("serverMode");

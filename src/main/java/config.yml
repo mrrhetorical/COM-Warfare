@@ -6,6 +6,10 @@ auto-download-dependency: false
 lang: EN
 #Server Mode: If set to true, when joining the server, players will be automatically put into a match.
 serverMode: false
+#Scoreboard: The different things you can change in the scoreboard.
+Scoreboard:
+  #Header of the tab list. Leave blank for default.
+  Header: [COM-Warfare]
 #Lobby Time: The amount of time players should wait in the lobby before the match starts.
 lobbyTime: 70
 #Players: the min and max amount of players allowed in a single game. Default range:  (2, 12) {PREMIUM-ONLY}

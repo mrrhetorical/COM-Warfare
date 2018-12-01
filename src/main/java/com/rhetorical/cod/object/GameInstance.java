@@ -143,7 +143,7 @@ public class GameInstance implements Listener {
 		scoreboardObjective.setDisplayName("" + ChatColor.WHITE + ChatColor.BOLD + time);
 		if (getGamemode() != Gamemode.FFA && getGamemode() != Gamemode.OITC && getGamemode() != Gamemode.GUN) {
 			Score redScore = scoreboardObjective.getScore("" + ChatColor.RED + ChatColor.BOLD + "RED: ");
-			Score blueScore = scoreboardObjective.getScore("" + ChatColor.DARK_BLUE + ChatColor.BOLD + "BLUE: ");
+			Score blueScore = scoreboardObjective.getScore("" + ChatColor.BLUE + ChatColor.BOLD + "BLUE: ");
 			redScore.setScore(RedTeamScore);
 			blueScore.setScore(BlueTeamScore);
 		} else {
@@ -671,7 +671,7 @@ public class GameInstance implements Listener {
 						if (getWinningTeam().equalsIgnoreCase("red")) {
 							teamFormat = ChatColor.RED + "RED";
 						} else if (getWinningTeam().equalsIgnoreCase("blue")) {
-							teamFormat = ChatColor.DARK_BLUE + "BLUE";
+							teamFormat = ChatColor.BLUE + "BLUE";
 						} else if (getWinningTeam().equalsIgnoreCase("nobody") || getWinningTeam().equalsIgnoreCase("tie")) {
 							Main.sendMessage(p, Main.codPrefix + ChatColor.GRAY + "Nobody won the match! It was a tie!", Main.lang);
 							Main.sendMessage(p, Main.codPrefix + ChatColor.WHITE + "Returning to the lobby in " + Integer.toString(t) + " seconds!", Main.lang);
@@ -854,7 +854,7 @@ public class GameInstance implements Listener {
 				}
 
 				if (currentMap.getGamemode() != Gamemode.FFA && currentMap.getGamemode() != Gamemode.OITC && currentMap.getGamemode() != Gamemode.GUN) {
-					scoreBar.setTitle(ChatColor.RED + "RED: " + RedTeamScore + ChatColor.GRAY + " «" + ChatColor.WHITE + counter + ChatColor.RESET + ChatColor.GRAY + "»" + ChatColor.DARK_BLUE + " BLU: " + BlueTeamScore);
+					scoreBar.setTitle(ChatColor.RED + "RED: " + RedTeamScore + ChatColor.GRAY + " «" + ChatColor.WHITE + counter + ChatColor.RESET + ChatColor.GRAY + "»" + ChatColor.BLUE + " BLU: " + BlueTeamScore);
 				} else {
 
 					Player highestScorer = Bukkit.getPlayer(getWinningTeam());
@@ -1239,12 +1239,12 @@ public class GameInstance implements Listener {
 
 			CodScore score = playerScores.get(p);
 
-			p.setPlayerListHeader("[COM-War]");
+			p.setPlayerListHeader(Main.header);
 			p.setPlayerListFooter(ChatColor.WHITE + "Playing " + ChatColor.GOLD + getMap().getGamemode().toString() + ChatColor.WHITE + " on " + ChatColor.GOLD + getMap().getName() + ChatColor.WHITE + "!");
 			p.setPlayerListName(ChatColor.WHITE + "[P" + Main.progressionManager.getPrestigeLevel(p) + "L" +
-					Main.progressionManager.getLevel(p) + "] " + teamColor + p.getDisplayName() + " [K] " +
-					ChatColor.GREEN + score.getKills() + teamColor + " [D] " + ChatColor.GREEN + score.getDeaths() +
-					teamColor + " [S] " + ChatColor.GREEN + score.getKillstreak());
+					Main.progressionManager.getLevel(p) + "] " + teamColor + p.getDisplayName() + ChatColor.WHITE + " [K] " +
+					ChatColor.GREEN + score.getKills() + ChatColor.WHITE + " [D] " + ChatColor.GREEN + score.getDeaths() +
+					ChatColor.WHITE + " [S] " + ChatColor.GREEN + score.getKillstreak());
 		}
 	}
 
@@ -1302,7 +1302,7 @@ public class GameInstance implements Listener {
 					xp /= 2d;
 				}
 
-				Main.sendMessage(killer, "" + ChatColor.RED + ChatColor.BOLD + "YOU " + ChatColor.RESET + "" + ChatColor.WHITE + "[killed] " + ChatColor.RESET + ChatColor.DARK_BLUE + ChatColor.BOLD + victim.getDisplayName(), Main.lang);
+				Main.sendMessage(killer, "" + ChatColor.RED + ChatColor.BOLD + "YOU " + ChatColor.RESET + "" + ChatColor.WHITE + "[killed] " + ChatColor.RESET + ChatColor.BLUE + ChatColor.BOLD + victim.getDisplayName(), Main.lang);
 				Main.sendTitle(killer, "", ChatColor.YELLOW + "+" + xp + "xp");
 
 				Main.progressionManager.addExperience(killer, xp);
@@ -1320,7 +1320,7 @@ public class GameInstance implements Listener {
 					xp /= 2d;
 				}
 
-				Main.sendMessage(killer,  "" + ChatColor.DARK_BLUE + ChatColor.BOLD + "YOU " + ChatColor.RESET + ChatColor.WHITE + "[killed] " + ChatColor.RESET + ChatColor.RED + ChatColor.BOLD + victim.getDisplayName(), Main.lang);
+				Main.sendMessage(killer,  "" + ChatColor.BLUE + ChatColor.BOLD + "YOU " + ChatColor.RESET + ChatColor.WHITE + "[killed] " + ChatColor.RESET + ChatColor.RED + ChatColor.BOLD + victim.getDisplayName(), Main.lang);
 				Main.sendTitle(killer, "", ChatColor.YELLOW + "+" + xp + "xp");
 				Main.progressionManager.addExperience(killer, xp);
 				kill(victim, killer);
@@ -1333,7 +1333,7 @@ public class GameInstance implements Listener {
 			if (victim == redFlagHolder) {
 				dropFlag(blueFlag, victim.getLocation());
 				for (Player p : players) {
-					Main.sendMessage(p, ChatColor.GREEN + "The " + ChatColor.DARK_BLUE + "blue " + ChatColor.GREEN + "flag has been dropped!", Main.lang);
+					Main.sendMessage(p, ChatColor.GREEN + "The " + ChatColor.BLUE + "blue " + ChatColor.GREEN + "flag has been dropped!", Main.lang);
 				}
 			}else if (victim == blueFlagHolder) {
 				dropFlag(redFlag, victim.getLocation());
@@ -1344,7 +1344,7 @@ public class GameInstance implements Listener {
 
 		} else if (getGamemode().equals(Gamemode.CTF) || getGamemode().equals(Gamemode.INFECT)) {
 			if (redTeam.contains(killer)) {
-				Main.sendMessage(killer, "" + ChatColor.RED + ChatColor.BOLD + "YOU " + ChatColor.RESET + "" + ChatColor.WHITE + "[killed] " + ChatColor.RESET + ChatColor.DARK_BLUE + ChatColor.BOLD + victim.getDisplayName(), Main.lang);
+				Main.sendMessage(killer, "" + ChatColor.RED + ChatColor.BOLD + "YOU " + ChatColor.RESET + "" + ChatColor.WHITE + "[killed] " + ChatColor.RESET + ChatColor.BLUE + ChatColor.BOLD + victim.getDisplayName(), Main.lang);
 				Main.sendTitle(killer, "", ChatColor.YELLOW + "+" + rank.getKillExperience() + "xp");
 
 				Main.progressionManager.addExperience(killer, rank.getKillExperience());
@@ -1352,7 +1352,7 @@ public class GameInstance implements Listener {
 				kill(victim, killer);
 				updateScores(victim, killer, rank);
 			} else if (blueTeam.contains(killer)) {
-				Main.sendMessage(killer,  "" + ChatColor.DARK_BLUE + ChatColor.BOLD + "YOU " + ChatColor.RESET + ChatColor.WHITE + "[killed] " + ChatColor.RESET + ChatColor.RED + ChatColor.BOLD + victim.getDisplayName(), Main.lang);
+				Main.sendMessage(killer,  "" + ChatColor.BLUE + ChatColor.BOLD + "YOU " + ChatColor.RESET + ChatColor.WHITE + "[killed] " + ChatColor.RESET + ChatColor.RED + ChatColor.BOLD + victim.getDisplayName(), Main.lang);
 				Main.sendTitle(killer, "", ChatColor.YELLOW + "+" + rank.getKillExperience() + "xp");
 				Main.progressionManager.addExperience(killer, rank.getKillExperience());
 				kill(victim, killer);
@@ -1597,7 +1597,7 @@ public class GameInstance implements Listener {
 				setupFlags(true, false);
 				blueFlagHolder = null;
 				for (Player player : players) {
-					Main.sendTitle(player,  ChatColor.DARK_BLUE + "The blue team scored!", "");
+					Main.sendTitle(player,  ChatColor.BLUE + "The blue team scored!", "");
 				}
 			}
 		}
@@ -1854,7 +1854,7 @@ public class GameInstance implements Listener {
 
 					if (aFlagCapture == 10) {
 						for (Player p : getPlayers()) {
-							p.sendMessage(ChatColor.YELLOW + "The " + ChatColor.DARK_BLUE + "BLUE " + ChatColor.YELLOW + "team has captured flag A!");
+							p.sendMessage(ChatColor.YELLOW + "The " + ChatColor.BLUE + "BLUE " + ChatColor.YELLOW + "team has captured flag A!");
 						}
 					} else if (aFlagCapture == -10) {
 						for (Player p : getPlayers()) {
@@ -1881,7 +1881,7 @@ public class GameInstance implements Listener {
 
 					if (bFlagCapture == 10) {
 						for (Player p : getPlayers()) {
-							p.sendMessage(ChatColor.YELLOW + "The " + ChatColor.DARK_BLUE + "BLUE " + ChatColor.YELLOW + "team has captured flag B!");
+							p.sendMessage(ChatColor.YELLOW + "The " + ChatColor.BLUE + "BLUE " + ChatColor.YELLOW + "team has captured flag B!");
 						}
 					} else if (bFlagCapture == -10) {
 						for (Player p : getPlayers()) {
@@ -1908,7 +1908,7 @@ public class GameInstance implements Listener {
 
 					if (cFlagCapture == 10) {
 						for (Player p : getPlayers()) {
-							p.sendMessage(ChatColor.YELLOW + "The " + ChatColor.DARK_BLUE + "BLUE " + ChatColor.YELLOW + "team has captured flag C!");
+							p.sendMessage(ChatColor.YELLOW + "The " + ChatColor.BLUE + "BLUE " + ChatColor.YELLOW + "team has captured flag C!");
 						}
 					} else if (cFlagCapture == -10) {
 						for (Player p : getPlayers()) {
