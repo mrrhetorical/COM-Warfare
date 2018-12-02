@@ -1173,6 +1173,11 @@ public class GameInstance implements Listener {
 			}
 
 			redTeam.add(p);
+
+			if (getGamemode().equals(Gamemode.INFECT)) {
+				BlueTeamScore = blueTeam.size();
+				RedTeamScore = redTeam.size();
+			}
 		}
 
 		if (getGamemode() == Gamemode.OITC) {
