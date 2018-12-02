@@ -69,9 +69,9 @@ public class PerkManager {
 		this.setDefaultTwo(this.getDefaultPerk(PerkSlot.TWO));
 		this.setDefaultThree(this.getDefaultPerk(PerkSlot.THREE));
 
-		for (int i = 3; i < Perk.values().length - 4; i++) {
+		for (int i = 0, k = 3; k < Perk.values().length; i++, k++) {
 			if (!Main.getPlugin().getConfig().contains("Perks." + i)) {
-				Perk perk = Perk.values()[i];
+				Perk perk = Perk.values()[k];
 				PerkSlot slot = PerkSlot.random();
 				Main.getPlugin().getConfig().set("Perks." + i + ".name", perk.toString());
 				Main.getPlugin().getConfig().set("Perks." + i + ".material", Material.APPLE.toString());
@@ -79,7 +79,7 @@ public class PerkManager {
 				Main.getPlugin().getConfig().set("Perks." + i + ".slot", slot.toString());
 				Main.getPlugin().getConfig().set("Perks." + i + ".lore", new ArrayList<String>());
 
-				availablePerks.add(new CodPerk(Perk.values()[i], new ItemStack(Material.APPLE), slot, new ArrayList<>(), 0));
+				availablePerks.add(new CodPerk(perk, new ItemStack(Material.APPLE), slot, new ArrayList<>(), 0));
 
 				Main.getPlugin().saveConfig();
 				Main.getPlugin().reloadConfig();
