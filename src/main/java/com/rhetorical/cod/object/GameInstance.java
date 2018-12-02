@@ -164,6 +164,8 @@ public class GameInstance implements Listener {
 		RedTeamScore = 0;
 		BlueTeamScore = 0;
 		ffaPlayerScores.clear();
+		blueTeam.clear();
+		redTeam.clear();
 
 		setState(GameState.WAITING);
 
