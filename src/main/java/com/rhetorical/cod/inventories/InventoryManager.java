@@ -3,6 +3,7 @@ package com.rhetorical.cod.inventories;
 import java.util.*;
 
 import com.rhetorical.cod.object.*;
+import com.rhetorical.tpp.McLang;
 import org.bukkit.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -731,10 +732,10 @@ public class InventoryManager implements Listener {
 			return;
 
 		if (e.getCurrentItem().equals(closeInv)) {
-			if (e.getClickedInventory().equals(mainInventory)) {
-				p.closeInventory();
-			} else {
+			if (!e.getClickedInventory().equals(mainInventory)) {
 				p.openInventory(mainInventory);
+			} else {
+				p.closeInventory();
 			}
 		}
 
@@ -918,9 +919,11 @@ public class InventoryManager implements Listener {
 						Main.invManager.setupShopInventories(p);
 						Main.invManager.setupCreateClassInventory(p);
 						Main.invManager.setupPlayerSelectionInventories(p);
+						p.openInventory(mainInventory);
+						Main.sendMessage(p, Main.codPrefix + ChatColor.GREEN + "Purchase successful!", McLang.EN);
 						return;
 					} else {
-						p.closeInventory();
+						Main.sendMessage(p, Main.codPrefix + ChatColor.RED + "You can't afford that!", McLang.EN);
 						return;
 					}
 				}
@@ -946,9 +949,11 @@ public class InventoryManager implements Listener {
 						Main.invManager.setupShopInventories(p);
 						Main.invManager.setupCreateClassInventory(p);
 						Main.invManager.setupPlayerSelectionInventories(p);
+						p.openInventory(mainInventory);
+						Main.sendMessage(p, Main.codPrefix + ChatColor.GREEN + "Purchase successful!", McLang.EN);
 						return;
 					} else {
-						p.closeInventory();
+						Main.sendMessage(p, Main.codPrefix + ChatColor.RED + "You can't afford that!", McLang.EN);
 						return;
 					}
 				}
@@ -972,9 +977,11 @@ public class InventoryManager implements Listener {
 						Main.invManager.setupShopInventories(p);
 						Main.invManager.setupCreateClassInventory(p);
 						Main.invManager.setupPlayerSelectionInventories(p);
+						p.openInventory(mainInventory);
+						Main.sendMessage(p, Main.codPrefix + ChatColor.GREEN + "Purchase successful!", McLang.EN);
 						return;
 					} else {
-						p.closeInventory();
+						Main.sendMessage(p, Main.codPrefix + ChatColor.RED + "You can't afford that!", McLang.EN);
 						return;
 					}
 				}
@@ -1133,11 +1140,6 @@ public class InventoryManager implements Listener {
 
 				}
 			}
-
-			if (e.getCurrentItem().equals(closeInv)) {
-				p.closeInventory();
-			}
-
 		}
 
 	}
