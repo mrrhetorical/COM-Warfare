@@ -1323,6 +1323,7 @@ public class GameInstance implements Listener {
 				Main.sendMessage(killer,  "" + ChatColor.BLUE + ChatColor.BOLD + "YOU " + ChatColor.RESET + ChatColor.WHITE + "[killed] " + ChatColor.RESET + ChatColor.RED + ChatColor.BOLD + victim.getDisplayName(), Main.lang);
 				Main.sendTitle(killer, "", ChatColor.YELLOW + "+" + xp + "xp");
 				Main.progressionManager.addExperience(killer, xp);
+				CreditManager.setCredits(killer, CreditManager.getCredits(killer) + rank.getKillCredits());
 				kill(victim, killer);
 				if (getGamemode() != Gamemode.RESCUE && getGamemode() != Gamemode.DESTROY && getGamemode() != Gamemode.KC) {
 					addBluePoint();
@@ -1354,6 +1355,7 @@ public class GameInstance implements Listener {
 			} else if (blueTeam.contains(killer)) {
 				Main.sendMessage(killer,  "" + ChatColor.BLUE + ChatColor.BOLD + "YOU " + ChatColor.RESET + ChatColor.WHITE + "[killed] " + ChatColor.RESET + ChatColor.RED + ChatColor.BOLD + victim.getDisplayName(), Main.lang);
 				Main.sendTitle(killer, "", ChatColor.YELLOW + "+" + rank.getKillExperience() + "xp");
+				CreditManager.setCredits(killer, CreditManager.getCredits(killer) + rank.getKillCredits());
 				Main.progressionManager.addExperience(killer, rank.getKillExperience());
 				kill(victim, killer);
 				updateScores(victim, killer, rank);
@@ -1363,6 +1365,7 @@ public class GameInstance implements Listener {
 			Main.sendMessage(killer, "" + ChatColor.GREEN + ChatColor.BOLD + "YOU " + ChatColor.RESET + ChatColor.WHITE + "[killed] " + ChatColor.RESET	 + ChatColor.GOLD + ChatColor.BOLD + victim.getDisplayName(), Main.lang);
 			Main.sendTitle(killer, "", ChatColor.YELLOW + "+" + rank.getKillExperience() + "xp");
 			Main.progressionManager.addExperience(killer, rank.getKillExperience());
+			CreditManager.setCredits(killer, CreditManager.getCredits(killer) + rank.getKillCredits());
 			kill(victim, killer);
 			if (getGamemode() == Gamemode.OITC) {
 				removePointForPlayer(victim);
