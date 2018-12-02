@@ -14,7 +14,7 @@ public enum Perk {
 	private String name;
 	private PerkSlot slot;
 	
-	private Perk(String name, PerkSlot slot) {
+	Perk(String name, PerkSlot slot) {
 		this.setName(name);
 		this.setSlot(slot);
 	}

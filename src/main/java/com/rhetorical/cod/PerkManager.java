@@ -69,25 +69,24 @@ public class PerkManager {
 		this.setDefaultTwo(this.getDefaultPerk(PerkSlot.TWO));
 		this.setDefaultThree(this.getDefaultPerk(PerkSlot.THREE));
 
-		int i = 0;
-		while (availablePerks.size() < Perk.values().length) {
-			if (!Main.getPlugin().getConfig().contains("Perks." + i) && i < 17) {
-				Main.getPlugin().getConfig().set("Perks." + i + ".name", Perk.values()[i].toString());
+		for (int i = 3; i < Perk.values().length - 4; i++) {
+			if (!Main.getPlugin().getConfig().contains("Perks." + i)) {
+				Perk perk = Perk.values()[i];
+				PerkSlot slot = PerkSlot.random();
+				Main.getPlugin().getConfig().set("Perks." + i + ".name", perk.toString());
 				Main.getPlugin().getConfig().set("Perks." + i + ".material", Material.APPLE.toString());
 				Main.getPlugin().getConfig().set("Perks." + i + ".cost", 0);
-				Main.getPlugin().getConfig().set("Perks." + i + ".slot", PerkSlot.random().toString());
+				Main.getPlugin().getConfig().set("Perks." + i + ".slot", slot.toString());
 				Main.getPlugin().getConfig().set("Perks." + i + ".lore", new ArrayList<String>());
 
-				availablePerks.add(new CodPerk(Perk.values()[i], new ItemStack(Material.APPLE), PerkSlot.random(), new ArrayList<>(), 0));
+				availablePerks.add(new CodPerk(Perk.values()[i], new ItemStack(Material.APPLE), slot, new ArrayList<>(), 0));
 
 				Main.getPlugin().saveConfig();
 				Main.getPlugin().reloadConfig();
-
-				i--;
 			}
-
-			i++;
 		}
+
+		System.out.println("Loaded " + availablePerks.size() + " perks!");
 	}
 
 	public CodPerk getDefaultTwo() {
@@ -126,16 +125,16 @@ public class PerkManager {
 
 			return new CodPerk(name, perkItem, slot, lore, cost);
 		} else {
-			Main.getPlugin().getConfig().set("Perks.default." + s + ".name", Perk.values()[s].toString());
+			Main.getPlugin().getConfig().set("Perks.default." + s + ".name", Perk.values()[s - 1].toString());
 			Main.getPlugin().getConfig().set("Perks.default." + s + ".material", Material.APPLE.toString());
 			Main.getPlugin().getConfig().set("Perks.default." + s + ".slot", slot.toString());
 			Main.getPlugin().getConfig().set("Perks.default." + s + ".lore", new ArrayList<String>());
 
 			Main.getPlugin().saveConfig();
 			Main.getPlugin().reloadConfig();
-		}
 
-		return null;
+			return getDefaultPerk(slot);
+		}
 
 		// CodPerk perk = GunsFile.getData().getString("Perks." + s + ".default.name");
 	}

@@ -505,7 +505,8 @@ public class InventoryManager implements Listener {
 					perkMeta.setLore(new ArrayList<>());
 				}
 				ArrayList<String> lore = (ArrayList<String>) perkMeta.getLore();
-				lore.add("\u00A76Cost: " + perk.getCost());
+				lore.add(ChatColor.GOLD + "Cost: " + perk.getCost());
+				lore.add(ChatColor.GOLD + "Slot: " + perk.getSlot().toString());
 				perkMeta.setLore(lore);
 				item.setItemMeta(perkMeta);
 
