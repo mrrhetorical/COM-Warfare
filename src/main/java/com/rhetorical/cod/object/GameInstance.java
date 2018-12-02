@@ -34,6 +34,7 @@ public class GameInstance implements Listener {
 	private int lobbyTime;
 
 	private GameState state;
+	private BukkitRunnable gameRunnable;
 
 	private ArrayList<Player> blueTeam = new ArrayList<>();
 	private ArrayList<Player> redTeam = new ArrayList<>();
@@ -853,6 +854,13 @@ public class GameInstance implements Listener {
 					game.checkFlags();
 				}
 
+				if (currentMap.getGamemode() == Gamemode.INFECT) {
+					if (blueTeam.size() == 0) {
+						endGameByScore(this);
+						return;
+					}
+				}
+
 				if (currentMap.getGamemode() != Gamemode.FFA && currentMap.getGamemode() != Gamemode.OITC && currentMap.getGamemode() != Gamemode.GUN) {
 					scoreBar.setTitle(ChatColor.RED + "RED: " + RedTeamScore + ChatColor.GRAY + " «" + ChatColor.WHITE + counter + ChatColor.RESET + ChatColor.GRAY + "»" + ChatColor.BLUE + " BLU: " + BlueTeamScore);
 				} else {
@@ -1010,8 +1018,8 @@ public class GameInstance implements Listener {
 			}
 
 		};
-
-		br.runTaskTimer(Main.getPlugin(), 0L, 20L);
+		gameRunnable = br;
+		gameRunnable.runTaskTimer(Main.getPlugin(), 0L, 20L);
 	}
 
 	private void startNewRound(int delay, List<Player> prevRWT) {
