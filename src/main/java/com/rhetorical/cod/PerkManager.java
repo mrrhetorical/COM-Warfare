@@ -86,6 +86,10 @@ public class PerkManager {
 			}
 		}
 
+		availablePerks.add(this.defaultOne);
+		availablePerks.add(this.defaultTwo);
+		availablePerks.add(this.defaultThree);
+
 		System.out.println("Loaded " + availablePerks.size() + " perks!");
 	}
 

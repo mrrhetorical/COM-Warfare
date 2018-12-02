@@ -159,23 +159,23 @@ public class LoadoutManager {
 
 		for (int i = 0; i < Main.progressionManager.getPrestigeLevel(p); i++) {
 			switch (i) {
-			case 1:
-				classes++;
-				break;
-			case 3:
-				classes++;
-				break;
-			case 5:
-				classes++;
-				break;
-			case 7:
-				classes++;
-				break;
-			case 9:
-				classes++;
-				break;
-			default:
-				break;
+				case 1:
+					classes++;
+					break;
+				case 3:
+					classes++;
+					break;
+				case 5:
+					classes++;
+					break;
+				case 7:
+					classes++;
+					break;
+				case 9:
+					classes++;
+					break;
+				default:
+					break;
 			}
 		}
 
@@ -308,15 +308,15 @@ public class LoadoutManager {
 			CodPerk perkThree = null;
 
 			for (CodPerk perk : Main.perkManager.getAvailablePerks()) {
-				if (perk.getPerk().getSlot() == PerkSlot.ONE) {
+				if (perk.getSlot() == PerkSlot.ONE) {
 					if (perk.getPerk().getName().equals(LoadoutsFile.getData().getString("Loadouts." + p.getName() + "." + k + ".Perk1"))) {
 						perkOne = perk;
 					}
-				} else if (perk.getPerk().getSlot() == PerkSlot.TWO) {
+				} else if (perk.getSlot() == PerkSlot.TWO) {
 					if (perk.getPerk().getName().equals(LoadoutsFile.getData().getString("Loadouts." + p.getName() + "." + k + ".Perk2"))) {
 						perkTwo = perk;
 					}
-				} else if (perk.getPerk().getSlot() == PerkSlot.THREE) {
+				} else if (perk.getSlot() == PerkSlot.THREE) {
 					if (perk.getPerk().getName().equals(LoadoutsFile.getData().getString("Loadouts." + p.getName() + "." + k + ".Perk3"))) {
 						perkThree = perk;
 					}
@@ -390,12 +390,9 @@ public class LoadoutManager {
 			LoadoutsFile.getData().set("Loadouts." + p.getName() + "." + i + ".Secondary", l.getSecondary().getName());
 			LoadoutsFile.getData().set("Loadouts." + p.getName() + "." + i + ".Lethal", l.getLethal().getName());
 			LoadoutsFile.getData().set("Loadouts." + p.getName() + "." + i + ".Tactical", l.getTactical().getName());
-			LoadoutsFile.getData().set("Loadouts." + p.getName() + "." + i + ".Perk1",
-					l.getPerk1().getPerk().getName());
-			LoadoutsFile.getData().set("Loadouts." + p.getName() + "." + i + ".Perk2",
-					l.getPerk2().getPerk().getName());
-			LoadoutsFile.getData().set("Loadouts." + p.getName() + "." + i + ".Perk3",
-					l.getPerk3().getPerk().getName());
+			LoadoutsFile.getData().set("Loadouts." + p.getName() + "." + i + ".Perk1", l.getPerk1().getPerk().getName());
+			LoadoutsFile.getData().set("Loadouts." + p.getName() + "." + i + ".Perk2", l.getPerk2().getPerk().getName());
+			LoadoutsFile.getData().set("Loadouts." + p.getName() + "." + i + ".Perk3", l.getPerk3().getPerk().getName());
 			LoadoutsFile.saveData();
 			LoadoutsFile.reloadData();
 			i++;

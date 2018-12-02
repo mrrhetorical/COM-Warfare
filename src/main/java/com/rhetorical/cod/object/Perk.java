@@ -26,11 +26,7 @@ public enum Perk {
 	public void setSlot(PerkSlot slot) {
 		this.slot = slot;
 	}
-	
-	public PerkSlot getSlot() {
-		return this.slot;
-	}
-	
+
 	public String getName() {
 		return this.name;
 	}
