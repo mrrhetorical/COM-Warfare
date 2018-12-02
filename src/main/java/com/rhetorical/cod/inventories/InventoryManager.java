@@ -432,7 +432,7 @@ public class InventoryManager implements Listener {
 
 		for (CodGun gun : guns) {
 			if (gun.getType() == UnlockType.BOTH || gun.getType() == UnlockType.CREDITS) {
-				if (Main.progressionManager.getLevel(p) >= gun.getLevelUnlock()) {
+				if (Main.progressionManager.getLevel(p) >= gun.getLevelUnlock() && !Main.shopManager.getPurchasedGuns().get(p).contains(gun)) {
 
 					ItemStack item = gun.getGun();
 
