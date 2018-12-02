@@ -78,6 +78,8 @@ public class PerkManager {
 				Main.getPlugin().getConfig().set("Perks." + i + ".slot", PerkSlot.random().toString());
 				Main.getPlugin().getConfig().set("Perks." + i + ".lore", new ArrayList<String>());
 
+				availablePerks.add(new CodPerk(Perk.values()[i], new ItemStack(Material.APPLE), PerkSlot.random(), new ArrayList<>(), 0));
+
 				Main.getPlugin().saveConfig();
 				Main.getPlugin().reloadConfig();
 
@@ -101,18 +103,18 @@ public class PerkManager {
 		int s;
 
 		switch (slot) {
-		case ONE:
-			s = 1;
-			break;
-		case TWO:
-			s = 2;
-			break;
-		case THREE:
-			s = 3;
-			break;
-		default:
-			Main.sendMessage(Main.cs, Main.codPrefix + "\u00A7cThere was an error loading the perk slot data from the config.yml! The file may be corrupted!", Main.lang);
-			return null;
+			case ONE:
+				s = 1;
+				break;
+			case TWO:
+				s = 2;
+				break;
+			case THREE:
+				s = 3;
+				break;
+			default:
+				Main.sendMessage(Main.cs, Main.codPrefix + "\u00A7cThere was an error loading the perk slot data from the config.yml! The file may be corrupted!", Main.lang);
+				return null;
 		}
 
 		if (Main.getPlugin().getConfig().contains("Perks.default." + s)) {

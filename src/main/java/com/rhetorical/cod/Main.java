@@ -111,6 +111,7 @@ public class Main extends JavaPlugin {
 			} else {
 				try {
 					lang = McLang.valueOf(getPlugin().getConfig().getString("lang"));
+					connectToTranslationService();
 				} catch (Exception e) {
 					lang = McLang.EN;
 					cs.sendMessage(codPrefix + ChatColor.RED + "Could not get the language from the config! Make sure you're using the right two letter abbreviation!");
@@ -134,13 +135,22 @@ public class Main extends JavaPlugin {
 		StatsFile.setup(getPlugin());
 		KillstreaksFile.setup(getPlugin());
 
+		System.out.println("Loading managers...");
+
 		progressionManager = new ProgressionManager();
+		System.out.println("Progression Manager loaded");
 		perkManager = new PerkManager();
+		System.out.println("Perk Manager loaded");
 		loadManager = new LoadoutManager(new HashMap<>());
+		System.out.println("Loadout Manager loaded");
 		shopManager = new ShopManager();
+		System.out.println("Shop Manager loaded");
 		perkListener = new PerkListener();
+		System.out.println("Perk Listener loaded");
 		killstreakManager = new KillStreakManager();
+		System.out.println("Killstreak Manager loaded");
 		invManager = new InventoryManager();
+		System.out.println("Inventory Manager loaded");
 
 		KillStreakManager.setup();
 
@@ -166,7 +176,6 @@ public class Main extends JavaPlugin {
 			defaultHealth = getPlugin().getConfig().getDouble("defaultHealth");
 			translate_api_key = getPlugin().getConfig().getString("translate.api_key");
 		}
-
 
 		if (ComVersion.getPurchased()) {
 			int i = 0;
@@ -196,8 +205,6 @@ public class Main extends JavaPlugin {
 			RankPerks rank = new RankPerks("default", 1, 100, 0);
 			Main.serverRanks.add(rank);
 		}
-		
-		connectToTranslationService();
 
 		Main.cs.sendMessage(Main.codPrefix + ChatColor.GREEN + ChatColor.BOLD + "COM-Warfare version " + ChatColor.RESET + ChatColor.WHITE + version + ChatColor.RESET + ChatColor.GREEN + ChatColor.BOLD + " is now up and running!");
 	}
@@ -776,23 +783,7 @@ public class Main extends JavaPlugin {
 		try {
 			translate = new McTranslate(Main.getPlugin(), Main.translate_api_key);
 		} catch(Exception e) {
-			Main.sendMessage(cs, Main.codPrefix + "Attempting to reconnect to McTranslate++ API...");
-			BukkitRunnable tryTranslateAgain = new BukkitRunnable() {
-				public void run() {
-					try {
-						translate = new McTranslate(Main.getPlugin(), Main.translate_api_key);
-					} catch(Exception e) {
-						Main.sendMessage(Main.cs, Main.codPrefix + ChatColor.RED + "Could not start McTranslate++ API!");
-						return;
-					}
-
-					Main.sendMessage(Main.cs, Main.codPrefix + ChatColor.YELLOW + "Successfully started McTranslate++ API!");
-					this.cancel();
-
-				}
-			};
-
-			tryTranslateAgain.runTaskLater(getPlugin(), 20L * (5L));
+			Main.sendMessage(Main.cs, Main.codPrefix + ChatColor.RED + "Could not start McTranslate++ API!");
 		}
 	}
 
