@@ -66,6 +66,9 @@ public class Main extends JavaPlugin {
 
 		ComVersion.setup(true);
 
+		getPlugin().saveDefaultConfig();
+		getPlugin().reloadConfig();
+
 		if (ComVersion.getPurchased()) {
 			codPrefix = getPlugin().getConfig().getString("prefix") + " ";
 
@@ -78,8 +81,8 @@ public class Main extends JavaPlugin {
 
 		String bukkitVersion = Bukkit.getServer().getBukkitVersion();
 
-		if (!bukkitVersion.startsWith("1.13")) {
-			Main.cs.sendMessage(Main.codPrefix + ChatColor.RED + "You are not on the right version of Spigot/Bukkit, COM-Warfare might not work as intended. To ensure it will work properly, please use version " + ChatColor.WHITE + "1.13" + ChatColor.RED + "!");
+		if (bukkitVersion.startsWith("1.8")) {
+			Main.cs.sendMessage(Main.codPrefix + ChatColor.RED + "You are not on the most recent version of Spigot/Bukkit, so COM-Warfare might not work as advertised. To ensure it will work properly, please use version " + ChatColor.WHITE + "1.9 - 1.13" + ChatColor.RED + "!");
 		}
 
 		Main.cs.sendMessage(Main.codPrefix + "Checking dependencies...");
@@ -130,9 +133,6 @@ public class Main extends JavaPlugin {
 		LoadoutsFile.setup(getPlugin());
 		StatsFile.setup(getPlugin());
 		KillstreaksFile.setup(getPlugin());
-
-		getPlugin().saveDefaultConfig();
-		getPlugin().reloadConfig();
 
 		progressionManager = new ProgressionManager();
 		perkManager = new PerkManager();
