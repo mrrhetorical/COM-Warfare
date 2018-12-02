@@ -262,13 +262,7 @@ public class InventoryManager implements Listener {
 
 	public void setupCreateClassInventory(Player p) {
 
-		if (Main.loadManager.getLoadouts(p) == null) {
-			Main.loadManager.load(p);
-		}
-
-		if (Main.loadManager.getLoadouts(p).size() < 5) {
-			Main.loadManager.load(p);
-		}
+		Main.loadManager.load(p);
 
 		Main.shopManager.loadPurchaseData(p);
 
