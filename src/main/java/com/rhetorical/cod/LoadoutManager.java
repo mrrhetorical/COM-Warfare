@@ -307,6 +307,23 @@ public class LoadoutManager {
 			CodPerk perkTwo = null;
 			CodPerk perkThree = null;
 
+			for (CodPerk perk : Main.perkManager.getAvailablePerks()) {
+				if (perk.getPerk().getSlot() == PerkSlot.ONE) {
+					if (perk.getPerk().getName().equals(LoadoutsFile.getData().getString("Loadouts." + p.getName() + "." + k + ".Perk1"))) {
+						perkOne = perk;
+					}
+				} else if (perk.getPerk().getSlot() == PerkSlot.TWO) {
+					if (perk.getPerk().getName().equals(LoadoutsFile.getData().getString("Loadouts." + p.getName() + "." + k + ".Perk2"))) {
+						perkTwo = perk;
+					}
+				} else if (perk.getPerk().getSlot() == PerkSlot.THREE) {
+					if (perk.getPerk().getName().equals(LoadoutsFile.getData().getString("Loadouts." + p.getName() + "." + k + ".Perk3"))) {
+						perkThree = perk;
+					}
+				}
+			}
+
+
 			if (primary == null) {
 				primary = Main.loadManager.getDefaultPrimary();
 			}

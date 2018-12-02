@@ -2,6 +2,7 @@ package com.rhetorical.cod;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -122,7 +123,9 @@ public class ShopManager {
 		this.purchasedGuns.computeIfAbsent(p, k -> new ArrayList<>());
 		if (purchasedGuns.get(p) != null) {
 			for (CodGun gun : this.purchasedGuns.get(p)) {
-				guns.add(gun.getName());
+				if (!guns.contains(gun.getName())) {
+					guns.add(gun.getName());
+				}
 			}
 		}
 
@@ -137,7 +140,9 @@ public class ShopManager {
 
 		if (purchasedWeapons.get(p) != null) {
 			for (CodWeapon grenade : this.purchasedWeapons.get(p)) {
-				weapons.add(grenade.getName());
+				if (!weapons.contains(grenade.getName())) {
+					weapons.add(grenade.getName());
+				}
 			}
 		}
 
@@ -148,7 +153,9 @@ public class ShopManager {
 
 		if (purchasedPerks.get(p) != null) {
 			for (CodPerk perk : this.purchasedPerks.get(p)) {
-				perks.add(perk.getPerk().getName());
+				if (!perks.contains(perk.getPerk().getName())) {
+					perks.add(perk.getPerk().getName());
+				}
 			}
 		}
 		
@@ -175,22 +182,26 @@ public class ShopManager {
 
 		if (gunList != null) {
 
-			outsideGuns: for (String s : gunList) {
-				for (CodGun gun : this.getPrimaryGuns()) {
+			for (String s : gunList) {
+				boolean found = false;
+				List<CodGun> allGuns = this.getPrimaryGuns();
+				allGuns.addAll(this.getSecondaryGuns());
+				for (CodGun gun : allGuns) {
 					if (gun.getName().equals(s)) {
-						guns.add(gun);
-						continue outsideGuns;
+						if (!guns.contains(gun)) {
+							guns.add(gun);
+							found = true;
+							break;
+						}
+						found = true;
+						break;
 					}
 				}
 
-				for (CodGun gun : this.getSecondaryGuns()) {
-					if (gun.getName().equals(s)) {
-						guns.add(gun);
-						continue outsideGuns;
-					}
+				if (!found) {
+					guns.add(Main.loadManager.getDefaultPrimary());
+					guns.add(Main.loadManager.getDefaultSecondary());
 				}
-				guns.add(Main.loadManager.getDefaultPrimary());
-				guns.add(Main.loadManager.getDefaultSecondary());
 			}
 		} else {
 			guns.add(Main.loadManager.getDefaultPrimary());
@@ -200,22 +211,27 @@ public class ShopManager {
 		ArrayList<String> weaponList = (ArrayList<String>) ShopFile.getData().get("Purchased.Weapons." + p.getName());
 
 		if (weaponList != null) {
-			outsideWeapons: for (String s : weaponList) {
+			for (String s : weaponList) {
+				boolean found = false;
+				List<CodWeapon> allWeapons = this.getLethalWeapons();
+				allWeapons.addAll(this.getTacticalWeapons());
 				for (CodWeapon weapon : this.getLethalWeapons()) {
 					if (weapon.getName().equals(s)) {
-						grenades.add(weapon);
-						continue outsideWeapons;
+						if (!grenades.contains(weapon)) {
+							grenades.add(weapon);
+							found = true;
+							break;
+						}
+						found = true;
+						break;
 					}
+
 				}
 
-				for (CodWeapon weapon : this.getTacticalWeapons()) {
-					if (weapon.getName().equals(s)) {
-						grenades.add(weapon);
-						continue outsideWeapons;
-					}
+				if (!found) {
+					grenades.add(Main.loadManager.getDefaultLethal());
+					grenades.add(Main.loadManager.getDefaultTactical());
 				}
-				grenades.add(Main.loadManager.getDefaultLethal());
-				grenades.add(Main.loadManager.getDefaultTactical());
 			}
 		} else {
 			grenades.add(Main.loadManager.getDefaultLethal());

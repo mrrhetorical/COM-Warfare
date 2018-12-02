@@ -1,9 +1,6 @@
 package com.rhetorical.cod.inventories;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.TreeMap;
+import java.util.*;
 
 import com.rhetorical.cod.object.*;
 import org.bukkit.ChatColor;
@@ -286,7 +283,7 @@ public class InventoryManager implements Listener {
 
 			ItemStack header;
 			try {
-				header = new ItemStack(Material.CRAFTING_TABLE);
+				header = new ItemStack(Material.valueOf("CRAFTING_TABLE"));
 			} catch(Exception e) {
 				header = new ItemStack(Material.valueOf("WORKBENCH"));
 			}
@@ -797,24 +794,24 @@ public class InventoryManager implements Listener {
 				return;
 			}
 
-			if (e.getCurrentItem().equals(KillStreakManager.uavItem) || e.getCurrentItem().equals(KillStreakManager.counterUavItem) || e.getCurrentItem().equals(KillStreakManager.nukeItem)) {
+			if (e.getCurrentItem().getItemMeta().equals(KillStreakManager.uavItem.getItemMeta()) || e.getCurrentItem().getItemMeta().equals(KillStreakManager.counterUavItem.getItemMeta()) || e.getCurrentItem().getItemMeta().equals(KillStreakManager.nukeItem.getItemMeta())) {
 				ItemStack i = e.getCurrentItem();
 				switch (i.getAmount()) {
-				case 1:
-					i.setAmount(2);
-					break;
-				case 2:
-					i.setAmount(3);
-					break;
-				case 3:
-					i.setAmount(9);
-					break;
-				case 9:
-					i.setAmount(1);
-					break;
-				default:
-					i.setAmount(9);
-					break;
+					case 1:
+						i.setAmount(2);
+						break;
+					case 2:
+						i.setAmount(3);
+						break;
+					case 3:
+						i.setAmount(9);
+						break;
+					case 9:
+						i.setAmount(1);
+						break;
+					default:
+						i.setAmount(9);
+						break;
 				}
 			} else if (e.getCurrentItem().getType().equals(Material.CHEST)) {
 
@@ -822,7 +819,7 @@ public class InventoryManager implements Listener {
 				ItemStack counterUavStack = this.killStreakInventory.get(p).getItem(2);
 				ItemStack nukeStack = this.killStreakInventory.get(p).getItem(4);
 
-				Integer[] usedNumbers = {};
+				Integer[] usedNumbers = new Integer[3];
 
 				HashMap<KillStreak, Integer> numMap = new HashMap<>();
 
@@ -839,7 +836,7 @@ public class InventoryManager implements Listener {
 						}
 					}
 
-					usedNumbers[usedNumbers.length] = counterUavStack.getAmount();
+					usedNumbers[usedNumbers.length - 1] = counterUavStack.getAmount();
 					numMap.put(KillStreak.COUNTER_UAV, counterUavStack.getAmount());
 				}
 
@@ -851,7 +848,7 @@ public class InventoryManager implements Listener {
 						}
 					}
 
-					usedNumbers[usedNumbers.length] = nukeStack.getAmount();
+					usedNumbers[usedNumbers.length - 1] = nukeStack.getAmount();
 					numMap.put(KillStreak.NUKE, nukeStack.getAmount());
 				}
 				///// FOR ANY NEW KILLSTREAKS, ADD THE ABOVE CODE FOR NEW STREAKS /////
@@ -861,10 +858,12 @@ public class InventoryManager implements Listener {
 					return;
 				}
 
-				KillStreak[] toSet = {};
+				KillStreak[] toSet = new KillStreak[3];
 
+				int i = 0;
 				for (KillStreak k : numMap.keySet()) {
-					toSet[toSet.length] = k;
+					toSet[i] = k;
+					i++;
 				}
 
 				Main.killstreakManager.setStreaks(p, toSet[0], toSet[1], toSet[2]);

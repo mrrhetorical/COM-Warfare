@@ -72,26 +72,26 @@ public class Loadout implements Listener {
 
 	public void setPerk(PerkSlot slot, CodPerk perk) {
 		switch (slot) {
-		case ONE:
-			this.perk1 = perk;
-			Main.loadManager.save(this.getOwner());
-			Main.loadManager.load(this.getOwner());
-			Main.invManager.setupCreateClassInventory(this.getOwner());
-			break;
-		case TWO:
-			this.perk2 = perk;
-			Main.loadManager.save(this.getOwner());
-			Main.loadManager.load(this.getOwner());
-			Main.invManager.setupCreateClassInventory(this.getOwner());
-			break;
-		case THREE:
-			this.perk3 = perk;
-			Main.loadManager.save(this.getOwner());
-			Main.loadManager.load(this.getOwner());
-			Main.invManager.setupCreateClassInventory(this.getOwner());
-			break;
-		default:
-			return;
+			case ONE:
+				this.perk1 = perk;
+				Main.loadManager.save(this.getOwner());
+				Main.loadManager.load(this.getOwner());
+				Main.invManager.setupCreateClassInventory(this.getOwner());
+				break;
+			case TWO:
+				this.perk2 = perk;
+				Main.loadManager.save(this.getOwner());
+				Main.loadManager.load(this.getOwner());
+				Main.invManager.setupCreateClassInventory(this.getOwner());
+				break;
+			case THREE:
+				this.perk3 = perk;
+				Main.loadManager.save(this.getOwner());
+				Main.loadManager.load(this.getOwner());
+				Main.invManager.setupCreateClassInventory(this.getOwner());
+				break;
+			default:
+				break;
 		}
 	}
 
