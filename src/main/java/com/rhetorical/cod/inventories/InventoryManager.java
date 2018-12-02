@@ -920,10 +920,8 @@ public class InventoryManager implements Listener {
 						Main.invManager.setupCreateClassInventory(p);
 						Main.invManager.setupPlayerSelectionInventories(p);
 						p.openInventory(mainInventory);
-						Main.sendMessage(p, Main.codPrefix + ChatColor.GREEN + "Purchase successful!", McLang.EN);
 						return;
 					} else {
-						Main.sendMessage(p, Main.codPrefix + ChatColor.RED + "You can't afford that!", McLang.EN);
 						return;
 					}
 				}
@@ -950,10 +948,8 @@ public class InventoryManager implements Listener {
 						Main.invManager.setupCreateClassInventory(p);
 						Main.invManager.setupPlayerSelectionInventories(p);
 						p.openInventory(mainInventory);
-						Main.sendMessage(p, Main.codPrefix + ChatColor.GREEN + "Purchase successful!", McLang.EN);
 						return;
 					} else {
-						Main.sendMessage(p, Main.codPrefix + ChatColor.RED + "You can't afford that!", McLang.EN);
 						return;
 					}
 				}
@@ -978,10 +974,8 @@ public class InventoryManager implements Listener {
 						Main.invManager.setupCreateClassInventory(p);
 						Main.invManager.setupPlayerSelectionInventories(p);
 						p.openInventory(mainInventory);
-						Main.sendMessage(p, Main.codPrefix + ChatColor.GREEN + "Purchase successful!", McLang.EN);
 						return;
 					} else {
-						Main.sendMessage(p, Main.codPrefix + ChatColor.RED + "You can't afford that!", McLang.EN);
 						return;
 					}
 				}
