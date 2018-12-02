@@ -731,7 +731,11 @@ public class InventoryManager implements Listener {
 			return;
 
 		if (e.getCurrentItem().equals(closeInv)) {
-			p.closeInventory();
+			if (e.getClickedInventory().equals(mainInventory)) {
+				p.closeInventory();
+			} else {
+				p.openInventory(mainInventory);
+			}
 		}
 
 		if (e.getClickedInventory().equals(mainInventory)) {
@@ -758,8 +762,6 @@ public class InventoryManager implements Listener {
 			} else if (e.getCurrentItem().equals(scoreStreaks)) {
 				p.closeInventory();
 				this.openKillStreaksInventory(p);
-			} else if (e.getCurrentItem().equals(closeInv)) {
-				p.closeInventory();
 			}
 		} else if (e.getInventory().equals(mainShopInventory)) {
 			if (e.getCurrentItem().equals(gunShopItem)) {
