@@ -128,7 +128,8 @@ public class ProgressionManager {
 		int level = getLevel(p);
 		double requiredExperience = getExperienceForLevel(level);
 
-		this.setExperience(p, getExperience(p) + experience);
+		double current = getExperience(p);
+		this.setExperience(p, current + experience);
 
 		if (this.getExperience(p) >= requiredExperience) {
 			this.setExperience(p, 0D);
@@ -160,9 +161,9 @@ public class ProgressionManager {
 			return 400D;
 		} else if (level == 2) {
 			return 4000D;
-		} else if (level <= 10) {
+		} else if (level < 10) {
 			exp = 4000 + (600 * (level - 2));
-		} else if (level >= 10 && level <= 31) {
+		} else if (level > 10 && level <= 31) {
 			exp = 4000 + (800 * level - 2);
 		} else if (level >= 31 && level <= 55) {
 			exp = 4000 + (1200 * level - 2);

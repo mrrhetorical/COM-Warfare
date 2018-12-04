@@ -10,12 +10,10 @@ import org.bukkit.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
-import org.bukkit.entity.Cod;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -1009,7 +1007,7 @@ public class Main extends JavaPlugin {
 			args[0] = title;
 			args[1] = subtitle;
 			args[2] = 10;
-			args[3] = 0;
+			args[3] = 20;
 			args[4] = 10;
 			p.getClass().getMethod("sendTitle", String.class, String.class, Integer.class, Integer.class, Integer.class).invoke(p, args);
 		} catch(Exception e) {
@@ -1026,7 +1024,7 @@ public class Main extends JavaPlugin {
 	public static void openMainMenu(Player p) {
 		p.openInventory(invManager.mainInventory);
 		try {
-			p.playSound(p.getLocation(), Sound.BLOCK_CHEST_OPEN, 4f, 1f);
+			p.playSound(p.getLocation(), Sound.valueOf("BLOCK_CHEST_OPEN"), 4f, 1f);
 		}catch(Exception e) {
 			//fail silently and play legacy sound
 			p.playSound(p.getLocation(), Sound.valueOf("CHEST_OPEN"), 4f, 1f);

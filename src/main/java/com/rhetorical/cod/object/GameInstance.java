@@ -3,17 +3,14 @@ package com.rhetorical.cod.object;
 import com.rhetorical.cod.*;
 import org.bukkit.*;
 import org.bukkit.block.Banner;
-import org.bukkit.boss.BarColor;
-import org.bukkit.boss.BarStyle;
-import org.bukkit.boss.BossBar;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
@@ -64,9 +61,9 @@ public class GameInstance implements Listener {
 
 	// Score management and game information system for FFA (Free for all)
 	private HashMap<Player, Integer> ffaPlayerScores = new HashMap<>();
-	private HashMap<Player, org.bukkit.boss.BossBar> freeForAllBar = new HashMap<>();
+	private HashMap<Player, Object> freeForAllBar = new HashMap<>();
 
-	private BossBar scoreBar = Bukkit.createBossBar(ChatColor.GRAY + "«" + ChatColor.WHITE + getFancyTime(Main.getPlugin().getConfig().getInt("lobbyTime")) + ChatColor.RESET + "" + ChatColor.GRAY + "»", org.bukkit.boss.BarColor.PINK, org.bukkit.boss.BarStyle.SOLID);;
+	private Object scoreBar;
 
 	private Scoreboard scoreboard = Bukkit.getScoreboardManager().getNewScoreboard(); //TODO: Update only on player join in-game arena or leave
 	private Objective scoreboardObjective = scoreboard.registerNewObjective("game_stats", "dummy");
@@ -78,6 +75,12 @@ public class GameInstance implements Listener {
 	private boolean isLegacy = Main.isLegacy();
 
 	public GameInstance(ArrayList<Player> pls, CodMap map) {
+
+		try {
+			scoreBar = Bukkit.createBossBar(ChatColor.GRAY + "«" + ChatColor.WHITE + getFancyTime(Main.getPlugin().getConfig().getInt("lobbyTime")) + ChatColor.RESET + "" + ChatColor.GRAY + "»", org.bukkit.boss.BarColor.GREEN, org.bukkit.boss.BarStyle.SEGMENTED_10);
+		} catch(NoClassDefFoundError e) {
+			System.out.println();
+		} catch(Exception ignored) {}
 
 		id = System.currentTimeMillis();
 
@@ -248,8 +251,13 @@ public class GameInstance implements Listener {
 
 		playerScores.put(p, new CodScore(p));
 
-		scoreBar.addPlayer(p);
+		try {
+//			scoreBar.addPlayer(p);
+			scoreBar.getClass().getMethod("addPlayer", Player.class).invoke(scoreBar, p);
 
+		} catch(NoClassDefFoundError e) {
+			System.out.println();
+		}catch(Exception ignored) {}
 
 		if (getState() == GameState.INGAME) {
 			assignTeams();
@@ -332,20 +340,36 @@ public class GameInstance implements Listener {
 			p.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
 		}
 
-		if (scoreBar.getPlayers().contains(p)) {
-			scoreBar.removePlayer(p);
-		}
+		try {
+//		if (scoreBar.getPlayers().contains(p)) {
+//			scoreBar.removePlayer(p);
+//		}
+			List<Player> players = (List<Player>) scoreBar.getClass().getMethod("getPlayers").invoke(scoreBar);
+			if (players.contains(p)) {
+				scoreBar.getClass().getMethod("removePlayer", Player.class).invoke(scoreBar, p);
+			}
+		} catch(NoClassDefFoundError e) {
+			System.out.println();
+		}catch(Exception ignored) {}
 
 		if (freeForAllBar.containsKey(p)) {
 			if (freeForAllBar.get(p) == null) {
 				freeForAllBar.remove(p);
 			}
 
-			BossBar bar = freeForAllBar.get(p);
+			try {
+//				BossBar bar = freeForAllBar.get(p);
+//
+//				bar.removeAll();
 
-			bar.removeAll();
+				Object bar = freeForAllBar.get(p);
 
-			freeForAllBar.remove(p);
+				bar.getClass().getMethod("removeAll").invoke(bar);
+
+				freeForAllBar.remove(p);
+			} catch(NoClassDefFoundError e) {
+				System.out.println();
+			}catch(Exception ignored) {}
 		}
 
 		health.removePlayer(p);
@@ -637,12 +661,25 @@ public class GameInstance implements Listener {
 		for (Player p : players) {
 
 			if (freeForAllBar.containsKey(p)) {
-				freeForAllBar.get(p).removeAll();
+				try {
+//				freeForAllBar.get(p).removeAll();
+					freeForAllBar.get(p).getClass().getMethod("removeAll").invoke(freeForAllBar.get(p));
+				}catch(NoClassDefFoundError e) {
+					System.out.println();
+				} catch(Exception ignored) {}
 			}
 
-			if (!scoreBar.getPlayers().contains(p)) {
-				scoreBar.addPlayer(p);
-			}
+			try {
+//			if (!scoreBar.getPlayers().contains(p)) {
+//				scoreBar.addPlayer(p);
+//			}
+				List<Player> players = (List<Player>) scoreBar.getClass().getMethod("getPlayers").invoke(scoreBar);
+				if (!players.contains(p)) {
+					scoreBar.getClass().getMethod("addPlayer", Player.class).invoke(scoreBar, p);
+				}
+			} catch(NoClassDefFoundError e) {
+				System.out.println();
+			}catch (Exception ignored) {}
 
 			p.getInventory().clear();
 
@@ -737,9 +774,17 @@ public class GameInstance implements Listener {
 
 		setState(GameState.STARTING);
 
-		scoreBar.removeAll();
+		try {
+//			scoreBar.removeAll();
+			scoreBar.getClass().getMethod("removeAll").invoke(scoreBar);
+		} catch(NoClassDefFoundError e) {
+			System.out.println();
+		}catch(Exception ignored) {}
 		for (Player p : players) {
-			scoreBar.addPlayer(p);
+			try {
+//				scoreBar.addPlayer(p);
+				scoreBar.getClass().getMethod("addPlayer", Player.class).invoke(scoreBar, p);
+			} catch(Exception e) {}
 			p.getInventory().setItem(0, Main.invManager.codItem);
 			p.getInventory().setItem(8, Main.invManager.leaveItem);
 		}
@@ -757,11 +802,21 @@ public class GameInstance implements Listener {
 
 				String counter = getFancyTime(t);
 
-				scoreBar.setTitle(ChatColor.GOLD + getMap().getName() + " " + ChatColor.GRAY + "«" + ChatColor.WHITE + counter + ChatColor.RESET + "" + ChatColor.GRAY + "» " + ChatColor.GOLD + getMap().getGamemode().toString());
+				try {
+//				scoreBar.setTitle(ChatColor.GOLD + getMap().getName() + " " + ChatColor.GRAY + "«" + ChatColor.WHITE + counter + ChatColor.RESET + "" + ChatColor.GRAY + "» " + ChatColor.GOLD + getMap().getGamemode().toString());
+				scoreBar.getClass().getMethod("setTitle", String.class).invoke(scoreBar, ChatColor.GOLD + getMap().getName() + " " + ChatColor.GRAY + "«" + ChatColor.WHITE + counter + ChatColor.RESET + "" + ChatColor.GRAY + "» " + ChatColor.GOLD + getMap().getGamemode().toString());
+				}catch(NoClassDefFoundError e) {
+					System.out.println();
+				} catch(Exception ignored) {}
 
 				double progress = (((double) t) / ((double) lobbyTime));
 
-				scoreBar.setProgress(progress);
+				try {
+//				scoreBar.setProgress(progress);
+					scoreBar.getClass().getMethod("setProgress", Double.class).invoke(scoreBar, progress);
+				} catch(NoClassDefFoundError e) {
+					System.out.println();
+				}catch(Exception ignored) {}
 
 				if (t % 30 == 0 || (t % 10 == 0 && t < 30) || (t % 5 == 0 && t < 15)) {
 					for (Player p : game.players) {
@@ -796,14 +851,32 @@ public class GameInstance implements Listener {
 		if (!newRound) {
 			setState(GameState.INGAME);
 
-			scoreBar.removeAll();
+			try {
+//			scoreBar.removeAll();
+				scoreBar.getClass().getMethod("removeAll").invoke(scoreBar);
+			} catch(NoClassDefFoundError e) {
+				System.out.println();
+			}catch(Exception ignored) {}
 
 			for (Player p : players) {
 				if (!currentMap.getGamemode().equals(Gamemode.FFA) && !currentMap.getGamemode().equals(Gamemode.OITC) && !currentMap.getGamemode().equals(Gamemode.GUN)) {
-					scoreBar.addPlayer(p);
+					try {
+						//scoreBar.addPlayer(p);
+						scoreBar.getClass().getMethod("addPlayer", Player.class).invoke(scoreBar, p);
+					}catch(NoClassDefFoundError e) {
+						System.out.println();
+					} catch(Exception ignored) {}
 				} else {
-					freeForAllBar.put(p, Bukkit.createBossBar(ChatColor.GRAY + "«" + ChatColor.WHITE + getFancyTime(Main.getPlugin().getConfig().getInt("gameTime." + getGamemode().toString())) + ChatColor.RESET + ChatColor.WHITE + "»", BarColor.PINK, BarStyle.SOLID));
-					freeForAllBar.get(p).addPlayer(p);
+
+					try {
+						Object bar = Bukkit.createBossBar(ChatColor.GRAY + "«" + ChatColor.WHITE + getFancyTime(Main.getPlugin().getConfig().getInt("gameTime." + getGamemode().toString())) + ChatColor.RESET + ChatColor.WHITE + "»", org.bukkit.boss.BarColor.GREEN, org.bukkit.boss.BarStyle.SEGMENTED_10);
+						freeForAllBar.put(p, bar);
+						freeForAllBar.get(p).getClass().getMethod("addPlayer", Player.class).invoke(freeForAllBar.get(p), p);
+
+					} catch(NoClassDefFoundError e) {
+						System.out.println();
+					}catch(Exception ignored) {}
+
 					if (getGamemode() == Gamemode.OITC) {
 						ffaPlayerScores.put(p, maxScore_OITC);
 					} else {
@@ -864,7 +937,12 @@ public class GameInstance implements Listener {
 				}
 
 				if (currentMap.getGamemode() != Gamemode.FFA && currentMap.getGamemode() != Gamemode.OITC && currentMap.getGamemode() != Gamemode.GUN) {
-					scoreBar.setTitle(ChatColor.RED + "RED: " + RedTeamScore + ChatColor.GRAY + " «" + ChatColor.WHITE + counter + ChatColor.RESET + ChatColor.GRAY + "»" + ChatColor.BLUE + " BLU: " + BlueTeamScore);
+					try {
+						//scoreBar.setTitle(ChatColor.RED + "RED: " + RedTeamScore + ChatColor.GRAY + " «" + ChatColor.WHITE + counter + ChatColor.RESET + ChatColor.GRAY + "»" + ChatColor.BLUE + " BLU: " + BlueTeamScore);
+						scoreBar.getClass().getMethod("setTitle", String.class).invoke(scoreBar, ChatColor.RED + "RED: " + RedTeamScore + ChatColor.GRAY + " «" + ChatColor.WHITE + counter + ChatColor.RESET + ChatColor.GRAY + "»" + ChatColor.BLUE + " BLU: " + BlueTeamScore);
+					} catch(NoClassDefFoundError e) {
+						System.out.println();
+					} catch(Exception ignored) {}
 				} else {
 
 					Player highestScorer = Bukkit.getPlayer(getWinningTeam());
@@ -900,16 +978,24 @@ public class GameInstance implements Listener {
 						}
 
 
-						Double progress = (((double) t) / ((double) gameTime));
-						freeForAllBar.get(p).setTitle(ChatColor.GREEN + p.getDisplayName() + ": " + ffaPlayerScores.get(p) + ChatColor.GRAY + " «" + ChatColor.WHITE + counter + ChatColor.RESET + ChatColor.GRAY + "»" + " " + ChatColor.GOLD + highestScorer.getDisplayName() + ": " + ffaPlayerScores.get(highestScorer));
-						freeForAllBar.get(p).setProgress(progress);
+						double progress = (((double) t) / ((double) gameTime));
+						try {
+//							freeForAllBar.get(p).setTitle(ChatColor.GREEN + p.getDisplayName() + ": " + ffaPlayerScores.get(p) + ChatColor.GRAY + " «" + ChatColor.WHITE + counter + ChatColor.RESET + ChatColor.GRAY + "»" + " " + ChatColor.GOLD + highestScorer.getDisplayName() + ": " + ffaPlayerScores.get(highestScorer));
+//							freeForAllBar.get(p).setProgress(progress);
+							freeForAllBar.get(p).getClass().getMethod("setTitle", String.class).invoke(freeForAllBar.get(p), ChatColor.GREEN + p.getDisplayName() + ": " + ffaPlayerScores.get(p) + ChatColor.GRAY + " «" + ChatColor.WHITE + counter + ChatColor.RESET + ChatColor.GRAY + "»" + " " + ChatColor.GOLD + highestScorer.getDisplayName() + ": " + ffaPlayerScores.get(highestScorer));
+							freeForAllBar.get(p).getClass().getMethod("setProgress", Double.class).invoke(freeForAllBar.get(p), progress);
+						} catch(NoClassDefFoundError e) {
+							System.out.println();
+						}catch(Exception ignored) {}
 					}
 				}
 
-				Double progress = (((double) t) / ((double) gameTime));
+				double progress = (((double) t) / ((double) gameTime));
 
-				scoreBar.setProgress(progress);
-
+				try {
+//					scoreBar.setProgress(progress);
+					scoreBar.getClass().getMethod("setProgress", Double.class).invoke(scoreBar, progress);
+				} catch(Exception ignored) {}
 				game.updateTabList();
 
 				if (currentMap.getGamemode() == Gamemode.TDM || currentMap.getGamemode() == Gamemode.RSB || currentMap.getGamemode() == Gamemode.DOM || currentMap.getGamemode() == Gamemode.CTF || currentMap.getGamemode() == Gamemode.KC) {
@@ -1028,9 +1114,9 @@ public class GameInstance implements Listener {
 		for(Player p : players) {
 			if (prevRWT != null && !prevRWT.isEmpty()) {
 				if (prevRWT.equals(blueTeam)) {
-                    p.sendTitle("\u00A79The blue team won the round!", String.format("The next round will start in %s seconds!", delay), 10, 20, 10);
+                    Main.sendTitle(p, "\u00A79The blue team won the round!", String.format("The next round will start in %s seconds!", delay));
                 } else if (prevRWT.equals(redTeam)) {
-                    p.sendTitle("\u00A7cThe red team won the round!", String.format("The next round will start in %s seconds!", delay), 10, 20, 10);
+                    Main.sendTitle(p, "\u00A7cThe red team won the round!", String.format("The next round will start in %s seconds!", delay));
                 }
 			}
 		}
@@ -1051,10 +1137,18 @@ public class GameInstance implements Listener {
 	}
 
 	public void resetScoreBoard() {
-		if (getGamemode() != Gamemode.FFA) {
-			scoreBar = Bukkit.createBossBar(Color.RED + "RED: 0" + "     " + "«" + getFancyTime(gameTime) + "»" + "     " + Color.BLUE + "BLUE: 0", BarColor.WHITE, BarStyle.SEGMENTED_10);
+		if (getGamemode() != Gamemode.FFA && getGamemode() != Gamemode.GUN && getGamemode() != Gamemode.OITC) {
+			try {
+				scoreBar = Bukkit.createBossBar(Color.RED + "RED: 0" + "     " + "«" + getFancyTime(gameTime) + "»" + "     " + Color.BLUE + "BLUE: 0", org.bukkit.boss.BarColor.GREEN, org.bukkit.boss.BarStyle.SEGMENTED_10);
+			} catch(NoClassDefFoundError e) {
+				System.out.println();
+			}catch(Exception ignored) {}
 		} else {
-			scoreBar = Bukkit.createBossBar(Color.RED + "YOU: 0" + "     " + "«" + getFancyTime(gameTime) + "»" + "     " + Color.BLUE + "1ST: 0", BarColor.WHITE, BarStyle.SEGMENTED_10);
+			try {
+				scoreBar = Bukkit.createBossBar(Color.RED + "YOU: 0" + "     " + "«" + getFancyTime(gameTime) + "»" + "     " + Color.BLUE + "1ST: 0", org.bukkit.boss.BarColor.GREEN, org.bukkit.boss.BarStyle.SEGMENTED_10);
+			} catch(NoClassDefFoundError e) {
+				System.out.println();
+			}catch(Exception ignored) {}
 		}
 	}
 
@@ -1254,8 +1348,10 @@ public class GameInstance implements Listener {
 
 			CodScore score = playerScores.get(p);
 
-			p.setPlayerListHeader(Main.header);
-			p.setPlayerListFooter(ChatColor.WHITE + "Playing " + ChatColor.GOLD + getMap().getGamemode().toString() + ChatColor.WHITE + " on " + ChatColor.GOLD + getMap().getName() + ChatColor.WHITE + "!");
+			try {
+				p.getClass().getMethod("setPlayerListHeader", String.class).invoke(p, Main.header);
+				p.getClass().getMethod("setPlayerListFooter", String.class).invoke(p, ChatColor.WHITE + "Playing " + ChatColor.GOLD + getMap().getGamemode().toString() + ChatColor.WHITE + " on " + ChatColor.GOLD + getMap().getName() + ChatColor.WHITE + "!");
+			} catch(NoSuchMethodException ig) {} catch(Exception ignored) {}
 			p.setPlayerListName(ChatColor.WHITE + "[P" + Main.progressionManager.getPrestigeLevel(p) + "L" +
 					Main.progressionManager.getLevel(p) + "] " + teamColor + p.getDisplayName() + ChatColor.WHITE + " [K] " +
 					ChatColor.GREEN + score.getKills() + ChatColor.WHITE + " [D] " + ChatColor.GREEN + score.getDeaths() +
@@ -1398,7 +1494,18 @@ public class GameInstance implements Listener {
 
 
 			if (getGamemode() == Gamemode.GUN) {
-				if (killer.getInventory().getItemInMainHand().equals(Main.loadManager.knife)) {
+
+				ItemStack held;
+
+				try {
+					held = (ItemStack) killer.getInventory().getClass().getMethod("getItemInMainHand").invoke(killer.getInventory());
+				} catch(NoSuchMethodException e) {
+					held = killer.getInventory().getItemInHand();
+				} catch(Exception e) {
+					held = killer.getInventory().getItemInHand();
+				}
+
+				if (held.equals(Main.loadManager.knife)) {
 					removePointForPlayer(victim);
 				}
 
@@ -1481,19 +1588,27 @@ public class GameInstance implements Listener {
 
 		double damage;
 
-		ItemStack heldWeapon = attacker.getInventory().getItemInMainHand();
+		ItemStack heldWeapon;
+
+		try {
+			heldWeapon = (ItemStack) attacker.getInventory().getClass().getMethod("getItemInMainHand").invoke(attacker.getInventory());
+		} catch(NoSuchMethodException e2) {
+			heldWeapon = attacker.getInventory().getItemInHand();
+		} catch(Exception e1) {
+			heldWeapon = attacker.getInventory().getItemInHand();
+		}
 
 		Material gSwordMat;
 		Material wSwordMat;
 
 		try {
-			gSwordMat = Material.GOLDEN_SWORD;
+			gSwordMat = Material.valueOf("GOLDEN_SWORD");
 		} catch(Exception silent) {
 			gSwordMat = Material.valueOf("GOLD_SWORD");
 		}
 
 		try {
-			wSwordMat = Material.WOODEN_SWORD;
+			wSwordMat = Material.valueOf("WOODEN_SWORD");
 		} catch(Exception silent) {
 			wSwordMat = Material.valueOf("WOOD_SWORD");
 		}
@@ -1623,17 +1738,13 @@ public class GameInstance implements Listener {
 	}
 
 	@EventHandler
-	public void onPlayerPickupFlag(EntityPickupItemEvent e) {
+	public void onPlayerPickupFlag(PlayerPickupItemEvent e) {
 		if (!(e.getItem().equals(redFlag) || e.getItem().equals(blueFlag)))
 			return;
 
 		e.setCancelled(true);
 
-		if (!(e.getEntity() instanceof Player)) {
-			return;
-		}
-
-		Player p = (Player) e.getEntity();
+		Player p = (Player) e.getPlayer();
 		if (!players.contains(p)) {
 			return;
 		}
@@ -1664,11 +1775,8 @@ public class GameInstance implements Listener {
 	}
 
 	@EventHandler
-	public void onPlayerPickupDogtag(EntityPickupItemEvent e) {
-		if (!(e.getEntity() instanceof Player))
-			return;
-
-		Player p = (Player) e.getEntity();
+	public void onPlayerPickupDogtag(PlayerPickupItemEvent e) {
+		Player p = (Player) e.getPlayer();
 
 		if (!GameManager.isInMatch(p))
 			return;
@@ -1726,7 +1834,7 @@ public class GameInstance implements Listener {
 
 			ItemStack flag;
 			try {
-				flag = new ItemStack(Material.RED_BANNER);
+				flag = new ItemStack(Material.valueOf("RED_BANNER"));
 			} catch(Exception e) {
 				flag = new ItemStack(Material.valueOf("BANNER"));
 				Banner banner = (Banner) flag.getData();
@@ -1741,7 +1849,7 @@ public class GameInstance implements Listener {
 
 			ItemStack flag;
 			try {
-				flag = new ItemStack(Material.BLUE_BANNER);
+				flag = new ItemStack(Material.valueOf("RED_BANNER"));
 			} catch(Exception e) {
 				flag = new ItemStack(Material.valueOf("BANNER"));
 				Banner banner = (Banner) flag.getData();

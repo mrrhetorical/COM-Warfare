@@ -222,8 +222,8 @@ public class InventoryManager implements Listener {
 
 		ItemStack gunItem;
 		try {
-			gunItem = new ItemStack(Material.WOODEN_HOE);
-		} catch(Exception e) {
+			gunItem = new ItemStack(Material.valueOf("WOODEN_HOE"));
+		} catch(Exception ignored) {
 			gunItem = new ItemStack(Material.valueOf("WOOD_HOE"));
 		}
 		ItemMeta gunMeta = gunItem.getItemMeta();
@@ -576,7 +576,7 @@ public class InventoryManager implements Listener {
 		for (String name : pls) {
 			ItemStack player;
 			try {
-				player = new ItemStack(Material.SKELETON_SKULL);
+				player = new ItemStack(Material.valueOf("SKELETON_SKULL"));
 			} catch(Exception e) {
 				player = new ItemStack(Material.valueOf("SKULL"));
 			}
@@ -649,7 +649,7 @@ public class InventoryManager implements Listener {
 
 		ItemStack deaths;
 		try {
-			deaths = new ItemStack(Material.SKELETON_SKULL);
+			deaths = new ItemStack(Material.valueOf("SKELETON_SKULL"));
 		} catch(Exception e) {
 			deaths = new ItemStack(Material.valueOf("SKULL"));
 		}
@@ -1142,7 +1142,21 @@ public class InventoryManager implements Listener {
 	public void itemUseListener(PlayerInteractEvent e) {
 		if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK || e.getAction() == Action.LEFT_CLICK_AIR || e.getAction() == Action.LEFT_CLICK_BLOCK) {
 
-			if (e.getPlayer().getInventory().getItemInMainHand().equals(leaveItem) || e.getPlayer().getInventory().getItemInOffHand().equals(leaveItem)) {
+			ItemStack item;
+			ItemStack altItem;
+
+			try {
+				item = (ItemStack) e.getPlayer().getInventory().getClass().getMethod("getItemInMainHand").invoke(e.getPlayer().getInventory());
+				altItem = (ItemStack) e.getPlayer().getInventory().getClass().getMethod("getItemInOffHand").invoke(e.getPlayer().getInventory());
+			} catch(NoSuchMethodException er1) {
+				item = e.getPlayer().getInventory().getItemInHand();
+				altItem = item;
+			} catch (Exception er1) {
+				item = e.getPlayer().getInventory().getItemInHand();
+				altItem = item;
+			}
+
+			if (item.equals(leaveItem) || altItem.equals(leaveItem)) {
 				if (!GameManager.isInMatch(e.getPlayer())) return;
 				GameManager.leaveMatch(e.getPlayer());
 				if (Main.lastLoc.containsKey(e.getPlayer())) {
@@ -1156,7 +1170,7 @@ public class InventoryManager implements Listener {
 				e.setCancelled(true);
 				return;
 			}
-			if (e.getPlayer().getInventory().getItemInMainHand().equals(codItem) || e.getPlayer().getInventory().getItemInOffHand().equals(codItem)) {
+			if (item.equals(codItem) || altItem.equals(codItem)) {
 				Main.openMainMenu(e.getPlayer());
 				e.setCancelled(true);
 //				return;
