@@ -317,7 +317,7 @@ public class Main extends JavaPlugin {
 						return true;
 					}
 
-					if (!(page > 0 && page <= 4)) {
+					if (!(page > 0 && page <= 5)) {
 						sendMessage(p, Main.codPrefix + ChatColor.RED + "You didn't give a proper page number!", lang);
 						return true;
 					}
@@ -325,7 +325,7 @@ public class Main extends JavaPlugin {
 					//FIXME: Left off here converting to ChatColor!
 
 					sendMessage(p, "-===\u00A76\u00A7lCOM-Warfare Help\u00A7r===-", lang);
-					sendMessage(p, "\u00A7f[\u00A7lPage " + page + " of 4\u00A7r\u00A7l]", lang);
+					sendMessage(p, "\u00A7f[\u00A7lPage " + page + " of 5\u00A7r\u00A7l]", lang);
 
 					switch (page) {
 						case 1:
@@ -357,12 +357,15 @@ public class Main extends JavaPlugin {
 							sendMessage(p, cColor + "/cod start | " + dColor + "Auto-starts the match if the lobby timer is started.");
 							sendMessage(p, cColor + "/cod boot | " + dColor + "Forces all players in all matches to leave.");
 							break;
+						case 5:
+							sendMessage(p, cColor + "/cod blacklist (map) (mode) | " + dColor + "Prevents a mode from being played on the map.");
+							break;
 						default:
 							break;
 					}
 				} else {
 					sendMessage(p, "-===\u00A76\u00A7lCOM-Warfare Help\u00A7r===-");
-					sendMessage(p, "\u00A7f[\u00A7lPage 1 of 4\u00A7r\u00A7l]");
+					sendMessage(p, "\u00A7f[\u00A7lPage 1 of 5\u00A7r\u00A7l]");
 
 					sendMessage(p, "\u00A7f\u00A7lType the command to see specifics.", lang);
 					sendMessage(p, cColor + "/cod help [page number] | " + dColor + "Opens a help page.");
@@ -370,7 +373,6 @@ public class Main extends JavaPlugin {
 					sendMessage(p, cColor + "/cod join | " + dColor + "Joins a game through the matchmaker.");
 					sendMessage(p, cColor + "/cod leave | " + dColor + "Leaves the current game.");
 					sendMessage(p, cColor + "/cod shop | " + dColor + "Opens the shop.");
-					sendMessage(p, cColor + "/cod blacklist (map) (mode) | " + dColor + "Prevents a mode from being played on the map.");
 
 				}
 
