@@ -578,7 +578,7 @@ public class InventoryManager implements Listener {
 			try {
 				player = new ItemStack(Material.valueOf("SKELETON_SKULL"));
 			} catch(Exception e) {
-				player = new ItemStack(Material.valueOf("SKULL"));
+				player = new ItemStack(Material.ANVIL);
 			}
 			ItemMeta playerMeta = player.getItemMeta();
 			playerMeta.setDisplayName("\u00A7f\u00A7lPlayer: " + name);
@@ -651,7 +651,7 @@ public class InventoryManager implements Listener {
 		try {
 			deaths = new ItemStack(Material.valueOf("SKELETON_SKULL"));
 		} catch(Exception e) {
-			deaths = new ItemStack(Material.valueOf("SKULL"));
+			deaths = new ItemStack(Material.ANVIL);
 		}
 		ItemMeta deathsMeta = deaths.getItemMeta();
 		deathsMeta.setDisplayName("\u00A7c\u00A7lDeaths: \u00A7r\u00A7f" + totalDeaths);
