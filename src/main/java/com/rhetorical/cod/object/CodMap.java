@@ -24,6 +24,7 @@ public class CodMap {
 	private Location Flag_A;
 	private Location Flag_B;
 	private Location Flag_C;
+	private List<Gamemode> blacklistedModes = new ArrayList<>();
 
 	private List<Gamemode> availableGamemodes = new ArrayList<>();
 
@@ -40,6 +41,11 @@ public class CodMap {
 		for (k = 0; ArenasFile.getData().contains("Maps." + k); k++) {
 			if (ArenasFile.getData().getString("Maps." + k + ".name").equalsIgnoreCase(this.name)) break;
 		}
+
+		List<String> blm = new ArrayList<>();
+		for (Gamemode gm : blacklistedModes) {
+			blm.add(gm.toString());
+		}
 		
 		ArenasFile.getData().set("Maps." + k + ".AFlag", getAFlagSpawn());
 		ArenasFile.getData().set("Maps." + k + ".BFlag", getBFlagSpawn());
@@ -51,6 +57,7 @@ public class CodMap {
 		ArenasFile.getData().set("Maps." + k + ".pinkSpawns", getPinkSpawns());
 		ArenasFile.getData().set("Maps." + k + ".redFlagSpawn", getRedFlagSpawn());
 		ArenasFile.getData().set("Maps." + k + ".redSpawns", getRedSpawns());
+		ArenasFile.getData().set("Maps." + k + ".blacklist", blm);
 		ArenasFile.saveData();
 		ArenasFile.reloadData();
 	}
@@ -79,24 +86,24 @@ public class CodMap {
 	public boolean setEnable() {
 		if (getBlueSpawns() != null && getRedSpawns() != null) {
 			if (getBlueSpawns().size() >= 1 && getRedSpawns().size() >= 1) {
-				if (!availableGamemodes.contains(Gamemode.TDM))
+				if (!availableGamemodes.contains(Gamemode.TDM) && !blacklistedModes.contains(Gamemode.TDM))
 					availableGamemodes.add(Gamemode.TDM);
-				if (!availableGamemodes.contains(Gamemode.RSB))
+				if (!availableGamemodes.contains(Gamemode.RSB) && !blacklistedModes.contains(Gamemode.RSB))
 					availableGamemodes.add(Gamemode.RSB);
-				if (!availableGamemodes.contains(Gamemode.INFECT))
+				if (!availableGamemodes.contains(Gamemode.INFECT) && !blacklistedModes.contains(Gamemode.INFECT))
 					availableGamemodes.add(Gamemode.INFECT);
-				if (!availableGamemodes.contains(Gamemode.KC))
+				if (!availableGamemodes.contains(Gamemode.KC) && !blacklistedModes.contains(Gamemode.KC))
 					availableGamemodes.add(Gamemode.KC);
-				if (!availableGamemodes.contains(Gamemode.RESCUE))
+				if (!availableGamemodes.contains(Gamemode.RESCUE) && !blacklistedModes.contains(Gamemode.RESCUE))
 					availableGamemodes.add(Gamemode.RESCUE);
 
 				if (getBlueFlagSpawn() != null && getRedFlagSpawn() != null) {
-					if (!availableGamemodes.contains(Gamemode.CTF))
+					if (!availableGamemodes.contains(Gamemode.CTF) && !blacklistedModes.contains(Gamemode.CTF))
 						availableGamemodes.add(Gamemode.CTF);
 				}
 
 				if (getAFlagSpawn() != null && getBFlagSpawn() != null && getCFlagSpawn() != null) {
-					if (!availableGamemodes.contains(Gamemode.DOM))
+					if (!availableGamemodes.contains(Gamemode.DOM) && !blacklistedModes.contains(Gamemode.DOM))
 						availableGamemodes.add(Gamemode.DOM);
 				}
 			}
@@ -104,13 +111,13 @@ public class CodMap {
 
 		if (getPinkSpawns() != null) {
 			if (getPinkSpawns().size() >= Main.maxPlayers) {
-				if (!availableGamemodes.contains(Gamemode.FFA))
+				if (!availableGamemodes.contains(Gamemode.FFA) && !blacklistedModes.contains(Gamemode.FFA))
 					availableGamemodes.add(Gamemode.FFA);
-				if(!availableGamemodes.contains(Gamemode.OITC)) {
+				if(!availableGamemodes.contains(Gamemode.OITC) && !blacklistedModes.contains(Gamemode.OITC)) {
 					if (GameManager.oitcGun != null)
 						availableGamemodes.add(Gamemode.OITC);
 				}
-				if (!availableGamemodes.contains(Gamemode.GUN)) {
+				if (!availableGamemodes.contains(Gamemode.GUN) && !blacklistedModes.contains(Gamemode.GUN)) {
 					if (GameManager.gunGameGuns != null && !GameManager.gunGameGuns.isEmpty()) {
 						availableGamemodes.add(Gamemode.GUN);
 					}
@@ -122,6 +129,11 @@ public class CodMap {
 		boolean shouldEnable = getAvailableGamemodes().size() > 0;
 		this.setEnabled(shouldEnable);
 		return shouldEnable;
+	}
+
+	public void addToBlacklist(Gamemode mode) {
+		blacklistedModes.add(mode);
+		save();
 	}
 	
 	//Only removes most recent spawn

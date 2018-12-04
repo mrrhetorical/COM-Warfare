@@ -370,6 +370,7 @@ public class Main extends JavaPlugin {
 					sendMessage(p, cColor + "/cod join | " + dColor + "Joins a game through the matchmaker.");
 					sendMessage(p, cColor + "/cod leave | " + dColor + "Leaves the current game.");
 					sendMessage(p, cColor + "/cod shop | " + dColor + "Opens the shop.");
+					sendMessage(p, cColor + "/cod blacklist (map) (mode) | " + dColor + "Prevents a mode from being played on the map.");
 
 				}
 
@@ -767,6 +768,32 @@ public class Main extends JavaPlugin {
 
 				Objects.requireNonNull(GameManager.getMatchWhichContains(p)).getMap().changeGamemode(mode);
 				sendMessage(p, codPrefix + ChatColor.GREEN + "Successfully changed game mode to " + ChatColor.GOLD + ChatColor.BOLD + mode.toString() + ChatColor.RESET + ChatColor.GREEN + "!");
+				return true;
+			} else if (args[0].equalsIgnoreCase("blacklist") && hasPerm(p, "com.blacklist")) {
+				if (args.length	< 3) {
+					sendMessage(p, codPrefix + ChatColor.RED + "Incorrect usage! Correct usage: '/cod blacklist (map) (mode)");
+					return true;
+				}
+
+				Gamemode mode;
+
+				try {
+					mode = Gamemode.valueOf(args[2].toUpperCase());
+				} catch(Exception e) {
+					sendMessage(p, codPrefix + ChatColor.RED + "No gamemode exists with that name!");
+					return true;
+				}
+
+				CodMap map = GameManager.getMapForName(args[1]);
+
+				if (map == null) {
+					sendMessage(p, codPrefix + ChatColor.RED + "No map exists with that name!");
+					return true;
+				}
+
+				map.addToBlacklist(mode);
+
+				sendMessage(p, Main.codPrefix + ChatColor.GREEN + "Successfully blacklisted " + mode.toString() + " from " + map.getName() + "!");
 				return true;
 			} else {
 				p.sendMessage(Main.codPrefix + ChatColor.RED + "Unknown command! Try using '/cod help' for a list of commands!");

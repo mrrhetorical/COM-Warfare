@@ -1776,7 +1776,7 @@ public class GameInstance implements Listener {
 
 	@EventHandler
 	public void onPlayerPickupDogtag(PlayerPickupItemEvent e) {
-		Player p = (Player) e.getPlayer();
+		Player p = e.getPlayer();
 
 		if (!GameManager.isInMatch(p))
 			return;
@@ -1789,7 +1789,7 @@ public class GameInstance implements Listener {
 		e.setCancelled(true);
 		e.getItem().remove();
 
-		if (stack.getItemMeta().getLore().size() == 0) {
+		if (stack.getItemMeta() == null || stack.getItemMeta().getLore() == null || stack.getItemMeta().getLore().size() == 0) {
 			return;
 		}
 

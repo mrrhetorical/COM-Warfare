@@ -63,6 +63,18 @@ public class GameManager {
 			m.setRedFlagSpawn((Location) ArenasFile.getData().get("Maps." + k + ".redFlagSpawn"));
 			m.setRedSpawns((ArrayList<Location>) ArenasFile.getData().get("Maps." + k + ".redSpawns"));
 
+			List<String> gamemodes = ArenasFile.getData().getStringList("Maps." + k + ".blacklist");
+
+			for (String str : gamemodes) {
+				Gamemode mode;
+				try {
+					mode = Gamemode.valueOf(str);
+				} catch(Exception e) {
+					continue;
+				}
+				m.addToBlacklist(mode);
+			}
+
 			m.setEnable();
 
 			AddedMaps.add(m);
