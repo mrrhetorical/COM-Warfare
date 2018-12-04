@@ -615,8 +615,6 @@ public class InventoryManager implements Listener {
 				lore.add("\u00A75\u00A7lKDR: " + (int) kills);
 			}
 
-			Main.sendMessage(Main.cs, item.toString() + " pos : " + pos, Main.lang);
-
 			itemMeta.setLore(lore);
 
 			item.setItemMeta(itemMeta);

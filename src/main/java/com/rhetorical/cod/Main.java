@@ -133,22 +133,13 @@ public class Main extends JavaPlugin {
 		StatsFile.setup(getPlugin());
 		KillstreaksFile.setup(getPlugin());
 
-		System.out.println("Loading managers...");
-
 		progressionManager = new ProgressionManager();
-		System.out.println("Progression Manager loaded");
 		perkManager = new PerkManager();
-		System.out.println("Perk Manager loaded");
 		loadManager = new LoadoutManager(new HashMap<>());
-		System.out.println("Loadout Manager loaded");
 		shopManager = new ShopManager();
-		System.out.println("Shop Manager loaded");
 		perkListener = new PerkListener();
-		System.out.println("Perk Listener loaded");
 		killstreakManager = new KillStreakManager();
-		System.out.println("Killstreak Manager loaded");
 		invManager = new InventoryManager();
-		System.out.println("Inventory Manager loaded");
 
 		KillStreakManager.setup();
 
