@@ -54,6 +54,7 @@ class PrevStats {
 		owner.setLevel(level);
 		owner.setHealth(health);
 		owner.setFoodLevel(hunger);
+		owner.getInventory().clear();
 		for (int slot : inventoryItems.keySet()) {
 			owner.getInventory().setItem(slot, inventoryItems.get(slot));
 		}
@@ -1866,8 +1867,13 @@ public class GameInstance implements Listener {
 			return;
 		}
 
-		Player tagOwner = Bukkit.getPlayer(UUID.fromString(stack.getItemMeta().getLore().get(0)));
+		Player tagOwner;
 
+		try {
+			tagOwner = Bukkit.getPlayer(UUID.fromString(stack.getItemMeta().getLore().get(0)));
+		} catch(Exception ex) {
+			return;
+		}
 		if (!areEnemies(p, tagOwner)) {
 			if (getGamemode() == Gamemode.RESCUE) {
 				if (isOnBlueTeam(tagOwner)) {
