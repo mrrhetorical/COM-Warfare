@@ -1703,7 +1703,9 @@ public class GameInstance implements Listener {
 					Main.perkListener.isInLastStand.add(victim);
 					Main.perkListener.lastStand(victim, this);
 					double xp = Main.getRank(attacker).getKillExperience() / 2f;
-					Main.sendMessage(attacker,  "" + ChatColor.BLUE + ChatColor.BOLD + "YOU " + ChatColor.RESET + ChatColor.WHITE + "[downed] " + ChatColor.RESET + ChatColor.RED + ChatColor.BOLD + victim.getDisplayName(), Main.lang);
+					ChatColor t1 = redTeam.contains(attacker) ? ChatColor.RED : blueTeam.contains(attacker) ? ChatColor.BLUE : ChatColor.LIGHT_PURPLE;
+					ChatColor t2 = t1 == ChatColor.RED ? ChatColor.BLUE : t1 == ChatColor.BLUE ? ChatColor.RED : ChatColor.LIGHT_PURPLE;
+					Main.sendMessage(attacker,  "" + t1 + ChatColor.BOLD + "YOU " + ChatColor.RESET + ChatColor.WHITE + "[downed] " + ChatColor.RESET + t2 + ChatColor.BOLD + victim.getDisplayName(), Main.lang);
 					Main.sendTitle(attacker, "", ChatColor.YELLOW + "+" + xp + "xp");
 					Main.progressionManager.addExperience(attacker, xp);
 					CreditManager.setCredits(attacker, CreditManager.getCredits(attacker) + Main.getRank(attacker).getKillCredits());
