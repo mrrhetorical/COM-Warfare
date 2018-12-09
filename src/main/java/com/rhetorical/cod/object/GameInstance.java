@@ -1699,7 +1699,13 @@ public class GameInstance implements Listener {
 			if (!Main.loadManager.getCurrentLoadout(victim).hasPerk(Perk.LAST_STAND)) {
 				handleDeath(attacker, victim);
 			} else {
-				Main.perkListener.lastStand(victim, this);
+				if (!Main.perkListener.isInLastStand.contains(victim)) {
+					Main.perkListener.isInLastStand.add(victim);
+					Main.perkListener.lastStand(victim, this);
+				} else {
+					Main.perkListener.isInLastStand.remove(victim);
+					handleDeath(attacker, victim);
+				}
 			}
 		}
 

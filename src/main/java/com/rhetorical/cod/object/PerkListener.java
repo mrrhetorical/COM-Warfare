@@ -1,6 +1,8 @@
 package com.rhetorical.cod.object;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -21,6 +23,8 @@ import com.rhetorical.cod.GameManager;
 import com.rhetorical.cod.Main;
 
 public class PerkListener implements Listener {
+
+	public List<Player> isInLastStand = new ArrayList<>();
 
 	public PerkListener() {
 		Bukkit.getServer().getPluginManager().registerEvents(this, Main.getPlugin());
@@ -174,6 +178,7 @@ public class PerkListener implements Listener {
 					Main.sendMessage(p, "\u00A7fYou are out of final stand!", Main.lang);
 					cancel();
 					cancelLastStand(p);
+					isInLastStand.remove(p);
 				}
 				
 				p.setSneaking(true);
