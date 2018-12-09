@@ -160,7 +160,7 @@ public class PerkListener implements Listener {
 		
 		i.health.reset(p);
 		i.health.damage(p, i.health.defaultHealth * 0.8D);
-		p.setWalkSpeed(0.1F);
+		p.setWalkSpeed(0.1f);
 		p.setSneaking(true);
 		
 		Main.sendMessage(p, "\u00A7fYou are in final stand! Wait 20 seconds to get back up!", Main.lang);
@@ -170,15 +170,21 @@ public class PerkListener implements Listener {
 
 			public void run() {
 
+				if (!isInLastStand.contains(p)) {
+					cancelLastStand(p);
+					cancel();
+				}
+
 				if (time > 0)
 					time--;
 				else {
-					p.setWalkSpeed(1);
+					p.setWalkSpeed(1f);
 					i.health.reset(p);
 					Main.sendMessage(p, "\u00A7fYou are out of final stand!", Main.lang);
 					cancel();
 					cancelLastStand(p);
 					isInLastStand.remove(p);
+					p.setSneaking(false);
 				}
 				
 				p.setSneaking(true);
