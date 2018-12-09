@@ -380,7 +380,7 @@ public class ShopManager {
 		}
 	}
 
-	void checkForNewGuns(Player p) {
+	public void checkForNewGuns(Player p) {
 		for (CodGun gun : Main.shopManager.primaryGuns) {
 			if (gun.getType() == UnlockType.LEVEL) {
 

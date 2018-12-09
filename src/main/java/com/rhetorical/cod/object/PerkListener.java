@@ -163,14 +163,16 @@ public class PerkListener implements Listener {
 		BukkitRunnable br = new BukkitRunnable() {
 			
 			private int time = 40;
-			
+
 			public void run() {
+
 				if (time > 0)
 					time--;
 				else {
-					p.setWalkSpeed(1F);
+					p.setWalkSpeed(1);
 					i.health.reset(p);
 					Main.sendMessage(p, "\u00A7fYou are out of final stand!", Main.lang);
+					cancel();
 					cancelLastStand(p);
 				}
 				
@@ -184,8 +186,8 @@ public class PerkListener implements Listener {
 	
 	private void cancelLastStand(Player p) {
 		if (lastStandRunnables.keySet().contains(p)) {
-			lastStandRunnables.get(p).cancel();
 			lastStandRunnables.remove(p);
+			lastStandRunnables.get(p);
 		}
 	}
 }

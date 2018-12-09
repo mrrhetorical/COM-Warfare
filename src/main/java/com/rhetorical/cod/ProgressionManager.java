@@ -66,15 +66,12 @@ public class ProgressionManager {
 
 		this.level.put(p, this.level.get(p) + 1);
 		p.sendMessage(Main.codPrefix + "\u00A77Congratulations! You just ranked up to level \u00A7e"
-				+ Integer.toString(getLevel(p)) + "\u00A7r\u00A77!");
+				+ getLevel(p) + "\u00A7r\u00A77!");
 
 		if (this.getLevel(p) == this.maxLevel) {
 			p.sendMessage(Main.codPrefix
 					+ "\u00A77Congratulations! You've reached the highest rank! Visit the prestige menu to get your reward!");
 		}
-
-		Main.shopManager.checkForNewGuns(p);
-
 	}
 
 	public int getLevel(Player p) {

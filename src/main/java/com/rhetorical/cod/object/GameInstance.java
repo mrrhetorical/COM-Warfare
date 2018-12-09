@@ -346,6 +346,8 @@ public class GameInstance implements Listener {
 		if (!players.contains(p))
 			return;
 
+		Main.shopManager.checkForNewGuns(p);
+
 		if (isLegacy) {
 			p.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
 		}
@@ -679,6 +681,8 @@ public class GameInstance implements Listener {
 	private void stopGame() {
 
 		for (Player p : players) {
+
+			Main.shopManager.checkForNewGuns(p);
 
 			if (freeForAllBar.containsKey(p)) {
 				try {
