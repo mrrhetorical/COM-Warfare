@@ -236,6 +236,8 @@ public class GameInstance implements Listener {
 
 
 		playerListNames.put(p, p.getPlayerListName());
+		p.setPlayerListName(ChatColor.WHITE + "[P" + Main.progressionManager.getPrestigeLevel(p) + "L" +
+				Main.progressionManager.getLevel(p) + "] " + ChatColor.YELLOW + p.getDisplayName());
 
 		health.addPlayer(p);
 
@@ -796,8 +798,6 @@ public class GameInstance implements Listener {
 			} catch(Exception ignored) {}
 			p.getInventory().setItem(0, Main.invManager.codItem);
 			p.getInventory().setItem(8, Main.invManager.leaveItem);
-			p.setPlayerListName(ChatColor.WHITE + "[P" + Main.progressionManager.getPrestigeLevel(p) + "L" +
-					Main.progressionManager.getLevel(p) + "] " + ChatColor.YELLOW + p.getDisplayName());
 		}
 
 		GameInstance game = this;
@@ -837,6 +837,8 @@ public class GameInstance implements Listener {
 				}
 
 				for (Player p : game.players) {
+					p.setPlayerListName(ChatColor.WHITE + "[P" + Main.progressionManager.getPrestigeLevel(p) + "L" +
+							Main.progressionManager.getLevel(p) + "] " + ChatColor.YELLOW + p.getDisplayName());
 					p.setPlayerListHeader(ChatColor.WHITE + "Playing " + ChatColor.GOLD + getGamemode() + ChatColor.WHITE + " on " + ChatColor.GOLD + getMap().getName() + ChatColor.WHITE + "!");
 					p.setPlayerListFooter(ChatColor.WHITE + "Game starts in " + ChatColor.GOLD + getFancyTime(t) + ChatColor.WHITE + "!");
 				}
