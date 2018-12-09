@@ -381,7 +381,8 @@ public class ShopManager {
 	}
 
 	public void checkForNewGuns(Player p) {
-		for (CodGun gun : Main.shopManager.primaryGuns) {
+		List<CodGun> primaryGuns = Main.shopManager.primaryGuns;
+		for (CodGun gun : primaryGuns) {
 			if (gun.getType() == UnlockType.LEVEL) {
 
 				Main.shopManager.loadPurchaseData(p);
@@ -404,7 +405,8 @@ public class ShopManager {
 			this.savePurchaseData(p);
 		}
 
-		for (CodGun gun : Main.shopManager.secondaryGuns) {
+		List<CodGun> secondaryGuns = Main.shopManager.secondaryGuns;
+		for (CodGun gun : secondaryGuns) {
 			if (gun.getType() == UnlockType.LEVEL) {
 
 				HashMap<Player, ArrayList<CodGun>> purchased = Main.shopManager.getPurchasedGuns();
@@ -422,11 +424,13 @@ public class ShopManager {
 			}
 		}
 
-		for (CodWeapon grenade : Main.shopManager.lethalWeapons) {
+		List<CodWeapon> lethalGrenades = Main.shopManager.lethalWeapons;
+		for (CodWeapon grenade : lethalGrenades) {
 			unlockGrenade(p, grenade);
 		}
 
-		for (CodWeapon grenade : Main.shopManager.tacticalWeapons) {
+		List<CodWeapon> tacticalGrenades = Main.shopManager.tacticalWeapons;
+		for (CodWeapon grenade : tacticalGrenades) {
 			unlockGrenade(p, grenade);
 		}
 
