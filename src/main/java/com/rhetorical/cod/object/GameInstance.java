@@ -279,13 +279,16 @@ public class GameInstance implements Listener {
 
 			if (getGamemode() != Gamemode.DESTROY && getGamemode() != Gamemode.RESCUE) {
 
+				Location spawn;
 				if (isOnRedTeam(p)) {
-					spawnCodPlayer(p, currentMap.getRedSpawn());
+					spawn = currentMap.getRedSpawn();
 				} else if (isOnBlueTeam(p)) {
-					spawnCodPlayer(p, currentMap.getBlueSpawn());
+					spawn = currentMap.getBlueSpawn();
 				} else {
-					spawnCodPlayer(p, currentMap.getPinkSpawn());
+					spawn = currentMap.getPinkSpawn();
 				}
+
+				spawnCodPlayer(p, spawn);
 			} else {
 				p.setGameMode(GameMode.SPECTATOR);
 				isAlive.put(p, false);
@@ -478,6 +481,10 @@ public class GameInstance implements Listener {
 	}
 
 	private void spawnCodPlayer(Player p, Location L) {
+		if (p.getLocation().getWorld() != L.getWorld()) {
+			//Move the player to the world before spawning if they aren't yet in the world.
+			p.teleport(L.getWorld().getSpawnLocation());
+		}
 		p.teleport(L);
 		p.getInventory().clear();
 		p.setGameMode(GameMode.ADVENTURE);
