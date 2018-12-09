@@ -179,7 +179,7 @@ public class PerkListener implements Listener {
 		};
 		
 		this.lastStandRunnables.put(p, br);
-		br.runTaskTimerAsynchronously(Main.getPlugin(), 0L, 10L);
+		br.runTaskTimer(Main.getPlugin(), 0L, 10L);
 	}
 	
 	private void cancelLastStand(Player p) {
