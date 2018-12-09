@@ -74,6 +74,8 @@ public class GameInstance implements Listener {
 
 	private boolean isLegacy = Main.isLegacy();
 
+	private HashMap<Player, String> playerListNames = new HashMap<>();
+
 	public GameInstance(ArrayList<Player> pls, CodMap map) {
 
 		try {
@@ -232,6 +234,9 @@ public class GameInstance implements Listener {
 		if (players.contains(p))
 			return;
 
+
+		playerListNames.put(p, p.getPlayerListName());
+
 		health.addPlayer(p);
 
 		Main.progressionManager.update(p);
@@ -358,10 +363,6 @@ public class GameInstance implements Listener {
 			}
 
 			try {
-//				BossBar bar = freeForAllBar.get(p);
-//
-//				bar.removeAll();
-
 				Object bar = freeForAllBar.get(p);
 
 				bar.getClass().getMethod("removeAll").invoke(bar);
@@ -382,6 +383,16 @@ public class GameInstance implements Listener {
 		if (players.size() == 0) {
 			GameManager.removeInstance(this);
 		}
+
+		if (playerListNames.get(p) != null) {
+			p.setPlayerListName(playerListNames.get(p));
+			playerListNames.remove(p);
+		} else {
+			p.setPlayerListName(p.getDisplayName());
+		}
+
+		p.setPlayerListHeader("");
+		p.setPlayerListFooter("");
 
 		System.gc();
 	}
@@ -768,9 +779,7 @@ public class GameInstance implements Listener {
 
 	private void startLobbyTimer(int time) {
 
-		if (forceStarted) {
-			forceStarted = false;
-		}
+		forceStarted = false;
 
 		setState(GameState.STARTING);
 
@@ -784,9 +793,11 @@ public class GameInstance implements Listener {
 			try {
 //				scoreBar.addPlayer(p);
 				scoreBar.getClass().getMethod("addPlayer", Player.class).invoke(scoreBar, p);
-			} catch(Exception e) {}
+			} catch(Exception ignored) {}
 			p.getInventory().setItem(0, Main.invManager.codItem);
 			p.getInventory().setItem(8, Main.invManager.leaveItem);
+			p.setPlayerListName(ChatColor.WHITE + "[P" + Main.progressionManager.getPrestigeLevel(p) + "L" +
+					Main.progressionManager.getLevel(p) + "] " + ChatColor.YELLOW + p.getDisplayName());
 		}
 
 		GameInstance game = this;
@@ -820,10 +831,14 @@ public class GameInstance implements Listener {
 
 				if (t % 30 == 0 || (t % 10 == 0 && t < 30) || (t % 5 == 0 && t < 15)) {
 					for (Player p : game.players) {
-
 						Main.sendMessage(p, Main.codPrefix + ChatColor.GRAY + "Game starting in " + getFancyTime(t) + "!", Main.lang);
 						Main.sendMessage(p, Main.codPrefix + ChatColor.GRAY + "Map: " + ChatColor.GREEN + game.currentMap.getName() + ChatColor.RESET + ChatColor.GRAY + " Gamemode: " + ChatColor.RED + game.currentMap.getGamemode().toString(), Main.lang);
 					}
+				}
+
+				for (Player p : game.players) {
+					p.setPlayerListHeader(ChatColor.WHITE + "Playing " + ChatColor.GOLD + getGamemode() + ChatColor.WHITE + " on " + ChatColor.GOLD + getMap().getName() + ChatColor.WHITE + "!");
+					p.setPlayerListFooter(ChatColor.WHITE + "Game starts in " + ChatColor.GOLD + getFancyTime(t) + ChatColor.WHITE + "!");
 				}
 
 				if (t == 0 || forceStarted) {
