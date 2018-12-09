@@ -31,7 +31,7 @@ class PrevStats {
 	private int level;
 	private double health;
 	private int hunger;
-	private PlayerInventory pInventory;
+	private HashMap<Integer, ItemStack> inventoryItems = new HashMap<>();
 
 	PrevStats(Player p, String name, double xp, int lvl, double hp, int food, PlayerInventory inv) {
 		owner = p;
@@ -40,7 +40,12 @@ class PrevStats {
 		level = lvl;
 		health = hp;
 		hunger = food;
-		pInventory = inv;
+		for (int i = 0; i < inv.getSize(); i++) {
+			ItemStack item = inv.getItem(i);
+			if (item != null) {
+				inventoryItems.put(i, item);
+			}
+		}
 	}
 
 	void apply() {
@@ -49,13 +54,10 @@ class PrevStats {
 		owner.setLevel(level);
 		owner.setHealth(health);
 		owner.setFoodLevel(hunger);
-		owner.getInventory().clear();
-		for (int i = 0; i < pInventory.getSize(); i++) {
-			ItemStack item = pInventory.getItem(i);
-			if (item != null) {
-				owner.getInventory().setItem(i, item);
-			}
+		for (int slot : inventoryItems.keySet()) {
+			owner.getInventory().setItem(slot, inventoryItems.get(slot));
 		}
+		owner.updateInventory();
 	}
 }
 

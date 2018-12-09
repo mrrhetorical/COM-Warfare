@@ -167,9 +167,6 @@ public class GameManager {
 		}
 
 		Objects.requireNonNull(getMatchWhichContains(p)).removePlayer(p);
-		p.getInventory().clear();
-		p.setHealth(20D);
-		p.setFoodLevel(20);
 		Main.sendMessage(p, Main.codPrefix + "\u00A77You left the lobby!", Main.lang);
 	}
 
