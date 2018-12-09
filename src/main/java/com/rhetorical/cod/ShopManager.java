@@ -35,8 +35,8 @@ public class ShopManager {
 
 	ShopManager() {
 
-		this.loadGuns();
-		this.loadWeapons();
+		loadGuns();
+		loadWeapons();
 		for (Player p : Bukkit.getOnlinePlayers()) {
 			this.loadPurchaseData(p);
 		}
@@ -381,11 +381,12 @@ public class ShopManager {
 	}
 
 	public void checkForNewGuns(Player p) {
-		List<CodGun> primaryGuns = Main.shopManager.primaryGuns;
+
+		Main.shopManager.loadPurchaseData(p);
+
+		List<CodGun> primaryGuns = getPrimaryGuns();
 		for (CodGun gun : primaryGuns) {
 			if (gun.getType() == UnlockType.LEVEL) {
-
-				Main.shopManager.loadPurchaseData(p);
 
 				HashMap<Player, ArrayList<CodGun>> purchased = Main.shopManager.getPurchasedGuns();
 
@@ -405,7 +406,7 @@ public class ShopManager {
 			this.savePurchaseData(p);
 		}
 
-		List<CodGun> secondaryGuns = Main.shopManager.secondaryGuns;
+		List<CodGun> secondaryGuns = getSecondaryGuns();
 		for (CodGun gun : secondaryGuns) {
 			if (gun.getType() == UnlockType.LEVEL) {
 
@@ -424,12 +425,12 @@ public class ShopManager {
 			}
 		}
 
-		List<CodWeapon> lethalGrenades = Main.shopManager.lethalWeapons;
+		List<CodWeapon> lethalGrenades = getLethalWeapons();
 		for (CodWeapon grenade : lethalGrenades) {
 			unlockGrenade(p, grenade);
 		}
 
-		List<CodWeapon> tacticalGrenades = Main.shopManager.tacticalWeapons;
+		List<CodWeapon> tacticalGrenades = getTacticalWeapons();
 		for (CodWeapon grenade : tacticalGrenades) {
 			unlockGrenade(p, grenade);
 		}
