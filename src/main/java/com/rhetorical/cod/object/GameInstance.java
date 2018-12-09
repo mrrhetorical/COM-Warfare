@@ -1712,6 +1712,7 @@ public class GameInstance implements Listener {
 				} else {
 					Main.perkListener.isInLastStand.remove(victim);
 					victim.setSneaking(false);
+					victim.setWalkSpeed(0.2f);
 					handleDeath(attacker, victim);
 				}
 			}
