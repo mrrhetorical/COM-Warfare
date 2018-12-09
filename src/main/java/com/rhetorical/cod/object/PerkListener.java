@@ -89,7 +89,7 @@ public class PerkListener implements Listener {
 				}
 			};
 
-			br.runTaskLaterAsynchronously(Main.getPlugin(), 600L);
+			br.runTaskLater(Main.getPlugin(), 600L);
 		}
 	}
 
@@ -150,7 +150,7 @@ public class PerkListener implements Listener {
 		}
 	}
 	
-	private HashMap<Player, BukkitRunnable> lastStandRunnables = new HashMap<Player, BukkitRunnable>();
+	private HashMap<Player, BukkitRunnable> lastStandRunnables = new HashMap<>();
 	
 	void lastStand(Player p, GameInstance i) {
 		
