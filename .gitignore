@@ -6,3 +6,7 @@
 target/
 
 dependency-reduced-pom\.xml
+
+com-warfare\.iml
+
+\.idea/misc\.xml
