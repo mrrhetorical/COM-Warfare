@@ -444,9 +444,10 @@ public class GameInstance implements Listener {
 			p.setHealth(20d);
 		}
 
-		p.setPlayerListHeader("");
-		p.setPlayerListFooter("");
-
+		try {
+			p.getClass().getMethod("setPlayerListHeader", String.class).invoke(p, "");
+			p.getClass().getMethod("setPlayerListFooter", String.class).invoke(p, "");
+		} catch(NoSuchMethodException ignored) {} catch(Exception ignored) {}
 		System.gc();
 	}
 
@@ -896,8 +897,10 @@ public class GameInstance implements Listener {
 				for (Player p : game.players) {
 					p.setPlayerListName(ChatColor.WHITE + "[P" + Main.progressionManager.getPrestigeLevel(p) + "L" +
 							Main.progressionManager.getLevel(p) + "] " + ChatColor.YELLOW + p.getDisplayName());
-					p.setPlayerListHeader(ChatColor.WHITE + "Playing " + ChatColor.GOLD + getGamemode() + ChatColor.WHITE + " on " + ChatColor.GOLD + getMap().getName() + ChatColor.WHITE + "!");
-					p.setPlayerListFooter(ChatColor.WHITE + "Game starts in " + ChatColor.GOLD + getFancyTime(t) + ChatColor.WHITE + "!");
+					try {
+						p.getClass().getMethod("setPlayerListHeader", String.class).invoke(p, ChatColor.WHITE + "Playing " + ChatColor.GOLD + getGamemode() + ChatColor.WHITE + " on " + ChatColor.GOLD + getMap().getName() + ChatColor.WHITE + "!");
+						p.getClass().getMethod("setPlayerListFooter", String.class).invoke(p, ChatColor.WHITE + "Game starts in " + ChatColor.GOLD + getFancyTime(t) + ChatColor.WHITE + "!");
+					} catch(NoSuchMethodException ignored) {} catch(Exception ignored) {}
 				}
 
 				if (t == 0 || forceStarted) {
