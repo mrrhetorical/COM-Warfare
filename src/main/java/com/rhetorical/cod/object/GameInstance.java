@@ -208,6 +208,7 @@ public class GameInstance implements Listener {
 	}
 
 	private void setupNextMaps() {
+		clearNextMaps();
 		CodMap m1 = GameManager.pickRandomMap();
 		CodMap m2 = GameManager.pickRandomMap();
 
@@ -957,6 +958,7 @@ public class GameInstance implements Listener {
 				}
 
 				if (t == 20) {
+					clearNextMaps();
 					CodMap[] maps = nextMaps;
 					int votes = 0;
 					if (mapVotes[0].size() > mapVotes[1].size()) {
