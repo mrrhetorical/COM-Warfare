@@ -214,13 +214,8 @@ public class GameInstance implements Listener {
 		CodMap m1 = GameManager.pickRandomMap();
 		CodMap m2 = GameManager.pickRandomMap();
 
-		if (m1 == null || m2 == null) {
-			nextMaps[0] = currentMap;
-			nextMaps[1] = currentMap;
-		} else {
-			nextMaps[0] = m1;
-			nextMaps[1] = m2;
-		}
+		nextMaps[0] = m1 == null ? currentMap : m1;
+		nextMaps[1] = m2 == null ? currentMap : m2;
 		mapVotes[0] = new ArrayList<>();
 		mapVotes[1] = new ArrayList<>();
 	}
