@@ -3,7 +3,6 @@ package com.rhetorical.cod.inventories;
 import java.util.*;
 
 import com.rhetorical.cod.object.*;
-import com.rhetorical.tpp.McLang;
 import org.bukkit.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -75,8 +74,8 @@ public class InventoryManager implements Listener {
 
 	public InventoryManager() {
 
-		mainInventory = Bukkit.createInventory(null, 18, "COM-Warfare");
-		mainShopInventory = Bukkit.createInventory(null, 9, "Shop Menu");
+		mainInventory = Bukkit.createInventory(null, 27, "COM-Warfare - Menu");
+		mainShopInventory = Bukkit.createInventory(null, 9, "COM-Warfare - Shop");
 		leaderboardInventory = Bukkit.createInventory(null, 36, "Leaderboard");
 
 		setupStaticItems();
@@ -125,7 +124,7 @@ public class InventoryManager implements Listener {
 		joinGameMeta.setLore(joinGameLore);
 		joinGame.setItemMeta(joinGameMeta);
 
-		mainInventory.setItem(0, joinGame);
+		mainInventory.setItem(13, joinGame);
 
 		createClass = new ItemStack(Material.CHEST);
 		ItemMeta createClassMeta = createClass.getItemMeta();
@@ -147,7 +146,7 @@ public class InventoryManager implements Listener {
 		scoreStreakMeta.setLore(scoreStreakLore);
 		scoreStreaks.setItemMeta(scoreStreakMeta);
 
-		mainInventory.setItem(2, scoreStreaks);
+		mainInventory.setItem(11, scoreStreaks);
 
 		ItemStack prestige = new ItemStack(Material.ANVIL);
 		ItemMeta prestigeMeta = prestige.getItemMeta();
@@ -158,7 +157,7 @@ public class InventoryManager implements Listener {
 		prestigeMeta.setLore(prestigeLore);
 		prestige.setItemMeta(prestigeMeta);
 
-		mainInventory.setItem(3, prestige);
+		mainInventory.setItem(18, prestige);
 
 		ItemStack assignments = new ItemStack(Material.GOLD_INGOT);
 		ItemMeta assignmentMeta = assignments.getItemMeta();
@@ -171,17 +170,7 @@ public class InventoryManager implements Listener {
 		assignmentMeta.setLore(assignmentLore);
 		assignments.setItemMeta(assignmentMeta);
 
-		mainInventory.setItem(4, assignments);
-
-		ItemStack clanTag = new ItemStack(Material.SHEARS);
-		ItemMeta clanTagMeta = clanTag.getItemMeta();
-		clanTagMeta.setDisplayName("\u00A75\u00A7lClan Tag");
-		ArrayList<String> clanTagLore = new ArrayList<>();
-		clanTagLore.add("\u00A76Change your clan tag in the chat!");
-		clanTagMeta.setLore(clanTagLore);
-		clanTag.setItemMeta(clanTagMeta);
-
-		mainInventory.setItem(5, clanTag);
+		mainInventory.setItem(7, assignments);
 
 		combatRecord = new ItemStack(Material.PAPER);
 		ItemMeta combatRecordMeta = combatRecord.getItemMeta();
@@ -193,7 +182,7 @@ public class InventoryManager implements Listener {
 		combatRecordMeta.setLore(combatRecordLore);
 		combatRecord.setItemMeta(combatRecordMeta);
 
-		mainInventory.setItem(6, combatRecord);
+		mainInventory.setItem(5, combatRecord);
 
 		leaderboard = new ItemStack(Material.PAPER);
 		ItemMeta leaderboardMeta = leaderboard.getItemMeta();
@@ -204,9 +193,9 @@ public class InventoryManager implements Listener {
 		leaderboardMeta.setLore(leaderboardLore);
 		leaderboard.setItemMeta(leaderboardMeta);
 
-		mainInventory.setItem(7, leaderboard);
+		mainInventory.setItem(15, leaderboard);
 
-		mainInventory.setItem(8, this.closeInv);
+		mainInventory.setItem(26, closeInv);
 
 		ItemStack shop = shopItem;
 		ItemMeta shopMeta = shop.getItemMeta();
@@ -218,7 +207,7 @@ public class InventoryManager implements Listener {
 
 		shopItem = shop;
 
-		mainInventory.setItem(9, shopItem);
+		mainInventory.setItem(3, shopItem);
 
 		ItemStack gunItem;
 		try {

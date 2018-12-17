@@ -152,6 +152,8 @@ public class Main extends JavaPlugin {
 
 		String version = getPlugin().getDescription().getVersion();
 
+
+		LangFile.setup(getPlugin());
 		ProgressionFile.setup(getPlugin());
 		ArenasFile.setup(getPlugin());
 		CreditsFile.setup(getPlugin());
@@ -249,6 +251,10 @@ public class Main extends JavaPlugin {
 	public static boolean isLegacy() {
 		//returns true if server is using 1.8
 		return Bukkit.getBukkitVersion().toUpperCase().startsWith("1.8");
+	}
+
+	public static boolean isUsingQA() {
+		return Bukkit.getServer().getPluginManager().getPlugin("QualityArmory") != null;
 	}
 
 	@Override
