@@ -132,15 +132,17 @@ public class Listeners implements Listener {
 			return;
 		}
 		
-		if (cause == DamageCause.FALL) {
+		if ((cause == DamageCause.DROWNING || cause == DamageCause.SUICIDE) && Objects.requireNonNull(GameManager.getMatchWhichContains(p)).getState() == GameState.INGAME) {
+			Objects.requireNonNull(GameManager.getMatchWhichContains(p)).kill(p, p);
+			return;
+		}
+
+		if (cause != DamageCause.ENTITY_ATTACK && cause != DamageCause.ENTITY_EXPLOSION && cause != DamageCause.ENTITY_SWEEP_ATTACK && cause != DamageCause.PROJECTILE) {
 			if (!Objects.requireNonNull(GameManager.getMatchWhichContains(p)).health.isDead(p) && Objects.requireNonNull(GameManager.getMatchWhichContains(p)).getState() == GameState.INGAME) {
 				Objects.requireNonNull(GameManager.getMatchWhichContains(p)).damagePlayer(p, damage);
 			}
 		}
 		
-		if ((cause == DamageCause.DROWNING || cause == DamageCause.SUICIDE) && Objects.requireNonNull(GameManager.getMatchWhichContains(p)).getState() == GameState.INGAME) {
-			Objects.requireNonNull(GameManager.getMatchWhichContains(p)).kill(p, p);
-			return;
-		}
+
 	}
 }
