@@ -223,17 +223,12 @@ public class GameInstance implements Listener {
 	}
 
 	private void clearNextMaps() {
-		if (nextMaps[0] != null) {
+		if (nextMaps[0] != null && nextMaps[0] != currentMap) {
 			GameManager.UsedMaps.remove(nextMaps[0]);
 		}
-		if (nextMaps[1] != null) {
+		if (nextMaps[1] != null && nextMaps[1] != currentMap) {
 			GameManager.UsedMaps.remove(nextMaps[1]);
 		}
-	}
-
-	private void clearMapVotes() {
-		mapVotes[0] = new ArrayList<>();
-		mapVotes[1] = new ArrayList<>();
 	}
 
 	public void addVote(int map, Player p) throws Exception {
