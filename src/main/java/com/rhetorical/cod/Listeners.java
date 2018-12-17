@@ -1,5 +1,6 @@
 package com.rhetorical.cod;
 
+import com.rhetorical.cod.object.GameState;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -132,13 +133,13 @@ public class Listeners implements Listener {
 		}
 		
 		if (cause == DamageCause.FALL) {
-			if (Objects.requireNonNull(GameManager.getMatchWhichContains(p)).health.isDead(p)) {
+			if (!Objects.requireNonNull(GameManager.getMatchWhichContains(p)).health.isDead(p) && Objects.requireNonNull(GameManager.getMatchWhichContains(p)).getState() == GameState.INGAME) {
 				Objects.requireNonNull(GameManager.getMatchWhichContains(p)).damagePlayer(p, damage);
 			}
 		}
 		
-		if (cause == DamageCause.DROWNING || cause == DamageCause.SUICIDE) {
-			GameManager.getMatchWhichContains(p).kill(p, p);
+		if ((cause == DamageCause.DROWNING || cause == DamageCause.SUICIDE) && Objects.requireNonNull(GameManager.getMatchWhichContains(p)).getState() == GameState.INGAME) {
+			Objects.requireNonNull(GameManager.getMatchWhichContains(p)).kill(p, p);
 			return;
 		}
 	}
