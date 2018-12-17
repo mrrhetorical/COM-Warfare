@@ -45,7 +45,6 @@ public class GameManager {
 
 	@SuppressWarnings("unchecked")
 	static void loadMaps() {
-		AddedMaps.clear();
 		int k = 0;
 		while (ArenasFile.getData().contains("Maps." + k)) {
 			CodMap m;
@@ -77,7 +76,17 @@ public class GameManager {
 
 			m.setEnable();
 
-			AddedMaps.add(m);
+			boolean contains = false;
+
+			for (CodMap map : AddedMaps) {
+				contains = map.getName().equalsIgnoreCase(m.getName());
+				if(contains)
+					break;
+			}
+
+			if (!contains) {
+				AddedMaps.add(m);
+			}
 			k++;
 		}
 	}
@@ -245,10 +254,8 @@ public class GameManager {
 		}
 		
 		Main.sendMessage(Main.cs, Main.codPrefix + "\u00A77Game instance id " + i.getId() + " has been removed!", Main.lang);
-		
-		if (UsedMaps.contains(i.getMap())) {
-			UsedMaps.remove(i.getMap());
-		}
+
+		UsedMaps.remove(i.getMap());
 
 		System.gc();
 	}

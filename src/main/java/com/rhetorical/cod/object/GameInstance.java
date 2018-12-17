@@ -132,7 +132,6 @@ public class GameInstance implements Listener {
 
 		players = pls;
 		currentMap = map;
-
 		Main.getPlugin().reloadConfig();
 
 		if (getGamemode() != Gamemode.INFECT) {
@@ -181,8 +180,6 @@ public class GameInstance implements Listener {
 
 		scoreboardObjective.setDisplaySlot(DisplaySlot.SIDEBAR);
 
-		setupNextMaps();
-
 		System.gc();
 
 		Main.cs.sendMessage(Main.codPrefix + ChatColor.GRAY + "Game lobby with id " + getId() + " created with map " + getMap().getName() + " with gamemode " + getGamemode() + ".");
@@ -211,8 +208,6 @@ public class GameInstance implements Listener {
 	}
 
 	private void setupNextMaps() {
-		clearNextMaps();
-
 		CodMap m1 = GameManager.pickRandomMap();
 		CodMap m2 = GameManager.pickRandomMap();
 
@@ -963,7 +958,6 @@ public class GameInstance implements Listener {
 
 				if (t == 20) {
 					CodMap[] maps = nextMaps;
-					clearNextMaps();
 					int votes = 0;
 					if (mapVotes[0].size() > mapVotes[1].size()) {
 						changeMap(maps[0]);
