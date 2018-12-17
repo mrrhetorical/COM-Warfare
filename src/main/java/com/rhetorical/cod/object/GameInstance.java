@@ -117,6 +117,9 @@ public class GameInstance implements Listener {
 
 	private HashMap<Player, PrevStats> joinStats = new HashMap<>();
 
+	private CodMap[] nextMaps = new CodMap[2];
+	private ArrayList<Player>[] mapVotes = new ArrayList[2];
+
 	public GameInstance(ArrayList<Player> pls, CodMap map) {
 
 		try {
@@ -203,6 +206,39 @@ public class GameInstance implements Listener {
 
 	private void resetScoreboard() {
 		scoreboardObjective = scoreboard.registerNewObjective("game_stats", "dummy");
+	}
+
+	private void setupNextMaps() {
+		CodMap m1 = GameManager.pickRandomMap();
+		CodMap m2 = GameManager.pickRandomMap();
+
+		if (m1 == null || m2 == null) {
+			nextMaps[0] = currentMap;
+			nextMaps[1] = currentMap;
+		} else {
+			nextMaps[0] = m1;
+			nextMaps[1] = m2;
+		}
+		mapVotes[0] = new ArrayList<>();
+		mapVotes[1] = new ArrayList<>();
+	}
+
+	private void clearNextMaps() {
+		GameManager.UsedMaps.remove(nextMaps[0]);
+		GameManager.UsedMaps.remove(nextMaps[1]);
+		mapVotes[0] = new ArrayList<>();
+		mapVotes[1] = new ArrayList<>();
+	}
+
+	public void addVote(int map, Player p) throws Exception {
+		if (map != 1 && map != 0)
+			throw new Exception(Main.codPrefix + "Improper map selected!");
+
+		mapVotes[0].remove(p);
+		mapVotes[1].remove(p);
+
+		if (!mapVotes[map].contains(p))
+			mapVotes[map].add(p);
 	}
 
 	private void reset() {
@@ -860,6 +896,8 @@ public class GameInstance implements Listener {
 
 		GameInstance game = this;
 
+		setupNextMaps();
+
 		BukkitRunnable br = new BukkitRunnable() {
 
 			int t = time;
@@ -891,6 +929,10 @@ public class GameInstance implements Listener {
 					for (Player p : game.players) {
 						Main.sendMessage(p, Main.codPrefix + ChatColor.GRAY + "Game starting in " + getFancyTime(t) + "!", Main.lang);
 						Main.sendMessage(p, Main.codPrefix + ChatColor.GRAY + "Map: " + ChatColor.GREEN + game.currentMap.getName() + ChatColor.RESET + ChatColor.GRAY + " Gamemode: " + ChatColor.RED + game.currentMap.getGamemode().toString(), Main.lang);
+						if (t > 20) {
+							Main.sendMessage(p, Main.codPrefix + ChatColor.GRAY + "Vote 1: " + ChatColor.GOLD + nextMaps[0].getName() + ChatColor.GRAY + " Vote 2: " + ChatColor.AQUA + nextMaps[1].getName(), Main.lang);
+							Main.sendMessage(p, Main.codPrefix + ChatColor.GRAY + "Votes 1: " + mapVotes[0].size() + " Votes 2: " + mapVotes[1].size(), Main.lang);
+						}
 					}
 				}
 
@@ -901,6 +943,21 @@ public class GameInstance implements Listener {
 						p.getClass().getMethod("setPlayerListHeader", String.class).invoke(p, ChatColor.WHITE + "Playing " + ChatColor.GOLD + getGamemode() + ChatColor.WHITE + " on " + ChatColor.GOLD + getMap().getName() + ChatColor.WHITE + "!");
 						p.getClass().getMethod("setPlayerListFooter", String.class).invoke(p, ChatColor.WHITE + "Game starts in " + ChatColor.GOLD + getFancyTime(t) + ChatColor.WHITE + "!");
 					} catch(NoSuchMethodException ignored) {} catch(Exception ignored) {}
+				}
+
+				if (t == 20) {
+					if (mapVotes[0].size() > mapVotes[1].size()) {
+						currentMap = nextMaps[0];
+					} else if (mapVotes[1].size() > mapVotes[0].size()) {
+						currentMap = nextMaps[1];
+					} else {
+						currentMap = nextMaps[1];
+					}
+
+					clearNextMaps();
+					for (Player p : game.players) {
+						Main.sendMessage(p, Main.codPrefix + ChatColor.GRAY + "The next map is set to: " + ChatColor.BLUE + game.currentMap.getName(), Main.lang);
+					}
 				}
 
 				if (t == 0 || forceStarted) {
