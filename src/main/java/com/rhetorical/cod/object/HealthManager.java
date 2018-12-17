@@ -54,7 +54,7 @@ public class HealthManager {
 		update(p);
 	}
 	
-	boolean isDead(Player p) {
+	public boolean isDead(Player p) {
 		
 		if (getHealth(p) <= 0) {
 			reset(p);

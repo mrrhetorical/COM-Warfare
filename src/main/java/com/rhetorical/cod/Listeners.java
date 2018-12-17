@@ -15,6 +15,8 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 import com.rhetorical.cod.object.GameInstance;
 
+import java.util.Objects;
+
 public class Listeners implements Listener {
 
 	/*
@@ -130,7 +132,9 @@ public class Listeners implements Listener {
 		}
 		
 		if (cause == DamageCause.FALL) {
-			GameManager.getMatchWhichContains(p).health.damage(p, damage);
+			if (Objects.requireNonNull(GameManager.getMatchWhichContains(p)).health.isDead(p)) {
+				Objects.requireNonNull(GameManager.getMatchWhichContains(p)).damagePlayer(p, damage);
+			}
 		}
 		
 		if (cause == DamageCause.DROWNING || cause == DamageCause.SUICIDE) {

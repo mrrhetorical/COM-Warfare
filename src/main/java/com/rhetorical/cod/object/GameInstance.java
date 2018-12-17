@@ -958,7 +958,6 @@ public class GameInstance implements Listener {
 				}
 
 				if (t == 20) {
-					clearNextMaps();
 					CodMap[] maps = nextMaps;
 					int votes = 0;
 					if (mapVotes[0].size() > mapVotes[1].size()) {
@@ -972,6 +971,7 @@ public class GameInstance implements Listener {
 						changeMap(maps[index]);
 						votes = -1;
 					}
+					clearNextMaps();
 
 					for (Player p : game.players) {
 						Main.sendMessage(p, Main.codPrefix + ChatColor.GRAY + "The next map is set to: " + ChatColor.BLUE + game.currentMap.getName(), Main.lang);
@@ -990,6 +990,8 @@ public class GameInstance implements Listener {
 							Main.sendMessage(p, Main.codPrefix + ChatColor.GRAY + "Game starting now!", Main.lang);
 						}
 					}
+
+					clearNextMaps();
 
 					startGame();
 
@@ -1419,9 +1421,7 @@ public class GameInstance implements Listener {
 		}
 
 		if (getGamemode() == Gamemode.INFECT && redTeam.contains(killer)) {
-			if (blueTeam.contains(p)) {
-				blueTeam.remove(p);
-			}
+			blueTeam.remove(p);
 
 			redTeam.add(p);
 
@@ -1861,6 +1861,18 @@ public class GameInstance implements Listener {
 				} else {
 					Main.perkListener.lastStand(victim, this);
 				}
+			}
+		}
+	}
+
+	public void damagePlayer(Player p, double damage) {
+		health.damage(p, damage);
+		if (health.isDead(p)) {
+			if (!Main.loadManager.getCurrentLoadout(p).hasPerk(Perk.LAST_STAND)) {
+				Main.sendMessage(p, "" + ChatColor.GREEN + ChatColor.BOLD + "YOU " + ChatColor.RESET + "" + ChatColor.WHITE + "[killed] " + ChatColor.RESET + ChatColor.GREEN + ChatColor.BOLD + "YOURSELF", Main.lang);
+				kill(p, p);
+			} else {
+				Main.perkListener.lastStand(p, this);
 			}
 		}
 	}
