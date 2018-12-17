@@ -181,6 +181,8 @@ public class GameInstance implements Listener {
 
 		scoreboardObjective.setDisplaySlot(DisplaySlot.SIDEBAR);
 
+		setupNextMaps();
+
 		System.gc();
 
 		Main.cs.sendMessage(Main.codPrefix + ChatColor.GRAY + "Game lobby with id " + getId() + " created with map " + getMap().getName() + " with gamemode " + getGamemode() + ".");
@@ -226,6 +228,9 @@ public class GameInstance implements Listener {
 	private void clearNextMaps() {
 		GameManager.UsedMaps.remove(nextMaps[0]);
 		GameManager.UsedMaps.remove(nextMaps[1]);
+	}
+
+	private void clearMapVotes() {
 		mapVotes[0] = new ArrayList<>();
 		mapVotes[1] = new ArrayList<>();
 	}
@@ -930,8 +935,10 @@ public class GameInstance implements Listener {
 						Main.sendMessage(p, Main.codPrefix + ChatColor.GRAY + "Game starting in " + getFancyTime(t) + "!", Main.lang);
 						Main.sendMessage(p, Main.codPrefix + ChatColor.GRAY + "Map: " + ChatColor.GREEN + game.currentMap.getName() + ChatColor.RESET + ChatColor.GRAY + " Gamemode: " + ChatColor.RED + game.currentMap.getGamemode().toString(), Main.lang);
 						if (t > 20) {
-							Main.sendMessage(p, Main.codPrefix + ChatColor.GRAY + "Vote 1: " + ChatColor.GOLD + nextMaps[0].getName() + ChatColor.GRAY + " Vote 2: " + ChatColor.AQUA + nextMaps[1].getName(), Main.lang);
-							Main.sendMessage(p, Main.codPrefix + ChatColor.GRAY + "Votes 1: " + mapVotes[0].size() + " Votes 2: " + mapVotes[1].size(), Main.lang);
+							Main.sendMessage(p, Main.codPrefix + ChatColor.GOLD + "Map Voting", Main.lang);
+							Main.sendMessage(p, Main.codPrefix + ChatColor.GRAY + "===============", Main.lang);
+							Main.sendMessage(p, Main.codPrefix + ChatColor.GRAY + "1: " + ChatColor.GOLD + nextMaps[0].getName() + ChatColor.GRAY + " | 2: " + ChatColor.AQUA + nextMaps[1].getName(), Main.lang);
+							Main.sendMessage(p, Main.codPrefix + ChatColor.GRAY + "Votes: " + ChatColor.GOLD + mapVotes[0].size() + ChatColor.GRAY + " | Votes: " + ChatColor.AQUA + mapVotes[1].size(), Main.lang);
 						}
 					}
 				}
@@ -943,20 +950,44 @@ public class GameInstance implements Listener {
 						p.getClass().getMethod("setPlayerListHeader", String.class).invoke(p, ChatColor.WHITE + "Playing " + ChatColor.GOLD + getGamemode() + ChatColor.WHITE + " on " + ChatColor.GOLD + getMap().getName() + ChatColor.WHITE + "!");
 						p.getClass().getMethod("setPlayerListFooter", String.class).invoke(p, ChatColor.WHITE + "Game starts in " + ChatColor.GOLD + getFancyTime(t) + ChatColor.WHITE + "!");
 					} catch(NoSuchMethodException ignored) {} catch(Exception ignored) {}
+
+					if (t > 20) {
+						if (!p.getInventory().getItem(3).equals(Main.invManager.voteItemA)) {
+							p.getInventory().setItem(3, Main.invManager.voteItemA);
+						}
+
+						if (!p.getInventory().getItem(4).equals(Main.invManager.voteItemB)) {
+							p.getInventory().setItem(4, Main.invManager.voteItemB);
+						}
+					} else {
+						p.getInventory().setItem(3, new ItemStack(Material.AIR));
+						p.getInventory().setItem(4, new ItemStack(Material.AIR));
+					}
 				}
 
 				if (t == 20) {
+					CodMap[] maps = nextMaps;
+					clearNextMaps();
+					int votes = 0;
 					if (mapVotes[0].size() > mapVotes[1].size()) {
-						currentMap = nextMaps[0];
+						changeMap(maps[0]);
+						votes = mapVotes[0].size();
 					} else if (mapVotes[1].size() > mapVotes[0].size()) {
-						currentMap = nextMaps[1];
+						changeMap(maps[1]);
+						votes = mapVotes[1].size();
 					} else {
-						currentMap = nextMaps[1];
+						int index = (new Random()).nextInt(2);
+						changeMap(maps[index]);
+						votes = -1;
 					}
 
-					clearNextMaps();
 					for (Player p : game.players) {
 						Main.sendMessage(p, Main.codPrefix + ChatColor.GRAY + "The next map is set to: " + ChatColor.BLUE + game.currentMap.getName(), Main.lang);
+						if (votes != -1) {
+							Main.sendMessage(p, Main.codPrefix + ChatColor.GRAY + "It won with " + ChatColor.AQUA + votes + ChatColor.GRAY + " votes!", Main.lang);
+						} else {
+							Main.sendMessage(p, Main.codPrefix + ChatColor.GRAY + "It was a tie!", Main.lang);
+						}
 					}
 				}
 

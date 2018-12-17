@@ -820,35 +820,6 @@ public class Main extends JavaPlugin {
 			} else if (args[0].equalsIgnoreCase("notes") && hasPerm(sender, "com.patchNotes")) {
 				PatchNotes.getPatchNotes(sender);
 				return true;
-			} else if (args[0].equalsIgnoreCase("vote")) {
-				if (!(sender instanceof Player)) {
-					sendMessage(cs, ChatColor.RED + "You must be a player to execute this command", lang);
-					return true;
-				}
-
-				if (args.length != 2) {
-					sendMessage(sender, codPrefix + ChatColor.RED + "Incorrect usage! Correct usage: '/cod vote (1/2)'");
-					return true;
-				}
-
-				int index;
-
-				try {
-					index = Integer.parseInt(args[1]) - 1;
-				} catch(NumberFormatException e) {
-					sendMessage(sender, codPrefix + ChatColor.RED + "Incorrect usage! Correct usage: '/cod vote (1/2)'");
-					return true;
-				}
-
-				try {
-					Objects.requireNonNull(GameManager.getMatchWhichContains((Player) sender)).addVote(index, (Player) sender);
-				} catch(Exception e) {
-					sendMessage(sender, codPrefix + ChatColor.RED + "Incorrect usage! Correct usage: '/cod vote (1/2)'");
-					return true;
-				}
-
-				sendMessage(sender, codPrefix + ChatColor.GREEN + "Successfully cast vote!");
-				return true;
 			} else {
 				sender.sendMessage(Main.codPrefix + ChatColor.RED + "Unknown command! Try using '/cod help' for a list of commands!");
 				return true;

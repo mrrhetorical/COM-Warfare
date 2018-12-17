@@ -51,6 +51,9 @@ public class InventoryManager implements Listener {
 	public ItemStack codItem = new ItemStack(Material.ENDER_PEARL);
 	public ItemStack leaveItem = new ItemStack(Material.BARRIER);
 
+	public ItemStack voteItemA = new ItemStack(Material.PAPER);
+	public ItemStack voteItemB = new ItemStack(Material.PAPER);
+
 	public boolean shouldCancelClick(Inventory i, Player p) {
 		if (i.equals(mainInventory)) {
 			return true;
@@ -104,7 +107,29 @@ public class InventoryManager implements Listener {
 		codLore.add(ChatColor.WHITE + "item to open the cod menu.");
 		codMeta.setLore(codLore);
 		codItem.setItemMeta(codMeta);
+
+		{
+			ItemMeta voteMeta = voteItemA.getItemMeta();
+			voteMeta.setDisplayName("" + ChatColor.GOLD + ChatColor.BOLD + "Vote for Map 1");
+			List<String> voteLore = new ArrayList<>();
+			codLore.add(ChatColor.WHITE + "Right or left click this");
+			codLore.add(ChatColor.WHITE + "item to vote for map 1.");
+			voteMeta.setLore(voteLore);
+			voteItemA.setItemMeta(voteMeta);
+		}
+
+		{
+			ItemMeta voteMeta = voteItemB.getItemMeta();
+			voteMeta.setDisplayName("" + ChatColor.GOLD + ChatColor.BOLD + "Vote for Map 2");
+			List<String> voteLore = new ArrayList<>();
+			codLore.add(ChatColor.WHITE + "Right or left click this");
+			codLore.add(ChatColor.WHITE + "item to vote for map 2.");
+			voteMeta.setLore(voteLore);
+			voteItemB.setItemMeta(voteMeta);
+		}
 	}
+
+
 
 	public void setupBackInvButton() {
 		ItemMeta backInvMeta = backInv.getItemMeta();
@@ -1161,6 +1186,26 @@ public class InventoryManager implements Listener {
 				Main.openMainMenu(e.getPlayer());
 				e.setCancelled(true);
 //				return;
+			}
+
+			if (item.equals(voteItemA) || altItem.equals(voteItemA)) {
+				try {
+					Objects.requireNonNull(GameManager.getMatchWhichContains(e.getPlayer())).addVote(0, e.getPlayer());
+				} catch (Exception ignored) {
+					return;
+				}
+
+				Main.sendMessage(e.getPlayer(), Main.codPrefix + ChatColor.GREEN + "Successfully cast vote!", Main.lang);
+			}
+
+			if (item.equals(voteItemB) || altItem.equals(voteItemB)) {
+				try {
+					Objects.requireNonNull(GameManager.getMatchWhichContains(e.getPlayer())).addVote(1, e.getPlayer());
+				} catch (Exception ignored) {
+					return;
+				}
+
+				Main.sendMessage(e.getPlayer(), Main.codPrefix + ChatColor.GREEN + "Successfully cast vote!", Main.lang);
 			}
 		}
 	}
