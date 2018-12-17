@@ -952,11 +952,11 @@ public class GameInstance implements Listener {
 					} catch(NoSuchMethodException ignored) {} catch(Exception ignored) {}
 
 					if (t > 20) {
-						if (!p.getInventory().getItem(3).equals(Main.invManager.voteItemA)) {
+						if (p.getInventory().getItem(3) == null || !p.getInventory().getItem(3).equals(Main.invManager.voteItemA)) {
 							p.getInventory().setItem(3, Main.invManager.voteItemA);
 						}
 
-						if (!p.getInventory().getItem(4).equals(Main.invManager.voteItemB)) {
+						if (p.getInventory().getItem(4) == null || !p.getInventory().getItem(4).equals(Main.invManager.voteItemB)) {
 							p.getInventory().setItem(4, Main.invManager.voteItemB);
 						}
 					} else {
