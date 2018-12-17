@@ -211,6 +211,8 @@ public class GameInstance implements Listener {
 	}
 
 	private void setupNextMaps() {
+		clearNextMaps();
+
 		CodMap m1 = GameManager.pickRandomMap();
 		CodMap m2 = GameManager.pickRandomMap();
 
@@ -221,8 +223,12 @@ public class GameInstance implements Listener {
 	}
 
 	private void clearNextMaps() {
-		GameManager.UsedMaps.remove(nextMaps[0]);
-		GameManager.UsedMaps.remove(nextMaps[1]);
+		if (nextMaps[0] != null) {
+			GameManager.UsedMaps.remove(nextMaps[0]);
+		}
+		if (nextMaps[1] != null) {
+			GameManager.UsedMaps.remove(nextMaps[1]);
+		}
 	}
 
 	private void clearMapVotes() {
