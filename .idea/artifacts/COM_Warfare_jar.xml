@@ -1,9 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="jar" name="COM-Warfare:jar">
-    <output-path>$USER_HOME$/Desktop/Minecraft Server/plugins</output-path>
-    <root id="archive" name="COM-Warfare.jar">
-      <element id="module-output" name="COM-Warfare" />
-      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/bstats/bstats-bukkit/1.2/bstats-bukkit-1.2.jar" path-in-jar="/" />
-    </root>
-  </artifact>
-</component>
