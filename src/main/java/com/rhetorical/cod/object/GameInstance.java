@@ -11,9 +11,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.potion.PotionEffect;
@@ -22,45 +20,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scoreboard.*;
 
 import java.util.*;
-
-class PrevStats {
-
-	private Player owner;
-	private String listName;
-	private double experience;
-	private int level;
-	private double health;
-	private int hunger;
-	private HashMap<Integer, ItemStack> inventoryItems = new HashMap<>();
-
-	PrevStats(Player p, String name, double xp, int lvl, double hp, int food, PlayerInventory inv) {
-		owner = p;
-		listName = name;
-		experience = xp;
-		level = lvl;
-		health = hp;
-		hunger = food;
-		for (int i = 0; i < inv.getSize(); i++) {
-			ItemStack item = inv.getItem(i);
-			if (item != null) {
-				inventoryItems.put(i, item);
-			}
-		}
-	}
-
-	void apply() {
-		owner.setPlayerListName(listName);
-		owner.setExp((float) experience);
-		owner.setLevel(level);
-		owner.setHealth(health);
-		owner.setFoodLevel(hunger);
-		owner.getInventory().clear();
-		for (int slot : inventoryItems.keySet()) {
-			owner.getInventory().setItem(slot, inventoryItems.get(slot));
-		}
-		owner.updateInventory();
-	}
-}
 
 public class GameInstance implements Listener {
 
@@ -114,8 +73,6 @@ public class GameInstance implements Listener {
 	private HashMap<Player, CodScore> playerScores = new HashMap<>();
 
 	private boolean isLegacy = Main.isLegacy();
-
-	private HashMap<Player, PrevStats> joinStats = new HashMap<>();
 
 	private CodMap[] nextMaps = new CodMap[2];
 	private ArrayList<Player>[] mapVotes = new ArrayList[2];
@@ -302,14 +259,14 @@ public class GameInstance implements Listener {
 
 	public void addPlayer(Player p) {
 
-		if (players.size() >= 12)
+		if (players.size() > Main.maxPlayers)
 			return;
 
 		if (players.contains(p))
 			return;
 
 
-		joinStats.put(p, new PrevStats(p, p.getPlayerListName(), p.getExp(), p.getLevel(), p.getHealth(), p.getFoodLevel(), p.getInventory()));
+		new PlayerSnapshot(p);
 		p.setPlayerListName(ChatColor.WHITE + "[P" + Main.progressionManager.getPrestigeLevel(p) + "L" +
 				Main.progressionManager.getLevel(p) + "] " + ChatColor.YELLOW + p.getDisplayName());
 
@@ -325,6 +282,11 @@ public class GameInstance implements Listener {
 		p.setHealth(20D);
 		p.setFoodLevel(20);
 		Main.progressionManager.update(p);
+
+		List<PotionEffect> peTypes = new ArrayList<>(p.getActivePotionEffects());
+		for (PotionEffect pe : peTypes) {
+			p.removePotionEffect(pe.getType());
+		}
 
 		p.teleport(Main.lobbyLoc);
 
@@ -465,9 +427,8 @@ public class GameInstance implements Listener {
 			GameManager.removeInstance(this);
 		}
 
-		if (joinStats.get(p) != null) {
-			joinStats.get(p).apply();
-			joinStats.remove(p);
+		if (PlayerSnapshot.hasSnapshot(p)) {
+			PlayerSnapshot.apply(p);
 			System.gc();
 		} else {
 			p.setPlayerListName(p.getDisplayName());

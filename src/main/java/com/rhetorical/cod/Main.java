@@ -810,15 +810,13 @@ public class Main extends JavaPlugin {
 	}
 
 	private boolean bootPlayers() {
-		for (GameInstance i : GameManager.RunningGames) {
+		List<GameInstance> runningGames = GameManager.RunningGames;
+		for (GameInstance i : runningGames) {
 			if (i != null) {
-				try {
-					for (Player p : i.getPlayers()) {
-						GameManager.leaveMatch(p);
-					}
-				} catch(Exception e) {
-					sendMessage(cs, Main.codPrefix + ChatColor.RED + "Couldn't successfully boot all players.");
-					return false;
+				List<Player> pls = i.getPlayers();
+
+				for (Player p : pls) {
+					GameManager.leaveMatch(p);
 				}
 			}
 		}
