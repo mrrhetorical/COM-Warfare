@@ -6,22 +6,18 @@ import org.bukkit.command.CommandSender;
 class PatchNotes {
     private static String[] notes = {
             "Added:\n" + ChatColor.GREEN +
-                    "- '/cod notes' to check patch notes. Permission: 'com.patchNotes'\n" +
-                    "- Message, experience, and credits when downing a player using final stand.",
+                    "+ Added the ability to vote for the next map. (Players click an item in their inventory to do so).\n" +
+                    "+ Added \"lang.yml\" file but have yet to add much functionality. (Will be fully released in version 2.8.0).\n",
             ChatColor.RESET + "Changes & Fixes:\n" + ChatColor.GRAY +
-                    "* Fixed an issue where the player list wasn't updated after leaving a game or returning to the lobby.\n" +
-                    "* Fixed an issue where the player list didn't update names correctly. \n" +
-                    "* Fixed an issue where players spawned in the ground if the map was located in a different world from the lobby.\n" +
-                    "* Fixed an issue where when players used final stand it would produce an error in the console when they got back up.\n" +
-                    "* Fixed an issue with scavenger not working properly and producing an error.\n" +
-                    "* Fixed an issue with leveling up producing an error.\n" +
-                    "* When players level up they are now rewarded their guns when leaving the game or returning to the lobby.\n" +
-                    "* Players states are saved before joining cod, and is reset upon leaving. \n" +
-                    "* Fixed a bug when picking up items from within a game where it would produce an error to the console.\n" +
-                    "* Fixed a bug where players in last stand would become invincible.\n" +
-                    "* Fixed a bug where players would be able to use final stand more than once at a time.\n" +
-                    "* Fixed a bug where players would have super speed when they got out of final stand.\n" +
-                    "* Players in final stand now have their speed set to 0."
+                    "* Changed the layout of the main menus.\n" +
+                    "* Fixed an issue where an arena's current map would be made available to other arenas.\n" +
+                    "* Fixed an issue where the list of arenas would be refreshed every time a new arena instance started.\n" +
+                    "* Fixed an issue where maps would show as \"IN USE\" when they were not.\n" +
+                    "* Fixed an issue where sometimes players wouldn't take damage in certain instances.\n" +
+                    "* Fixed an issue where players sometimes could take damage when in the lobby when they shouldn't.\n" +
+                    "* Fixed an issue where not all players would be booted when using the boot command or when restarting the plugin.\n" +
+                    "* Fixed a bug where the max player count in the game was always 12 regardless of the setting in the config.\n" +
+                    "* Potion effects are now saved and cleared when joining a game."
     };
     static void getPatchNotes(CommandSender s) {
         s.sendMessage("=====[" + ChatColor.BOLD + ChatColor.RED + " COM-Warfare " + ChatColor.GOLD	+ Main.getPlugin().getDescription().getVersion() + ChatColor.RESET + "]=====");
