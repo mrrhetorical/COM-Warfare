@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
 import com.rhetorical.cod.files.CreditsFile;
 
 public class CreditManager {
-	private static HashMap<Player, Integer> creditMap = new HashMap<Player, Integer>();
+	private static HashMap<Player, Integer> creditMap = new HashMap<>();
 
 	static void loadCredits(Player p) {
 		for (int k = 0; CreditsFile.getData().contains("Credits.players." + k); k++) {
