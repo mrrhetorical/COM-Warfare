@@ -143,8 +143,8 @@ public class Main extends JavaPlugin {
 		killstreakManager = new KillStreakManager();
 		invManager = new InventoryManager();
 
+		QualityGun.setup();
 		KillStreakManager.setup();
-
 		GameManager.setupOITC();
 		GameManager.setupGunGame();
 
@@ -1053,7 +1053,8 @@ public class Main extends JavaPlugin {
 		}
 	}
 
-	public static String getTranslatorApiKey() {
-		return Main.translate_api_key;
+	public static boolean hasQualityArms() {
+		return Bukkit.getServer().getPluginManager().getPlugin("QualityArmory") != null;
 	}
+
 }

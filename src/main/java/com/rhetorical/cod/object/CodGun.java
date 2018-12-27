@@ -1,5 +1,7 @@
 package com.rhetorical.cod.object;
 
+import com.rhetorical.cod.Main;
+import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -88,6 +90,13 @@ public class CodGun extends CodWeapon {
 	}
 
 	public ItemStack getGun() {
+		if (Main.hasQualityArms()) {
+			ItemStack gun = QualityGun.getGunForName(getName());
+
+			if (gun.getType() != Material.AIR) {
+				return gun;
+			}
+		}
 		ItemMeta meta = this.gunItem.getItemMeta();
 		
 		meta.setDisplayName(this.getName());
@@ -155,6 +164,13 @@ public class CodGun extends CodWeapon {
 	}
 
 	public ItemStack getAmmo() {
+		if (Main.hasQualityArms()) {
+			ItemStack ammo = QualityGun.getAmmoForName(getName());
+
+			if (ammo.getType() != Material.AIR) {
+				return ammo;
+			}
+		}
 		return this.ammoItem;
 	}
 
