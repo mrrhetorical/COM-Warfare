@@ -186,8 +186,8 @@ public enum Lang {
 	PUT_IN_QUEUE("&7Put in matchmaker queue . . ."),
 	ERROR_CAN_NOT_SAVE_KILL_STREAKS("&cError saving kill streaks!"),
 	ERROR_SELECTING_CLASS("&cCould not select a class!"),
-	CHANGED_CLASS_ONE_MAN_ARMY("&fYour class will change when you next respawn."),
-	CHANGED_CLASS_MESSAGE("&fYour class will change in 10 seconds if you do not move!"),
+	CHANGED_CLASS_ONE_MAN_ARMY("&fYour class will change in 10 seconds if you do not move!"),
+	CHANGED_CLASS_MESSAGE("&fYour class will change when you next respawn."),
 	VOTE_REGISTERED("&aSuccessfully cast vote!");
 
 
