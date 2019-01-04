@@ -117,7 +117,7 @@ public class LoadoutManager {
 
 		CodGun primary = loadout.getPrimary();
 		CodGun secondary = loadout.getSecondary();
-		CodWeapon LETHAL = loadout.getLethal();
+		CodWeapon lethal = loadout.getLethal();
 		CodWeapon tactical = loadout.getTactical();
 		// CodPerk perkOne = loadout.getPerk1();
 		// CodPerk perkTwo = loadout.getPerk2();
@@ -141,15 +141,8 @@ public class LoadoutManager {
 		p.getInventory().setItem(25, secondaryAmmo);
 
 		// Grenades
-		p.getInventory().setItem(3, LETHAL.getWeapon());
+		p.getInventory().setItem(3, lethal.getWeapon());
 		p.getInventory().setItem(4, tactical.getWeapon());
-
-		/*
-		 * TODO: - Set inventory of player - Slot 0: Knife - Slot 1: Primary -
-		 * Slot 2: Secondary - Slot 3: LETHAL - Slot 4: Tactical - Slot 5: -
-		 * Slot 6: - Slot 7: - Slot 8: Current Scorestreak
-		 * 
-		 */
 
 	}
 

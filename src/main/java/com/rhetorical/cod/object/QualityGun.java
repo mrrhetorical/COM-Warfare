@@ -5,20 +5,30 @@ import org.bukkit.inventory.ItemStack;
 
 public class QualityGun {
 
-    private static Class apiClass;
+    private static Class<?> apiClass;
+    private static Object apiObject;
 
     public static void setup() {
         try {
-            apiClass = Class.forName("me.zombie_striker.qa.QualityArmory");
-        } catch(ClassNotFoundException ignored) {}
+            apiClass = Class.forName("me.zombie_striker.qg.api.QualityArmory");
+//            apiClass = Class.forName("QualityArmory");
+            apiObject = apiClass.newInstance();
+        } catch(ClassNotFoundException ignored) {} catch(Exception ignored) {}
     }
 
     public static ItemStack getGunForName(String name) {
         ItemStack gun = null;
+//        gun = me.zombie_striker.qg.api.QualityArmory.getGunItemStack(name);
         try {
-            gun = (ItemStack) apiClass.getMethod("getGunItemStack", String.class).invoke(null, name);
+            gun = (ItemStack) apiClass
+					.getMethod("getGunItemStack", String.class)
+					.invoke(null, name);
 
-        } catch(NoSuchMethodException ignored) {} catch(Exception ignored) { }
+        } catch(NoSuchMethodException ignored) {
+//        	ignored.printStackTrace();
+		} catch(Exception ignored) {
+//        	ignored.printStackTrace();
+		}
 
         return gun != null ? gun : new ItemStack(Material.AIR);
     }
@@ -27,8 +37,16 @@ public class QualityGun {
         ItemStack ammo = null;
 
         try {
-            ammo = (ItemStack) apiClass.getMethod("getAmmoItemStack", String.class).invoke(null, name);
-        } catch(NoSuchMethodException ignored) {} catch(Exception ignored) { }
+            ammo = (ItemStack) apiClass
+					.getMethod("getAmmoItemStack", String.class)
+					.invoke(null, name);
+        } catch(NoSuchMethodException ignored) {
+//        	ignored.printStackTrace();
+		} catch(Exception ignored) {
+//        	ignored.printStackTrace();
+		}
+
+//		ammo = me.zombie_striker.qg.api.QualityArmory.getAmmoItemStack(name);
 
         return ammo != null ? ammo : new ItemStack(Material.AIR);
     }

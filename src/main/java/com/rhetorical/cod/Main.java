@@ -2,6 +2,7 @@ package com.rhetorical.cod;
 
 import com.rhetorical.cod.files.*;
 import com.rhetorical.cod.inventories.InventoryManager;
+import com.rhetorical.cod.lang.Lang;
 import com.rhetorical.cod.object.*;
 import com.rhetorical.tpp.McLang;
 import com.rhetorical.tpp.api.McTranslate;
@@ -126,6 +127,8 @@ public class Main extends JavaPlugin {
 
 
 		LangFile.setup(getPlugin());
+		Lang.load();
+
 		ProgressionFile.setup(getPlugin());
 		ArenasFile.setup(getPlugin());
 		CreditsFile.setup(getPlugin());
@@ -215,7 +218,7 @@ public class Main extends JavaPlugin {
 		if (p.hasPermission(s) || p.hasPermission("com.*") || p instanceof ConsoleCommandSender || p.isOp()) {
 			return true;
 		} else {
-			sendMessage(p, Main.codPrefix + ChatColor.RED + "You don't have permission to do that!", lang);
+			sendMessage(p, Main.codPrefix + Lang.NO_PERMISSION.getMessage(), lang);
 			return false;
 		}
 	}
@@ -240,7 +243,7 @@ public class Main extends JavaPlugin {
 
 		if (args.length == 0) {
 			if (!(sender instanceof Player)) {
-				sendMessage(cs, ChatColor.RED + "You must be a player to execute this command", lang);
+				sendMessage(cs, Lang.MUST_BE_PLAYER.getMessage(), lang);
 				return true;
 			}
 			Player p = (Player) sender;
@@ -254,12 +257,12 @@ public class Main extends JavaPlugin {
 					try {
 						page = Integer.parseInt(args[1]);
 					} catch (Exception e) {
-						sendMessage(sender, Main.codPrefix + ChatColor.RED + "You didn't specify a proper page.", lang);
+						sendMessage(sender, Main.codPrefix + Lang.NOT_PROPER_PAGE.getMessage(), lang);
 						return true;
 					}
 
 					if (!(page > 0 && page <= 5)) {
-						sendMessage(sender, Main.codPrefix + ChatColor.RED + "You didn't give a proper page number!", lang);
+						sendMessage(sender, Main.codPrefix + Lang.NOT_PROPER_PAGE.getMessage(), lang);
 						return true;
 					}
 
@@ -320,7 +323,7 @@ public class Main extends JavaPlugin {
 
 			} else if (args[0].equalsIgnoreCase("join") && hasPerm(sender, "com.join")) {
 				if (!(sender instanceof Player)) {
-					sendMessage(cs, ChatColor.RED + "You must be a player to execute this command", lang);
+					sendMessage(cs, Lang.MUST_BE_PLAYER.getMessage(), lang);
 					return true;
 				}
 				Player p = (Player) sender;
@@ -334,7 +337,7 @@ public class Main extends JavaPlugin {
 				return true;
 			} else if (args[0].equalsIgnoreCase("leave") && hasPerm(sender, "com.leave")) {
 				if (!(sender instanceof Player)) {
-					sendMessage(cs, ChatColor.RED + "You must be a player to execute this command", lang);
+					sendMessage(cs, Lang.MUST_BE_PLAYER.getMessage(), lang);
 					return true;
 				}
 				Player p = (Player) sender;
@@ -350,7 +353,7 @@ public class Main extends JavaPlugin {
 
 				return true;
 			} else if (args[0].equalsIgnoreCase("listMaps") && hasPerm(sender, "com.map.list")) {
-				sendMessage(sender, Main.codPrefix + "\u00A7f=====\u00A76\u00A7lMap List\u00A7r\u00A7f=====", lang);
+				sendMessage(sender, Main.codPrefix + Lang.MAP_LIST_HEADER.getMessage(), lang);
 				int k = 0;
 				for (CodMap m : GameManager.AddedMaps) {
 					k++;
@@ -366,16 +369,23 @@ public class Main extends JavaPlugin {
 						gmr.append("NONE");
 					}
 
+					String entry = Lang.MAP_LIST_ENTRY.getMessage();
+
+					entry = entry.replace("{map-id}", k + "");
+					entry = entry.replace("{map-name}", m.getName());
+					entry = entry.replace("{game-mode}", gmr.toString());
+
 					if (GameManager.UsedMaps.contains(m)) {
-						sendMessage(sender, k + " - \u00A76\u00A7lName: \u00A7r\u00A7a" + m.getName() + " \u00A7r\u00A76\u00A7lGamemode: \u00A7r\u00A7c" + gmr.toString() + " \u00A7r\u00A76\u00A7lStatus: \u00A7r\u00A74IN USE", lang);
+						entry = entry.replace("{map-status}", ChatColor.RED + "IN-USE");
 					} else {
 						if (m.isEnabled()) {
-							sendMessage(sender, k + " - \u00A76\u00A7lName: \u00A7r\u00A7a" + m.getName() + " \u00A7r\u00A76\u00A7lGamemode: \u00A7r\u00A7c" + gmr.toString() + " \u00A7r\u00A76\u00A7lStatus: \u00A7r\u00A7aAVAILABLE", lang);
-							continue;
+							entry = entry.replace("{map-status}", ChatColor.GREEN + "WAITING");
+						} else {
+							entry = entry.replace("{map-status]", ChatColor.RED + "UNFINISHED");
 						}
-
-						sendMessage(sender, k + " - \u00A76\u00A7lName: \u00A7r\u00A7a" + m.getName() + " \u00A7r\u00A76\u00A7lGamemode: \u00A7r\u00A7c" + gmr.toString() + " \u00A7r\u00A76\u00A7lStatus: \u00A7r\u00A7aUNFINISHED", lang);
 					}
+
+					sendMessage(sender, entry, lang);
 				}
 				return true;
 			} else if (args[0].equalsIgnoreCase("createMap") && hasPerm(sender, "com.map.create")) {
@@ -385,7 +395,7 @@ public class Main extends JavaPlugin {
 
 					for (CodMap m : GameManager.AddedMaps) {
 						if (m.getName().equalsIgnoreCase(mapName)) {
-							sendMessage(sender, Main.codPrefix + "\u00A7cThere already exists a map with that name!", lang);
+							sendMessage(sender, Main.codPrefix + Lang.CREATE_MAP_ALREADY_EXISTS.getMessage(), lang);
 							return true;
 						}
 					}
@@ -393,11 +403,14 @@ public class Main extends JavaPlugin {
 					newMap = new CodMap(mapName);
 
 					GameManager.AddedMaps.add(newMap);
-					sendMessage(sender, Main.codPrefix + "\u00A7aSuccessfully created map " + newMap.getName() + "!", lang);
+					String msg = Lang.CREATE_MAP_SUCCESS.getMessage();
+					msg = msg.replace("{map-name}", mapName);
+					sendMessage(sender, Main.codPrefix + msg, lang);
 					newMap.setEnable();
 					return true;
 				} else {
-					sendMessage(sender, Main.codPrefix + "\u00A7cIncorrect usage! Correct usage: /cod createMap (name)");
+					String msg = Lang.INCORRECT_USAGE.getMessage().replace("{command}", "/cod createMap (name)");
+					sendMessage(sender, Main.codPrefix + msg);
 					return true;
 				}
 			} else if (args[0].equalsIgnoreCase("removeMap") && hasPerm(sender, "com.map.remove")) {
@@ -423,28 +436,30 @@ public class Main extends JavaPlugin {
 								notChanged.save();
 							}
 
-							sendMessage(sender, Main.codPrefix + "\u00A7aSuccessfully removed map!", lang);
+							sendMessage(sender, Main.codPrefix + Lang.REMOVE_MAP_SUCCESS.getMessage(), lang);
 							return true;
 						}
 					}
 
-					sendMessage(sender, Main.codPrefix + "\u00A7cThere's no map with that name!", lang);
+					sendMessage(sender, Main.codPrefix + Lang.MAP_NOT_EXISTS_WITH_NAME.getMessage(), lang);
 					return true;
 
 				} else {
-					sendMessage(sender, Main.codPrefix + "\u00A7cIncorrect usage! Correct usage: /cod removeMap (name)");
+					String msg = Lang.INCORRECT_USAGE.getMessage().replace("{command}", "/cod removeMap (name)");
+					sendMessage(sender, Main.codPrefix + msg);
 					return true;
 				}
 
 			} else if (args[0].equalsIgnoreCase("set") && hasPerm(sender, "com.map.modify")) {
 				if (!(sender instanceof Player)) {
-					sendMessage(cs, ChatColor.RED + "You must be a player to execute this command", lang);
+					sendMessage(cs, Lang.MUST_BE_PLAYER.getMessage(), lang);
 					return true;
 				}
 				Player p = (Player) sender;
 
 				if (!(args.length > 1)) {
-					sendMessage(p, Main.codPrefix + "\u00A7cIncorrect usage! Correct usage: /cod set (lobby/spawn/flag) [args]");
+					String msg = Lang.INCORRECT_USAGE.getMessage().replace("{command}", "/cod set (lobby/spawn/flag) [args]");
+					sendMessage(p, Main.codPrefix + msg);
 					return true;
 				}
 
@@ -455,12 +470,13 @@ public class Main extends JavaPlugin {
 					Main.lobbyLoc = (Location) getPlugin().getConfig().get("com.lobby");
 					getPlugin().saveConfig();
 					getPlugin().reloadConfig();
-					sendMessage(p, Main.codPrefix + "\u00A7aSuccessfully set lobby to your location! (You might want to restart the server for it to take effect)", lang);
+					sendMessage(p, Main.codPrefix + Lang.SET_LOBBY_SUCCESS.getMessage(), lang);
 					return true;
 				} else if (args[1].equalsIgnoreCase("spawn") && hasPerm(p, "com.map.addSpawn")) {
 
 					if (args.length < 4) {
-						sendMessage(p, Main.codPrefix + "\u00A7cIncorrect usage! Correct usage: /cod set spawn (map name) (team)");
+						String msg = Lang.INCORRECT_USAGE.getMessage().replace("{command}", "/cod set spawn (map name) (team)");
+						sendMessage(p, Main.codPrefix + msg);
 						return true;
 					}
 					CodMap map = null;
@@ -472,35 +488,41 @@ public class Main extends JavaPlugin {
 					}
 
 					if (map == null) {
-						sendMessage(p, Main.codPrefix + "\u00A7cThat map doesn't exist! Map names are case sensitive!", lang);
+						sendMessage(p, Main.codPrefix + Lang.MAP_NOT_EXISTS_WITH_NAME, lang);
 						return true;
 					}
 
 					String spawnTeam = args[3];
+					String team = "";
 					switch (spawnTeam.toUpperCase()) {
 					case "RED":
 						map.addRedSpawn(p.getLocation());
-						sendMessage(p, Main.codPrefix + "\u00A7aSuccessfully created \u00A7cRED \u00A7aspawn for map \u00A76" + map.getName(), lang);
+						team = ChatColor.RED + "RED";
 						map.setEnable();
-						return true;
+						break;
 					case "BLUE":
 						map.addblueSpawn(p.getLocation());
-						sendMessage(p, Main.codPrefix + "\u00A7aSuccessfully created \u00A79BLUE \u00A7aspawn for map \u00A76" + map.getName(), lang);
+						team = ChatColor.BLUE + "BLUE";
 						map.setEnable();
-						return true;
+						break;
 					case "PINK":
 						map.addPinkSpawn(p.getLocation());
-						sendMessage(p, Main.codPrefix + "\u00A7aSuccessfully created \u00A7dPINK \u00A7aspawn for map \u00A76" + map.getName(), lang);
+						team = ChatColor.LIGHT_PURPLE + "PINK";
 						map.setEnable();
-						return true;
+						break;
 					default:
-						sendMessage(p, Main.codPrefix + "\u00A7cThat's not a valid team!", lang);
+						sendMessage(p, Main.codPrefix + Lang.TEAM_NOT_EXISTS_WITH_NAME.getMessage(), lang);
 						return true;
 					}
+
+					String msg = Lang.SET_SPAWN_SUCCESS.getMessage().replace("{team}", team).replace("{map-name}", map.getName());
+					sendMessage(p, Main.codPrefix + msg);
+
 				} else if (args[1].equalsIgnoreCase("flag") && hasPerm(p, "com.map.modify")) {
 
 					if (args.length < 4) {
-						sendMessage(p, Main.codPrefix + "\u00A7cIncorrect usage! Correct usage: /cod set flag (map name) (red/blue/a/b/c)");
+						String msg = Lang.INCORRECT_USAGE.getMessage().replace("{command}", "/cod set flag (map name) (red/blue/a/b/c)");
+						sendMessage(p, Main.codPrefix + msg);
 						return true;
 					}
 
@@ -515,62 +537,73 @@ public class Main extends JavaPlugin {
 					}
 
 					if (map == null) {
-						sendMessage(p, Main.codPrefix + "\u00A7cThat map doesn't exist! Map names are case sensitive!", lang);
+						sendMessage(p, Main.codPrefix + Lang.MAP_NOT_EXISTS_WITH_NAME.getMessage(), lang);
 						return true;
 					}
 
 					String arg = args[3];
 
+					String team = null;
+					String flag = null;
+
 					switch(arg.toLowerCase()) {
 						case "red":
 							map.addRedFlagSpawn(p.getLocation());
-							sendMessage(p, Main.codPrefix + "\u00A7aSuccessfully set \u00A7cred \u00A7aCTF flag spawn!");
-							return true;
+							team = ChatColor.RED + "RED";
+							break;
 						case "blue":
 							map.addBlueFlagSpawn(p.getLocation());
-							sendMessage(p, Main.codPrefix + "\u00A7aSuccessfully set \u00A79blue \u00A7aCTF flag spawn!");
-							return true;
+							team = ChatColor.BLUE + "BLUE";
+							break;
 						case "a":
 							map.addAFlagSpawn(p.getLocation());
-							sendMessage(p, Main.codPrefix + "\u00A7aSuccessfully set \u00A7eA DOM \u00A7aflag spawn!");
-							return true;
+							flag = ChatColor.YELLOW + "A";
+							break;
 						case "b":
 							map.addBFlagSpawn(p.getLocation());
-							sendMessage(p, Main.codPrefix + "\u00A7aSuccessfully set \u00A7eB DOM \u00A7aflag spawn!");
-							return true;
+							flag = ChatColor.YELLOW + "B";
+							break;
 						case "c":
 							map.addCFlagSpawn(p.getLocation());
-							sendMessage(p, Main.codPrefix + "\u00A7aSuccessfully set \u00A7eC DOM \u00A7aflag spawn!");
-							return true;
+							flag = ChatColor.YELLOW + "C";
+							break;
 						default:
-							sendMessage(p, Main.codPrefix + "\u00A7cIncorrect usage! Available flags are \"A\", \"B\", \"C\", \"Blue\", or \"Red\"!");
+							String msg = Lang.INCORRECT_USAGE.getMessage().replace("{command}", "/cod set flag (map name) (red/blue/a/b/c)");
+							sendMessage(p, Main.codPrefix + msg);
 							return true;
 					}
 
+					if (team == null) {
+						sendMessage(p, Main.codPrefix + Lang.SET_FLAG_DOM_SUCCESS.getMessage().replace("{flag}", flag));
+					} else {
+						sendMessage(p, Main.codPrefix + Lang.SET_FLAG_CTF_SUCCESS.getMessage().replace("{team}", team));
+					}
+
+					return true;
 				}
 
 			} else if (args[0].equalsIgnoreCase("lobby") && hasPerm(sender, "com.lobby")) {
 				if (!(sender instanceof Player)) {
-					sendMessage(cs, ChatColor.RED + "You must be a player to execute this command", lang);
+					sendMessage(cs, ChatColor.RED + Lang.MUST_BE_PLAYER.getMessage(), lang);
 					return true;
 				}
 				Player p = (Player) sender;
 				if (lobbyLoc != null) {
 					p.teleport(lobbyLoc);
 				} else {
-					sendMessage(p, Main.codPrefix + "\u00A7cThere's no lobby to send you to!", lang);
+					sendMessage(p, Main.codPrefix + Lang.LOBBY_NOT_EXISTS.getMessage(), lang);
 				}
 			} else if (args[0].equalsIgnoreCase("balance")) {
 				if (!(sender instanceof Player)) {
-					sendMessage(cs, ChatColor.RED + "You must be a player to execute this command", lang);
+					sendMessage(cs, ChatColor.RED + Lang.MUST_BE_PLAYER.getMessage(), lang);
 					return true;
 				}
 				Player p = (Player) sender;
 				int credits = CreditManager.getCredits(p);
-				sendMessage(p, codPrefix + ChatColor.GREEN + "You have " + credits + " credits!", lang);
+				sendMessage(p, codPrefix + Lang.BALANCE_COMMAND.getMessage().replace("{credits}", credits + ""), lang);
 			} else if (args[0].equalsIgnoreCase("credits")) {
 				if (!(args.length >= 3)) {
-					sendMessage(sender, Main.codPrefix + "\u00A7cIncorrect usage! Proper usage: '/cod credits [give/set] {player} (amount)'");
+					sendMessage(sender, Main.codPrefix + Lang.INCORRECT_USAGE.getMessage().replace("{command}", "/cod credits [give/set] {player} (amount)"));
 					return true;
 				}
 				if (args[1].equalsIgnoreCase("give") && hasPerm(sender, "com.credits.give")) {
@@ -579,13 +612,13 @@ public class Main extends JavaPlugin {
 					try {
 						amount = Integer.parseInt(args[3]);
 					} catch (Exception e) {
-						sendMessage(sender, Main.codPrefix + "\u00A7cIncorrect usage! Proper usage: '/cod credits give {player} (amount)'");
+						sendMessage(sender, Main.codPrefix + Lang.INCORRECT_USAGE.getMessage().replace("{command}", "/cod credits give {player} (amount)"));
 						return true;
 
 					}
 
 					CreditManager.setCredits(playerName, CreditManager.getCredits(playerName) + amount);
-					sendMessage(sender, Main.codPrefix + "\u00A7aSuccessfully gave " + playerName + " " + Integer.toString(amount) + " credits! They now have " + CreditManager.getCredits(playerName) + " credits!", lang);
+					sendMessage(sender, Main.codPrefix + Lang.GIVE_BALANCE_COMMAND.getMessage().replace("{player}", playerName).replace("{amount}", amount + "").replace("{total}", CreditManager.getCredits(playerName) + ""), lang);
 					return true;
 				} else if (args[1].equalsIgnoreCase("set") && hasPerm(sender, "com.credits.set")) {
 					String playerName = args[2];
@@ -593,12 +626,12 @@ public class Main extends JavaPlugin {
 					try {
 						amount = Integer.parseInt(args[3]);
 					} catch (Exception e) {
-						sendMessage(sender, Main.codPrefix + ChatColor.RED + "Incorrect usage! Proper usage: '/cod credits set {name} [amount]'");
+						sendMessage(sender, Main.codPrefix + Lang.INCORRECT_USAGE.getMessage().replace("{command}", "/cod credits set {name} [amount]"));
 						return true;
 					}
 
 					CreditManager.setCredits(playerName, amount);
-					sendMessage(sender, Main.codPrefix + ChatColor.GREEN + "Successfully set " + playerName + "'s credit count to " + Integer.toString(amount) + "!", lang);
+					sendMessage(sender, Main.codPrefix + Lang.SET_BALANCE_COMMAND.getMessage().replace("{player}", playerName).replace("{amount}", amount + ""), lang);
 					return true;
 				}
 			} else if (args[0].equalsIgnoreCase("createGun") && hasPerm(sender, "com.createGun")) {
@@ -607,7 +640,7 @@ public class Main extends JavaPlugin {
 					createGun(sender, args);
 					return true;
 				} else {
-					sendMessage(sender, Main.codPrefix + ChatColor.RED + "Incorrect usage! Correct usage: '/cod createGun (Gun name) (Primary/Secondary) (Unlock type: level/credit/both) (Ammo Amount) (Gun Material) (Ammo Material) (Level Unlock) (Cost)'");
+					sendMessage(sender, Main.codPrefix + Lang.INCORRECT_USAGE.getMessage().replace("{command}", "/cod createGun (Gun name) (Primary/Secondary) (Unlock type: level/credit/both) (Ammo Amount) (Gun Material) (Ammo Material) (Level Unlock) (Cost)"));
 					return true;
 				}
 			} else if ((args[0].equalsIgnoreCase("createWeapon") || args[0].equalsIgnoreCase("createGrenade")) && hasPerm(sender, "com.createWeapon")) {
@@ -615,12 +648,12 @@ public class Main extends JavaPlugin {
 					createWeapon(sender, args);
 					return true;
 				} else {
-					sendMessage(sender, Main.codPrefix + ChatColor.RED + "Incorrect usage! Correct usage: '/cod createWeapon (name) (Lethal/Tactical) (Unlock Type: level/credit/both) (Grenade Material) (Level Unlock) (Cost)'");
+					sendMessage(sender, Main.codPrefix + Lang.INCORRECT_USAGE.getMessage().replace("{command}", "/cod createWeapon (name) (Lethal/Tactical) (Unlock Type: level/credit/both) (Grenade Material) (Level Unlock) (Cost)"));
 					return true;
 				}
 			} else if (args[0].equalsIgnoreCase("start") && hasPerm(sender, "com.forceStart")) {
 				if (!(sender instanceof Player)) {
-					sendMessage(cs, ChatColor.RED + "You must be a player to execute this command", lang);
+					sendMessage(cs, ChatColor.RED + Lang.MUST_BE_PLAYER.getMessage(), lang);
 					return true;
 				}
 				Player p = (Player) sender;
@@ -631,21 +664,21 @@ public class Main extends JavaPlugin {
 							if (game != null) {
 								game.forceStart(true);
 							} else {
-								p.sendMessage(codPrefix + ChatColor.RED + "Could not force start arena!");
+								p.sendMessage(codPrefix + Lang.FORCE_START_FAIL.getMessage());
 							}
 						}
 					} catch(Exception e) {
-						sendMessage(Main.cs, Main.codPrefix + ChatColor.RED + "Could not find the game that the player is in!", Main.lang	);
+						sendMessage(Main.cs, Main.codPrefix + Lang.COULD_NOT_FIND_GAME_PLAYER_IN, Main.lang	);
 					}
 					return true;
 				} else {
-					sendMessage(p, Main.codPrefix + ChatColor.RED + "You must be in a game to use that command!", lang);
+					sendMessage(p, Main.codPrefix + Lang.MUST_BE_IN_GAME.getMessage(), lang);
 				}
 
 				return true;
 			} else if (args[0].equalsIgnoreCase("class") && hasPerm(sender, "com.selectClass")) {
 				if (!(sender instanceof Player)) {
-					sendMessage(cs, ChatColor.RED + "You must be a player to execute this command", lang);
+					sendMessage(cs, Lang.MUST_BE_PLAYER.getMessage(), lang);
 					return true;
 				}
 				Player p = (Player) sender;
@@ -653,7 +686,7 @@ public class Main extends JavaPlugin {
 				return true;
 			} else if (args[0].equalsIgnoreCase("shop") && hasPerm(sender, "com.openShop")) {
 				if (!(sender instanceof Player)) {
-					sendMessage(cs, ChatColor.RED + "You must be a player to execute this command", lang);
+					sendMessage(cs, Lang.MUST_BE_PLAYER.getMessage(), lang);
 					return true;
 				}
 				Player p = (Player) sender;
@@ -663,13 +696,13 @@ public class Main extends JavaPlugin {
 			} else if (args[0].equalsIgnoreCase("boot") && hasPerm(sender, "com.bootAll")) {
 				boolean result = bootPlayers();
 				if (result) {
-					sender.sendMessage(Main.codPrefix + ChatColor.GREEN + "All players booted!");
+					sender.sendMessage(Main.codPrefix + Lang.PLAYERS_BOOTED_SUCCESS.getMessage());
 				} else {
-					sender.sendMessage(Main.codPrefix + ChatColor.RED + "Couldn't boot all players!");
+					sender.sendMessage(Main.codPrefix + Lang.PLAYER_BOOTED_FAILURE.getMessage());
 				}
 			} else if (args[0].equalsIgnoreCase("add") && hasPerm(sender, "com.add")) {
 				if (args.length	< 3) {
-					sendMessage(sender, ChatColor.RED + "Incorrect usage! Correct usage: '/cod add [oitc/gun] (gun name)'");
+					sendMessage(sender, Lang.INCORRECT_USAGE.getMessage().replace("{command}", "/cod add [oitc/gun] (gun name)"));
 					return true;
 				}
 
@@ -678,7 +711,7 @@ public class Main extends JavaPlugin {
 				CodWeapon weapon = shopManager.getWeaponForName(gunName);
 
 				if (!(weapon instanceof CodGun)) {
-					sendMessage(sender, ChatColor.RED + "Could not find a weapon with the name: \"" + gunName + "\"!");
+					sendMessage(sender, Lang.WEAPON_NOT_FOUND_WITH_NAME.getMessage().replace("{gun-name}", gunName));
 					return true;
 				}
 
@@ -687,7 +720,7 @@ public class Main extends JavaPlugin {
 					saveConfig();
 					reloadConfig();
 					GameManager.setupOITC();
-					sendMessage(sender, Main.codPrefix + ChatColor.GREEN + "Successfully set OITC gun to \"" + weapon.getName() + "\"!");
+					sendMessage(sender, Main.codPrefix + Lang.OITC_GUN_SET_SUCCESS.getMessage().replace("{gun-name}", gunName));
 					return true;
 				} else if (type.equalsIgnoreCase("gun")) {
 					GameManager.gunGameGuns.add((CodGun) weapon);
@@ -698,51 +731,51 @@ public class Main extends JavaPlugin {
 					getConfig().set("GunProgression", gunList);
 					saveConfig();
 					reloadConfig();
-					sendMessage(sender, Main.codPrefix + ChatColor.GREEN + "Successfully added gun to the Gun Game progression!");
+					sendMessage(sender, Main.codPrefix + Lang.GUN_PROGRESSION_ADDED_SUCCESS.getMessage());
 					return true;
 				}
-				sendMessage(sender, Main.codPrefix + ChatColor.RED + "Incorrect usage! Correct usage: '/cod add [oitc/gun] (gun name)'");
+				sendMessage(sender, Main.codPrefix + Lang.INCORRECT_USAGE.getMessage().replace("{command}", "/cod add [oitc/gun] (gun name)"));
 				return true;
 			} else if (args[0].equalsIgnoreCase("changeMap") && hasPerm(sender, "com.changeMap")) {
 				if (!(sender instanceof Player)) {
-					sendMessage(cs, ChatColor.RED + "You must be a player to execute this command", lang);
+					sendMessage(cs, Main.codPrefix + Lang.MUST_BE_PLAYER.getMessage(), lang);
 					return true;
 				}
 				Player p = (Player) sender;
 
 				if (args.length < 2) {
-					sendMessage(p, codPrefix + ChatColor.RED + "Incorrect usage! Correct usage: '/cod changeMap (name)'");
+					sendMessage(p, codPrefix + Lang.INCORRECT_USAGE.getMessage().replace("{command}", "/cod changeMap (name)"));
 					return true;
 				}
 
 				if (!GameManager.isInMatch(p)) {
-					sendMessage(p, codPrefix + ChatColor.RED + "You aren't in a game!");
+					sendMessage(p, codPrefix + Lang.MUST_BE_IN_GAME.getMessage());
 					return true;
 				}
 
 				CodMap map = GameManager.getMapForName(args[1]);
 
 				if (map == null) {
-					sendMessage(p, codPrefix + ChatColor.RED + "No map with that name exists!");
+					sendMessage(p, codPrefix + Lang.MAP_NOT_EXISTS_WITH_NAME.getMessage());
 					return true;
 				}
 
 				GameManager.changeMap(Objects.requireNonNull(GameManager.getMatchWhichContains(p)), map);
-				sendMessage(p, codPrefix + ChatColor.GREEN + "Successfully changed map to " + ChatColor.GOLD + ChatColor.BOLD + map.getName() + ChatColor.RESET + ChatColor.GREEN + "!");
+				sendMessage(p, codPrefix + Lang.MAP_CHANGE_SUCCESS.getMessage().replace("{map-name}", map.getName()));
 				return true;
 			} else if (args[0].equalsIgnoreCase("changeMode") && hasPerm(sender, "com.changeMode")) {
 				if (!(sender instanceof Player)) {
-					sendMessage(cs, ChatColor.RED + "You must be a player to execute this command", lang);
+					sendMessage(cs, Main.codPrefix + Lang.MUST_BE_PLAYER.getMessage(), lang);
 					return true;
 				}
 				Player p = (Player) sender;
 				if (args.length < 2) {
-					sendMessage(p, codPrefix + ChatColor.RED + "Incorrect usage! Correct usage: '/cod changeMode (name)'");
+					sendMessage(p, codPrefix + Lang.INCORRECT_USAGE.getMessage().replace("{command}", "/cod changeMode (name)"));
 					return true;
 				}
 
 				if (!GameManager.isInMatch(p)) {
-					sendMessage(p, codPrefix + ChatColor.RED + "You aren't in a game!");
+					sendMessage(p, codPrefix + Lang.MUST_BE_IN_GAME.getMessage());
 					return true;
 				}
 
@@ -751,21 +784,21 @@ public class Main extends JavaPlugin {
 				try {
 					mode = Gamemode.valueOf(args[1]);
 				} catch(Exception e) {
-					sendMessage(p, codPrefix + ChatColor.RED + "No gamemode with that name exists!");
+					sendMessage(p, codPrefix + Lang.GAME_MODE_NOT_EXISTS_WITH_NAME.getMessage());
 					return true;
 				}
 
 				if (!Objects.requireNonNull(GameManager.getMatchWhichContains(p)).getMap().getAvailableGamemodes().contains(mode)) {
-					sendMessage(p, codPrefix + ChatColor.RED + "That gamemode is not set up on that map!");
+					sendMessage(p, codPrefix + Lang.GAME_MODE_NOT_SET_UP_ON_MAP.getMessage());
 					return true;
 				}
 
 				Objects.requireNonNull(GameManager.getMatchWhichContains(p)).getMap().changeGamemode(mode);
-				sendMessage(p, codPrefix + ChatColor.GREEN + "Successfully changed game mode to " + ChatColor.GOLD + ChatColor.BOLD + mode.toString() + ChatColor.RESET + ChatColor.GREEN + "!");
+				sendMessage(p, codPrefix + Lang.GAME_MODE_CHANGE_SUCCESS.getMessage().replace("{game-mode}", mode.toString()));
 				return true;
 			} else if (args[0].equalsIgnoreCase("blacklist") && hasPerm(sender, "com.blacklist")) {
 				if (args.length	< 3) {
-					sendMessage(sender, codPrefix + ChatColor.RED + "Incorrect usage! Correct usage: '/cod blacklist (map) (mode)'");
+					sendMessage(sender, codPrefix + Lang.INCORRECT_USAGE.getMessage().replace("{command}", "/cod blacklist (map) (mode)"));
 					return true;
 				}
 
@@ -774,26 +807,26 @@ public class Main extends JavaPlugin {
 				try {
 					mode = Gamemode.valueOf(args[2].toUpperCase());
 				} catch(Exception e) {
-					sendMessage(sender, codPrefix + ChatColor.RED + "No gamemode exists with that name!");
+					sendMessage(sender, codPrefix + Lang.GAME_MODE_NOT_EXISTS_WITH_NAME.getMessage());
 					return true;
 				}
 
 				CodMap map = GameManager.getMapForName(args[1]);
 
 				if (map == null) {
-					sendMessage(sender, codPrefix + ChatColor.RED + "No map exists with that name!");
+					sendMessage(sender, codPrefix + Lang.MAP_NOT_EXISTS_WITH_NAME.getMessage());
 					return true;
 				}
 
 				map.addToBlacklist(mode);
 
-				sendMessage(sender, Main.codPrefix + ChatColor.GREEN + "Successfully blacklisted " + mode.toString() + " from " + map.getName() + "!");
+				sendMessage(sender, Main.codPrefix + Lang.BLACKLIST_SUCCESS.getMessage().replace("{mode}", mode.toString()).replace("{map-name}", map.getName()));
 				return true;
 			} else if (args[0].equalsIgnoreCase("notes") && hasPerm(sender, "com.patchNotes")) {
 				PatchNotes.getPatchNotes(sender);
 				return true;
 			} else {
-				sender.sendMessage(Main.codPrefix + ChatColor.RED + "Unknown command! Try using '/cod help' for a list of commands!");
+				sender.sendMessage(Main.codPrefix + Lang.UNKNOWN_COMMAND.getMessage());
 				return true;
 			}
 		}
@@ -824,6 +857,8 @@ public class Main extends JavaPlugin {
 	}
 
 	private void createWeapon(CommandSender p, String[] args) {
+
+		String command = "/cod createWeapon (name) (Lethal/Tactical) (Unlock Type: level/credit/both) (Grenade Material) (Level Unlock) (Cost)";
 		if (args.length == 7) {
 			String name = args[1];
 			WeaponType grenadeType;
@@ -832,13 +867,13 @@ public class Main extends JavaPlugin {
 			try {
 				grenadeType = WeaponType.valueOf(args[2].toUpperCase());
 			} catch (Exception e) {
-				sendMessage(p, Main.codPrefix + "\u00A7cThat weapon type does not exist! 'tactical' and 'lethal' are the two available weapon types.", lang);
+				sendMessage(p, Main.codPrefix + Lang.WEAPON_TYPE_NOT_EXISTS.getMessage(), lang);
 				return;
 			}
 			try {
 				unlockType = UnlockType.valueOf(args[3].toUpperCase());
 			} catch (Exception e) {
-				sendMessage(p, Main.codPrefix + "\u00A7cThat unlock type doesn't exist! 'level', 'credits', and 'both' are the only available options.", lang);
+				sendMessage(p, Main.codPrefix + Lang.UNLOCK_TYPE_NOT_EXISTS.getMessage(), lang);
 				return;
 			}
 			ItemStack grenade;
@@ -846,7 +881,7 @@ public class Main extends JavaPlugin {
 			try {
 				grenade = new ItemStack(Material.valueOf(args[4].toUpperCase()));
 			} catch (Exception e) {
-				sendMessage(p, Main.codPrefix + "\u00A7cThat material does not exist!", lang);
+				sendMessage(p, Main.codPrefix + Lang.MATERIAL_NOT_EXISTS.getMessage(), lang);
 				return;
 			}
 
@@ -855,7 +890,7 @@ public class Main extends JavaPlugin {
 			try {
 				levelUnlock = Integer.parseInt(args[5]);
 			} catch (Exception e) {
-				sendMessage(p, Main.codPrefix + "\u00A7cYou didn't provide a number for the level unlock!", lang);
+				sendMessage(p, Main.codPrefix + Lang.INCORRECT_USAGE.getMessage().replace("{command}", command), lang);
 				return;
 			}
 
@@ -864,7 +899,7 @@ public class Main extends JavaPlugin {
 			try {
 				cost = Integer.parseInt(args[6]);
 			} catch (Exception e) {
-				sendMessage(p, Main.codPrefix + "\u00A7cYou didn't provide a number for the cost!", lang);
+				sendMessage(p, Main.codPrefix + Lang.INCORRECT_USAGE.getMessage().replace("{command}", command), lang);
 				return;
 			}
 
@@ -874,7 +909,7 @@ public class Main extends JavaPlugin {
 
 			grenadeWeapon.save();
 
-			sendMessage(p, codPrefix + "\u00A7aSuccessfully created weapon " + name + " as a " + grenadeType.toString() + " grenade!", lang);
+			sendMessage(p, codPrefix + Lang.WEAPON_CREATED_SUCCESS.getMessage().replace("{weapon-name}", name).replace("{weapon-type}", grenadeType.toString()), lang);
 
 			switch (grenadeType) {
 			case LETHAL:
@@ -892,11 +927,12 @@ public class Main extends JavaPlugin {
 			}
 
 		} else {
-			sendMessage(p, Main.codPrefix + "\u00A7cIncorrect usage! Correct usage: '/cod createWeapon (name) (Lethal/Tactical) (Unlock Type: level/credit/both) (Grenade Material) (Level Unlock) (Cost)'");
+			sendMessage(p, Main.codPrefix + Lang.INCORRECT_USAGE.getMessage().replace("{command}", command), lang);
 		}
 	}
 
 	private void createGun(CommandSender p, String[] args) {
+		String command = "/cod createGun (Gun name) (Primary/Secondary) (Unlock type: level/credit/both) (Ammo Amount) (Gun Material) (Ammo Material) (Level Unlock) (Cost)";
 		if (args.length == 9) {
 			String name = args[1];
 
@@ -905,7 +941,7 @@ public class Main extends JavaPlugin {
 			try {
 				gunType = GunType.valueOf(args[2]);
 			} catch (Exception e) {
-				sendMessage(p, Main.codPrefix + "\u00A7cThat gun type doesn't exist! 'Primary' & 'Secondary' are the only two options.", lang);
+				sendMessage(p, Main.codPrefix + Lang.GUN_TYPE_NOT_EXISTS.getMessage(), lang);
 				return;
 			}
 
@@ -914,7 +950,7 @@ public class Main extends JavaPlugin {
 			try {
 				unlockType = UnlockType.valueOf(args[3].toUpperCase());
 			} catch (Exception e) {
-				sendMessage(p, Main.codPrefix + "\u00A7cThat unlock type doesn't exist! 'level', 'credits', and 'both' are the only available options.", lang);
+				sendMessage(p, Main.codPrefix + Lang.UNLOCK_TYPE_NOT_EXISTS.getMessage(), lang);
 				return;
 			}
 
@@ -923,7 +959,7 @@ public class Main extends JavaPlugin {
 			try {
 				ammoAmount = Integer.parseInt(args[4]);
 			} catch (Exception e) {
-				sendMessage(p, Main.codPrefix + "\u00A7cYou didn't provide a number for the ammo type!", lang);
+				sendMessage(p, Main.codPrefix + Lang.INCORRECT_USAGE.getMessage().replace("{command}", command) , lang);
 				return;
 			}
 
@@ -934,7 +970,7 @@ public class Main extends JavaPlugin {
 				gunItem = new ItemStack(Material.valueOf(args[5].toUpperCase()));
 				ammoItem = new ItemStack(Material.valueOf(args[6].toUpperCase()));
 			} catch (Exception e) {
-				sendMessage(p, Main.codPrefix + "\u00A7cEither the, primary, secondary, or both of the gun material do not exist!", lang);
+				sendMessage(p, Main.codPrefix + Lang.MATERIAL_NOT_EXISTS.getMessage(), lang);
 				return;
 			}
 
@@ -943,7 +979,7 @@ public class Main extends JavaPlugin {
 			try {
 				levelUnlock = Integer.parseInt(args[7]);
 			} catch (Exception e) {
-				sendMessage(p, Main.codPrefix + "\u00A7cYou didn't provide a number for the level unlock!", lang);
+				sendMessage(p, Main.codPrefix + Lang.INCORRECT_USAGE.getMessage().replace("{command}", command) , lang);
 				return;
 			}
 
@@ -952,7 +988,7 @@ public class Main extends JavaPlugin {
 			try {
 				cost = Integer.parseInt(args[8]);
 			} catch (Exception e) {
-				sendMessage(p, Main.codPrefix + "\u00A7cYou didn't provide a number for the cost!", lang);
+				sendMessage(p, Main.codPrefix + Lang.INCORRECT_USAGE.getMessage().replace("{command}", command) , lang);
 				return;
 			}
 
@@ -962,7 +998,7 @@ public class Main extends JavaPlugin {
 
 			gun.save();
 
-			sendMessage(p, codPrefix + "\u00A7aSuccessfully created gun " + name + " as a " + gunType.toString() + " weapon!", lang);
+			sendMessage(p, codPrefix + Lang.GUN_CREATED_SUCCESS.getMessage().replace("{gun-name}", name).replace("{gun-type}", gunType.toString()), lang);
 
 			switch (gunType) {
 			case Primary:
@@ -979,7 +1015,7 @@ public class Main extends JavaPlugin {
 				break;
 			}
 		} else {
-			sendMessage(p, Main.codPrefix + "\u00A7cIncorrect usage! Correct usage: '/cod createGun (Gun name) (Primary/Secondary) (Unlock type: level/credit/both) (Ammo Amount) (Gun Material) (Ammo Material) (Level Unlock) (Cost)'");
+			sendMessage(p, Main.codPrefix + Lang.INCORRECT_USAGE.getMessage().replace("{command}", command) , lang);
 		}
 
 	}

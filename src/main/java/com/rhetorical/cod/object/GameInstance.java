@@ -558,30 +558,30 @@ public class GameInstance implements Listener {
 
 			CodWeapon tactical = Main.loadManager.getRandomTactical();
 
-			ItemStack primaryAmmo = primary.getAmmo();
+			ItemStack primaryAmmo = Main.hasQualityArms() ? QualityGun.getAmmoForName(primary.getName()) : primary.getAmmo();
 			primaryAmmo.setAmount(primary.getAmmoCount());
 
-			ItemStack secondaryAmmo = secondary.getAmmo();
+			ItemStack secondaryAmmo = Main.hasQualityArms() ? QualityGun.getAmmoForName(secondary.getName()) : secondary.getAmmo();
 			secondaryAmmo.setAmount(secondary.getAmmoCount());
 
 
 			p.getInventory().setItem(0, Main.loadManager.knife);
 			if (!primary.equals(Main.loadManager.blankPrimary)) {
-				p.getInventory().setItem(1, primary.getGun());
+				p.getInventory().setItem(1, Main.hasQualityArms() ? QualityGun.getGunForName(primary.getName()) : primary.getGun());
 				p.getInventory().setItem(19, primaryAmmo);
 			}
 
 			if (!secondary.equals(Main.loadManager.blankSecondary)) {
-				p.getInventory().setItem(2, secondary.getGun());
+				p.getInventory().setItem(2, Main.hasQualityArms() ? QualityGun.getGunForName(secondary.getName()) : secondary.getGun());
 				p.getInventory().setItem(25, secondaryAmmo);
 			}
 
 			if (Math.random() > 0.5 && !lethal.equals(Main.loadManager.blankLethal)) {
-				p.getInventory().setItem(3, lethal.getWeapon());
+				p.getInventory().setItem(3, Main.hasQualityArms() ? QualityGun.getGunForName(lethal.getName()) : lethal.getWeapon());
 			}
 
 			if (Math.random() > 0.5 && !lethal.equals(Main.loadManager.blankTactical)) {
-				p.getInventory().setItem(4, tactical.getWeapon());
+				p.getInventory().setItem(4, Main.hasQualityArms() ? QualityGun.getGunForName(tactical.getName()) : tactical.getWeapon());
 			}
 
 		} else if (getGamemode() == Gamemode.DOM
@@ -597,27 +597,27 @@ public class GameInstance implements Listener {
 
 			if (getGamemode() != Gamemode.INFECT || (getGamemode() == Gamemode.INFECT && blueTeam.contains(p))) {
 				if (!loadout.getPrimary().equals(Main.loadManager.blankPrimary)) {
-					p.getInventory().setItem(1, loadout.getPrimary().getGun());
+					p.getInventory().setItem(1, Main.hasQualityArms() ? QualityGun.getGunForName(loadout.getPrimary().getName()) : loadout.getPrimary().getGun());
 
-					ItemStack primaryAmmo = loadout.getPrimary().getAmmo();
+					ItemStack primaryAmmo = Main.hasQualityArms() ? QualityGun.getAmmoForName(loadout.getPrimary().getName()) : loadout.getPrimary().getAmmo();
 					primaryAmmo.setAmount(loadout.getPrimary().getAmmoCount());
 					p.getInventory().setItem(19, primaryAmmo);
 				}
 
 				if (!loadout.getSecondary().equals(Main.loadManager.blankSecondary)) {
-					p.getInventory().setItem(2, loadout.getSecondary().getGun());
+					p.getInventory().setItem(2, Main.hasQualityArms() ? QualityGun.getGunForName(loadout.getSecondary().getName()) : loadout.getSecondary().getGun());
 					if (!loadout.hasPerk(Perk.ONE_MAN_ARMY)) {
-						ItemStack secondaryAmmo = loadout.getSecondary().getAmmo();
+						ItemStack secondaryAmmo = Main.hasQualityArms() ? QualityGun.getAmmoForName(loadout.getSecondary().getName()) : loadout.getSecondary().getAmmo();
 						secondaryAmmo.setAmount(loadout.getSecondary().getAmmoCount());
 						p.getInventory().setItem(25, secondaryAmmo);
 					}
 				}
 
 				if (!loadout.getLethal().equals(Main.loadManager.blankLethal))
-					p.getInventory().setItem(3, loadout.getLethal().getWeapon());
+					p.getInventory().setItem(3, Main.hasQualityArms() ? QualityGun.getGunForName(loadout.getLethal().getName()) : loadout.getLethal().getWeapon());
 
 				if (!loadout.getTactical().equals(Main.loadManager.blankTactical))
-					p.getInventory().setItem(4, loadout.getTactical().getWeapon());
+					p.getInventory().setItem(4, Main.hasQualityArms() ? QualityGun.getGunForName(loadout.getTactical().getName()) : loadout.getTactical().getWeapon());
 			}
 
 			if (getGamemode() == Gamemode.INFECT && redTeam.contains(p)) {
@@ -626,8 +626,8 @@ public class GameInstance implements Listener {
 
 		} else if (getGamemode() == Gamemode.OITC) {
 			p.getInventory().setItem(0, Main.loadManager.knife);
-			p.getInventory().setItem(1, GameManager.oitcGun.getGun());
-			ItemStack ammo = GameManager.oitcGun.getAmmo();
+			p.getInventory().setItem(1, Main.hasQualityArms() ? QualityGun.getGunForName(GameManager.oitcGun.getName()) : GameManager.oitcGun.getGun());
+			ItemStack ammo = Main.hasQualityArms() ? QualityGun.getAmmoForName(GameManager.oitcGun.getName()) : GameManager.oitcGun.getAmmo();
 			ammo.setAmount(1);
 			p.getInventory().setItem(8, ammo);
 		} else if (getGamemode() == Gamemode.GUN) {
@@ -636,8 +636,8 @@ public class GameInstance implements Listener {
 			}
 			p.getInventory().setItem(0, Main.loadManager.knife);
 			CodGun gun = GameManager.gunGameGuns.get(ffaPlayerScores.get(p));
-			ItemStack gunItem = gun.getGun();
-			ItemStack ammo = gun.getAmmo();
+			ItemStack gunItem = Main.hasQualityArms() ? QualityGun.getGunForName(gun.getName()) : gun.getGun();
+			ItemStack ammo = Main.hasQualityArms() ? QualityGun.getAmmoForName(gun.getName()) : gun.getAmmo();
 			ammo.setAmount(gun.getAmmoCount());
 
 			p.getInventory().setItem(1, gunItem);
