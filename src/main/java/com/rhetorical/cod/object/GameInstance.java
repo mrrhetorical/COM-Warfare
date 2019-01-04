@@ -180,10 +180,10 @@ public class GameInstance implements Listener {
 
 	private void clearNextMaps() {
 		if (nextMaps[0] != null && nextMaps[0] != currentMap) {
-			GameManager.UsedMaps.remove(nextMaps[0]);
+			GameManager.usedMaps.remove(nextMaps[0]);
 		}
 		if (nextMaps[1] != null && nextMaps[1] != currentMap) {
-			GameManager.UsedMaps.remove(nextMaps[1]);
+			GameManager.usedMaps.remove(nextMaps[1]);
 		}
 	}
 
@@ -238,7 +238,7 @@ public class GameInstance implements Listener {
 		if (map == null)
 			return;
 
-		GameManager.UsedMaps.remove(getMap());
+		GameManager.usedMaps.remove(getMap());
 
 		currentMap = map;
 		map.changeGamemode();

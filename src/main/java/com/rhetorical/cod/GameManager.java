@@ -12,9 +12,9 @@ import com.rhetorical.cod.files.ArenasFile;
 
 public class GameManager {
 
-	static ArrayList<GameInstance> RunningGames = new ArrayList<>();
-	static ArrayList<CodMap> AddedMaps = new ArrayList<>();
-	public static ArrayList<CodMap> UsedMaps = new ArrayList<>();
+	static ArrayList<GameInstance> runningGames = new ArrayList<>();
+	static ArrayList<CodMap> addedMaps = new ArrayList<>();
+	public static ArrayList<CodMap> usedMaps = new ArrayList<>();
 
 	public static CodGun oitcGun = null;
 	public static List<CodGun> gunGameGuns = new ArrayList<>();
@@ -80,14 +80,14 @@ public class GameManager {
 
 			boolean contains = false;
 
-			for (CodMap map : AddedMaps) {
+			for (CodMap map : addedMaps) {
 				contains = map.getName().equalsIgnoreCase(m.getName());
 				if(contains)
 					break;
 			}
 
 			if (!contains) {
-				AddedMaps.add(m);
+				addedMaps.add(m);
 			}
 			k++;
 		}
@@ -112,7 +112,7 @@ public class GameManager {
 		}
 		
 
-		for (GameInstance i : RunningGames) {
+		for (GameInstance i : runningGames) {
 			if (i.getPlayers().contains(p)) {
 				Main.sendMessage(p, Main.codPrefix + Lang.ALREADY_IN_GAME.getMessage(), Main.lang);
 				return false;
@@ -124,7 +124,7 @@ public class GameManager {
 		GameInstance newGame;
 
 		Main.sendMessage(p, Main.codPrefix + Lang.SEARCHING_FOR_MATCH.getMessage(), Main.lang);
-		for (GameInstance i : RunningGames) {
+		for (GameInstance i : runningGames) {
 			if (i.getPlayers().size() < 12) {
 				if (i.getPlayers().size() == 0) {
 					removeInstance(i);
@@ -151,7 +151,7 @@ public class GameManager {
 
 			newGame = new GameInstance(new ArrayList<>(), map);
 
-			RunningGames.add(newGame);
+			runningGames.add(newGame);
 
 			newGame.addPlayer(p);
 
@@ -182,7 +182,7 @@ public class GameManager {
 	}
 
 	public static boolean isInMatch(Player p) {
-		for (GameInstance game : RunningGames) {
+		for (GameInstance game : runningGames) {
 			if (game.getPlayers().contains(p)) {
 				return true;
 			}
@@ -193,7 +193,7 @@ public class GameManager {
 	}
 
 	public static CodMap getMapForName(String name) {
-		for(CodMap map : AddedMaps) {
+		for(CodMap map : addedMaps) {
 			if (map.getName().equalsIgnoreCase(name))
 				return map;
 		}
@@ -202,7 +202,7 @@ public class GameManager {
 	}
 	
 	public static GameInstance getMatchWhichContains(Player p) {
-		for (GameInstance game : RunningGames) {
+		for (GameInstance game : runningGames) {
 			if(game.getPlayers().contains(p)) {
 				return game;
 			}
@@ -214,14 +214,14 @@ public class GameManager {
 	public static CodMap pickRandomMap() {
 		loadMaps();
 		
-		Collections.shuffle(AddedMaps);
+		Collections.shuffle(addedMaps);
 		
-		for (CodMap m : AddedMaps) {
+		for (CodMap m : addedMaps) {
 			if (!m.isEnabled()) {
 				continue;
 			}
-			if (!UsedMaps.contains(m)) {
-				UsedMaps.add(m);
+			if (!usedMaps.contains(m)) {
+				usedMaps.add(m);
 				return m;
 			}
 		}
@@ -236,7 +236,7 @@ public class GameManager {
 		if (game.getMap() == map)
 			return false;
 
-		if (UsedMaps.contains(map))
+		if (usedMaps.contains(map))
 			return false;
 
 		if (!map.isEnabled())
@@ -257,9 +257,9 @@ public class GameManager {
 		
 		Main.sendMessage(Main.cs, Main.codPrefix + ChatColor.GRAY + "Game instance id " + i.getId() + " has been removed!", Main.lang);
 
-		UsedMaps.remove(i.getMap());
+		usedMaps.remove(i.getMap());
 
-		RunningGames.remove(i);
+		runningGames.remove(i);
 
 		System.gc();
 	}

@@ -35,7 +35,7 @@ public class Listeners implements Listener {
 	public void playerLeaveGame(PlayerQuitEvent e) {
 		Player p = e.getPlayer();
 		// remove from cod
-		for (GameInstance i : GameManager.RunningGames) {
+		for (GameInstance i : GameManager.runningGames) {
 			if (i.getPlayers().contains(p)) {
 				p.teleport(Main.lobbyLoc);
 				i.removePlayer(p);

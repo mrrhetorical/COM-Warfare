@@ -205,8 +205,8 @@ public class Main extends JavaPlugin {
 
 	@Override
 	public void onDisable() {
-		if (GameManager.AddedMaps.size() != 0) {
-			for (CodMap m : GameManager.AddedMaps) {
+		if (GameManager.addedMaps.size() != 0) {
+			for (CodMap m : GameManager.addedMaps) {
 				m.save();
 			}
 
@@ -355,7 +355,7 @@ public class Main extends JavaPlugin {
 			} else if (args[0].equalsIgnoreCase("listMaps") && hasPerm(sender, "com.map.list")) {
 				sendMessage(sender, Main.codPrefix + Lang.MAP_LIST_HEADER.getMessage(), lang);
 				int k = 0;
-				for (CodMap m : GameManager.AddedMaps) {
+				for (CodMap m : GameManager.addedMaps) {
 					k++;
 					StringBuilder gmr = new StringBuilder();
 					for(Gamemode gm : m.getAvailableGamemodes()) {
@@ -375,7 +375,7 @@ public class Main extends JavaPlugin {
 					entry = entry.replace("{map-name}", m.getName());
 					entry = entry.replace("{game-mode}", gmr.toString());
 
-					if (GameManager.UsedMaps.contains(m)) {
+					if (GameManager.usedMaps.contains(m)) {
 						entry = entry.replace("{map-status}", ChatColor.RED + "IN-USE");
 					} else {
 						if (m.isEnabled()) {
@@ -393,7 +393,7 @@ public class Main extends JavaPlugin {
 					CodMap newMap;
 					String mapName = args[1];
 
-					for (CodMap m : GameManager.AddedMaps) {
+					for (CodMap m : GameManager.addedMaps) {
 						if (m.getName().equalsIgnoreCase(mapName)) {
 							sendMessage(sender, Main.codPrefix + Lang.CREATE_MAP_ALREADY_EXISTS.getMessage(), lang);
 							return true;
@@ -402,7 +402,7 @@ public class Main extends JavaPlugin {
 
 					newMap = new CodMap(mapName);
 
-					GameManager.AddedMaps.add(newMap);
+					GameManager.addedMaps.add(newMap);
 					String msg = Lang.CREATE_MAP_SUCCESS.getMessage();
 					msg = msg.replace("{map-name}", mapName);
 					sendMessage(sender, Main.codPrefix + msg, lang);
@@ -420,9 +420,9 @@ public class Main extends JavaPlugin {
 
 					String mapName = args[1];
 
-					for (CodMap m : GameManager.AddedMaps) {
+					for (CodMap m : GameManager.addedMaps) {
 						if (m.getName().equalsIgnoreCase(mapName)) {
-							GameManager.AddedMaps.remove(m);
+							GameManager.addedMaps.remove(m);
 
 							File aFile = new File(getPlugin().getDataFolder(), "arenas.yml");
 
@@ -432,7 +432,7 @@ public class Main extends JavaPlugin {
 
 							ArenasFile.setup(getPlugin());
 
-							for (CodMap notChanged : GameManager.AddedMaps) {
+							for (CodMap notChanged : GameManager.addedMaps) {
 								notChanged.save();
 							}
 
@@ -481,7 +481,7 @@ public class Main extends JavaPlugin {
 					}
 					CodMap map = null;
 					String spawnMapName = args[2];
-					for (CodMap m : GameManager.AddedMaps) {
+					for (CodMap m : GameManager.addedMaps) {
 						if (m.getName().equalsIgnoreCase(spawnMapName)) {
 							map = m;
 						}
@@ -529,7 +529,7 @@ public class Main extends JavaPlugin {
 					CodMap map = null;
 
 					String mapName = args[2];
-					for(CodMap m : GameManager.AddedMaps) {
+					for(CodMap m : GameManager.addedMaps) {
 						if (m.getName().equalsIgnoreCase(mapName)){
 							map = m;
 							break;
@@ -843,7 +843,12 @@ public class Main extends JavaPlugin {
 	}
 
 	private boolean bootPlayers() {
-		List<GameInstance> runningGames = GameManager.RunningGames;
+		GameInstance[] runningGames = new GameInstance[GameManager.runningGames.size()];
+
+		for (int k = 0; k < runningGames.length; k++) {
+			runningGames[k] = GameManager.runningGames.get(k);
+		}
+
 		for (GameInstance i : runningGames) {
 			if (i != null) {
 				Player[] pls = new Player[i.getPlayers().size()];
