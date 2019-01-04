@@ -601,28 +601,8 @@ public class GameInstance implements Listener {
 			p.getInventory().setItem(0, Main.loadManager.knife);
 
 			if (getGamemode() != Gamemode.INFECT || (getGamemode() == Gamemode.INFECT && blueTeam.contains(p))) {
-				if (!loadout.getPrimary().equals(Main.loadManager.blankPrimary)) {
-					p.getInventory().setItem(1, Main.hasQualityArms() ? QualityGun.getGunForName(loadout.getPrimary().getName()) : loadout.getPrimary().getGun());
 
-					ItemStack primaryAmmo = Main.hasQualityArms() ? QualityGun.getAmmoForName(loadout.getPrimary().getName()) : loadout.getPrimary().getAmmo();
-					primaryAmmo.setAmount(loadout.getPrimary().getAmmoCount());
-					p.getInventory().setItem(19, primaryAmmo);
-				}
-
-				if (!loadout.getSecondary().equals(Main.loadManager.blankSecondary)) {
-					p.getInventory().setItem(2, Main.hasQualityArms() ? QualityGun.getGunForName(loadout.getSecondary().getName()) : loadout.getSecondary().getGun());
-					if (!loadout.hasPerk(Perk.ONE_MAN_ARMY)) {
-						ItemStack secondaryAmmo = Main.hasQualityArms() ? QualityGun.getAmmoForName(loadout.getSecondary().getName()) : loadout.getSecondary().getAmmo();
-						secondaryAmmo.setAmount(loadout.getSecondary().getAmmoCount());
-						p.getInventory().setItem(25, secondaryAmmo);
-					}
-				}
-
-				if (!loadout.getLethal().equals(Main.loadManager.blankLethal))
-					p.getInventory().setItem(3, Main.hasQualityArms() ? QualityGun.getGunForName(loadout.getLethal().getName()) : loadout.getLethal().getWeapon());
-
-				if (!loadout.getTactical().equals(Main.loadManager.blankTactical))
-					p.getInventory().setItem(4, Main.hasQualityArms() ? QualityGun.getGunForName(loadout.getTactical().getName()) : loadout.getTactical().getWeapon());
+				Main.loadManager.giveLoadout(p, loadout);
 			}
 
 			if (getGamemode() == Gamemode.INFECT && redTeam.contains(p)) {

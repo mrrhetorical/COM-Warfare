@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.rhetorical.cod.lang.Lang;
+import com.rhetorical.cod.object.*;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -13,20 +14,12 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import com.rhetorical.cod.files.GunsFile;
 import com.rhetorical.cod.files.LoadoutsFile;
-import com.rhetorical.cod.object.CodGun;
-import com.rhetorical.cod.object.CodPerk;
-import com.rhetorical.cod.object.CodWeapon;
-import com.rhetorical.cod.object.GunType;
-import com.rhetorical.cod.object.Loadout;
-import com.rhetorical.cod.object.PerkSlot;
-import com.rhetorical.cod.object.UnlockType;
-import com.rhetorical.cod.object.WeaponType;
 
 public class LoadoutManager {
 
-	private HashMap<Player, Integer> allowedClasses = new HashMap<Player, Integer>();
-	private HashMap<Player, ArrayList<Loadout>> playerLoadouts = new HashMap<Player, ArrayList<Loadout>>();
-	private HashMap<Player, Loadout> activeLoadouts = new HashMap<Player, Loadout>();
+	private HashMap<Player, Integer> allowedClasses = new HashMap<>();
+	private HashMap<Player, ArrayList<Loadout>> playerLoadouts = new HashMap<>();
+	private HashMap<Player, Loadout> activeLoadouts = new HashMap<>();
 
 	public ItemStack knife;
 
@@ -70,7 +63,7 @@ public class LoadoutManager {
 
 		knife = new ItemStack(Material.IRON_SWORD);
 		ItemMeta knifeMeta = knife.getItemMeta();
-		knifeMeta.setDisplayName("\u00A7eKnife");
+		knifeMeta.setDisplayName(ChatColor.YELLOW + "Knife");
 		ArrayList<String> knifeLore = new ArrayList<>();
 		knifeLore.add(Lang.KNIFE_LORE.getMessage());
 		knifeMeta.setLore(knifeLore);
@@ -120,30 +113,38 @@ public class LoadoutManager {
 		CodGun secondary = loadout.getSecondary();
 		CodWeapon lethal = loadout.getLethal();
 		CodWeapon tactical = loadout.getTactical();
-		// CodPerk perkOne = loadout.getPerk1();
-		// CodPerk perkTwo = loadout.getPerk2();
-		// CodPerk perkThree = loadout.getPerk3();
 
 		// Knife
-		p.getInventory().setItem(0, this.knife);
+		p.getInventory().setItem(0, knife);
 
-		// Guns
-		p.getInventory().setItem(1, primary.getGun());
-		p.getInventory().setItem(2, secondary.getGun());
+		// Primary & Ammo
 
-		// Ammo
-		ItemStack primaryAmmo = primary.getAmmo();
-		ItemStack secondaryAmmo = secondary.getAmmo();
+		if (!primary.equals(Main.loadManager.blankPrimary)) {
+					p.getInventory().setItem(1, Main.hasQualityArms() ? QualityGun.getGunForName(primary.getName()) : primary.getGun());
 
-		primaryAmmo.setAmount(primary.getAmmoCount());
-		secondaryAmmo.setAmount(secondary.getAmmoCount());
+					ItemStack primaryAmmo = Main.hasQualityArms() ? QualityGun.getAmmoForName(primary.getName()) : primary.getAmmo();
+					primaryAmmo.setAmount(primary.getAmmoCount());
+					p.getInventory().setItem(19, primaryAmmo);
+		}
+		
+		// Secondary & Ammo
 
-		p.getInventory().setItem(19, primaryAmmo);
-		p.getInventory().setItem(25, secondaryAmmo);
+		if (!secondary.equals(Main.loadManager.blankSecondary)) {
+					p.getInventory().setItem(2, Main.hasQualityArms() ? QualityGun.getGunForName(secondary.getName()) : secondary.getGun());
+					if (!loadout.hasPerk(Perk.ONE_MAN_ARMY)) {
+						ItemStack secondaryAmmo = Main.hasQualityArms() ? QualityGun.getAmmoForName(secondary.getName()) : secondary.getAmmo();
+						secondaryAmmo.setAmount(secondary.getAmmoCount());
+						p.getInventory().setItem(25, secondaryAmmo);
+					}
+		}
 
 		// Grenades
-		p.getInventory().setItem(3, lethal.getWeapon());
-		p.getInventory().setItem(4, tactical.getWeapon());
+
+		if (!lethal.equals(Main.loadManager.blankLethal))
+					p.getInventory().setItem(3, Main.hasQualityArms() ? QualityGun.getGunForName(lethal.getName()) : lethal.getWeapon());
+
+		if (!tactical.equals(Main.loadManager.blankTactical))
+					p.getInventory().setItem(4, Main.hasQualityArms() ? QualityGun.getGunForName(tactical.getName()) : tactical.getWeapon());
 
 	}
 
@@ -151,7 +152,7 @@ public class LoadoutManager {
 
 		int classes = 5;
 
-		for (int i = 0; i < Main.progressionManager.getPrestigeLevel(p); i++) {
+		for (int i = 1; i <= Main.progressionManager.getPrestigeLevel(p); i++) {
 			switch (i) {
 				case 1:
 					classes++;
@@ -200,8 +201,6 @@ public class LoadoutManager {
 
 		if (!GunsFile.getData().contains("Guns.Secondary.default")) {
 
-//			Main.sendMessage(Main.cs,  Main.codPrefix + "\u00A7cCan't start COM-Warfare without a default SECONDARY weapon!", Main.lang);
-
 			return blankSecondary;
 		}
 
@@ -221,7 +220,6 @@ public class LoadoutManager {
 
 		if (!GunsFile.getData().contains("Weapons.LETHAL.default")) {
 
-//			Main.sendMessage(Main.cs,  Main.codPrefix + "\u00A7cCan't start COM-Warfare without a default LETHAL weapon!", Main.lang);
 			return blankLethal;
 		}
 
@@ -236,7 +234,6 @@ public class LoadoutManager {
 
 		if (!GunsFile.getData().contains("Weapons.TACTICAL.default")) {
 
-//			Main.sendMessage(Main.cs,  Main.codPrefix + "\u00A7cCan't start COM-Warfare without a default TACTICAL weapon!", Main.lang);
 			return blankTactical;
 		}
 
@@ -396,11 +393,8 @@ public class LoadoutManager {
 	public Loadout getCurrentLoadout(Player p) {
 
 		ArrayList<Loadout> loadouts = getLoadouts(p);
-		if (!loadouts.equals(null)) {
-			return loadouts.get(0);
-		}
 
-		return null;
+		return loadouts.get(0);
 	}
 
 	public ArrayList<Loadout> getLoadouts(Player p) {
