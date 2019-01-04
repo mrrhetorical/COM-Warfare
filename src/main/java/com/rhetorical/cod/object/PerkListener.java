@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import com.rhetorical.cod.lang.Lang;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -72,7 +73,7 @@ public class PerkListener implements Listener {
 
 						p.getInventory().setItem(19, primaryAmmo);
 					} else {
-						Main.sendMessage(p, Main.codPrefix + "\u00A7cYou moved and couldn't finish switching your class!", Main.lang);
+						Main.sendMessage(p, Main.codPrefix + Lang.PERK_ONE_MAN_ARMY_FAILED.getMessage(), Main.lang);
 					}
 					this.cancel();
 				}
@@ -163,7 +164,7 @@ public class PerkListener implements Listener {
 		p.setWalkSpeed(0f);
 		p.setSneaking(true);
 		
-		Main.sendMessage(p, "\u00A7fYou are in final stand! Wait 20 seconds to get back up!", Main.lang);
+		Main.sendMessage(p, Lang.PERK_FINAL_STAND_NOTIFICATION.getMessage(), Main.lang);
 		BukkitRunnable br = new BukkitRunnable() {
 			
 			private int time = 40;
@@ -180,7 +181,7 @@ public class PerkListener implements Listener {
 				else {
 					p.setWalkSpeed(0.2f);
 					i.health.reset(p);
-					Main.sendMessage(p, "\u00A7fYou are out of final stand!", Main.lang);
+				Main.sendMessage(p, Lang.PERK_FINAL_STAND_FINISHED.getMessage(), Main.lang);
 					cancel();
 					cancelLastStand(p);
 					isInLastStand.remove(p);

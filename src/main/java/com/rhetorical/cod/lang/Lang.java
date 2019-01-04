@@ -74,7 +74,10 @@ public enum Lang {
 	RAN_OUT_OF_MAPS("&cCOM-Warfare ran out of maps to use!"),
 	CURRENT_GAME_REMOVED("&cThe current game has been removed!"),
 	INSUFFICIENT_FUNDS("&cInsufficient funds!"),
-	PURCHASE_SUCCESSFUL("&aPurchase successful!");
+	PURCHASE_SUCCESSFUL("&aPurchase successful!"),
+	PERK_ONE_MAN_ARMY_FAILED("&cYou moved and couldn't finish switching your class!"),
+	PERK_FINAL_STAND_NOTIFICATION("&fYou are in final stand! Wait 20 seconds to get back up!"),
+	PERK_FINAL_STAND_FINISHED("&fYou are out of final stand!");
 
 
 	private String message;

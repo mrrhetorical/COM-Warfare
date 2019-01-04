@@ -302,7 +302,7 @@ public class GameInstance implements Listener {
 			System.out.println();
 		}catch(Exception ignored) {}
 
-		if (getState() == GameState.INGAME) {
+		if (getState() == GameState.IN_GAME) {
 			assignTeams();
 
 			if (isLegacy) {
@@ -486,7 +486,7 @@ public class GameInstance implements Listener {
 		}
 
 		startGameTimer(gameTime, false);
-		setState(GameState.INGAME);
+		setState(GameState.IN_GAME);
 	}
 
 	private void dropFlag(Item flag, Location location) {
@@ -969,7 +969,7 @@ public class GameInstance implements Listener {
 	private void startGameTimer(int time, boolean newRound) {
 
 		if (!newRound) {
-			setState(GameState.INGAME);
+			setState(GameState.IN_GAME);
 
 			try {
 //			scoreBar.removeAll();
@@ -1419,7 +1419,7 @@ public class GameInstance implements Listener {
 					if (t == 3)
 						Main.sendTitle(p, Main.codPrefix + ChatColor.RED + "You will respawn in " + t + " seconds!", "");
 				} else {
-					if (getState() == GameState.INGAME) {
+					if (getState() == GameState.IN_GAME) {
 						if (getGamemode() != Gamemode.FFA && getGamemode() != Gamemode.OITC && getGamemode() != Gamemode.GUN) {
 							if (blueTeam.contains(p)) {
 								spawnCodPlayer(p, getMap().getBlueSpawn());
@@ -1695,7 +1695,7 @@ public class GameInstance implements Listener {
 		if (!players.contains(victim) && !players.contains(attacker))
 			return;
 
-		if (getState() != GameState.INGAME) {
+		if (getState() != GameState.IN_GAME) {
 			return;
 		}
 
@@ -1800,7 +1800,7 @@ public class GameInstance implements Listener {
 		if (!players.contains(victim) && !players.contains(shooter))
 			return;
 
-		if (getState() != GameState.INGAME) {
+		if (getState() != GameState.IN_GAME) {
 			return;
 		}
 
