@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import com.rhetorical.cod.lang.Lang;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -347,8 +348,7 @@ public class ShopManager {
 
 		Main.shopManager.setPurchasedGuns(purchased);
 
-		Main.sendMessage(p, Main.codPrefix + "\u00A7aYou just unlocked the \u00A76" + gun.getName() + "\u00A7a!", Main.lang);
-		Main.sendMessage(p, Main.codPrefix + "\u00A7aEquip it after the match!", Main.lang);
+		Main.sendMessage(p, Main.codPrefix + Lang.WEAPON_UNLOCKED.getMessage().replace("{gun-name}", gun.getName()), Main.lang);
 	}
 
 	private void unlockGrenade(Player p, CodWeapon grenade) {
@@ -368,14 +368,14 @@ public class ShopManager {
 
 					Main.shopManager.setPurchasedWeapons(purchased);
 
-					Main.sendMessage(p, Main.codPrefix + "\u00A7aYou just unlocked the \u00A76" + grenade.getName() + "\u00A7a!", Main.lang);
-					Main.sendMessage(p, Main.codPrefix + "\u00A7aEquip it after the match!", Main.lang);
+					Main.sendMessage(p, Main.codPrefix + Lang.WEAPON_UNLOCKED.getMessage().replace("{gun-name}", grenade.getName()), Main.lang);
+
 				}
 			}
 		} else if (grenade.getType() == UnlockType.BOTH) {
 			if (Main.progressionManager.getLevel(p) == grenade.getLevelUnlock()) {
 				Main.sendMessage(p,
-						Main.codPrefix + "\u00A7aThe \u00A76" + grenade.getName() + "\u00A7a is now available for purchase!", Main.lang);
+						Main.codPrefix + Lang.WEAPON_PURCHASE_UNLOCKED.getMessage().replace("{gun-name}", grenade.getName()), Main.lang);
 			}
 		}
 	}
@@ -399,7 +399,7 @@ public class ShopManager {
 				}
 			} else if (gun.getType() == UnlockType.BOTH) {
 				if (Main.progressionManager.getLevel(p) == gun.getLevelUnlock()) {
-					Main.sendMessage(p, Main.codPrefix + "\u00A7aThe \u00A76" + gun.getName() + "\u00A7a is now available for purchase!", Main.lang);
+					Main.sendMessage(p, Main.codPrefix + Lang.WEAPON_PURCHASE_UNLOCKED.getMessage().replace("{gun-name}", gun.getName()), Main.lang);
 				}
 			}
 
@@ -420,7 +420,7 @@ public class ShopManager {
 				}
 			} else if (gun.getType() == UnlockType.BOTH) {
 				if (Main.progressionManager.getLevel(p) == gun.getLevelUnlock()) {
-					Main.sendMessage(p, Main.codPrefix + "\u00A7aThe \u00A76" + gun.getName() + "\u00A7a is now available for purchase!", Main.lang);
+					Main.sendMessage(p, Main.codPrefix + Lang.WEAPON_PURCHASE_UNLOCKED.getMessage().replace("{gun-name}", gun.getName()), Main.lang);
 				}
 			}
 		}

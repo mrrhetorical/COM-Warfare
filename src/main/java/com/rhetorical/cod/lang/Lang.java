@@ -42,7 +42,9 @@ public enum Lang {
 	UNLOCK_TYPE_NOT_EXISTS("&cThat unlock type does not exist! Valid types include 'level', 'credits', and 'both'!"),
 	MATERIAL_NOT_EXISTS("&cThat material does not exist!"),
 	WEAPON_CREATED_SUCCESS("&aSuccessfully created weapon {weapon-name} as a {weapon-type} grenade!"),
-	GUN_CREATED_SUCCESS("&aSuccessfully created gun {gun-name} as a {gun-type}!");
+	GUN_CREATED_SUCCESS("&aSuccessfully created gun {gun-name} as a {gun-type}!"),
+	WEAPON_UNLOCKED("&aYou just unlocked the &6{gun-name}! \n &aEquip it after the match!"),
+	WEAPON_PURCHASE_UNLOCKED("&The &6{gun-name} is now available for purchase!");
 
 	private String message;
 
