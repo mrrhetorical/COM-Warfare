@@ -1930,7 +1930,7 @@ public class GameInstance implements Listener {
 
 		e.setCancelled(true);
 
-		Player p = (Player) e.getPlayer();
+		Player p = e.getPlayer();
 		if (!players.contains(p)) {
 			return;
 		}
@@ -2199,7 +2199,7 @@ public class GameInstance implements Listener {
 						team = "blue";
 					} else if (aFlagCapture == -10) {
 						team = "red";
-					} else if (aFlagCapture == 0) {
+					} else if (aFlagCapture == 0 && (blue > 0 || red > 0)) {
 
 						for (Player p : getPlayers()) {
 							p.sendMessage(Lang.FLAG_NEUTRALIZED.getMessage().replace("{flag}", flag));
@@ -2239,7 +2239,7 @@ public class GameInstance implements Listener {
 						team = "blue";
 					} else if (bFlagCapture == -10) {
 						team = "red";
-					} else if (bFlagCapture == 0) {
+					} else if (bFlagCapture == 0 && (blue > 0 || red > 0)) {
 
 						for (Player p : getPlayers()) {
 							p.sendMessage(Lang.FLAG_NEUTRALIZED.getMessage().replace("{flag}", flag));
@@ -2279,7 +2279,7 @@ public class GameInstance implements Listener {
 						team = "blue";
 					} else if (cFlagCapture == -10) {
 						team = "red";
-					} else if (cFlagCapture == 0) {
+					} else if (cFlagCapture == 0 && (blue > 0 || red > 0)) {
 
 						for (Player p : getPlayers()) {
 							p.sendMessage(Lang.FLAG_NEUTRALIZED.getMessage().replace("{flag}", flag));
