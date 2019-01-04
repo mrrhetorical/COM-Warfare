@@ -556,7 +556,6 @@ public class InventoryManager implements Listener {
 			this.setupSelectClassInventory(p);
 		}
 
-		p.closeInventory();
 		p.openInventory(this.selectClassInventory.get(p));
 		return true;
 	}
@@ -577,7 +576,7 @@ public class InventoryManager implements Listener {
 				player = new ItemStack(Material.ANVIL);
 			}
 			ItemMeta playerMeta = player.getItemMeta();
-			playerMeta.setDisplayName(Lang.LEADERBOARD_PLAYER_ENTRY.getMessage().replace("{player}", name));
+			playerMeta.setDisplayName(Lang.LEADERBOARD_PLAYER_ENTRY.getMessage().replace("{name}", name));
 
 			double experience = StatHandler.getExperience(name);
 
@@ -740,45 +739,36 @@ public class InventoryManager implements Listener {
 				GameManager.findMatch(p);
 				p.closeInventory();
 			} else if (e.getCurrentItem().equals(createClass)) {
-				p.closeInventory();
 				this.setupCreateClassInventory(p);
 				p.openInventory(createClassInventory.get(p));
 			} else if (e.getCurrentItem().equals(shopItem)) {
-				p.closeInventory();
 				p.openInventory(mainShopInventory);
 				setupShopInventories(p);
 			} else if (e.getCurrentItem().equals(combatRecord)) {
-				p.closeInventory();
 				openPersonalStatsMenu(p);
 			} else if (e.getCurrentItem().equals(leaderboard)) {
-				p.closeInventory();
 				setupLeaderBoard();
 				p.openInventory(leaderboardInventory);
 			} else if (e.getCurrentItem().equals(scoreStreaks)) {
-				p.closeInventory();
 				this.openKillStreaksInventory(p);
 			}
 		} else if (e.getInventory().equals(mainShopInventory)) {
 			if (e.getCurrentItem().equals(gunShopItem)) {
-				p.closeInventory();
 				if (!Main.shopManager.gunShop.containsKey(p)) {
 					this.setupShopInventories(p);
 				}
 				p.openInventory(Main.shopManager.gunShop.get(p));
 			} else if (e.getCurrentItem().equals(grenadeShopItem)) {
-				p.closeInventory();
 				if (!Main.shopManager.weaponShop.containsKey(p)) {
 					this.setupShopInventories(p);
 				}
 				p.openInventory(Main.shopManager.weaponShop.get(p));
 			} else if (e.getCurrentItem().equals(perkShopItem)) {
-				p.closeInventory();
 				if (!Main.shopManager.weaponShop.containsKey(p)) {
 					this.setupShopInventories(p);
 				}
 				p.openInventory(Main.shopManager.perkShop.get(p));
 			} else if (e.getCurrentItem().equals(shopItem)) {
-				p.closeInventory();
 				p.openInventory(mainShopInventory);
 			}
 		} else if (e.getInventory().equals(killStreakInventory.get(p))) {
@@ -868,25 +858,18 @@ public class InventoryManager implements Listener {
 
 			for (int i = 0; i < Main.loadManager.getAllowedClasses(p); i++) {
 				if (slot == 1 + (9 * i)) {
-					p.closeInventory();
 					p.openInventory(Main.loadManager.getLoadouts(p).get(i).getPrimaryInventory());
 				} else if (slot == 2 + (9 * i)) {
-					p.closeInventory();
 					p.openInventory(Main.loadManager.getLoadouts(p).get(i).getSecondaryInventory());
 				} else if (slot == 3 + (9 * i)) {
-					p.closeInventory();
 					p.openInventory(Main.loadManager.getLoadouts(p).get(i).getLethalInventory());
 				} else if (slot == 4 + (9 * i)) {
-					p.closeInventory();
 					p.openInventory(Main.loadManager.getLoadouts(p).get(i).getTacticalInventory());
 				} else if (slot == 5 + (9 * i)) {
-					p.closeInventory();
 					p.openInventory(Main.loadManager.getLoadouts(p).get(i).getPerk1Inventory());
 				} else if (slot == 6 + (9 * i)) {
-					p.closeInventory();
 					p.openInventory(Main.loadManager.getLoadouts(p).get(i).getPerk2Inventory());
 				} else if (slot == 7 + (9 * i)) {
-					p.closeInventory();
 					p.openInventory(Main.loadManager.getLoadouts(p).get(i).getPerk3Inventory());
 				}
 			}
@@ -907,7 +890,6 @@ public class InventoryManager implements Listener {
 						Main.shopManager.purchasedGuns.put(p, purchasedGuns);
 						Main.shopManager.savePurchaseData(p);
 						Main.shopManager.loadPurchaseData(p);
-						p.closeInventory();
 						Main.invManager.setupShopInventories(p);
 						Main.invManager.setupCreateClassInventory(p);
 						Main.invManager.setupPlayerSelectionInventories(p);
@@ -935,7 +917,6 @@ public class InventoryManager implements Listener {
 						Main.shopManager.purchasedWeapons.put(p, purchasedGrenades);
 						Main.shopManager.savePurchaseData(p);
 						Main.shopManager.loadPurchaseData(p);
-						p.closeInventory();
 						Main.invManager.setupShopInventories(p);
 						Main.invManager.setupCreateClassInventory(p);
 						Main.invManager.setupPlayerSelectionInventories(p);
@@ -961,7 +942,6 @@ public class InventoryManager implements Listener {
 						Main.shopManager.purchasedPerks.put(p, purchasedPerks);
 						Main.shopManager.savePurchaseData(p);
 						Main.shopManager.loadPurchaseData(p);
-						p.closeInventory();
 						Main.invManager.setupShopInventories(p);
 						Main.invManager.setupCreateClassInventory(p);
 						Main.invManager.setupPlayerSelectionInventories(p);
@@ -989,7 +969,6 @@ public class InventoryManager implements Listener {
 
 			Loadout current = Main.loadManager.getLoadouts(p).get(slot);
 			Main.loadManager.setActiveLoadout(p, current);
-			p.closeInventory();
 
 			if (!hasOneManArmy) {
 				Main.sendMessage(p, Main.codPrefix + Lang.CHANGED_CLASS_MESSAGE.getMessage(), Main.lang);
@@ -1009,7 +988,6 @@ public class InventoryManager implements Listener {
 						if (gun.getGun().getType().equals(item.getType())) {
 							loadout.setPrimary(gun);
 							Main.invManager.setupCreateClassInventory(p);
-							p.closeInventory();
 							p.openInventory(Main.invManager.createClassInventory.get(p));
 							return;
 						}
@@ -1018,7 +996,6 @@ public class InventoryManager implements Listener {
 					if (Main.loadManager.getDefaultPrimary().getGun().getType().equals(item.getType())) {
 						loadout.setPrimary(Main.loadManager.getDefaultPrimary());
 						Main.invManager.setupCreateClassInventory(p);
-						p.closeInventory();
 						p.openInventory(Main.invManager.createClassInventory.get(p));
 						return;
 					}
@@ -1031,7 +1008,6 @@ public class InventoryManager implements Listener {
 						if (gun.getGun().getType().equals(item.getType())) {
 							loadout.setSecondary(gun);
 							Main.invManager.setupCreateClassInventory(p);
-							p.closeInventory();
 							p.openInventory(Main.invManager.createClassInventory.get(p));
 							return;
 						}
@@ -1040,7 +1016,6 @@ public class InventoryManager implements Listener {
 					if (Main.loadManager.getDefaultSecondary().getGun().getType().equals(item.getType())) {
 						loadout.setSecondary(Main.loadManager.getDefaultSecondary());
 						Main.invManager.setupCreateClassInventory(p);
-						p.closeInventory();
 						p.openInventory(Main.invManager.createClassInventory.get(p));
 						return;
 					}
@@ -1053,7 +1028,6 @@ public class InventoryManager implements Listener {
 						if (grenade.getWeapon().getType().equals(item.getType())) {
 							loadout.setLethal(grenade);
 							Main.invManager.setupCreateClassInventory(p);
-							p.closeInventory();
 							p.openInventory(Main.invManager.createClassInventory.get(p));
 							return;
 						}
@@ -1062,7 +1036,6 @@ public class InventoryManager implements Listener {
 					if (Main.loadManager.getDefaultLethal().getWeapon().getType().equals(item.getType())) {
 						loadout.setLethal(Main.loadManager.getDefaultLethal());
 						Main.invManager.setupCreateClassInventory(p);
-						p.closeInventory();
 						p.openInventory(Main.invManager.createClassInventory.get(p));
 						return;
 					}
@@ -1075,7 +1048,6 @@ public class InventoryManager implements Listener {
 						if (grenade.getWeapon().getType().equals(item.getType())) {
 							loadout.setTactical(grenade);
 							Main.invManager.setupCreateClassInventory(p);
-							p.closeInventory();
 							p.openInventory(Main.invManager.createClassInventory.get(p));
 							return;
 						}
@@ -1084,7 +1056,6 @@ public class InventoryManager implements Listener {
 					if (Main.loadManager.getDefaultTactical().getWeapon().getType().equals(item.getType())) {
 						loadout.setTactical(Main.loadManager.getDefaultTactical());
 						Main.invManager.setupCreateClassInventory(p);
-						p.closeInventory();
 						p.openInventory(Main.invManager.createClassInventory.get(p));
 						return;
 					}
@@ -1096,7 +1067,6 @@ public class InventoryManager implements Listener {
 						if (perk.getItem().getType().equals(item.getType()) && perk.getPerk().getName().equals(item.getItemMeta().getDisplayName())) {
 							loadout.setPerk(PerkSlot.ONE, perk);
 							Main.invManager.setupCreateClassInventory(p);
-							p.closeInventory();
 							p.openInventory(Main.invManager.createClassInventory.get(p));
 							return;
 						}
@@ -1107,7 +1077,6 @@ public class InventoryManager implements Listener {
 						if (perk.getItem().getType().equals(item.getType()) && perk.getPerk().getName().equals(item.getItemMeta().getDisplayName())) {
 							loadout.setPerk(PerkSlot.TWO, perk);
 							Main.invManager.setupCreateClassInventory(p);
-							p.closeInventory();
 							p.openInventory(Main.invManager.createClassInventory.get(p));
 							return;
 						}
@@ -1118,7 +1087,6 @@ public class InventoryManager implements Listener {
 						if (perk.getItem().getType().equals(item.getType()) && perk.getPerk().getName().equals(item.getItemMeta().getDisplayName())) {
 							loadout.setPerk(PerkSlot.THREE, perk);
 							Main.invManager.setupCreateClassInventory(p);
-							p.closeInventory();
 							p.openInventory(Main.invManager.createClassInventory.get(p));
 							return;
 						}

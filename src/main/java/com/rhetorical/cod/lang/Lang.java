@@ -200,7 +200,7 @@ public enum Lang {
 	public static void load() {
 		for (Lang m : Lang.values()) {
 			if (LangFile.getData().contains(m.toString())) {
-				Main.cs.sendMessage("Getting from config");
+//				Main.cs.sendMessage("Loading value \"" + m.toString() + "\" from config");
 				m.message = LangFile.getData().getString(m.toString());
 			} else {
 				LangFile.getData().set(m.toString(), m.message);

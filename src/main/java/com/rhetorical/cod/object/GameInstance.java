@@ -70,6 +70,7 @@ public class GameInstance implements Listener {
 	private Objective scoreboardObjective = scoreboard.registerNewObjective("game_stats", "dummy");
 
 	public HealthManager health;
+	public HungerManager hungerManager;
 
 	private HashMap<Player, CodScore> playerScores = new HashMap<>();
 
@@ -129,6 +130,7 @@ public class GameInstance implements Listener {
 		setState(GameState.WAITING);
 
 		health = new HealthManager(pls, Main.defaultHealth);
+		hungerManager = new HungerManager();
 
 		Bukkit.getServer().getPluginManager().registerEvents(this, Main.getPlugin());
 
@@ -272,6 +274,7 @@ public class GameInstance implements Listener {
 				Main.progressionManager.getLevel(p) + "] " + ChatColor.YELLOW + p.getDisplayName());
 
 		health.addPlayer(p);
+		hungerManager.addPlayer(p);
 
 		Main.progressionManager.update(p);
 
@@ -422,6 +425,7 @@ public class GameInstance implements Listener {
 		playerScores.remove(p);
 
 		players.remove(p);
+		hungerManager.removePlayer(p);
 		ffaPlayerScores.remove(p);
 
 		if (players.size() == 0) {
@@ -1828,7 +1832,7 @@ public class GameInstance implements Listener {
 		Player victim = (Player) e.getEntity();
 		Player shooter = (Player) bullet.getShooter();
 
-		Double damage = e.getDamage();
+		double damage = e.getDamage();
 
 		if (!players.contains(victim) && !players.contains(shooter))
 			return;

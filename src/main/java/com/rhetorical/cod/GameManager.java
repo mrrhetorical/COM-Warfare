@@ -4,6 +4,7 @@ import java.util.*;
 
 import com.rhetorical.cod.lang.Lang;
 import com.rhetorical.cod.object.*;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
@@ -254,9 +255,11 @@ public class GameManager {
 			Main.sendMessage(p, Lang.CURRENT_GAME_REMOVED.getMessage(), Main.lang);
 		}
 		
-		Main.sendMessage(Main.cs, Main.codPrefix + "\u00A77Game instance id " + i.getId() + " has been removed!", Main.lang);
+		Main.sendMessage(Main.cs, Main.codPrefix + ChatColor.GRAY + "Game instance id " + i.getId() + " has been removed!", Main.lang);
 
 		UsedMaps.remove(i.getMap());
+
+		RunningGames.remove(i);
 
 		System.gc();
 	}

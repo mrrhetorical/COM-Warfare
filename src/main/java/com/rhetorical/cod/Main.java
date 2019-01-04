@@ -846,7 +846,10 @@ public class Main extends JavaPlugin {
 		List<GameInstance> runningGames = GameManager.RunningGames;
 		for (GameInstance i : runningGames) {
 			if (i != null) {
-				List<Player> pls = i.getPlayers();
+				Player[] pls = new Player[i.getPlayers().size()];
+				for (int k = 0; k < pls.length; k ++) {
+					pls[k] = i.getPlayers().get(k);
+				}
 
 				for (Player p : pls) {
 					i.removePlayer(p);
