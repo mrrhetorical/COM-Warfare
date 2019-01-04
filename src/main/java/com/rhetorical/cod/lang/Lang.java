@@ -139,7 +139,7 @@ public enum Lang {
 	INVENTORY_JOIN_GAME_LORE("&6&lUse the matchmaker to find a match!"),
 	INVENTORY_CREATE_A_CLASS_NAME("&4&lCreate-a-Class"),
 	INVENTORY_CREATE_A_CLASS_LORE("&6Create custom loadouts to use in game!"),
-	INVENTORY_SCORESTREAKS_NAME("&b*lKill streaks"),
+	INVENTORY_SCORESTREAKS_NAME("&b&lKill streaks"),
 	INVENTORY_SCORESTREAKS_LORE("&6Choose which kill streaks you want to use!"),
 	INVENTORY_PRESTIGE_NAME("&6&lPrestige Your Account!"),
 	INVENTORY_PRESTIGE_LORE("&6Prestige your account and unlock special awards!"),
