@@ -2,6 +2,7 @@ package com.rhetorical.cod;
 
 import java.util.HashMap;
 
+import com.rhetorical.cod.lang.Lang;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -89,10 +90,10 @@ public class CreditManager {
 				setCredits(p, getCredits(p) - cost);
 			}
 			saveCredits(p);
-			Main.sendMessage(p, Main.codPrefix + "\u00A7aPurchase successful!", Main.lang);
+			Main.sendMessage(p, Main.codPrefix + Lang.PURCHASE_SUCCESSFUL.getMessage(), Main.lang);
 			return true;
 		} else {
-			Main.sendMessage(p, Main.codPrefix + "\u00A7cInsufficient funds!", Main.lang);
+			Main.sendMessage(p, Main.codPrefix + Lang.INSUFFICIENT_FUNDS.getMessage(), Main.lang);
 			return false;
 		}
 	}

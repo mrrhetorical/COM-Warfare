@@ -72,7 +72,9 @@ public enum Lang {
 	PLAYER_LEAVE_GAME("&7You have left the lobby!"),
 	PLAYER_NOT_IN_GAME("&7You are not in a match!"),
 	RAN_OUT_OF_MAPS("&cCOM-Warfare ran out of maps to use!"),
-	CURRENT_GAME_REMOVED("&cThe current game has been removed!");
+	CURRENT_GAME_REMOVED("&cThe current game has been removed!"),
+	INSUFFICIENT_FUNDS("&cInsufficient funds!"),
+	PURCHASE_SUCCESSFUL("&aPurchase successful!");
 
 
 	private String message;
