@@ -201,7 +201,7 @@ public enum Lang {
 			if (LangFile.getData().contains(m.name())) {
 				m.message = LangFile.getData().getString(m.name());
 			} else {
-				LangFile.getData().set(m.name(), m.getMessage());
+				LangFile.getData().set(m.name(), m.message);
 			}
 		}
 
