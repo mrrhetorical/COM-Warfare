@@ -77,8 +77,12 @@ public enum Lang {
 	PURCHASE_SUCCESSFUL("&aPurchase successful!"),
 	PERK_ONE_MAN_ARMY_FAILED("&cYou moved and couldn't finish switching your class!"),
 	PERK_FINAL_STAND_NOTIFICATION("&fYou are in final stand! Wait 20 seconds to get back up!"),
-	PERK_FINAL_STAND_FINISHED("&fYou are out of final stand!");
-
+	PERK_FINAL_STAND_FINISHED("&fYou are out of final stand!"),
+	ERROR_COULD_NOT_LOAD_KILL_STREAKS("&cCould not load kill streak information for {player}!"),
+	KILL_STREAK_REQUIRED_KILLS("&f&lRequired Kills: &a{kills}"),
+	UAV_NAME("&6&lUAV"),
+	COUNTER_UAV_NAME("&6&lCounter UAV"),
+	NUKE_NAME("&6&lNuke");
 
 	private String message;
 

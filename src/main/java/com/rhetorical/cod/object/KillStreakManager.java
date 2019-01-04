@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import com.rhetorical.cod.lang.Lang;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -34,31 +35,31 @@ public class KillStreakManager {
 	public static void setup() {
 		KillStreakManager.uavItem = new ItemStack(Material.SHEARS);
 		ItemMeta uavMeta = uavItem.getItemMeta();
-		uavMeta.setDisplayName("\u00A76\u00A7lUAV");
+		uavMeta.setDisplayName(Lang.UAV_NAME.getMessage());
 		List<String> uavLore = uavMeta.getLore();
 		if (uavLore == null)
-			uavLore = new ArrayList<String>();
-		uavLore.add("\u00A7f\u00A7lRequired kills: \u00A7a" + 3);
+			uavLore = new ArrayList<>();
+		uavLore.add(Lang.KILL_STREAK_REQUIRED_KILLS.getMessage().replace("{kills}", "3"));
 		uavMeta.setLore(uavLore);
 		uavItem.setItemMeta(uavMeta);
 
 		KillStreakManager.counterUavItem = new ItemStack(Material.SHEARS);
 		ItemMeta counterUavMeta = counterUavItem.getItemMeta();
-		counterUavMeta.setDisplayName("\u00A76\u00A7lCounter UAV");
+		counterUavMeta.setDisplayName(Lang.COUNTER_UAV_NAME.getMessage());
 		List<String> counterUavLore = counterUavMeta.getLore();
 		if (counterUavLore == null)
-			counterUavLore = new ArrayList<String>();
-		counterUavLore.add("\u00A7f\u00A7lRequired kills: \u00A7a" + 4);
+			counterUavLore = new ArrayList<>();
+		counterUavLore.add(Lang.KILL_STREAK_REQUIRED_KILLS.getMessage().replace("{kills}", "4"));
 		counterUavMeta.setLore(counterUavLore);
 		counterUavItem.setItemMeta(counterUavMeta);
 
 		KillStreakManager.nukeItem = new ItemStack(Material.TNT);
 		ItemMeta nukeMeta = nukeItem.getItemMeta();
-		nukeMeta.setDisplayName("\u00A76\u00A7lNuke");
+		nukeMeta.setDisplayName(Lang.NUKE_NAME.getMessage());
 		List<String> nukeLore = nukeMeta.getLore();
 		if (nukeLore == null)
-			nukeLore = new ArrayList<String>();
-		nukeLore.add("\u00A7f\u00A7lRequired kills: \u00A7a" + 25);
+			nukeLore = new ArrayList<>();
+		nukeLore.add(Lang.KILL_STREAK_REQUIRED_KILLS.getMessage().replace("{kills}", "25"));
 		nukeMeta.setLore(nukeLore);
 		nukeItem.setItemMeta(nukeMeta);
 	}
@@ -149,7 +150,7 @@ public class KillStreakManager {
 			try {
 				ks = KillStreak.valueOf(s);
 			} catch (Exception e) {
-				Main.cs.sendMessage(Main.codPrefix + "\u00A7cCould not load killstreak information for " + p.getName());
+				Main.cs.sendMessage(Main.codPrefix + Lang.ERROR_COULD_NOT_LOAD_KILL_STREAKS.getMessage().replace("{player}", p.getName()));
 				continue;
 			}
 
