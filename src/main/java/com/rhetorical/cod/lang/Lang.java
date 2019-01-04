@@ -51,14 +51,28 @@ public enum Lang {
 	RANK_RESET_MESSAGE("&7Your rank has been reset!"),
 	ERROR_SETTING_PLAYER_EXPERIENCE_LEVEL("&cThere was an error setting the player's experience level."),
 	ERROR_READING_PERK_DATA("&cThere was an error reading the perk data from the config. The file may be corrupted!"),
-	ERROR_READING_PLAYER_LOADOUT("&cError loading player's loadout from teh config."),
+	ERROR_READING_PLAYER_LOADOUT("&cError loading player's loadout from the config."),
 	NO_PRIMARY("&cNo Primary"),
 	NO_SECONDARY("&cNo Secondary"),
 	NO_LETHAL("&cNo Lethal"),
 	NO_TACTICAL("&cNo Tactical"),
 	KNIFE_LORE("&6A knife that can kill players in one hit."),
 	CLASS_PREFIX("Class"),
-	CHAT_FORMAT("{team-color}{player}&r&f» &7{message}");
+	CHAT_FORMAT("{team-color}{player}&r&f» &7{message}"),
+	NO_LOBBY_SET("&cNo lobby location set!"),
+	COULD_NOT_CREATE_MATCH_BECAUSE_NO_LOBBY("&7Could not create a match because there is no lobby location!"),
+	ALREADY_IN_GAME("&7You are already in a game!"),
+	SEARCHING_FOR_MATCH("&7Searching for match . . ."),
+	COULD_NOT_FIND_MATCH("&7Could not find a match . . ."),
+	CREATING_MATCH("&7Creating match . . ."),
+	COULD_NOT_CREATE_MATCH_BECAUSE_NO_MAPS("&cCould not create match because there are not enough maps!"),
+	CREATED_LOBBY("&7Created game lobby!"),
+	FOUND_MATCH("&7Found match!"),
+	PLAYER_JOINED_LOBBY("&7{player} has joined your lobby!"),
+	PLAYER_LEAVE_GAME("&7You have left the lobby!"),
+	PLAYER_NOT_IN_GAME("&7You are not in a match!"),
+	RAN_OUT_OF_MAPS("&cCOM-Warfare ran out of maps to use!"),
+	CURRENT_GAME_REMOVED("&cThe current game has been removed!");
 
 
 	private String message;

@@ -2,6 +2,7 @@ package com.rhetorical.cod;
 
 import java.util.*;
 
+import com.rhetorical.cod.lang.Lang;
 import com.rhetorical.cod.object.*;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -97,22 +98,22 @@ public class GameManager {
 			Main.loadManager.load(p);
 			Main.invManager.setupPlayerSelectionInventories(p);
 		} catch(Exception e) {
-			Main.sendMessage(Main.cs, Main.codPrefix + "\u00A7cCouldn't load loadouts from " + p.getDisplayName() + "!", Main.lang);
+			Main.sendMessage(Main.cs, Main.codPrefix + Lang.ERROR_READING_PLAYER_LOADOUT.getMessage(), Main.lang);
 		}
 		
 		Main.progressionManager.loadData(p);
 		Main.progressionManager.saveData(p);
 		
 		if (Main.lobbyLoc == null) {
-			Main.sendMessage(p, Main.codPrefix + "\u00A7cNo lobby set! You cannot start a game without a lobby location set!", Main.lang);
-			Main.sendMessage(p, Main.codPrefix + "\u00A77Could not create a match because there is no lobby location!", Main.lang);
+			Main.sendMessage(p, Main.codPrefix + Lang.NO_LOBBY_SET.getMessage(), Main.lang);
+			Main.sendMessage(p, Main.codPrefix + Lang.COULD_NOT_CREATE_MATCH_BECAUSE_NO_LOBBY.getMessage(), Main.lang);
 			return false;
 		}
 		
 
 		for (GameInstance i : RunningGames) {
 			if (i.getPlayers().contains(p)) {
-				Main.sendMessage(p, Main.codPrefix + "\u00A77You are already in a game!", Main.lang);
+				Main.sendMessage(p, Main.codPrefix + Lang.ALREADY_IN_GAME.getMessage(), Main.lang);
 				return false;
 			}
 		}
@@ -121,7 +122,7 @@ public class GameManager {
 
 		GameInstance newGame;
 
-		Main.sendMessage(p, Main.codPrefix + "\u00A77Searching for match. . .", Main.lang);
+		Main.sendMessage(p, Main.codPrefix + Lang.SEARCHING_FOR_MATCH.getMessage(), Main.lang);
 		for (GameInstance i : RunningGames) {
 			if (i.getPlayers().size() < 12) {
 				if (i.getPlayers().size() == 0) {
@@ -136,12 +137,12 @@ public class GameManager {
 
 		if (possibleMatches.size() == 0) {
 
-			Main.sendMessage(p, Main.codPrefix + "\u00A77Could not find a match. . .", Main.lang);
-			Main.sendMessage(p, Main.codPrefix + "\u00A77Creating match. . .", Main.lang);
+			Main.sendMessage(p, Main.codPrefix + Lang.COULD_NOT_FIND_MATCH.getMessage(), Main.lang);
+			Main.sendMessage(p, Main.codPrefix + Lang.CREATING_MATCH.getMessage(), Main.lang);
 
 			CodMap map = pickRandomMap();
 			if (map == null) {
-				Main.sendMessage(p, Main.codPrefix + "\u00A77Could not create a match because there are not enough maps!", Main.lang);
+				Main.sendMessage(p, Main.codPrefix + Lang.COULD_NOT_CREATE_MATCH_BECAUSE_NO_MAPS.getMessage(), Main.lang);
 				return false;
 			}
 
@@ -153,15 +154,15 @@ public class GameManager {
 
 			newGame.addPlayer(p);
 
-			Main.sendMessage(p, Main.codPrefix + "\u00A77Created Lobby!", Main.lang);
+			Main.sendMessage(p, Main.codPrefix + Lang.CREATED_LOBBY.getMessage(), Main.lang);
 			return true;
 
 		}
 
 		possibleMatches.lastEntry().getValue().addPlayer(p);
-		Main.sendMessage(p, Main.codPrefix + "\u00A77Found Match!", Main.lang);
+		Main.sendMessage(p, Main.codPrefix + Lang.FOUND_MATCH.getMessage(), Main.lang);
 		for (Player inGame : possibleMatches.lastEntry().getValue().getPlayers()) {
-			Main.sendMessage(inGame, Main.codPrefix + "\u00A77" + p.getName() + "\u00A77 has joined your lobby!", Main.lang);
+			Main.sendMessage(inGame, Main.codPrefix + Lang.PLAYER_JOINED_LOBBY.getMessage().replace("{player}", p.getDisplayName()), Main.lang);
 		}
 
 		return true;
@@ -171,12 +172,12 @@ public class GameManager {
 
 	public static void leaveMatch(Player p) {
 		if (!isInMatch(p) || getMatchWhichContains(p) == null) {
-			Main.sendMessage(p, Main.codPrefix + "\u00A77You aren't in a game!", Main.lang);
+			Main.sendMessage(p, Main.codPrefix + Lang.PLAYER_NOT_IN_GAME.getMessage(), Main.lang);
 			return;
 		}
 
 		Objects.requireNonNull(getMatchWhichContains(p)).removePlayer(p);
-		Main.sendMessage(p, Main.codPrefix + "\u00A77You left the lobby!", Main.lang);
+		Main.sendMessage(p, Main.codPrefix + Lang.PLAYER_LEAVE_GAME.getMessage(), Main.lang);
 	}
 
 	public static boolean isInMatch(Player p) {
@@ -224,7 +225,7 @@ public class GameManager {
 			}
 		}
 
-		Main.sendMessage(Main.cs, "\u00A7cCOM-Warfare ran out of maps! (Maybe consider adding more maps?)", Main.lang);
+		Main.sendMessage(Main.cs, Lang.RAN_OUT_OF_MAPS.getMessage(), Main.lang);
 
 		return null;
 	}
@@ -250,7 +251,7 @@ public class GameManager {
 	public static void removeInstance(GameInstance i) {
 
 		for (Player p : i.getPlayers()) {
-			Main.sendMessage(p, "\u00A7cThe current game instance has been removed!", Main.lang);
+			Main.sendMessage(p, Lang.CURRENT_GAME_REMOVED.getMessage(), Main.lang);
 		}
 		
 		Main.sendMessage(Main.cs, Main.codPrefix + "\u00A77Game instance id " + i.getId() + " has been removed!", Main.lang);
