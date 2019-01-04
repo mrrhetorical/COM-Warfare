@@ -57,7 +57,8 @@ public enum Lang {
 	NO_LETHAL("&cNo Lethal"),
 	NO_TACTICAL("&cNo Tactical"),
 	KNIFE_LORE("&6A knife that can kill players in one hit."),
-	CLASS_PREFIX("Class");
+	CLASS_PREFIX("Class"),
+	CHAT_FORMAT("{team-color}{player}&r&f» &7{message}");
 
 
 	private String message;

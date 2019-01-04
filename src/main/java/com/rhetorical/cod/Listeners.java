@@ -1,7 +1,9 @@
 package com.rhetorical.cod;
 
+import com.rhetorical.cod.lang.Lang;
 import com.rhetorical.cod.object.GameState;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -83,15 +85,22 @@ public class Listeners implements Listener {
 
 					GameInstance i = GameManager.getMatchWhichContains(sender);
 
-					if (i.isOnBlueTeam(sender)) {
-						receiver.sendMessage("\u00A79" + sender.getDisplayName() + " \u00A7r\u00A7f»\u00A7r \u00A77" + message);
+					ChatColor tColor = ChatColor.GRAY;
+
+					if (Objects.requireNonNull(i).isOnBlueTeam(sender)) {
+						tColor = ChatColor.BLUE;
 					} else if (i.isOnRedTeam(sender)) {
-						receiver.sendMessage("\u00A7c" + sender.getDisplayName() + " \u00A7r\u00A7f»\u00A7r \u00A77" + message);
+						tColor = ChatColor.RED;
 					} else if (i.isOnPinkTeam(sender)) {
-						receiver.sendMessage("\u00A7d" + sender.getDisplayName() + " \u00A7r\u00A7f»\u00A7r \u00A77" + message);
-					} else {
-						receiver.sendMessage("\u00A77" + sender.getDisplayName() + " \u00A7r\u00A7f»\u00A7r \u00A77" + message);
+						tColor = ChatColor.LIGHT_PURPLE;
 					}
+
+					String msg = Lang.CHAT_FORMAT.getMessage();
+					msg = msg.replace("{team-color}", tColor + "");
+					msg = msg.replace("{player}", sender.getDisplayName());
+					msg = msg.replace("{message}", message);
+
+					receiver.sendMessage(msg);
 				}
 			} else {
 				return;
