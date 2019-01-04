@@ -2,6 +2,7 @@ package com.rhetorical.cod;
 
 import java.util.ArrayList;
 
+import com.rhetorical.cod.lang.Lang;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
@@ -11,10 +12,6 @@ import com.rhetorical.cod.object.PerkSlot;
 
 public class PerkManager {
 
-	// private HashMap<Perk, Integer> perkCost = new HashMap<Perk, Integer>();
-	// private HashMap<Perk, PerkSlot> perkSlot = new HashMap<Perk, PerkSlot>();
-	// private HashMap<Perk, ItemStack> perkItem = new HashMap<Perk, ItemStack>();
-	// private HashMap<Perk, ArrayList<String>> perkLore = new HashMap<Perk, ArrayList<String>>();
 	private ArrayList<CodPerk> availablePerks = new ArrayList<CodPerk>();
 	private CodPerk defaultOne;
 	private CodPerk defaultTwo;
@@ -30,7 +27,7 @@ public class PerkManager {
 			try {
 				perk = Perk.valueOf(Main.getPlugin().getConfig().getString("Perks." + i + ".name"));
 			} catch (Exception e) {
-				Main.sendMessage(Main.cs, Main.codPrefix + "\u00A7cThere was an error reading the perk data from the config. The file may be corrupted!", Main.lang);
+				Main.sendMessage(Main.cs, Main.codPrefix + Lang.ERROR_READING_PERK_DATA.getMessage(), Main.lang);
 				continue;
 			}
 
@@ -51,7 +48,7 @@ public class PerkManager {
 				perkSlot = PerkSlot.THREE;
 				break;
 			default:
-				Main.sendMessage(Main.cs, Main.codPrefix + "\u00A7cThere was an error reading the perk slot data from the config. The file may be corrupted!", Main.lang);
+				Main.sendMessage(Main.cs, Main.codPrefix + Lang.ERROR_READING_PERK_DATA.getMessage(), Main.lang);
 				continue;
 			}
 
@@ -116,7 +113,7 @@ public class PerkManager {
 				s = 3;
 				break;
 			default:
-				Main.sendMessage(Main.cs, Main.codPrefix + "\u00A7cThere was an error loading the perk slot data from the config.yml! The file may be corrupted!", Main.lang);
+				Main.sendMessage(Main.cs, Main.codPrefix + Lang.ERROR_READING_PERK_DATA.getMessage(), Main.lang);
 				return null;
 		}
 

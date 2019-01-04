@@ -49,7 +49,8 @@ public enum Lang {
 	RANK_UP_PRESTIGE_MESSAGE("&7Congratulations! You just ranked up to prestige level &e{level}&r&7!"),
 	RANK_UP_READY_TO_PRESTIGE("&7Congratulations! You have just reached the highest rank! Visit the prestige menu to get your reward!"),
 	RANK_RESET_MESSAGE("&7Your rank has been reset!"),
-	ERROR_SETTING_PLAYER_EXPERIENCE_LEVEL("&cThere was an error setting the player's experience level.");
+	ERROR_SETTING_PLAYER_EXPERIENCE_LEVEL("&cThere was an error setting the player's experience level."),
+	ERROR_READING_PERK_DATA("&cThere was an error reading the perk data from the config. The file may be corrupted!");
 
 
 	private String message;
