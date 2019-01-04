@@ -44,7 +44,13 @@ public enum Lang {
 	WEAPON_CREATED_SUCCESS("&aSuccessfully created weapon {weapon-name} as a {weapon-type} grenade!"),
 	GUN_CREATED_SUCCESS("&aSuccessfully created gun {gun-name} as a {gun-type}!"),
 	WEAPON_UNLOCKED("&aYou just unlocked the &6{gun-name}! \n &aEquip it after the match!"),
-	WEAPON_PURCHASE_UNLOCKED("&The &6{gun-name} is now available for purchase!");
+	WEAPON_PURCHASE_UNLOCKED("&The &6{gun-name} is now available for purchase!"),
+	RANK_UP_MESSAGE("&7Congratulations! You just ranked up to level &e{level}&r&7!"),
+	RANK_UP_PRESTIGE_MESSAGE("&7Congratulations! You just ranked up to prestige level &e{level}&r&7!"),
+	RANK_UP_READY_TO_PRESTIGE("&7Congratulations! You have just reached the highest rank! Visit the prestige menu to get your reward!"),
+	RANK_RESET_MESSAGE("&7Your rank has been reset!"),
+	ERROR_SETTING_PLAYER_EXPERIENCE_LEVEL("&cThere was an error setting the player's experience level.");
+
 
 	private String message;
 
