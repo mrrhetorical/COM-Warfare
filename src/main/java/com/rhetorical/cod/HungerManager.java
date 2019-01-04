@@ -38,12 +38,10 @@ public class HungerManager {
 				if (p.isSprinting()) {
 					if (p.getFoodLevel() > 6) {
 						p.setFoodLevel(p.getFoodLevel() - 2);
-						System.out.println("Health modified");
 					}
 				} else {
 					if (p.getFoodLevel() < 20) {
 						p.setFoodLevel(p.getFoodLevel() + 2);
-						System.out.println("Health modified");
 					}
 				}
 			}
