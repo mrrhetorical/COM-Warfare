@@ -458,7 +458,7 @@ public class InventoryManager implements Listener {
 				continue;
 
 			if (grenade.getType() == UnlockType.BOTH || grenade.getType() == UnlockType.CREDITS) {
-				if ((grenade.getType() == UnlockType.CREDITS || Main.progressionManager.getLevel(p) >= grenade.getLevelUnlock()) && !Main.shopManager.getPurchasedGuns().get(p).contains(grenade)) {
+				if ((grenade.getType() == UnlockType.CREDITS || Main.progressionManager.getLevel(p) >= grenade.getLevelUnlock()) && !Main.shopManager.getPurchasedWeapons().get(p).contains(grenade)) {
 
 					ItemStack item = grenade.getWeapon();
 
