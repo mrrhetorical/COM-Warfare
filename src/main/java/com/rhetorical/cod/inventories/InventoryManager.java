@@ -2,6 +2,7 @@ package com.rhetorical.cod.inventories;
 
 import java.util.*;
 
+import com.rhetorical.cod.lang.Lang;
 import com.rhetorical.cod.object.*;
 import org.bukkit.ChatColor;
 import org.bukkit.Bukkit;
@@ -77,9 +78,9 @@ public class InventoryManager implements Listener {
 
 	public InventoryManager() {
 
-		mainInventory = Bukkit.createInventory(null, 27, "COM-Warfare - Menu");
-		mainShopInventory = Bukkit.createInventory(null, 9, "COM-Warfare - Shop");
-		leaderboardInventory = Bukkit.createInventory(null, 36, "Leaderboard");
+		mainInventory = Bukkit.createInventory(null, 27, Lang.INVENTORY_MAIN_MENU_TITLE.getMessage());
+		mainShopInventory = Bukkit.createInventory(null, 9, Lang.INVENTORY_SHOP_MENU_TITLE.getMessage());
+		leaderboardInventory = Bukkit.createInventory(null, 36, Lang.INVENTORY_LEADERBOARD_MENU_TITLE.getMessage());
 
 		setupStaticItems();
 		setupMainInventories();
@@ -89,41 +90,37 @@ public class InventoryManager implements Listener {
 
 	private void setupStaticItems() {
 		ItemMeta closeInvMeta = closeInv.getItemMeta();
-		closeInvMeta.setDisplayName(ChatColor.RED + "" +  ChatColor.BOLD + "Close");
+		closeInvMeta.setDisplayName(Lang.INVENTORY_CLOSE_BUTTON_NAME.getMessage());
 		closeInv.setItemMeta(closeInvMeta);
 
 		ItemMeta leaveMeta = leaveItem.getItemMeta();
-		leaveMeta.setDisplayName("" + ChatColor.RED + ChatColor.BOLD + "Leave Game");
+		leaveMeta.setDisplayName(Lang.INVENTORY_LEAVE_GAME_NAME.getMessage());
 		List<String> leaveLore = new ArrayList<>();
-		leaveLore.add(ChatColor.GOLD + "Right or left click this");
-		leaveLore.add(ChatColor.GOLD + "item to leave the lobby.");
+		leaveLore.add(Lang.INVENTORY_LEAVE_GAME_LORE.getMessage());
 		leaveMeta.setLore(leaveLore);
 		leaveItem.setItemMeta(leaveMeta);
 
 		ItemMeta codMeta = codItem.getItemMeta();
-		codMeta.setDisplayName("" + ChatColor.GOLD + ChatColor.BOLD + "Open Menu");
+		codMeta.setDisplayName(Lang.INVENTORY_OPEN_MENU_NAME.getMessage());
 		List<String> codLore = new ArrayList<>();
-		codLore.add(ChatColor.WHITE + "Right or left click this");
-		codLore.add(ChatColor.WHITE + "item to open the cod menu.");
+		codLore.add(Lang.INVENTORY_OPEN_MENU_LORE.getMessage());
 		codMeta.setLore(codLore);
 		codItem.setItemMeta(codMeta);
 
 		{
 			ItemMeta voteMeta = voteItemA.getItemMeta();
-			voteMeta.setDisplayName("" + ChatColor.GOLD + ChatColor.BOLD + "Vote for Map 1");
+			voteMeta.setDisplayName(Lang.INVENTORY_VOTE_MAP_ONE_NAME.getMessage());
 			List<String> voteLore = new ArrayList<>();
-			codLore.add(ChatColor.WHITE + "Right or left click this");
-			codLore.add(ChatColor.WHITE + "item to vote for map 1.");
+			codLore.add(Lang.INVENTORY_VOTE_MAP_ONE_LORE.getMessage());
 			voteMeta.setLore(voteLore);
 			voteItemA.setItemMeta(voteMeta);
 		}
 
 		{
 			ItemMeta voteMeta = voteItemB.getItemMeta();
-			voteMeta.setDisplayName("" + ChatColor.GOLD + ChatColor.BOLD + "Vote for Map 2");
+			voteMeta.setDisplayName(Lang.INVENTORY_VOTE_MAP_TWO_NAME.getMessage());
 			List<String> voteLore = new ArrayList<>();
-			codLore.add(ChatColor.WHITE + "Right or left click this");
-			codLore.add(ChatColor.WHITE + "item to vote for map 2.");
+			codLore.add(Lang.INVENTORY_VOTE_MAP_TWO_LORE.getMessage());
 			voteMeta.setLore(voteLore);
 			voteItemB.setItemMeta(voteMeta);
 		}
@@ -133,7 +130,7 @@ public class InventoryManager implements Listener {
 
 	public void setupBackInvButton() {
 		ItemMeta backInvMeta = backInv.getItemMeta();
-		backInvMeta.setDisplayName("\u00A7c\u00A7lBack");
+		backInvMeta.setDisplayName(Lang.INVENTORY_BACK_BUTTON_NAME.getMessage());
 		backInv.setItemMeta(backInvMeta);
 	}
 
@@ -142,10 +139,9 @@ public class InventoryManager implements Listener {
 	private void setupMainInventories() {
 		joinGame = new ItemStack(Material.EMERALD);
 		ItemMeta joinGameMeta = joinGame.getItemMeta();
-		joinGameMeta.setDisplayName("\u00A7a\u00A7lFind Match");
+		joinGameMeta.setDisplayName(Lang.INVENTORY_JOIN_GAME_NAME.getMessage());
 		ArrayList<String> joinGameLore = new ArrayList<>();
-		joinGameLore.add("\u00A76Utilize the matchmaker to find a match ");
-		joinGameLore.add("\u00A76with the best match for you!");
+		joinGameLore.add(Lang.INVENTORY_JOIN_GAME_LORE.getMessage());
 		joinGameMeta.setLore(joinGameLore);
 		joinGame.setItemMeta(joinGameMeta);
 
@@ -153,10 +149,9 @@ public class InventoryManager implements Listener {
 
 		createClass = new ItemStack(Material.CHEST);
 		ItemMeta createClassMeta = createClass.getItemMeta();
-		createClassMeta.setDisplayName("\u00A74\u00A7lCreate-a-Class");
+		createClassMeta.setDisplayName(Lang.INVENTORY_CREATE_A_CLASS_NAME.getMessage());
 		ArrayList<String> createClassLore = new ArrayList<>();
-		createClassLore.add("\u00A76Create custom loadouts for you to ");
-		createClassLore.add("\u00A76use in game!");
+		createClassLore.add(Lang.INVENTORY_CREATE_A_CLASS_LORE.getMessage());
 		createClassMeta.setLore(createClassLore);
 		createClass.setItemMeta(createClassMeta);
 
@@ -164,10 +159,9 @@ public class InventoryManager implements Listener {
 
 		scoreStreaks = new ItemStack(Material.DIAMOND);
 		ItemMeta scoreStreakMeta = scoreStreaks.getItemMeta();
-		scoreStreakMeta.setDisplayName("\u00A7b\u00A7lScorestreaks");
+		scoreStreakMeta.setDisplayName(Lang.INVENTORY_SCORESTREAKS_NAME.getMessage());
 		ArrayList<String> scoreStreakLore = new ArrayList<>();
-		scoreStreakLore.add("\u00A76Choose which scorestreaks you want");
-		scoreStreakLore.add("\u00A76to use during a match!");
+		scoreStreakLore.add(Lang.INVENTORY_SCORESTREAKS_LORE.getMessage());
 		scoreStreakMeta.setLore(scoreStreakLore);
 		scoreStreaks.setItemMeta(scoreStreakMeta);
 
@@ -175,10 +169,9 @@ public class InventoryManager implements Listener {
 
 		ItemStack prestige = new ItemStack(Material.ANVIL);
 		ItemMeta prestigeMeta = prestige.getItemMeta();
-		prestigeMeta.setDisplayName("\u00A76\u00A7lPrestige Options");
+		prestigeMeta.setDisplayName(Lang.INVENTORY_PRESTIGE_NAME.getMessage());
 		ArrayList<String> prestigeLore = new ArrayList<>();
-		prestigeLore.add("\u00A76Prestige your account and unlock ");
-		prestigeLore.add("\u00A76special awards!");
+		prestigeLore.add(Lang.INVENTORY_PRESTIGE_LORE.getMessage());
 		prestigeMeta.setLore(prestigeLore);
 		prestige.setItemMeta(prestigeMeta);
 
@@ -186,12 +179,9 @@ public class InventoryManager implements Listener {
 
 		ItemStack assignments = new ItemStack(Material.GOLD_INGOT);
 		ItemMeta assignmentMeta = assignments.getItemMeta();
-		assignmentMeta.setDisplayName("\u00A73\u00A7lAssignments & Contracts");
+		assignmentMeta.setDisplayName(Lang.INVENTORY_ASSIGNMENTS_NAME.getMessage());
 		ArrayList<String> assignmentLore = new ArrayList<>();
-		assignmentLore.add("\u00A76Complete assignments and buy ");
-		assignmentLore.add("\u00A76contracts to get extra rewards ");
-		assignmentLore.add("\u00A76for playing the game and completing ");
-		assignmentLore.add("\u00A76challenges!");
+		assignmentLore.add(Lang.INVENTORY_ASSIGNMENTS_LORE.getMessage());
 		assignmentMeta.setLore(assignmentLore);
 		assignments.setItemMeta(assignmentMeta);
 
@@ -199,11 +189,9 @@ public class InventoryManager implements Listener {
 
 		combatRecord = new ItemStack(Material.PAPER);
 		ItemMeta combatRecordMeta = combatRecord.getItemMeta();
-		combatRecordMeta.setDisplayName("\u00A79\u00A7lCombat Record");
+		combatRecordMeta.setDisplayName(Lang.INVENTORY_RECORD_NAME.getMessage());
 		ArrayList<String> combatRecordLore = new ArrayList<>();
-		combatRecordLore.add("\u00A76Check your combat record and see what ");
-		combatRecordLore.add("\u00A76weapons and killstreaks you've gotten  ");
-		combatRecordLore.add("\u00A76the most kills with!");
+		combatRecordLore.add(Lang.INVENTORY_RECORD_LORE.getMessage());
 		combatRecordMeta.setLore(combatRecordLore);
 		combatRecord.setItemMeta(combatRecordMeta);
 
@@ -211,10 +199,9 @@ public class InventoryManager implements Listener {
 
 		leaderboard = new ItemStack(Material.PAPER);
 		ItemMeta leaderboardMeta = leaderboard.getItemMeta();
-		leaderboardMeta.setDisplayName("\u00A72\u00A7lLeaderboard");
+		leaderboardMeta.setDisplayName(Lang.INVENTORY_BOARDS_NAME.getMessage());
 		ArrayList<String> leaderboardLore = new ArrayList<>();
-		leaderboardLore.add("\u00A76Compare where your stats are compared ");
-		leaderboardLore.add("\u00A76to everyone else's!");
+		leaderboardLore.add(Lang.INVENTORY_BOARDS_LORE.getMessage());
 		leaderboardMeta.setLore(leaderboardLore);
 		leaderboard.setItemMeta(leaderboardMeta);
 
@@ -224,9 +211,9 @@ public class InventoryManager implements Listener {
 
 		ItemStack shop = shopItem;
 		ItemMeta shopMeta = shop.getItemMeta();
-		shopMeta.setDisplayName("\u00A7a\u00A7lShop");
+		shopMeta.setDisplayName(Lang.INVENTORY_SHOP_NAME.getMessage());
 		ArrayList<String> shopLore = new ArrayList<>();
-		shopLore.add("\u00A76Buy items here at the shop!");
+		shopLore.add(Lang.INVENTORY_SHOP_LORE.getMessage());
 		shopMeta.setLore(shopLore);
 		shop.setItemMeta(shopMeta);
 
@@ -241,9 +228,9 @@ public class InventoryManager implements Listener {
 			gunItem = new ItemStack(Material.valueOf("WOOD_HOE"));
 		}
 		ItemMeta gunMeta = gunItem.getItemMeta();
-		gunMeta.setDisplayName("\u00A79Gun Shop");
+		gunMeta.setDisplayName(Lang.INVENTORY_GUN_SHOP_NAME.getMessage());
 		ArrayList<String> gunLore = new ArrayList<>();
-		gunLore.add("\u00A76Buy guns that you have unlocked here!");
+		gunLore.add(Lang.INVENTORY_GUN_SHOP_LORE.getMessage());
 		gunMeta.setLore(gunLore);
 		gunItem.setItemMeta(gunMeta);
 
@@ -251,9 +238,9 @@ public class InventoryManager implements Listener {
 
 		ItemStack grenadeItem = new ItemStack(Material.SLIME_BALL);
 		ItemMeta grenadeMeta = grenadeItem.getItemMeta();
-		grenadeMeta.setDisplayName("\u00A7cGrenade Shop");
+		grenadeMeta.setDisplayName(Lang.INVENTORY_GRENADE_SHOP_NAME.getMessage());
 		ArrayList<String> grenadeLore = new ArrayList<>();
-		grenadeLore.add("\u00A76Buy grenades that you have unlocked here!");
+		grenadeLore.add(Lang.INVENTORY_GRENADE_SHOP_LORE.getMessage());
 		gunMeta.setLore(grenadeLore);
 		grenadeItem.setItemMeta(grenadeMeta);
 
@@ -261,9 +248,9 @@ public class InventoryManager implements Listener {
 
 		ItemStack perkItem = new ItemStack(Material.APPLE);
 		ItemMeta perkMeta = perkItem.getItemMeta();
-		perkMeta.setDisplayName("\u00A7aPerk Shop");
+		perkMeta.setDisplayName(Lang.INVENTORY_PERK_SHOP_NAME.getMessage());
 		ArrayList<String> perkLore = new ArrayList<>();
-		perkLore.add("\u00A76Buy perks that you have unlocked here!");
+		perkLore.add(Lang.INVENTORY_PERK_SHOP_LORE.getMessage());
 		perkMeta.setLore(perkLore);
 		perkItem.setItemMeta(perkMeta);
 
@@ -281,7 +268,7 @@ public class InventoryManager implements Listener {
 
 		Main.shopManager.loadPurchaseData(p);
 
-		Inventory customClassInventory = Bukkit.createInventory(p, 9 * Main.loadManager.getAllowedClasses(p), "Create-a-Class");
+		Inventory customClassInventory = Bukkit.createInventory(p, 9 * Main.loadManager.getAllowedClasses(p), Lang.INVENTORY_CREATE_A_CLASS_NAME.getMessage());
 
 		int line;
 
@@ -299,62 +286,57 @@ public class InventoryManager implements Listener {
 			ItemMeta headerMeta = header.getItemMeta();
 			headerMeta.setDisplayName(loadout.getName());
 			ArrayList<String> headerLore = new ArrayList<>();
-			headerLore.add("\u00A76Edit the class to the right.");
+			headerLore.add(Lang.INVENTORY_LOADOUT_HEADER_LORE.getMessage());
 			headerMeta.setLore(headerLore);
 			header.setItemMeta(headerMeta);
 
 			ItemStack primary = loadout.getPrimary().getGun();
 			ItemMeta primaryMeta = primary.getItemMeta();
-			primaryMeta.setDisplayName("\u00A76Primary Weapon\u00A7f: \u00A7r\u00A7f" + loadout.getPrimary().getName());
+			primaryMeta.setDisplayName(Lang.INVENTORY_PRIMARY_WEAPON_NAME.getMessage().replace("{gun}", loadout.getPrimary().getName()));
 			ArrayList<String> primaryLore = new ArrayList<>();
-			primaryLore.add("\u00A76This is your primary weapon. During games,");
-			primaryLore.add("\u00A76this should be your go-to gun.");
+			primaryLore.add(Lang.INVENTORY_PRIMARY_WEAPON_LORE.getMessage());
 			primaryMeta.setLore(primaryLore);
 			primary.setItemMeta(primaryMeta);
 
 			ItemStack secondary = loadout.getSecondary().getGun();
 			ItemMeta secondaryMeta = secondary.getItemMeta();
-			secondaryMeta.setDisplayName("\u00A76Secondary Weapon\u00A7f: \u00A7r\u00A7f" + loadout.getSecondary().getName());
+			secondaryMeta.setDisplayName(Lang.INVENTORY_SECONDARY_WEAPON_NAME.getMessage().replace("{gun}", loadout.getSecondary().getName()));
 			ArrayList<String> secondaryLore = new ArrayList<>();
-			secondaryLore.add("\u00A76This is your secondary weapon. During games,");
-			secondaryLore.add("\u00A76this should be used as a backup weapon.");
+			secondaryLore.add(Lang.INVENTORY_SECONDARY_WEAPON_LORE.getMessage());
 			secondaryMeta.setLore(secondaryLore);
 			secondary.setItemMeta(secondaryMeta);
 
 			ItemStack lethal = loadout.getLethal().getWeapon();
 			ItemMeta lethalMeta = lethal.getItemMeta();
-			lethalMeta.setDisplayName("\u00A76Lethal Grenade\u00A7f: \u00A7r\u00A7f" + loadout.getLethal().getName());
+			lethalMeta.setDisplayName(Lang.INVENTORY_LETHAL_WEAPON_NAME.getMessage().replace("{gun}", loadout.getLethal().getName()));
 			ArrayList<String> lethalLore = new ArrayList<>();
-			lethalLore.add("\u00A76This is your lethal grenade. Use it");
-			lethalLore.add("\u00A76during games to kill players.");
+			lethalLore.add(Lang.INVENTORY_LETHAL_WEAPON_LORE.getMessage());
 			lethalMeta.setLore(lethalLore);
 			lethal.setItemMeta(lethalMeta);
 
 			ItemStack tactical = loadout.getTactical().getWeapon();
 			ItemMeta tacticalMeta = tactical.getItemMeta();
-			tacticalMeta.setDisplayName("\u00A76Tactical Grenade\u00A7f: \u00A7r\u00A7f" + loadout.getTactical().getName());
+			tacticalMeta.setDisplayName(Lang.INVENTORY_TACTICAL_WEAPON_NAME.getMessage().replace("{gun}", loadout.getTactical().getName()));
 			ArrayList<String> tacticalLore = new ArrayList<>();
-			tacticalLore.add("\u00A76This is your tactical grenade. Use it");
-			tacticalLore.add("\u00A76to disorient other players and use");
-			tacticalLore.add("\u00A76it to gain a tactical advantage over players.");
+			tacticalLore.add(Lang.INVENTORY_TACTICAL_WEAPON_LORE.getMessage());
 			tacticalMeta.setLore(tacticalLore);
 			tactical.setItemMeta(tacticalMeta);
 
 			ItemStack perkOne = loadout.getPerk1().getItem();
 			ItemMeta perkOneMeta = perkOne.getItemMeta();
-			perkOneMeta.setDisplayName("\u00A76Perk 1\u00A7f: \u00A7r\u00A7f" + loadout.getPerk1().getPerk().getName());
+			perkOneMeta.setDisplayName(Lang.INVENTORY_PERK_NAME.getMessage().replace("{i}", "1").replace("{perk}", loadout.getPerk1().getPerk().getName()));
 			perkOneMeta.setLore(loadout.getPerk1().getLore());
 			perkOne.setItemMeta(perkOneMeta);
 
 			ItemStack perkTwo = loadout.getPerk2().getItem();
 			ItemMeta perkTwoMeta = perkTwo.getItemMeta();
-			perkTwoMeta.setDisplayName("\u00A76Perk 2\u00A7f: \u00A7r\u00A7f" + loadout.getPerk2().getPerk().getName());
+			perkTwoMeta.setDisplayName(Lang.INVENTORY_PERK_NAME.getMessage().replace("{i}", "2").replace("{perk}", loadout.getPerk2().getPerk().getName()));
 			perkTwoMeta.setLore(loadout.getPerk2().getLore());
 			perkTwo.setItemMeta(perkTwoMeta);
 
 			ItemStack perkThree = loadout.getPerk3().getItem();
 			ItemMeta perkThreeMeta = perkThree.getItemMeta();
-			perkThreeMeta.setDisplayName("\u00A76Perk 3\u00A7f: \u00A7r\u00A7f" + loadout.getPerk3().getPerk().getName());
+			perkThreeMeta.setDisplayName(Lang.INVENTORY_PERK_NAME.getMessage().replace("{i}", "3").replace("{perk}", loadout.getPerk3().getPerk().getName()));
 			perkThreeMeta.setLore(loadout.getPerk3().getLore());
 			perkThree.setItemMeta(perkThreeMeta);
 
@@ -437,9 +419,9 @@ public class InventoryManager implements Listener {
 	}
 
 	private void setupShopInventories(Player p) {
-		Inventory gunShop = Bukkit.createInventory(p, 36, "Gun Shop");
-		Inventory weaponShop = Bukkit.createInventory(p, 36, "Grenade Shop");
-		Inventory perkShop = Bukkit.createInventory(p, 36, "Perk Shop");
+		Inventory gunShop = Bukkit.createInventory(p, 36, Lang.INVENTORY_GUN_SHOP_NAME.getMessage());
+		Inventory weaponShop = Bukkit.createInventory(p, 36, Lang.INVENTORY_GRENADE_SHOP_NAME.getMessage());
+		Inventory perkShop = Bukkit.createInventory(p, 36, Lang.INVENTORY_PERK_SHOP_NAME.getMessage());
 
 		ArrayList<CodGun> guns = Main.shopManager.getPrimaryGuns();
 		guns.addAll(Main.shopManager.getSecondaryGuns());
@@ -454,7 +436,7 @@ public class InventoryManager implements Listener {
 
 					ArrayList<String> lore = new ArrayList<>();
 
-					lore.add("\u00A76Cost: " + gun.getCreditUnlock());
+					lore.add(Lang.SHOP_COST + ": " + gun.getCreditUnlock());
 
 					gunMeta.setLore(lore);
 
@@ -484,7 +466,7 @@ public class InventoryManager implements Listener {
 
 					ArrayList<String> lore = new ArrayList<>();
 
-					lore.add("\u00A76Cost: " + grenade.getCreditUnlock());
+					lore.add(Lang.SHOP_COST.getMessage() + ": " + grenade.getCreditUnlock());
 
 					gunMeta.setLore(lore);
 
@@ -514,8 +496,8 @@ public class InventoryManager implements Listener {
 					perkMeta.setLore(new ArrayList<>());
 				}
 				ArrayList<String> lore = (ArrayList<String>) perkMeta.getLore();
-				lore.add(ChatColor.GOLD + "Cost: " + perk.getCost());
-				lore.add(ChatColor.GOLD + "Slot: " + perk.getSlot().toString());
+				lore.add(Lang.SHOP_COST.getMessage() + ": " + perk.getCost());
+				lore.add(Lang.PERK_SLOT.getMessage() + ": " + perk.getSlot().toString());
 				perkMeta.setLore(lore);
 				item.setItemMeta(perkMeta);
 
@@ -535,7 +517,7 @@ public class InventoryManager implements Listener {
 
 	private void setupSelectClassInventory(Player p) {
 
-		Inventory inventory = Bukkit.createInventory(p, 9, "Select Class");
+		Inventory inventory = Bukkit.createInventory(p, 9, Lang.INVENTORY_SELECT_CLASS_TITLE.getMessage());
 
 		for (int i = 0; i < Main.loadManager.getAllowedClasses(p); i++) {
 
@@ -547,13 +529,13 @@ public class InventoryManager implements Listener {
 			meta.setDisplayName(loadout.getName());
 
 			ArrayList<String> lore = new ArrayList<>();
-			lore.add("\u00A76Primary: " + loadout.getPrimary().getName());
-			lore.add("\u00A76Secondary: " + loadout.getSecondary().getName());
-			lore.add("\u00A76Lethal: " + loadout.getLethal().getName());
-			lore.add("\u00A76Tactical: " + loadout.getTactical().getName());
-			lore.add("\u00A76Perk 1: " + loadout.getPerk1().getPerk().toString());
-			lore.add("\u00A76Perk 2: " + loadout.getPerk2().getPerk().toString());
-			lore.add("\u00A76Perk 3: " + loadout.getPerk3().getPerk().toString());
+			lore.add(Lang.INVENTORY_SELECT_CLASS_PRIMARY.getMessage() + ": " + loadout.getPrimary().getName());
+			lore.add(Lang.INVENTORY_SELECT_CLASS_SECONDARY.getMessage() + ": " + loadout.getSecondary().getName());
+			lore.add(Lang.INVENTORY_SELECT_CLASS_LETHAL.getMessage() + ": " + loadout.getLethal().getName());
+			lore.add(Lang.INVENTORY_SELECT_CLASS_TACTICAL.getMessage() + ": " + loadout.getTactical().getName());
+			lore.add(Lang.INVENTORY_SELECT_CLASS_PERK + " 1: " + loadout.getPerk1().getPerk().toString());
+			lore.add(Lang.INVENTORY_SELECT_CLASS_PERK + " 2: " + loadout.getPerk2().getPerk().toString());
+			lore.add(Lang.INVENTORY_SELECT_CLASS_PERK + " 3: " + loadout.getPerk3().getPerk().toString());
 
 			meta.setLore(lore);
 			item.setItemMeta(meta);
@@ -566,7 +548,7 @@ public class InventoryManager implements Listener {
 
 	public boolean openSelectClassInventory(Player p) {
 		if (!GameManager.isInMatch(p)) {
-			Main.sendMessage(p,Main.codPrefix + "\u00A7cYou can't select a class while not in a game!", Main.lang);
+			Main.sendMessage(p,Main.codPrefix + Lang.ERROR_CAN_NOT_CHANGE_CLASS.getMessage(), Main.lang);
 			return false;
 		}
 
@@ -595,7 +577,7 @@ public class InventoryManager implements Listener {
 				player = new ItemStack(Material.ANVIL);
 			}
 			ItemMeta playerMeta = player.getItemMeta();
-			playerMeta.setDisplayName("\u00A7f\u00A7lPlayer: " + name);
+			playerMeta.setDisplayName(Lang.LEADERBOARD_PLAYER_ENTRY.getMessage().replace("{player}", name));
 
 			double experience = StatHandler.getExperience(name);
 
@@ -619,14 +601,14 @@ public class InventoryManager implements Listener {
 
 			ArrayList<String> lore = new ArrayList<>();
 
-			lore.add("\u00A7f\u00A7lPosition: " + pos);
-			lore.add("\u00A76\u00A7lScore: " + experience);
-			lore.add("\u00A7a\u00A7lKills: " + (int) kills);
-			lore.add("\u00A7c\u00A7lDeaths: " + (int) deaths);
+			lore.add(Lang.LEADERBOARD_POSITION.getMessage().replace("{score}", pos + ""));
+			lore.add(Lang.LEADERBOARD_SCORE.getMessage().replace("{score}", experience + ""));
+			lore.add(Lang.LEADERBOARD_KILLS.getMessage().replace("{score}", (int) kills + ""));
+			lore.add(Lang.LEADERBOARD_DEATHS.getMessage().replace("{score}", (int) deaths + ""));
 			if (!Float.isNaN(kdr)) {
-				lore.add("\u00A75\u00A7lKDR: " + kdr);
+				lore.add(Lang.LEADERBOARD_KD.getMessage().replace("{score}", kdr + ""));
 			} else {
-				lore.add("\u00A75\u00A7lKDR: " + (int) kills);
+				lore.add(Lang.LEADERBOARD_KD.getMessage().replace("{score}", (int) kills + ""));
 			}
 
 			itemMeta.setLore(lore);
@@ -642,7 +624,7 @@ public class InventoryManager implements Listener {
 
 	private void setupPersonalStatsBoardMenu(Player p) {
 		if (!personalStatistics.containsKey(p)) {
-			personalStatistics.put(p, Bukkit.createInventory(null, 9, "Combat Record"));
+			personalStatistics.put(p, Bukkit.createInventory(null, 9, Lang.INVENTORY_RECORD_NAME.getMessage()));
 		}
 
 		Inventory inv = personalStatistics.get(p);
@@ -656,7 +638,7 @@ public class InventoryManager implements Listener {
 
 		ItemStack kills = new ItemStack(Material.ARROW);
 		ItemMeta killsMeta = kills.getItemMeta();
-		killsMeta.setDisplayName("\u00A7a\u00A7lKills: \u00A7r\u00A7f" + totalKills);
+		killsMeta.setDisplayName(Lang.LEADERBOARD_KILLS.getMessage().replace("{score}", totalKills + ""));
 		kills.setItemMeta(killsMeta);
 
 		ItemStack deaths;
@@ -666,15 +648,15 @@ public class InventoryManager implements Listener {
 			deaths = new ItemStack(Material.ANVIL);
 		}
 		ItemMeta deathsMeta = deaths.getItemMeta();
-		deathsMeta.setDisplayName("\u00A7c\u00A7lDeaths: \u00A7r\u00A7f" + totalDeaths);
+		deathsMeta.setDisplayName(Lang.LEADERBOARD_DEATHS.getMessage().replace("{score}", totalDeaths + ""));
 		deaths.setItemMeta(deathsMeta);
 
 		ItemStack killDeathRatio = new ItemStack(Material.GLASS_BOTTLE);
 		ItemMeta killDeathRatioMeta = killDeathRatio.getItemMeta();
 		if (!Float.isNaN(kdr)) {
-			killDeathRatioMeta.setDisplayName("\u00A76\u00A7lKDR: \u00A7r\u00A7f" + kdr);
+			killDeathRatioMeta.setDisplayName(Lang.LEADERBOARD_KD.getMessage().replace("{score}", kdr + ""));
 		} else {
-			killDeathRatioMeta.setDisplayName("\u00A76\u00A7lKDR: \u00A7r\u00A7f" + totalKills);
+			killDeathRatioMeta.setDisplayName(Lang.LEADERBOARD_KD.getMessage().replace("{score}", totalKills + ""));
 		}
 
 		killDeathRatio.setItemMeta(killDeathRatioMeta);
@@ -700,7 +682,7 @@ public class InventoryManager implements Listener {
 
 	private void setupKillStreaksInventory(Player p) {
 
-		Inventory inv = Bukkit.createInventory(null, 36, "Killstreaks");
+		Inventory inv = Bukkit.createInventory(null, 36, Lang.INVENTORY_SCORESTREAKS_NAME.getMessage());
 
 		inv.setItem(0, KillStreakManager.uavItem);
 		inv.setItem(2, KillStreakManager.counterUavItem);
@@ -737,7 +719,7 @@ public class InventoryManager implements Listener {
 				return;
 			}
 		} catch(Exception exception) {
-			Main.sendMessage(Main.cs, "\u00A7c Make sure that you have the default weapons and guns set!", Main.lang);
+			Main.sendMessage(Main.cs, Lang.ERROR_DEFAULT_WEAPONS_GUNS_NOT_SET.getMessage(), Main.lang);
 		}
 
 		if (e.getCurrentItem() == null)
@@ -754,7 +736,7 @@ public class InventoryManager implements Listener {
 		if (e.getClickedInventory().equals(mainInventory)) {
 
 			if (e.getCurrentItem().equals(joinGame)) {
-				Main.sendMessage(p,Main.codPrefix + "\u00A77Put in matchmaker queue. . .", Main.lang);
+				Main.sendMessage(p,Main.codPrefix + Lang.PUT_IN_QUEUE.getMessage(), Main.lang);
 				GameManager.findMatch(p);
 				p.closeInventory();
 			} else if (e.getCurrentItem().equals(createClass)) {
@@ -841,7 +823,6 @@ public class InventoryManager implements Listener {
 				if (counterUavStack.getAmount() != 9) {
 					for (int i : usedNumbers) {
 						if (i == counterUavStack.getAmount()) {
-							Main.sendMessage(p,Main.codPrefix + "\u00A7cCan't save killstreaks! More than one item has the same killstreak slot number!", Main.lang);
 							return;
 						}
 					}
@@ -853,7 +834,6 @@ public class InventoryManager implements Listener {
 				if (nukeStack.getAmount() != 9) {
 					for (int i : usedNumbers) {
 						if (i == nukeStack.getAmount()) {
-							Main.sendMessage(p,Main.codPrefix + "\u00A7cCan't save killstreaks! More than one item has the same killstreak slot number!",Main.lang);
 							return;
 						}
 					}
@@ -864,7 +844,7 @@ public class InventoryManager implements Listener {
 				///// FOR ANY NEW KILLSTREAKS, ADD THE ABOVE CODE FOR NEW STREAKS /////
 
 				if (!(usedNumbers[2] != null && usedNumbers[2] != 0 && usedNumbers[2] != 9)) {
-					Main.sendMessage(p,Main.codPrefix + "\u00A7cThere were not enough killstreaks set to save!", Main.lang);
+					Main.sendMessage(p,Main.codPrefix + Lang.ERROR_CAN_NOT_SAVE_KILL_STREAKS.getMessage(), Main.lang);
 					return;
 				}
 
@@ -997,7 +977,7 @@ public class InventoryManager implements Listener {
 			try {
 				slot = e.getSlot();
 			} catch (NullPointerException exception) {
-				Main.sendMessage(Main.cs, "Could not select the proper class", Main.lang);
+				Main.sendMessage(Main.cs, Lang.ERROR_SELECTING_CLASS.getMessage(), Main.lang);
 				return;
 			}
 
@@ -1012,10 +992,10 @@ public class InventoryManager implements Listener {
 			p.closeInventory();
 
 			if (!hasOneManArmy) {
-				Main.sendMessage(p, Main.codPrefix + "\u00A7fYou changed your class to " + current.getName() + ". It will change when you next spawn.", Main.lang);
+				Main.sendMessage(p, Main.codPrefix + Lang.CHANGED_CLASS_MESSAGE.getMessage(), Main.lang);
 				Main.perkListener.oneManArmy(p);
 			} else {
-				Main.sendMessage(p, Main.codPrefix + "\u00A7fyou changed your class to " + current.getName() + ". It will change in 10 seconds if you don't move.", Main.lang);
+				Main.sendMessage(p, Main.codPrefix + Lang.CHANGED_CLASS_ONE_MAN_ARMY.getMessage(), Main.lang);
 			}
 
 		} else {
@@ -1195,7 +1175,7 @@ public class InventoryManager implements Listener {
 					return;
 				}
 
-				Main.sendMessage(e.getPlayer(), Main.codPrefix + ChatColor.GREEN + "Successfully cast vote!", Main.lang);
+				Main.sendMessage(e.getPlayer(), Main.codPrefix + Lang.VOTE_REGISTERED.getMessage(), Main.lang);
 			}
 
 			if (item.equals(voteItemB) || altItem.equals(voteItemB)) {
@@ -1205,7 +1185,7 @@ public class InventoryManager implements Listener {
 					return;
 				}
 
-				Main.sendMessage(e.getPlayer(), Main.codPrefix + ChatColor.GREEN + "Successfully cast vote!", Main.lang);
+				Main.sendMessage(e.getPlayer(), Main.codPrefix + Lang.VOTE_REGISTERED.getMessage(), Main.lang);
 			}
 		}
 	}

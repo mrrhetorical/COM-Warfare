@@ -1,5 +1,6 @@
 package com.rhetorical.cod.lang;
 
+import com.rhetorical.cod.files.LangFile;
 import org.bukkit.ChatColor;
 
 public enum Lang {
@@ -119,7 +120,74 @@ public enum Lang {
 	FLAG_B("Flag B"),
 	FLAG_C("Flag C"),
 	FLAG_CAPTURED("&eThe {team-color}{team} team has captured {flag}!"),
-	FLAG_NEUTRALIZED("&e{flag} has been neutralized!");
+	FLAG_NEUTRALIZED("&e{flag} has been neutralized!"),
+	INVENTORY_MAIN_MENU_TITLE("COM-Warfare - Menu"),
+	INVENTORY_SHOP_MENU_TITLE("COM-Warfare - SHOP"),
+	INVENTORY_LEADERBOARD_MENU_TITLE("Leaderboard"),
+	INVENTORY_CLOSE_BUTTON_NAME("&c&lClose"),
+	INVENTORY_BACK_BUTTON_NAME("&c&lBack"),
+	INVENTORY_LEAVE_GAME_NAME("&c&lLeave Game"),
+	INVENTORY_LEAVE_GAME_LORE("&6Right or left click this item to leave the lobby."),
+	INVENTORY_OPEN_MENU_NAME("&6&lOpen Menu"),
+	INVENTORY_OPEN_MENU_LORE("&fRight or left click this item to open the cod menu."),
+	INVENTORY_VOTE_MAP_ONE_NAME("&6&lVote for Map 1"),
+	INVENTORY_VOTE_MAP_ONE_LORE("&fRight or left click this item to vote for map 1."),
+	INVENTORY_VOTE_MAP_TWO_NAME("&6&lVote for Map 2"),
+	INVENTORY_VOTE_MAP_TWO_LORE("&fRight or left click this item to vote for map 2."),
+	INVENTORY_JOIN_GAME_NAME("&a&lFind Match"),
+	INVENTORY_JOIN_GAME_LORE("&6&lUse the matchmaker to find a match!"),
+	INVENTORY_CREATE_A_CLASS_NAME("&4&lCreate-a-Class"),
+	INVENTORY_CREATE_A_CLASS_LORE("&6Create custom loadouts to use in game!"),
+	INVENTORY_SCORESTREAKS_NAME("&b*lKill streaks"),
+	INVENTORY_SCORESTREAKS_LORE("&6Choose which kill streaks you want to use!"),
+	INVENTORY_PRESTIGE_NAME("&6&lPrestige Your Account!"),
+	INVENTORY_PRESTIGE_LORE("&6Prestige your account and unlock special awards!"),
+	INVENTORY_ASSIGNMENTS_NAME("&3&lAssignments"),
+	INVENTORY_ASSIGNMENTS_LORE("&6Complete assignments to earn special rewards!"),
+	INVENTORY_RECORD_NAME("&9&lCombat Record"),
+	INVENTORY_RECORD_LORE("&6Shows your amount of kills & deaths, as well as other statistics."),
+	INVENTORY_BOARDS_NAME("&2&lLeader board"),
+	INVENTORY_BOARDS_LORE("&6Compare your stats to everyone else!"),
+	INVENTORY_SHOP_NAME("&a&lShop"),
+	INVENTORY_SHOP_LORE("&6Buy items here at the shop!"),
+	INVENTORY_GUN_SHOP_NAME("&9&lGun Shop"),
+	INVENTORY_GUN_SHOP_LORE("&6Buy guys you have unlocked here!"),
+	INVENTORY_GRENADE_SHOP_NAME("&Grenade Shop"),
+	INVENTORY_GRENADE_SHOP_LORE("&6Buy grenades you have unlocked here!"),
+	INVENTORY_PERK_SHOP_NAME("&aPerk Shop"),
+	INVENTORY_PERK_SHOP_LORE("&6Buy perks you have unlocked here!"),
+	INVENTORY_LOADOUT_HEADER_LORE("&6Edit the class to the right."),
+	INVENTORY_PRIMARY_WEAPON_NAME("&6Primary Weapon&f: &r&f{gun}"),
+	INVENTORY_PRIMARY_WEAPON_LORE("&6This should be your go-to gun during matches."),
+	INVENTORY_SECONDARY_WEAPON_NAME("&6Secondary Weapon&f: &r&f{gun}"),
+	INVENTORY_SECONDARY_WEAPON_LORE("&6This should be used as a backup weapon."),
+	INVENTORY_LETHAL_WEAPON_NAME("&6Lethal Grenade&f: &r&f{gun}"),
+	INVENTORY_LETHAL_WEAPON_LORE("&6Use this during games to throw at and kill players!"),
+	INVENTORY_TACTICAL_WEAPON_NAME("&6Tactical Weapon&f: &r&f{gun}"),
+	INVENTORY_TACTICAL_WEAPON_LORE("&6Use this grenade to gain an advantage during matches!"),
+	INVENTORY_PERK_NAME("&6Perk {i}&f: &r&f{perk}"),
+	SHOP_COST("&6Cost"),
+	PERK_SLOT("&6Slot"),
+	INVENTORY_SELECT_CLASS_TITLE("&6Select Class"),
+	INVENTORY_SELECT_CLASS_PRIMARY("&6Primary"),
+	INVENTORY_SELECT_CLASS_SECONDARY("&6Secondary"),
+	INVENTORY_SELECT_CLASS_LETHAL("&6Lethal"),
+	INVENTORY_SELECT_CLASS_TACTICAL("&6Tactical"),
+	INVENTORY_SELECT_CLASS_PERK("&6Perk"),
+	ERROR_CAN_NOT_CHANGE_CLASS("&cYou can not select a class while not in a game!"),
+	LEADERBOARD_PLAYER_ENTRY("&f&lPlayer: {name}"),
+	LEADERBOARD_POSITION("&f&lPosition: {score}"),
+	LEADERBOARD_SCORE("&6&lScore: {score}"),
+	LEADERBOARD_KILLS("&a&lKills: {score}"),
+	LEADERBOARD_DEATHS("&c&lDeaths: {score}"),
+	LEADERBOARD_KD("&5&lKDR: {score}"),
+	ERROR_DEFAULT_WEAPONS_GUNS_NOT_SET("&cMake sure that you have at least one primary, one secondary, one lethal, and one tactical weapon created!"),
+	PUT_IN_QUEUE("&7Put in matchmaker queue . . ."),
+	ERROR_CAN_NOT_SAVE_KILL_STREAKS("&cError saving kill streaks!"),
+	ERROR_SELECTING_CLASS("&cCould not select a class!"),
+	CHANGED_CLASS_ONE_MAN_ARMY("&fYour class will change when you next respawn."),
+	CHANGED_CLASS_MESSAGE("&fYour class will change in 10 seconds if you do not move!"),
+	VOTE_REGISTERED("&aSuccessfully cast vote!");
 
 
 	private String message;
@@ -129,7 +197,15 @@ public enum Lang {
 	}
 
 	public static void load() {
-		NO_PERMISSION.message = "";
+		for (Lang m : Lang.values()) {
+			if (LangFile.getData().contains(m.name())) {
+				m.message = LangFile.getData().getString(m.name());
+			} else {
+				LangFile.getData().set(m.name(), m.getMessage());
+			}
+		}
+
+		LangFile.saveData();
 	}
 
 	public String getMessage() {

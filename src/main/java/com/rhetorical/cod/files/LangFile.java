@@ -45,6 +45,8 @@ public class LangFile {
 		} catch (IOException e) {
 			Bukkit.getServer().getLogger().severe(ChatColor.RED + "Could not save lang.yml!");
 		}
+
+		reloadData();
 	}
 
 	public static void reloadData() {
