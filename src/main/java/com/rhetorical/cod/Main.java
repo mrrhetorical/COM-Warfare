@@ -201,6 +201,13 @@ public class Main extends JavaPlugin {
 		}
 
 		Main.cs.sendMessage(Main.codPrefix + ChatColor.GREEN + ChatColor.BOLD + "COM-Warfare version " + ChatColor.RESET + ChatColor.WHITE + version + ChatColor.RESET + ChatColor.GREEN + ChatColor.BOLD + " is now up and running!");
+
+		if (serverMode) {
+			for (Player p : Bukkit.getOnlinePlayers()) {
+				GameManager.findMatch(p);
+			}
+		}
+
 	}
 
 	@Override
