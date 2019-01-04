@@ -3,6 +3,7 @@ package com.rhetorical.cod;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import com.rhetorical.cod.lang.Lang;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -47,10 +48,10 @@ public class LoadoutManager {
 				lethalMeta = emptyLethal.getItemMeta(),
 				tacticalMeta = emptyTactical.getItemMeta();
 
-		primaryMeta.setDisplayName(ChatColor.RED + "No Primary");
-		secondaryMeta.setDisplayName(ChatColor.RED + "No Secondary");
-		lethalMeta.setDisplayName(ChatColor.RED + "No Lethal");
-		tacticalMeta.setDisplayName(ChatColor.RED + "No Tactical");
+		primaryMeta.setDisplayName(Lang.NO_PRIMARY.getMessage());
+		secondaryMeta.setDisplayName(Lang.NO_SECONDARY.getMessage());
+		lethalMeta.setDisplayName(Lang.NO_LETHAL.getMessage());
+		tacticalMeta.setDisplayName(Lang.NO_TACTICAL.getMessage());
 
 		blankPrimary = new CodGun("No Primary", GunType.Primary, UnlockType.LEVEL, 0, new ItemStack(Material.AIR), emptyPrimary, 0);
 		blankSecondary = new CodGun("No Secondary", GunType.Secondary, UnlockType.LEVEL, 0, new ItemStack(Material.AIR), emptySecondary, 0);
@@ -70,8 +71,8 @@ public class LoadoutManager {
 		knife = new ItemStack(Material.IRON_SWORD);
 		ItemMeta knifeMeta = knife.getItemMeta();
 		knifeMeta.setDisplayName("\u00A7eKnife");
-		ArrayList<String> knifeLore = new ArrayList<String>();
-		knifeLore.add("\u00A76A knife that can kill players in one hit.");
+		ArrayList<String> knifeLore = new ArrayList<>();
+		knifeLore.add(Lang.KNIFE_LORE.getMessage());
 		knifeMeta.setLore(knifeLore);
 		knife.setItemMeta(knifeMeta);
 	}
@@ -93,7 +94,7 @@ public class LoadoutManager {
 		}
 
 		while (getAllowedClasses(p) < currentLoadouts.size()) {
-			Loadout defaultLoadout = new Loadout(p, "Class " + Integer.toString(currentLoadouts.size() + 1),
+			Loadout defaultLoadout = new Loadout(p, Lang.CLASS_PREFIX + " " + Integer.toString(currentLoadouts.size() + 1),
 					getDefaultPrimary(), getDefaultSecondary(), getDefaultLethal(), getDefaultTactical(),
 					Main.perkManager.getDefaultPerk(PerkSlot.ONE), Main.perkManager.getDefaultPerk(PerkSlot.TWO),
 					Main.perkManager.getDefaultPerk(PerkSlot.THREE));
@@ -350,7 +351,7 @@ public class LoadoutManager {
 				loadout = new Loadout(p, name, primary, secondary, lethal, tactical, perkOne, perkTwo, perkThree);
 				l.add(loadout);
 			} catch (Exception e) {
-				Main.sendMessage(Main.cs,  Main.codPrefix + "\u00A7cError loading player loadout from the config.", Main.lang);
+				Main.sendMessage(Main.cs,  Main.codPrefix + Lang.ERROR_READING_PLAYER_LOADOUT.getMessage(), Main.lang);
 			}
 
 			k++;
@@ -358,7 +359,7 @@ public class LoadoutManager {
 
 		if (l.isEmpty()) {
 			for (int i = 0; i < 5; i++) {
-				Loadout loadout = new Loadout(p, "Class " + Integer.toString(i + 1), this.getDefaultPrimary(),
+				Loadout loadout = new Loadout(p, Lang.CLASS_PREFIX + " " + Integer.toString(i + 1), this.getDefaultPrimary(),
 						this.getDefaultSecondary(), this.getDefaultLethal(), this.getDefaultTactical(),
 						Main.perkManager.getDefaultPerk(PerkSlot.ONE), Main.perkManager.getDefaultPerk(PerkSlot.TWO),
 						Main.perkManager.getDefaultPerk(PerkSlot.THREE));

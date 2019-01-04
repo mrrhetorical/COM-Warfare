@@ -50,7 +50,14 @@ public enum Lang {
 	RANK_UP_READY_TO_PRESTIGE("&7Congratulations! You have just reached the highest rank! Visit the prestige menu to get your reward!"),
 	RANK_RESET_MESSAGE("&7Your rank has been reset!"),
 	ERROR_SETTING_PLAYER_EXPERIENCE_LEVEL("&cThere was an error setting the player's experience level."),
-	ERROR_READING_PERK_DATA("&cThere was an error reading the perk data from the config. The file may be corrupted!");
+	ERROR_READING_PERK_DATA("&cThere was an error reading the perk data from the config. The file may be corrupted!"),
+	ERROR_READING_PLAYER_LOADOUT("&cError loading player's loadout from teh config."),
+	NO_PRIMARY("&cNo Primary"),
+	NO_SECONDARY("&cNo Secondary"),
+	NO_LETHAL("&cNo Lethal"),
+	NO_TACTICAL("&cNo Tactical"),
+	KNIFE_LORE("&6A knife that can kill players in one hit."),
+	CLASS_PREFIX("Class");
 
 
 	private String message;
