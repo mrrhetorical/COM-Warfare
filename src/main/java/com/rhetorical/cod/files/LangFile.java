@@ -32,7 +32,7 @@ public class LangFile {
 				Bukkit.getServer().getLogger().severe(ChatColor.RED + "Could not create lang.yml!");
 			}
 		}
-		lang = YamlConfiguration.loadConfiguration(lfile);
+		reloadData();
 	}
 
 	public static FileConfiguration getData() {

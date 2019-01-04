@@ -849,7 +849,8 @@ public class Main extends JavaPlugin {
 				List<Player> pls = i.getPlayers();
 
 				for (Player p : pls) {
-					GameManager.leaveMatch(p);
+					i.removePlayer(p);
+					Main.sendMessage(p, Main.codPrefix + Lang.PLAYER_LEAVE_GAME.getMessage(), Main.lang);
 				}
 			}
 		}

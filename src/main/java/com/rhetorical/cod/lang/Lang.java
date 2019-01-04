@@ -1,5 +1,6 @@
 package com.rhetorical.cod.lang;
 
+import com.rhetorical.cod.Main;
 import com.rhetorical.cod.files.LangFile;
 import org.bukkit.ChatColor;
 
@@ -123,7 +124,7 @@ public enum Lang {
 	FLAG_NEUTRALIZED("&e{flag} has been neutralized!"),
 	INVENTORY_MAIN_MENU_TITLE("COM-Warfare - Menu"),
 	INVENTORY_SHOP_MENU_TITLE("COM-Warfare - SHOP"),
-	INVENTORY_LEADERBOARD_MENU_TITLE("Leaderboard"),
+	INVENTORY_LEADERBOARD_MENU_TITLE("Leader board"),
 	INVENTORY_CLOSE_BUTTON_NAME("&c&lClose"),
 	INVENTORY_BACK_BUTTON_NAME("&c&lBack"),
 	INVENTORY_LEAVE_GAME_NAME("&c&lLeave Game"),
@@ -198,10 +199,11 @@ public enum Lang {
 
 	public static void load() {
 		for (Lang m : Lang.values()) {
-			if (LangFile.getData().contains(m.name())) {
-				m.message = LangFile.getData().getString(m.name());
+			if (LangFile.getData().contains(m.toString())) {
+				Main.cs.sendMessage("Getting from config");
+				m.message = LangFile.getData().getString(m.toString());
 			} else {
-				LangFile.getData().set(m.name(), m.message);
+				LangFile.getData().set(m.toString(), m.message);
 			}
 		}
 
