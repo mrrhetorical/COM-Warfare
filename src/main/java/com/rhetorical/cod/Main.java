@@ -867,7 +867,7 @@ public class Main extends JavaPlugin {
 
 	private void createWeapon(CommandSender p, String[] args) {
 
-		String command = "/cod createWeapon (name) (Lethal/Tactical) (Unlock Type: level/credit/both) (Grenade Material) (Level Unlock) (Cost)";
+		String command = "/cod createWeapon (name) (Lethal/Tactical) (Unlock Type: level/credits/both) (Grenade Material) (Level Unlock) (Cost)";
 		if (args.length == 7) {
 			String name = args[1];
 			WeaponType grenadeType;
@@ -941,7 +941,7 @@ public class Main extends JavaPlugin {
 	}
 
 	private void createGun(CommandSender p, String[] args) {
-		String command = "/cod createGun (Gun name) (Primary/Secondary) (Unlock type: level/credit/both) (Ammo Amount) (Gun Material) (Ammo Material) (Level Unlock) (Cost)";
+		String command = "/cod createGun (Gun name) (Primary/Secondary) (Unlock type: level/credits/both) (Ammo Amount) (Gun Material) (Ammo Material) (Level Unlock) (Cost)";
 		if (args.length == 9) {
 			String name = args[1];
 

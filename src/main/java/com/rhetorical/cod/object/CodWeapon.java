@@ -24,7 +24,7 @@ public class CodWeapon {
 		this.levelUnlock = levelUnlock;
 		this.weaponType = wt;
 		
-		this.unlockType = UnlockType.LEVEL;
+		this.unlockType = t;
 	
 		this.name = n;
 		this.weaponItem = weaponI;
@@ -47,7 +47,7 @@ public class CodWeapon {
 		
 		int k = 0;
 		while (GunsFile.getData().contains("Weapons." + weaponType.toString() + "." + k)) {
-			if (GunsFile.getData().getString("Weapons." + weaponType.toString() + "." + k + ".name") == this.name) {
+			if (GunsFile.getData().getString("Weapons." + weaponType.toString() + "." + k + ".name").equals(this.name)) {
 				GunsFile.getData().set("Weapons." + weaponType.toString() + "." + k + ".name", this.name);
 				GunsFile.getData().set("Weapons." + weaponType.toString() + "." + k + ".item", this.weaponItem);
 				GunsFile.getData().set("Weapons." + weaponType.toString() + "." + k + ".unlockType", this.unlockType.toString());
