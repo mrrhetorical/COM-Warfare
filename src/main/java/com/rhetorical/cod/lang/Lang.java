@@ -153,7 +153,7 @@ public enum Lang {
 	INVENTORY_SHOP_LORE("&6Buy items here at the shop!"),
 	INVENTORY_GUN_SHOP_NAME("&9&lGun Shop"),
 	INVENTORY_GUN_SHOP_LORE("&6Buy guys you have unlocked here!"),
-	INVENTORY_GRENADE_SHOP_NAME("&Grenade Shop"),
+	INVENTORY_GRENADE_SHOP_NAME("&6Grenade Shop"),
 	INVENTORY_GRENADE_SHOP_LORE("&6Buy grenades you have unlocked here!"),
 	INVENTORY_PERK_SHOP_NAME("&aPerk Shop"),
 	INVENTORY_PERK_SHOP_LORE("&6Buy perks you have unlocked here!"),
