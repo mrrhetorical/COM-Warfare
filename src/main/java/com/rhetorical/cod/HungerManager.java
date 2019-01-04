@@ -7,7 +7,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class HungerManager {
 
@@ -47,10 +46,10 @@ public class HungerManager {
 					if (p.isSprinting()) {
 						if (p.getFoodLevel() > 6) {
 							p.setFoodLevel(p.getFoodLevel() - 2);
-						} else {
-							if (!p.isSprinting() && p.getFoodLevel() < 20) {
-								p.setFoodLevel(p.getFoodLevel() + 2);
-							}
+						}
+					} else {
+						if (!p.isSprinting() && p.getFoodLevel() < 20) {
+							p.setFoodLevel(p.getFoodLevel() + 2);
 						}
 					}
 				} else {

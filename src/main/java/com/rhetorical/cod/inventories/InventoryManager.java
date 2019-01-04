@@ -428,7 +428,7 @@ public class InventoryManager implements Listener {
 
 		for (CodGun gun : guns) {
 			if (gun.getType() == UnlockType.BOTH || gun.getType() == UnlockType.CREDITS) {
-				if (Main.progressionManager.getLevel(p) >= gun.getLevelUnlock() && !Main.shopManager.getPurchasedGuns().get(p).contains(gun)) {
+				if ((gun.getType() == UnlockType.CREDITS || Main.progressionManager.getLevel(p) >= gun.getLevelUnlock()) && !Main.shopManager.getPurchasedGuns().get(p).contains(gun)) {
 
 					ItemStack item = gun.getGun();
 
@@ -458,7 +458,7 @@ public class InventoryManager implements Listener {
 				continue;
 
 			if (grenade.getType() == UnlockType.BOTH || grenade.getType() == UnlockType.CREDITS) {
-				if (Main.progressionManager.getLevel(p) >= grenade.getLevelUnlock() && !Main.shopManager.getPurchasedGuns().get(p).contains(grenade)) {
+				if ((grenade.getType() == UnlockType.CREDITS || Main.progressionManager.getLevel(p) >= grenade.getLevelUnlock()) && !Main.shopManager.getPurchasedGuns().get(p).contains(grenade)) {
 
 					ItemStack item = grenade.getWeapon();
 
@@ -533,9 +533,9 @@ public class InventoryManager implements Listener {
 			lore.add(Lang.INVENTORY_SELECT_CLASS_SECONDARY.getMessage() + ": " + loadout.getSecondary().getName());
 			lore.add(Lang.INVENTORY_SELECT_CLASS_LETHAL.getMessage() + ": " + loadout.getLethal().getName());
 			lore.add(Lang.INVENTORY_SELECT_CLASS_TACTICAL.getMessage() + ": " + loadout.getTactical().getName());
-			lore.add(Lang.INVENTORY_SELECT_CLASS_PERK + " 1: " + loadout.getPerk1().getPerk().toString());
-			lore.add(Lang.INVENTORY_SELECT_CLASS_PERK + " 2: " + loadout.getPerk2().getPerk().toString());
-			lore.add(Lang.INVENTORY_SELECT_CLASS_PERK + " 3: " + loadout.getPerk3().getPerk().toString());
+			lore.add(Lang.INVENTORY_SELECT_CLASS_PERK.getMessage() + " 1: " + loadout.getPerk1().getPerk().toString());
+			lore.add(Lang.INVENTORY_SELECT_CLASS_PERK.getMessage() + " 2: " + loadout.getPerk2().getPerk().toString());
+			lore.add(Lang.INVENTORY_SELECT_CLASS_PERK.getMessage() + " 3: " + loadout.getPerk3().getPerk().toString());
 
 			meta.setLore(lore);
 			item.setItemMeta(meta);
@@ -742,8 +742,8 @@ public class InventoryManager implements Listener {
 				this.setupCreateClassInventory(p);
 				p.openInventory(createClassInventory.get(p));
 			} else if (e.getCurrentItem().equals(shopItem)) {
-				p.openInventory(mainShopInventory);
 				setupShopInventories(p);
+				p.openInventory(mainShopInventory);
 			} else if (e.getCurrentItem().equals(combatRecord)) {
 				openPersonalStatsMenu(p);
 			} else if (e.getCurrentItem().equals(leaderboard)) {
@@ -876,6 +876,11 @@ public class InventoryManager implements Listener {
 
 		} else if (Main.shopManager.gunShop.get(p) != null && e.getInventory().equals(Main.shopManager.gunShop.get(p))) {
 
+			if(e.getCurrentItem().equals(closeInv)) {
+				p.openInventory(mainShopInventory);
+				return;
+			}
+
 			Main.shopManager.loadPurchaseData(p);
 
 			ArrayList<CodGun> guns = Main.shopManager.getPrimaryGuns();
@@ -903,13 +908,19 @@ public class InventoryManager implements Listener {
 
 		} else if (e.getInventory().equals(Main.shopManager.weaponShop.get(p))) {
 
+			if(e.getCurrentItem().equals(closeInv)) {
+				p.openInventory(mainShopInventory);
+				return;
+			}
+
 			Main.shopManager.loadPurchaseData(p);
 
 			ArrayList<CodWeapon> grenades = Main.shopManager.getLethalWeapons();
 			grenades.addAll(Main.shopManager.getTacticalWeapons());
 
 			for (CodWeapon grenade : grenades) {
-				if (e.getCurrentItem().getType().equals(grenade.getWeapon().getType())) {
+				if (e.getCurrentItem().getType().equals(grenade.getWeapon().getType())
+				&&e.getCurrentItem().getItemMeta().getDisplayName().equals(grenade.getName())) {
 					int cost = grenade.getCreditUnlock();
 					if (CreditManager.purchase(p, cost)) {
 						ArrayList<CodWeapon> purchasedGrenades = Main.shopManager.purchasedWeapons.get(p);
@@ -928,6 +939,11 @@ public class InventoryManager implements Listener {
 				}
 			}
 		} else if (e.getInventory().equals(Main.shopManager.perkShop.get(p))) {
+
+			if(e.getCurrentItem().equals(closeInv)) {
+				p.openInventory(mainShopInventory);
+				return;
+			}
 
 			Main.shopManager.loadPurchaseData(p);
 
