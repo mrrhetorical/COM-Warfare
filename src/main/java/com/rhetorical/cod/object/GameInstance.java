@@ -262,6 +262,9 @@ public class GameInstance implements Listener {
 
 	public void addPlayer(Player p) {
 
+		if (p == null)
+			return;
+
 		if (players.size() > Main.maxPlayers)
 			return;
 

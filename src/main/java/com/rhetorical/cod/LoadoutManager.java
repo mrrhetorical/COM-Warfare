@@ -29,6 +29,12 @@ public class LoadoutManager {
 	public CodWeapon blankLethal,
 			blankTactical;
 
+	public CodGun defaultPrimary,
+			defaultSecondary;
+
+	public CodWeapon defaultLethal,
+			defaultTactical;
+
 	private ItemStack emptyPrimary = new ItemStack(Material.BARRIER);
 	private ItemStack emptySecondary = new ItemStack(Material.BARRIER);
 	private ItemStack emptyLethal = new ItemStack(Material.BARRIER);
@@ -181,20 +187,30 @@ public class LoadoutManager {
 
 		if (!GunsFile.getData().contains("Guns.Primary.default")) {
 
-//			Main.sendMessage(Main.cs,  Main.codPrefix + "\u00A7cCan't start COM-Warfare without a default PRIMARY weapon!", Main.lang);
 			return blankPrimary;
 		}
 
-		String gunName = GunsFile.getData().getString("Guns.Primary.default.name");
-		int ammoAmount = GunsFile.getData().getInt("Guns.Primary.default.ammoCount");
-		ItemStack ammoItem = (ItemStack) GunsFile.getData().get("Guns.Primary.default.ammoItem");
-		ItemStack gunItem = (ItemStack) GunsFile.getData().get("Guns.Primary.default.gunItem");
+		if (defaultPrimary == null) {
 
-		CodGun gun = new CodGun(gunName, GunType.Primary, null, ammoAmount, ammoItem, gunItem, 0);
+			String gunName = GunsFile.getData().getString("Guns.Primary.default.name");
+			int ammoAmount = GunsFile.getData().getInt("Guns.Primary.default.ammoCount");
+			Material ammoMat = Material.valueOf(GunsFile.getData().getString("Guns.Primary.default.ammoItem"));
+			short ammoData = (short) GunsFile.getData().getInt("Guns.Primary.default.ammoData");
+			ItemStack ammoItem = new ItemStack(ammoMat, 1, ammoData);
 
-		gun.setCreditUnlock(0);
+			Material gunMat = Material.valueOf(GunsFile.getData().getString("Guns.Primary.default.gunItem"));
+			short gunData = (short) GunsFile.getData().getInt("Guns.Primary.default.gunData");
+			ItemStack gunItem = new ItemStack(gunMat, 1, gunData);
 
-		return gun;
+			CodGun gun = new CodGun(gunName, GunType.Primary, null, ammoAmount, ammoItem, gunItem, 0);
+
+			gun.setCreditUnlock(0);
+
+			defaultPrimary = gun;
+
+		}
+
+		return defaultPrimary;
 	}
 
 	public CodGun getDefaultSecondary() {
@@ -204,16 +220,27 @@ public class LoadoutManager {
 			return blankSecondary;
 		}
 
-		String gunName = GunsFile.getData().getString("Guns.Secondary.default.name");
-		int ammoAmount = GunsFile.getData().getInt("Guns.Secondary.default.ammoCount");
-		ItemStack ammoItem = GunsFile.getData().getItemStack("Guns.Secondary.default.ammoItem");
-		ItemStack gunItem = GunsFile.getData().getItemStack("Guns.Secondary.default.gunItem");
+		if (defaultSecondary == null) {
 
-		CodGun gun = new CodGun(gunName, GunType.Secondary, null, ammoAmount, ammoItem, gunItem, 0);
+			String gunName = GunsFile.getData().getString("Guns.Secondary.default.name");
+			int ammoAmount = GunsFile.getData().getInt("Guns.Secondary.default.ammoCount");
+			Material ammoMat = Material.valueOf(GunsFile.getData().getString("Guns.Secondary.default.ammoItem"));
+			short ammoData = (short) GunsFile.getData().getInt("Guns.Secondary.default.ammoData");
+			ItemStack ammoItem = new ItemStack(ammoMat, 1, ammoData);
 
-		gun.setCreditUnlock(0);
+			Material gunMat = Material.valueOf(GunsFile.getData().getString("Guns.Secondary.default.gunItem"));
+			short gunData = (short) GunsFile.getData().getInt("Guns.Secondary.default.gunData");
+			ItemStack gunItem = new ItemStack(gunMat, 1, gunData);
 
-		return gun;
+			CodGun gun = new CodGun(gunName, GunType.Secondary, null, ammoAmount, ammoItem, gunItem, 0);
+
+			gun.setCreditUnlock(0);
+
+			defaultSecondary = gun;
+
+		}
+
+		return defaultSecondary;
 	}
 
 	public CodWeapon getDefaultLethal() {
@@ -223,11 +250,18 @@ public class LoadoutManager {
 			return blankLethal;
 		}
 
-		String weaponName = GunsFile.getData().getString("Weapons.LETHAL.default.name");
-		UnlockType type = UnlockType.valueOf(GunsFile.getData().getString("Weapons.LETHAL.default.unlockType"));
-		ItemStack weapon = GunsFile.getData().getItemStack("Weapons.LETHAL.default.item");
+		if (defaultLethal == null) {
 
-		return new CodWeapon(weaponName, WeaponType.LETHAL, type, weapon, 0);
+			String weaponName = GunsFile.getData().getString("Weapons.LETHAL.default.name");
+			UnlockType type = UnlockType.valueOf(GunsFile.getData().getString("Weapons.LETHAL.default.unlockType"));
+			Material mat = Material.valueOf(GunsFile.getData().getString("Weapons.LETHAL.default.item"));
+			short data = (short) GunsFile.getData().getInt("Weapons.LETHAL.default.data");
+			ItemStack weapon = new ItemStack(mat, 1, data);
+
+			defaultLethal = new CodWeapon(weaponName, WeaponType.LETHAL, type, weapon, 0);
+		}
+
+		return defaultLethal;
 	}
 
 	public CodWeapon getDefaultTactical() {
@@ -237,11 +271,18 @@ public class LoadoutManager {
 			return blankTactical;
 		}
 
-		String weaponName = GunsFile.getData().getString("Weapons.TACTICAL.default.name");
-		UnlockType type = UnlockType.valueOf(GunsFile.getData().getString("Weapons.TACTICAL.default.unlockType"));
-		ItemStack weapon = GunsFile.getData().getItemStack("Weapons.TACTICAL.default.item");
+		if (defaultTactical == null) {
 
-		return new CodWeapon(weaponName, WeaponType.TACTICAL, type, weapon, 0);
+			String weaponName = GunsFile.getData().getString("Weapons.TACTICAL.default.name");
+			UnlockType type = UnlockType.valueOf(GunsFile.getData().getString("Weapons.TACTICAL.default.unlockType"));
+			Material mat = Material.valueOf(GunsFile.getData().getString("Weapons.TACTICAL.default.item"));
+			short data = (short) GunsFile.getData().getInt("Weapons.TACTICAL.default.data");
+			ItemStack weapon = new ItemStack(mat, 1, data);
+
+			defaultTactical = new CodWeapon(weaponName, WeaponType.TACTICAL, type, weapon, 0);
+		}
+
+		return defaultTactical;
 	}
 
 	public boolean load(Player p) {
@@ -356,7 +397,7 @@ public class LoadoutManager {
 
 		if (l.isEmpty()) {
 			for (int i = 0; i < 5; i++) {
-				Loadout loadout = new Loadout(p, Lang.CLASS_PREFIX + " " + Integer.toString(i + 1), this.getDefaultPrimary(),
+				Loadout loadout = new Loadout(p, Lang.CLASS_PREFIX.getMessage() + " " + (i + 1), this.getDefaultPrimary(),
 						this.getDefaultSecondary(), this.getDefaultLethal(), this.getDefaultTactical(),
 						Main.perkManager.getDefaultPerk(PerkSlot.ONE), Main.perkManager.getDefaultPerk(PerkSlot.TWO),
 						Main.perkManager.getDefaultPerk(PerkSlot.THREE));

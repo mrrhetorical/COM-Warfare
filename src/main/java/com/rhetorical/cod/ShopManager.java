@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.rhetorical.cod.lang.Lang;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -52,11 +53,17 @@ public class ShopManager {
 		primaryGuns.add(Main.loadManager.getDefaultPrimary());
 		for (int i = 0; GunsFile.getData().contains("Guns.Primary." + i); i++) {
 			String name = GunsFile.getData().getString("Guns.Primary." + i + ".name");
+
 			int ammoCount = GunsFile.getData().getInt("Guns.Primary." + i + ".ammoCount");
-			ItemStack ammoItem = GunsFile.getData().getItemStack("Guns.Primary." + i + ".ammoItem");
-			ItemStack gunItem = GunsFile.getData().getItemStack("Guns.Primary." + i + ".gunItem");
-			UnlockType unlockType = UnlockType
-					.valueOf(GunsFile.getData().getString("Guns.Primary." + i + ".unlockType"));
+			Material ammoMat = Material.valueOf(GunsFile.getData().getString("Guns.Primary." + i + ".ammoItem"));
+			short ammoData = (short) GunsFile.getData().getInt("Guns.Primary." + i + ".ammoData");
+			ItemStack ammoItem = new ItemStack (ammoMat, 1, ammoData);
+
+			Material gunMat = Material.valueOf(GunsFile.getData().getString("Guns.Primary." + i + ".gunItem"));
+			short gunData = (short) GunsFile.getData().getInt("Guns.Primary." + i + ".gunData");
+			ItemStack gunItem = new ItemStack(gunMat, 1, gunData);
+
+			UnlockType unlockType = UnlockType.valueOf(GunsFile.getData().getString("Guns.Primary." + i + ".unlockType"));
 			int levelUnlock = GunsFile.getData().getInt("Guns.Primary." + i + ".levelUnlock");
 			int creditsUnlock = GunsFile.getData().getInt("Guns.Primary." + i + ".creditUnlock");
 
@@ -73,10 +80,15 @@ public class ShopManager {
 			}
 			String name = GunsFile.getData().getString("Guns.Secondary." + i + ".name");
 			int ammoCount = GunsFile.getData().getInt("Guns.Secondary." + i + ".ammoCount");
-			ItemStack ammoItem = GunsFile.getData().getItemStack("Guns.Secondary." + i + ".ammoItem");
-			ItemStack gunItem = GunsFile.getData().getItemStack("Guns.Secondary." + i + ".gunItem");
-			UnlockType unlockType = UnlockType
-					.valueOf(GunsFile.getData().getString("Guns.Secondary." + i + ".unlockType"));
+			Material ammoMat = Material.valueOf(GunsFile.getData().getString("Guns.Secondary." + i + ".ammoItem"));
+			short ammoData = (short) GunsFile.getData().getInt("Guns.Secondary." + i + ".ammoData");
+			ItemStack ammoItem = new ItemStack(ammoMat, 1, ammoData);
+
+			Material gunMat = Material.valueOf(GunsFile.getData().getString("Guns.Secondary." + i + ".gunItem"));
+			short gunData = (short) GunsFile.getData().getInt("Guns.Secondary." + i + ".gunData");
+			ItemStack gunItem = new ItemStack(gunMat, 1, gunData);
+
+			UnlockType unlockType = UnlockType.valueOf(GunsFile.getData().getString("Guns.Secondary." + i + ".unlockType"));
 			int levelUnlock = GunsFile.getData().getInt("Guns.Secondary." + i + ".levelUnlock");
 			int creditsUnlock = GunsFile.getData().getInt("Guns.Secondary." + i + ".creditUnlock");
 
@@ -90,28 +102,30 @@ public class ShopManager {
 		lethalWeapons.add(Main.loadManager.getDefaultLethal());
 		tacticalWeapons.add(Main.loadManager.getDefaultTactical());
 
-		for (int i = 0; GunsFile.getData().contains("Weapons.LETHAL." + i + ".name"); i++) {
-			String weaponName = GunsFile.getData().getString("Weapons.LETHAL." + i + ".name");
-			UnlockType type = UnlockType.valueOf(GunsFile.getData().getString("Weapons.LETHAL." + i + ".unlockType"));
-			ItemStack weapon = GunsFile.getData().getItemStack("Weapons.LETHAL." + i + ".item");
-			int levelUnlock = GunsFile.getData().getInt("Weapons.LETHAL." + i + ".levelUnlock");
-			int creditUnlock = GunsFile.getData().getInt("Weapons.LETHAL." + i + ".creditUnlock");
+		String[] weaponTypes = {"LETHAL", "TACTICAL"};
 
-			CodWeapon grenade = new CodWeapon(weaponName, WeaponType.LETHAL, type, weapon, levelUnlock);
-			grenade.setCreditUnlock(creditUnlock);
-			lethalWeapons.add(grenade);
-		}
+		for (int k = 0; k < weaponTypes.length; k++) {
 
-		for (int i = 0; GunsFile.getData().contains("Weapons.TACTICAL." + i + ".name"); i++) {
-			String weaponName = GunsFile.getData().getString("Weapons.TACTICAL." + i + ".name");
-			UnlockType type = UnlockType.valueOf(GunsFile.getData().getString("Weapons.TACTICAL." + i + ".unlockType"));
-			ItemStack weapon = GunsFile.getData().getItemStack("Weapons.TACTICAL." + i + ".item");
-			int levelUnlock = GunsFile.getData().getInt("Weapons.TACTICAL." + i + ".levelUnlock");
-			int creditUnlock = GunsFile.getData().getInt("Weapons.TACTICAL." + i + ".creditUnlock");
+			String s = weaponTypes[k];
 
-			CodWeapon grenade = new CodWeapon(weaponName, WeaponType.TACTICAL, type, weapon, levelUnlock);
-			grenade.setCreditUnlock(creditUnlock);
-			lethalWeapons.add(grenade);
+			for (int i = 0; GunsFile.getData().contains("Weapons." + s + "." + i + ".name"); i++) {
+				String weaponName = GunsFile.getData().getString("Weapons." + s + "." + i + ".name");
+				UnlockType type = UnlockType.valueOf(GunsFile.getData().getString("Weapons." + s + "." + i + ".unlockType"));
+				Material weaponMat = Material.valueOf(GunsFile.getData().getString("Weapons." + s + "." + i + ".item"));
+				short weaponData = (short) GunsFile.getData().getInt("Weapons." + s + "." + i + ".data");
+				ItemStack weapon = new ItemStack(weaponMat, 1, weaponData);
+				int levelUnlock = GunsFile.getData().getInt("Weapons." + s + "." + i + ".levelUnlock");
+				int creditUnlock = GunsFile.getData().getInt("Weapons." + s + "." + i + ".creditUnlock");
+
+				CodWeapon grenade = new CodWeapon(weaponName, WeaponType.valueOf(s), type, weapon, levelUnlock);
+				grenade.setCreditUnlock(creditUnlock);
+
+				if (k == 0) {
+					lethalWeapons.add(grenade);
+				} else {
+					tacticalWeapons.add(grenade);
+				}
+			}
 		}
 	}
 

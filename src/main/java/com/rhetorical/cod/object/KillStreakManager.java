@@ -22,10 +22,6 @@ public class KillStreakManager {
 	private HashMap<Player, Integer> killstreakMap = new HashMap<>();
 	private HashMap<Player, ArrayList<KillStreak>> availableKillstreaks = new HashMap<>();
 
-	public KillStreakManager() {
-
-	}
-
 	void kill(Player p, Player killer) {
 		if (!killstreakMap.containsKey(p))
 			killstreakMap.put(p, 0);

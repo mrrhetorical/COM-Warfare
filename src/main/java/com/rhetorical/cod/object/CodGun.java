@@ -40,13 +40,15 @@ public class CodGun extends CodWeapon {
 		GunsFile.reloadData();
 		
 		if (this.levelUnlock <= 1 & creditUnlock <= 0 && !GunsFile.getData().contains("Guns." + gunType.toString() + ".default.name")) {
-			GunsFile.getData().set("Guns." + gunType.toString() + ".default.name", this.name);
-			GunsFile.getData().set("Guns." + gunType.toString() + ".default.ammoCount", this.ammo);
-			GunsFile.getData().set("Guns." + gunType.toString() + ".default.ammoItem", this.ammoItem);
-			GunsFile.getData().set("Guns." + gunType.toString() + ".default.gunItem", this.gunItem);
-			GunsFile.getData().set("Guns." + gunType.toString() + ".default.unlockType", this.unlockType.toString());
-			GunsFile.getData().set("Guns." + gunType.toString() + ".default.levelUnlock", this.levelUnlock);
-			GunsFile.getData().set("Guns." + gunType.toString() + ".default.creditUnlock", this.creditUnlock);
+			GunsFile.getData().set("Guns." + gunType.toString() + ".default.name", name);
+			GunsFile.getData().set("Guns." + gunType.toString() + ".default.ammoCount", ammo);
+			GunsFile.getData().set("Guns." + gunType.toString() + ".default.ammoItem", ammoItem.getType().toString());
+			GunsFile.getData().set("Guns." + gunType.toString() + ".default.ammoData", ammoItem.getDurability());
+			GunsFile.getData().set("Guns." + gunType.toString() + ".default.gunItem", gunItem.getType().toString());
+			GunsFile.getData().set("Guns." + gunType.toString() + ".default.gunData", gunItem.getDurability());
+			GunsFile.getData().set("Guns." + gunType.toString() + ".default.unlockType", unlockType.toString());
+			GunsFile.getData().set("Guns." + gunType.toString() + ".default.levelUnlock", levelUnlock);
+			GunsFile.getData().set("Guns." + gunType.toString() + ".default.creditUnlock", creditUnlock);
 			GunsFile.saveData();
 			GunsFile.reloadData();
 			return;
@@ -54,29 +56,22 @@ public class CodGun extends CodWeapon {
 		
 		int k = 0;
 		while (GunsFile.getData().contains("Guns." + gunType.toString() + "." + k)) {
-			if (GunsFile.getData().getString("Guns." + gunType.toString() + "." + k + ".name") == this.name) {
-				GunsFile.getData().set("Guns." + gunType.toString() + "." + k + ".name", this.name);
-				GunsFile.getData().set("Guns." + gunType.toString() + "." + k + ".ammoCount", this.ammo);
-				GunsFile.getData().set("Guns." + gunType.toString() + "." + k + ".ammoItem", this.ammoItem);
-				GunsFile.getData().set("Guns." + gunType.toString() + "." + k + ".gunItem", this.gunItem);
-				GunsFile.getData().set("Guns." + gunType.toString() + "." + k + ".unlockType", this.unlockType.toString());
-				GunsFile.getData().set("Guns." + gunType.toString() + "." + k + ".levelUnlock", this.levelUnlock);
-				GunsFile.getData().set("Guns." + gunType.toString() + "." + k + ".creditUnlock", this.creditUnlock);
-				GunsFile.saveData();
-				GunsFile.reloadData();
-				return;
+			if (GunsFile.getData().getString("Guns." + gunType.toString() + "." + k + ".name").equals(name)) {
+				break;
 			}
 			
 			k++;
 		}
 		
-		GunsFile.getData().set("Guns." + gunType.toString() + "." + k + ".name", this.name);
-		GunsFile.getData().set("Guns." + gunType.toString() + "." + k + ".ammoCount", this.ammo);
-		GunsFile.getData().set("Guns." + gunType.toString() + "." + k + ".ammoItem", this.ammoItem);
-		GunsFile.getData().set("Guns." + gunType.toString() + "." + k + ".gunItem", this.gunItem);
-		GunsFile.getData().set("Guns." + gunType.toString() + "." + k + ".unlockType", this.unlockType.toString());
-		GunsFile.getData().set("Guns." + gunType.toString() + "." + k + ".levelUnlock", this.levelUnlock);
-		GunsFile.getData().set("Guns." + gunType.toString() + "." + k + ".creditUnlock", this.creditUnlock);
+		GunsFile.getData().set("Guns." + gunType.toString() + "." + k + ".name", name);
+		GunsFile.getData().set("Guns." + gunType.toString() + "." + k + ".ammoCount", ammo);
+		GunsFile.getData().set("Guns." + gunType.toString() + "." + k + ".ammoItem", ammoItem.getType().toString());
+		GunsFile.getData().set("Guns." + gunType.toString() + "." + k + ".ammoData", ammoItem.getDurability());
+		GunsFile.getData().set("Guns." + gunType.toString() + "." + k + ".gunItem", gunItem.getType().toString());
+		GunsFile.getData().set("Guns." + gunType.toString() + "." + k + ".gunData", gunItem.getDurability());
+		GunsFile.getData().set("Guns." + gunType.toString() + "." + k + ".unlockType", unlockType.toString());
+		GunsFile.getData().set("Guns." + gunType.toString() + "." + k + ".levelUnlock", levelUnlock);
+		GunsFile.getData().set("Guns." + gunType.toString() + "." + k + ".creditUnlock", creditUnlock);
 		GunsFile.saveData();
 		GunsFile.reloadData();
 	}

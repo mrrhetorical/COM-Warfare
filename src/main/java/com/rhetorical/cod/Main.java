@@ -153,7 +153,6 @@ public class Main extends JavaPlugin {
 		invManager = new InventoryManager();
 
 		QualityGun.setup();
-		KillStreakManager.setup();
 		GameManager.setupOITC();
 		GameManager.setupGunGame();
 
@@ -901,7 +900,14 @@ public class Main extends JavaPlugin {
 			ItemStack grenade;
 
 			try {
-				grenade = new ItemStack(Material.valueOf(args[4].toUpperCase()));
+				String[] wa = args[4].toUpperCase().split(":");
+
+				if (wa.length == 1) {
+					grenade = new ItemStack(Material.valueOf(args[4].toUpperCase()));
+				} else {
+					byte data = Byte.parseByte(wa[1]);
+					grenade = new ItemStack(Material.valueOf(wa[4]), 1, data);
+				}
 			} catch (Exception e) {
 				sendMessage(p, Main.codPrefix + Lang.MATERIAL_NOT_EXISTS.getMessage(), lang);
 				return;
@@ -961,7 +967,11 @@ public class Main extends JavaPlugin {
 			GunType gunType;
 
 			try {
-				gunType = GunType.valueOf(args[2]);
+				String gt = args[2];
+				String first = gt.charAt(0) + "";
+				gt = gt.substring(1);
+				gt = first.toUpperCase() + gt.toLowerCase();
+				gunType = GunType.valueOf(gt);
 			} catch (Exception e) {
 				sendMessage(p, Main.codPrefix + Lang.GUN_TYPE_NOT_EXISTS.getMessage(), lang);
 				return;
@@ -989,8 +999,23 @@ public class Main extends JavaPlugin {
 			ItemStack ammoItem;
 
 			try {
-				gunItem = new ItemStack(Material.valueOf(args[5].toUpperCase()));
-				ammoItem = new ItemStack(Material.valueOf(args[6].toUpperCase()));
+				String[] ga = args[5].toUpperCase().split(":");
+
+				if (ga.length == 1) {
+					gunItem = new ItemStack(Material.valueOf(args[5].toUpperCase()));
+				} else {
+					byte data = Byte.parseByte(ga[1]);
+					gunItem = new ItemStack(Material.valueOf(ga[0]), 1, data);
+				}
+
+				String[] aa = args[6].toUpperCase().split(":");
+
+				if (aa.length == 1) {
+					ammoItem = new ItemStack(Material.valueOf(args[6].toUpperCase()));
+				} else {
+					byte data = Byte.parseByte(aa[1]);
+					ammoItem = new ItemStack(Material.valueOf(aa[6]), 1, data);
+				}
 			} catch (Exception e) {
 				sendMessage(p, Main.codPrefix + Lang.MATERIAL_NOT_EXISTS.getMessage(), lang);
 				return;
