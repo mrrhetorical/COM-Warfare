@@ -16,12 +16,6 @@ import com.rhetorical.cod.files.KillstreaksFile;
 
 public class KillStreakManager {
 
-	///// KILLSTREAK ITEMS /////
-
-	public static ItemStack uavItem;
-	public static ItemStack counterUavItem;
-	public static ItemStack nukeItem;
-
 	///// END KILLSTREAK ITEMS /////
 
 	private HashMap<Player, KillStreak[]> playerKillstreaks = new HashMap<>();
@@ -30,38 +24,6 @@ public class KillStreakManager {
 
 	public KillStreakManager() {
 
-	}
-	
-	public static void setup() {
-		KillStreakManager.uavItem = new ItemStack(Material.SHEARS);
-		ItemMeta uavMeta = uavItem.getItemMeta();
-		uavMeta.setDisplayName(Lang.UAV_NAME.getMessage());
-		List<String> uavLore = uavMeta.getLore();
-		if (uavLore == null)
-			uavLore = new ArrayList<>();
-		uavLore.add(Lang.KILL_STREAK_REQUIRED_KILLS.getMessage().replace("{kills}", "3"));
-		uavMeta.setLore(uavLore);
-		uavItem.setItemMeta(uavMeta);
-
-		KillStreakManager.counterUavItem = new ItemStack(Material.SHEARS);
-		ItemMeta counterUavMeta = counterUavItem.getItemMeta();
-		counterUavMeta.setDisplayName(Lang.COUNTER_UAV_NAME.getMessage());
-		List<String> counterUavLore = counterUavMeta.getLore();
-		if (counterUavLore == null)
-			counterUavLore = new ArrayList<>();
-		counterUavLore.add(Lang.KILL_STREAK_REQUIRED_KILLS.getMessage().replace("{kills}", "4"));
-		counterUavMeta.setLore(counterUavLore);
-		counterUavItem.setItemMeta(counterUavMeta);
-
-		KillStreakManager.nukeItem = new ItemStack(Material.TNT);
-		ItemMeta nukeMeta = nukeItem.getItemMeta();
-		nukeMeta.setDisplayName(Lang.NUKE_NAME.getMessage());
-		List<String> nukeLore = nukeMeta.getLore();
-		if (nukeLore == null)
-			nukeLore = new ArrayList<>();
-		nukeLore.add(Lang.KILL_STREAK_REQUIRED_KILLS.getMessage().replace("{kills}", "25"));
-		nukeMeta.setLore(nukeLore);
-		nukeItem.setItemMeta(nukeMeta);
 	}
 
 	void kill(Player p, Player killer) {
@@ -97,11 +59,6 @@ public class KillStreakManager {
 
 	}
 
-	/*
-	 * SETTING KILLSTREAKS: - All killstreaks in menu - Killstreaks when clicked change number between 1, 2, and 3. - Save button saves streaks in said position. - When streaks have 1, they're in slot 1, and so on. Slot number is just for saving convenience. - When there are 2 streaks with the same slot, saving is cancelled. - When there are 2 streaks with the same required killcount, saving is cancelled. - If the inventory is closed before the killstreaks can be saved, the saving is cancelled.
-	 * 
-	 */
-
 	public KillStreak[] getStreaks(Player p) {
 		if (!playerKillstreaks.containsKey(p)) {
 			loadStreaks(p);
@@ -117,18 +74,11 @@ public class KillStreakManager {
 		saveStreaks(p);
 	}
 
-	public boolean setStreaks(Player p, KillStreak first, KillStreak second, KillStreak third) {
-
-		KillStreak[] streaks = { first, second, third };
-		this.playerKillstreaks.put(p, streaks);
-		this.saveStreaks(p);
-		return true;
-	}
 
 	public boolean hasStreakActive(Player p, KillStreak ks) {
 
-		if (this.playerKillstreaks.containsKey(p))
-			for (KillStreak s : this.playerKillstreaks.get(p)) {
+		if (playerKillstreaks.containsKey(p))
+			for (KillStreak s : playerKillstreaks.get(p)) {
 				if (s.equals(ks)) {
 					return true;
 				}
