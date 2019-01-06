@@ -559,6 +559,24 @@ public class InventoryManager implements Listener {
 		three = Bukkit.createInventory(null, 27, Lang.SELECT_STREAK_INVENTORY_NAME.getMessage());
 
 
+		for (KillStreak ks : KillStreak.values()) {
+			boolean found = false;
+
+			KillStreak[] pStreaks = Main.killstreakManager.getStreaks(p);
+
+			for (int i = 0; i < 3; i++) {
+				found = pStreaks[i].equals(ks);
+				if (found)
+					break;
+			}
+
+			if (!found) {
+				one.addItem(ks.getKillStreakItem());
+				two.addItem(ks.getKillStreakItem());
+				three.addItem(ks.getKillStreakItem());
+			}
+		}
+
 
 		one.setItem(26, backInv);
 		two.setItem(26, backInv);
@@ -770,12 +788,6 @@ public class InventoryManager implements Listener {
 
 		this.mainKillStreakInventory.put(p, inv);
 
-	}
-
-	private void setupKillStreakSelectionInventories(Player p) {
-		Inventory one;
-		Inventory two;
-		Inventory three;
 	}
 
 	private boolean openKillStreaksInventory(Player p) {
@@ -1016,6 +1028,31 @@ public class InventoryManager implements Listener {
 				Main.sendMessage(p, Main.codPrefix + Lang.CHANGED_CLASS_ONE_MAN_ARMY.getMessage(), Main.lang);
 			}
 
+		} else if (e.getInventory().equals(killStreakInventory1.get(p)) || e.getInventory().equals(killStreakInventory2.get(p)) || e.getInventory().equals(killStreakInventory3.get(p))) {
+
+			if (e.getCurrentItem().equals(backInv)) {
+				openKillStreaksInventory(p);
+				return;
+			}
+
+			int inv = 0;
+
+			if (e.getInventory().equals(killStreakInventory1.get(p)))
+				inv = 1;
+			else if (e.getInventory().equals(killStreakInventory2.get(p)))
+				inv = 2;
+			else if (e.getInventory().equals(killStreakInventory3.get(p)))
+				inv = 3;
+
+
+			for (KillStreak streak : KillStreak.values()) {
+				if (e.getCurrentItem().equals(streak.getKillStreakItem())) {
+					Main.killstreakManager.setStreak(p, streak, inv);
+					Main.sendMessage(p, Lang.CHANGE_STREAK_SUCCESS.getMessage(), Main.lang);
+					return;
+				}
+			}
+			
 		} else {
 
 			ItemStack item = e.getCurrentItem();

@@ -88,8 +88,9 @@ public class KillStreakManager {
 					if (!availableKillstreaks.containsKey(p))
 						availableKillstreaks.put(p, new ArrayList<>());
 
-					availableKillstreaks.get(p).add(s);
-					availableKillstreaks.put(p, availableKillstreaks.get(p));
+					ArrayList<KillStreak> st = availableKillstreaks.get(p);
+					st.add(s);
+					availableKillstreaks.put(p, st);
 				}
 			}
 		}
@@ -107,6 +108,12 @@ public class KillStreakManager {
 		}
 
 		return playerKillstreaks.get(p);
+	}
+
+	public void setStreak(Player p, KillStreak streak, int slot) {
+		KillStreak[] streaks = getStreaks(p);
+		streaks[slot] = streak;
+		saveStreaks(p);
 	}
 
 	public boolean setStreaks(Player p, KillStreak first, KillStreak second, KillStreak third) {
@@ -177,7 +184,7 @@ public class KillStreakManager {
 			return;
 		}
 
-		ArrayList<String> killStreakStrings = new ArrayList<String>();
+		List<String> killStreakStrings = new ArrayList<>();
 
 		for (KillStreak k : this.playerKillstreaks.get(p)) {
 			String s = k.toString();

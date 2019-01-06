@@ -85,6 +85,7 @@ public enum Lang {
 	UAV_NAME("&6&lUAV"),
 	COUNTER_UAV_NAME("&6&lCounter UAV"),
 	NUKE_NAME("&6&lNuke"),
+	DOGS_NAME("&6&lDogs"),
 	SCOREBOARD_PART1("Press 'TAB' to check"),
 	SCOREBOARD_PART2("your scores!"),
 	PLAYER_DOG_TAG_NAME("{team-color}{player}'s dog tag."),
@@ -191,7 +192,8 @@ public enum Lang {
 	VOTE_REGISTERED("&aSuccessfully cast vote!"),
 	KILL_STREAK_NAME("&cChange Kill Streak {number}"),
 	KILL_STREAK_LORE("&eClick here to select your streak for this spot."),
-	SELECT_STREAK_INVENTORY_NAME("&c&lSelect Kill Streak");
+	SELECT_STREAK_INVENTORY_NAME("&c&lSelect Kill Streak"),
+	CHANGE_STREAK_SUCCESS("&aSuccessfully changed kill streak!");
 
 
 	private String message;
