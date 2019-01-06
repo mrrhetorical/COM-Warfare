@@ -791,7 +791,6 @@ public class InventoryManager implements Listener {
 	}
 
 	private boolean openKillStreaksInventory(Player p) {
-
 		setupKillStreaksInventory(p);
 		Inventory inv = mainKillStreakInventory.get(p);
 		p.openInventory(inv);
@@ -1035,24 +1034,25 @@ public class InventoryManager implements Listener {
 				return;
 			}
 
-			int inv = 0;
+			int inv = -1;
 
 			if (e.getInventory().equals(killStreakInventory1.get(p)))
-				inv = 1;
+				inv = 0;
 			else if (e.getInventory().equals(killStreakInventory2.get(p)))
-				inv = 2;
+				inv = 1;
 			else if (e.getInventory().equals(killStreakInventory3.get(p)))
-				inv = 3;
+				inv = 2;
 
 
 			for (KillStreak streak : KillStreak.values()) {
 				if (e.getCurrentItem().equals(streak.getKillStreakItem())) {
 					Main.killstreakManager.setStreak(p, streak, inv);
+					openKillStreaksInventory(p);
 					Main.sendMessage(p, Lang.CHANGE_STREAK_SUCCESS.getMessage(), Main.lang);
 					return;
 				}
 			}
-			
+
 		} else {
 
 			ItemStack item = e.getCurrentItem();

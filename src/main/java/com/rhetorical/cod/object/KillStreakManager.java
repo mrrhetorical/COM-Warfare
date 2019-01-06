@@ -104,7 +104,7 @@ public class KillStreakManager {
 
 	public KillStreak[] getStreaks(Player p) {
 		if (!playerKillstreaks.containsKey(p)) {
-			setStreaks(p, KillStreak.UAV, KillStreak.COUNTER_UAV, KillStreak.NUKE);
+			loadStreaks(p);
 		}
 
 		return playerKillstreaks.get(p);
@@ -113,6 +113,7 @@ public class KillStreakManager {
 	public void setStreak(Player p, KillStreak streak, int slot) {
 		KillStreak[] streaks = getStreaks(p);
 		streaks[slot] = streak;
+		playerKillstreaks.put(p, streaks);
 		saveStreaks(p);
 	}
 
@@ -146,18 +147,18 @@ public class KillStreakManager {
 
 	public void loadStreaks(Player p) {
 		if (!KillstreaksFile.getData().contains("Killstreaks." + p.getName())) {
-			this.saveStreaks(p);
 			KillStreak[] killStreaks = new KillStreak[3];
 			killStreaks[0] = (KillStreak.UAV);
 			killStreaks[1] = (KillStreak.COUNTER_UAV);
 			killStreaks[2] = (KillStreak.NUKE);
 			playerKillstreaks.put(p, killStreaks);
+			saveStreaks(p);
 			return;
 		}
 
 		List<String> streaks = KillstreaksFile.getData().getStringList("Killstreaks." + p.getName() + ".streaks");
 
-		KillStreak[] killStreaks = new KillStreak[streaks.size()];
+		KillStreak[] killStreaks = new KillStreak[3];
 		int i = -1;
 		for (String s : streaks) {
 			i++;
@@ -172,11 +173,11 @@ public class KillStreakManager {
 			killStreaks[i] = ks;
 		}
 
-		this.playerKillstreaks.put(p, killStreaks);
+		playerKillstreaks.put(p, killStreaks);
 	}
 
 	private void saveStreaks(Player p) {
-		if (!this.playerKillstreaks.containsKey(p)) {
+		if (!playerKillstreaks.containsKey(p)) {
 			String[] streaks = { "UAV", "COUNTER_UAV", "NUKE" };
 			KillstreaksFile.getData().set("Killstreaks." + p.getName() + ".streaks", streaks);
 			KillstreaksFile.saveData();
@@ -186,7 +187,7 @@ public class KillStreakManager {
 
 		List<String> killStreakStrings = new ArrayList<>();
 
-		for (KillStreak k : this.playerKillstreaks.get(p)) {
+		for (KillStreak k : getStreaks(p)) {
 			String s = k.toString();
 			killStreakStrings.add(s);
 		}
