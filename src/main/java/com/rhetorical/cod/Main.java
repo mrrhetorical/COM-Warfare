@@ -909,7 +909,7 @@ public class Main extends JavaPlugin {
 					grenade = new ItemStack(Material.valueOf(wa[4]), 1, data);
 				}
 			} catch (Exception e) {
-				sendMessage(p, Main.codPrefix + Lang.MATERIAL_NOT_EXISTS.getMessage().replace("{name}", args[4]), lang);
+				sendMessage(p, Main.codPrefix + Lang.MATERIAL_NOT_EXISTS.getMessage().replace("{name}", args[4].toUpperCase()), lang);
 				return;
 			}
 
@@ -1007,7 +1007,7 @@ public class Main extends JavaPlugin {
 					gunItem = new ItemStack(Material.valueOf(ga[0]), 1, data);
 				}
 			} catch (Exception e) {
-				sendMessage(p, Main.codPrefix + Lang.MATERIAL_NOT_EXISTS.getMessage().replace("{name}", args[5]), lang);
+				sendMessage(p, Main.codPrefix + Lang.MATERIAL_NOT_EXISTS.getMessage().replace("{name}", args[5].toUpperCase()), lang);
 				return;
 			}
 
@@ -1021,7 +1021,7 @@ public class Main extends JavaPlugin {
 					ammoItem = new ItemStack(Material.valueOf(aa[0]), 1, data);
 				}
 			} catch (Exception e) {
-				sendMessage(p, Main.codPrefix + Lang.MATERIAL_NOT_EXISTS.getMessage().replace("{name}", args[6]), lang);
+				sendMessage(p, Main.codPrefix + Lang.MATERIAL_NOT_EXISTS.getMessage().replace("{name}", args[6].toUpperCase()), lang);
 				return;
 			}
 
