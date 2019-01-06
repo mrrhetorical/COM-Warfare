@@ -126,7 +126,7 @@ public class Main extends JavaPlugin {
 					lang = McLang.EN;
 			}
 		} catch(Exception classException) {
-			Main.cs.sendMessage(Main.codPrefix + ChatColor.RED + "McTranslate++ Doesn't seem to be installed? If you have 'auto-download-dependencies' turned on, it will automatically install, and after installing, you should restart the server!");
+			Main.cs.sendMessage(codPrefix + ChatColor.RED + "McTranslate++ Doesn't seem to be installed? If you have 'auto-download-dependencies' turned on, it will automatically install, and after installing, you should restart the server!");
 		}
 
 		String version = getPlugin().getDescription().getVersion();
