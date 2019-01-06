@@ -250,7 +250,7 @@ public class Loadout implements Listener {
 			return;
 		}
 
-		if (e.getCurrentItem().equals(Main.invManager.closeInv)) {
+		if (e.getCurrentItem().equals(Main.invManager.backInv)) {
 			p.closeInventory();
 			return;
 		}

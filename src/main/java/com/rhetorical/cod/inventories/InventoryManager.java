@@ -28,7 +28,7 @@ import static com.rhetorical.cod.Main.lobbyLoc;
 public class InventoryManager implements Listener {
 
 	public ItemStack closeInv = new ItemStack(Material.BARRIER);
-	private ItemStack backInv = new ItemStack(Material.REDSTONE);
+	public ItemStack backInv = new ItemStack(Material.REDSTONE);
 
 	public Inventory mainInventory;
 	public Inventory mainShopInventory;
@@ -36,7 +36,11 @@ public class InventoryManager implements Listener {
 	public HashMap<Player, Inventory> createClassInventory = new HashMap<>();
 	private HashMap<Player, Inventory> selectClassInventory = new HashMap<>();
 	private HashMap<Player, Inventory> personalStatistics = new HashMap<>();
-	private HashMap<Player, Inventory> killStreakInventory = new HashMap<>();
+	private HashMap<Player, Inventory> mainKillStreakInventory = new HashMap<>();
+	private HashMap<Player, Inventory> killStreakInventory1 = new HashMap<>();
+	private HashMap<Player, Inventory> killStreakInventory2 = new HashMap<>();
+	private HashMap<Player, Inventory> killStreakInventory3 = new HashMap<>();
+
 
 	private ItemStack joinGame = new ItemStack(Material.EMERALD);
 	private ItemStack createClass = new ItemStack(Material.CHEST);
@@ -72,7 +76,9 @@ public class InventoryManager implements Listener {
 			}
 		}
 
-		return i.equals(this.selectClassInventory.get(p)) || i.equals(leaderboardInventory) || i.equals(personalStatistics.get(p)) || i.equals(mainShopInventory) || i.equals(Main.shopManager.gunShop.get(p)) || i.equals(Main.shopManager.weaponShop.get(p)) || i.equals(Main.shopManager.perkShop.get(p)) || i.equals(this.killStreakInventory.get(p));
+		return i.equals(this.selectClassInventory.get(p)) || i.equals(leaderboardInventory) || i.equals(personalStatistics.get(p)) || i.equals(mainShopInventory) || i.equals(Main.shopManager.gunShop.get(p)) || i.equals(Main.shopManager.weaponShop.get(p)) || i.equals(Main.shopManager.perkShop.get(p))
+				|| i.equals(this.mainKillStreakInventory.get(p))
+				|| i.equals(this.killStreakInventory1.get(p)) || i.equals(this.killStreakInventory2.get(p)) || i.equals(this.killStreakInventory3.get(p));
 
 	}
 
@@ -107,6 +113,10 @@ public class InventoryManager implements Listener {
 		codMeta.setLore(codLore);
 		codItem.setItemMeta(codMeta);
 
+		ItemMeta backInvMeta = backInv.getItemMeta();
+		backInvMeta.setDisplayName(Lang.INVENTORY_BACK_BUTTON_NAME.getMessage());
+		backInv.setItemMeta(backInvMeta);
+
 		{
 			ItemMeta voteMeta = voteItemA.getItemMeta();
 			voteMeta.setDisplayName(Lang.INVENTORY_VOTE_MAP_ONE_NAME.getMessage());
@@ -124,14 +134,6 @@ public class InventoryManager implements Listener {
 			voteMeta.setLore(voteLore);
 			voteItemB.setItemMeta(voteMeta);
 		}
-	}
-
-
-
-	public void setupBackInvButton() {
-		ItemMeta backInvMeta = backInv.getItemMeta();
-		backInvMeta.setDisplayName(Lang.INVENTORY_BACK_BUTTON_NAME.getMessage());
-		backInv.setItemMeta(backInvMeta);
 	}
 
 	// Main Inventory
@@ -259,7 +261,7 @@ public class InventoryManager implements Listener {
 		mainShopInventory.setItem(0, gunShopItem);
 		mainShopInventory.setItem(1, grenadeShopItem);
 		mainShopInventory.setItem(2, perkShopItem);
-		mainShopInventory.setItem(8, closeInv);
+		mainShopInventory.setItem(8, backInv);
 	}
 
 	public void setupCreateClassInventory(Player p) {
@@ -348,7 +350,7 @@ public class InventoryManager implements Listener {
 			customClassInventory.setItem(line + 5, perkOne);
 			customClassInventory.setItem(line + 6, perkTwo);
 			customClassInventory.setItem(line + 7, perkThree);
-			customClassInventory.setItem(line + 8, this.closeInv);
+			customClassInventory.setItem(line + 8, backInv);
 
 			createClassInventory.put(p, customClassInventory);
 
@@ -400,13 +402,13 @@ public class InventoryManager implements Listener {
 				}
 			}
 
-			primary.setItem(35, closeInv);
-			secondary.setItem(35, closeInv);
-			lethal.setItem(26, closeInv);
-			tactical.setItem(26, closeInv);
-			perk1.setItem(26, closeInv);
-			perk2.setItem(26, closeInv);
-			perk3.setItem(26, closeInv);
+			primary.setItem(35, backInv);
+			secondary.setItem(35, backInv);
+			lethal.setItem(26, backInv);
+			tactical.setItem(26, backInv);
+			perk1.setItem(26, backInv);
+			perk2.setItem(26, backInv);
+			perk3.setItem(26, backInv);
 
 			loadout.setPrimaryInventory(primary);
 			loadout.setSecondaryInventory(secondary);
@@ -506,9 +508,9 @@ public class InventoryManager implements Listener {
 
 		}
 
-		gunShop.setItem(35, closeInv);
-		weaponShop.setItem(35, closeInv);
-		perkShop.setItem(35, closeInv);
+		gunShop.setItem(35, backInv);
+		weaponShop.setItem(35, backInv);
+		perkShop.setItem(35, backInv);
 
 		Main.shopManager.gunShop.put(p, gunShop);
 		Main.shopManager.weaponShop.put(p, weaponShop);
@@ -546,6 +548,13 @@ public class InventoryManager implements Listener {
 		selectClassInventory.put(p, inventory);
 	}
 
+	public boolean setupKillStreakInventories(Player p) {
+
+
+
+		return true;
+	}
+
 	public boolean openSelectClassInventory(Player p) {
 		if (!GameManager.isInMatch(p)) {
 			Main.sendMessage(p,Main.codPrefix + Lang.ERROR_CAN_NOT_CHANGE_CLASS.getMessage(), Main.lang);
@@ -561,7 +570,7 @@ public class InventoryManager implements Listener {
 	}
 
 	private void setupLeaderBoard() {
-		leaderboardInventory.setItem(35, closeInv);
+		leaderboardInventory.setItem(35, backInv);
 		ArrayList<String> pls = StatHandler.getLeaderboardList();
 
 		TreeMap<Double, String> expMap = new TreeMap<>();
@@ -663,7 +672,7 @@ public class InventoryManager implements Listener {
 		inv.setItem(0, kills);
 		inv.setItem(1, deaths);
 		inv.setItem(2, killDeathRatio);
-		inv.setItem(8, closeInv);
+		inv.setItem(8, backInv);
 
 		personalStatistics.put(p, inv);
 	}
@@ -681,22 +690,63 @@ public class InventoryManager implements Listener {
 
 	private void setupKillStreaksInventory(Player p) {
 
-		Inventory inv = Bukkit.createInventory(null, 36, Lang.INVENTORY_SCORESTREAKS_NAME.getMessage());
+		Inventory inv = Bukkit.createInventory(null, 27, Lang.INVENTORY_SCORESTREAKS_NAME.getMessage());
 
-		inv.setItem(0, KillStreakManager.uavItem);
-		inv.setItem(2, KillStreakManager.counterUavItem);
-		inv.setItem(4, KillStreakManager.nukeItem);
+		ItemStack one,
+				two,
+				three;
 
-		inv.setItem(35, closeInv);
+		one = new ItemStack(Main.killstreakManager.getStreaks(p)[0].getKillStreakItem());
+		two = new ItemStack(Main.killstreakManager.getStreaks(p)[1].getKillStreakItem());
+		three = new ItemStack(Main.killstreakManager.getStreaks(p)[2].getKillStreakItem());
 
-		this.killStreakInventory.put(p, inv);
+		{
+			ItemMeta meta = one.getItemMeta();
+			meta.setDisplayName(Lang.KILL_STREAK_NAME.getMessage().replace("{number}", "1"));
+			List<String> lore = new ArrayList<>();
+			lore.add(Lang.KILL_STREAK_LORE.getMessage());
+			meta.setLore(lore);
+			one.setItemMeta(meta);
+		}
 
+		{
+			ItemMeta meta = two.getItemMeta();
+			meta.setDisplayName(Lang.KILL_STREAK_NAME.getMessage().replace("{number}", "2"));
+			List<String> lore = new ArrayList<>();
+			lore.add(Lang.KILL_STREAK_LORE.getMessage());
+			meta.setLore(lore);
+			two.setItemMeta(meta);
+		}
+
+		{
+			ItemMeta meta = three.getItemMeta();
+			meta.setDisplayName(Lang.KILL_STREAK_NAME.getMessage().replace("{number}", "3"));
+			List<String> lore = new ArrayList<>();
+			lore.add(Lang.KILL_STREAK_LORE.getMessage());
+			meta.setLore(lore);
+			three.setItemMeta(meta);
+		}
+
+		inv.setItem(11, one);
+		inv.setItem(13, two);
+		inv.setItem(15, three);
+
+		inv.setItem(26, backInv);
+
+		this.mainKillStreakInventory.put(p, inv);
+
+	}
+
+	private void setupKillStreakSelectionInventories(Player p) {
+		Inventory one;
+		Inventory two;
+		Inventory three;
 	}
 
 	private boolean openKillStreaksInventory(Player p) {
 
 		setupKillStreaksInventory(p);
-		Inventory inv = killStreakInventory.get(p);
+		Inventory inv = mainKillStreakInventory.get(p);
 		p.openInventory(inv);
 		return true;
 	}
@@ -725,6 +775,11 @@ public class InventoryManager implements Listener {
 			return;
 
 		if (e.getCurrentItem().equals(closeInv)) {
+			p.closeInventory();
+			return;
+		}
+
+		if (e.getCurrentItem().equals(backInv)) {
 			if (!e.getClickedInventory().equals(mainInventory)) {
 				p.openInventory(mainInventory);
 			} else {
@@ -771,88 +826,14 @@ public class InventoryManager implements Listener {
 			} else if (e.getCurrentItem().equals(shopItem)) {
 				p.openInventory(mainShopInventory);
 			}
-		} else if (e.getInventory().equals(killStreakInventory.get(p))) {
+		} else if (e.getInventory().equals(mainKillStreakInventory.get(p))) {
 			if (e.getCurrentItem() == null || e.getCurrentItem().getType().equals(Material.AIR)) {
 				return;
 			}
 
-			if (e.getCurrentItem().getItemMeta().equals(KillStreakManager.uavItem.getItemMeta()) || e.getCurrentItem().getItemMeta().equals(KillStreakManager.counterUavItem.getItemMeta()) || e.getCurrentItem().getItemMeta().equals(KillStreakManager.nukeItem.getItemMeta())) {
-				ItemStack i = e.getCurrentItem();
-				switch (i.getAmount()) {
-					case 1:
-						i.setAmount(2);
-						break;
-					case 2:
-						i.setAmount(3);
-						break;
-					case 3:
-						i.setAmount(9);
-						break;
-					case 9:
-						i.setAmount(1);
-						break;
-					default:
-						i.setAmount(9);
-						break;
-				}
-			} else if (e.getCurrentItem().getType().equals(Material.CHEST)) {
 
-				ItemStack uavStack = this.killStreakInventory.get(p).getItem(0);
-				ItemStack counterUavStack = this.killStreakInventory.get(p).getItem(2);
-				ItemStack nukeStack = this.killStreakInventory.get(p).getItem(4);
-
-				Integer[] usedNumbers = new Integer[3];
-
-				HashMap<KillStreak, Integer> numMap = new HashMap<>();
-
-				if (uavStack.getAmount() != 9) {
-					usedNumbers[0] = uavStack.getAmount();
-					numMap.put(KillStreak.UAV, uavStack.getAmount());
-				}
-
-				if (counterUavStack.getAmount() != 9) {
-					for (int i : usedNumbers) {
-						if (i == counterUavStack.getAmount()) {
-							return;
-						}
-					}
-
-					usedNumbers[usedNumbers.length - 1] = counterUavStack.getAmount();
-					numMap.put(KillStreak.COUNTER_UAV, counterUavStack.getAmount());
-				}
-
-				if (nukeStack.getAmount() != 9) {
-					for (int i : usedNumbers) {
-						if (i == nukeStack.getAmount()) {
-							return;
-						}
-					}
-
-					usedNumbers[usedNumbers.length - 1] = nukeStack.getAmount();
-					numMap.put(KillStreak.NUKE, nukeStack.getAmount());
-				}
-				///// FOR ANY NEW KILLSTREAKS, ADD THE ABOVE CODE FOR NEW STREAKS /////
-
-				if (!(usedNumbers[2] != null && usedNumbers[2] != 0 && usedNumbers[2] != 9)) {
-					Main.sendMessage(p,Main.codPrefix + Lang.ERROR_CAN_NOT_SAVE_KILL_STREAKS.getMessage(), Main.lang);
-					return;
-				}
-
-				KillStreak[] toSet = new KillStreak[3];
-
-				int i = 0;
-				for (KillStreak k : numMap.keySet()) {
-					toSet[i] = k;
-					i++;
-				}
-
-				Main.killstreakManager.setStreaks(p, toSet[0], toSet[1], toSet[2]);
-
-			}
 
 		} else if (e.getInventory().equals(createClassInventory.get(p))) {
-
-			// TODO: - Change class name when clicking class icon on left
 
 			int slot = e.getSlot();
 
@@ -876,7 +857,7 @@ public class InventoryManager implements Listener {
 
 		} else if (Main.shopManager.gunShop.get(p) != null && e.getInventory().equals(Main.shopManager.gunShop.get(p))) {
 
-			if(e.getCurrentItem().equals(closeInv)) {
+			if (e.getCurrentItem().equals(backInv)) {
 				p.openInventory(mainShopInventory);
 				return;
 			}
@@ -908,7 +889,7 @@ public class InventoryManager implements Listener {
 
 		} else if (e.getInventory().equals(Main.shopManager.weaponShop.get(p))) {
 
-			if(e.getCurrentItem().equals(closeInv)) {
+			if (e.getCurrentItem().equals(backInv)) {
 				p.openInventory(mainShopInventory);
 				return;
 			}
@@ -940,7 +921,7 @@ public class InventoryManager implements Listener {
 			}
 		} else if (e.getInventory().equals(Main.shopManager.perkShop.get(p))) {
 
-			if(e.getCurrentItem().equals(closeInv)) {
+			if (e.getCurrentItem().equals(backInv)){
 				p.openInventory(mainShopInventory);
 				return;
 			}
@@ -1000,6 +981,11 @@ public class InventoryManager implements Listener {
 
 				if (e.getInventory().equals(loadout.getPrimaryInventory())) {
 
+					if (e.getCurrentItem().equals(backInv)) {
+						p.openInventory(createClassInventory.get(p));
+						return;
+					}
+
 					for (CodGun gun : Main.shopManager.getPurchasedGuns().get(p)) {
 						if (gun.getGun().getType().equals(item.getType())) {
 							loadout.setPrimary(gun);
@@ -1019,6 +1005,11 @@ public class InventoryManager implements Listener {
 					break;
 
 				} else if (e.getInventory().equals(loadout.getSecondaryInventory())) {
+
+					if (e.getCurrentItem().equals(backInv)) {
+						p.openInventory(createClassInventory.get(p));
+						return;
+					}
 
 					for (CodGun gun : Main.shopManager.getPurchasedGuns().get(p)) {
 						if (gun.getGun().getType().equals(item.getType())) {
@@ -1040,6 +1031,11 @@ public class InventoryManager implements Listener {
 
 				} else if (e.getInventory().equals(loadout.getLethalInventory())) {
 
+					if (e.getCurrentItem().equals(backInv)) {
+						p.openInventory(createClassInventory.get(p));
+						return;
+					}
+
 					for (CodWeapon grenade : Main.shopManager.getPurchasedWeapons().get(p)) {
 						if (grenade.getWeapon().getType().equals(item.getType())) {
 							loadout.setLethal(grenade);
@@ -1050,6 +1046,7 @@ public class InventoryManager implements Listener {
 					}
 
 					if (Main.loadManager.getDefaultLethal().getWeapon().getType().equals(item.getType())) {
+
 						loadout.setLethal(Main.loadManager.getDefaultLethal());
 						Main.invManager.setupCreateClassInventory(p);
 						p.openInventory(Main.invManager.createClassInventory.get(p));
@@ -1059,6 +1056,11 @@ public class InventoryManager implements Listener {
 					break;
 
 				} else if (e.getInventory().equals(loadout.getTacticalInventory())) {
+
+					if (e.getCurrentItem().equals(backInv)) {
+						p.openInventory(createClassInventory.get(p));
+						return;
+					}
 
 					for (CodWeapon grenade : Main.shopManager.getPurchasedWeapons().get(p)) {
 						if (grenade.getWeapon().getType().equals(item.getType())) {
@@ -1079,6 +1081,12 @@ public class InventoryManager implements Listener {
 					break;
 
 				} else if (e.getInventory().equals(loadout.getPerk1Inventory())) {
+
+					if (e.getCurrentItem().equals(backInv)) {
+						p.openInventory(createClassInventory.get(p));
+						return;
+					}
+
 					for (CodPerk perk : Main.shopManager.getPerks(p)) {
 						if (perk.getItem().getType().equals(item.getType()) && perk.getPerk().getName().equals(item.getItemMeta().getDisplayName())) {
 							loadout.setPerk(PerkSlot.ONE, perk);
@@ -1089,6 +1097,12 @@ public class InventoryManager implements Listener {
 					}
 
 				} else if (e.getInventory().equals(loadout.getPerk2Inventory())) {
+
+					if (e.getCurrentItem().equals(backInv)) {
+						p.openInventory(createClassInventory.get(p));
+						return;
+					}
+
 					for (CodPerk perk : Main.shopManager.getPerks(p)) {
 						if (perk.getItem().getType().equals(item.getType()) && perk.getPerk().getName().equals(item.getItemMeta().getDisplayName())) {
 							loadout.setPerk(PerkSlot.TWO, perk);
@@ -1099,6 +1113,12 @@ public class InventoryManager implements Listener {
 					}
 
 				} else if (e.getInventory().equals(loadout.getPerk3Inventory())) {
+
+					if (e.getCurrentItem().equals(backInv)) {
+						p.openInventory(createClassInventory.get(p));
+						return;
+					}
+
 					for (CodPerk perk : Main.shopManager.getPerks(p)) {
 						if (perk.getItem().getType().equals(item.getType()) && perk.getPerk().getName().equals(item.getItemMeta().getDisplayName())) {
 							loadout.setPerk(PerkSlot.THREE, perk);

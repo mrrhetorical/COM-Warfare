@@ -1,15 +1,15 @@
 #Prefix: The prefix for the plugin to use {PREMIUM-ONLY}
-prefix: COM
+prefix: '&l&f[&cCOM&f]&r'
 #Auto download dependencies: Automatically download all required dependencies if this plugin cannot find them on the computer. By having this value set to 'true', you understand and thereby give permission for this application to download files that are required to run features of this plugin onto this computer.
 auto-download-dependency: false
 #Lang: The two letter abbreviation for what language the plugin will be translated to. Set to 'none' if you don't want to use the translation service. Default: EN {PREMIUM-ONLY}
-lang: EN
+lang: 'EN'
 #Server Mode: If set to true, when joining the server, players will be automatically put into a match.
 serverMode: false
 #Scoreboard: The different things you can change in the scoreboard.
 Scoreboard:
   #Header of the tab list. Leave blank for default.
-  Header: COM-Warfare
+  Header: 'COM-Warfare'
 #Lobby Time: The amount of time players should wait in the lobby before the match starts.
 lobbyTime: 70
 #Players: the min and max amount of players allowed in a single game. Default range:  (2, 12) {PREMIUM-ONLY}
@@ -64,7 +64,7 @@ GunProgression: []
 RankTiers:
   0:
     #The name of the tier.
-    name: default
+    name: 'default'
     #The amounts for kill rewards.
     kill:
       #Amount of xp rewarded when a player kills another player.
@@ -74,7 +74,7 @@ RankTiers:
     #Amount of credits rewarded when a player levels up.
     levelCredits: 0
   1:
-    name: donator
+    name: 'donator'
     kill:
       xp: 100
       credits: 1

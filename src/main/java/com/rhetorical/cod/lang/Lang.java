@@ -139,7 +139,7 @@ public enum Lang {
 	INVENTORY_JOIN_GAME_LORE("&6&lUse the matchmaker to find a match!"),
 	INVENTORY_CREATE_A_CLASS_NAME("&4&lCreate-a-Class"),
 	INVENTORY_CREATE_A_CLASS_LORE("&6Create custom loadouts to use in game!"),
-	INVENTORY_SCORESTREAKS_NAME("&b&lKill streaks"),
+	INVENTORY_SCORESTREAKS_NAME("&c&lKill streaks"),
 	INVENTORY_SCORESTREAKS_LORE("&6Choose which kill streaks you want to use!"),
 	INVENTORY_PRESTIGE_NAME("&6&lPrestige Your Account!"),
 	INVENTORY_PRESTIGE_LORE("&6Prestige your account and unlock special awards!"),
@@ -188,7 +188,10 @@ public enum Lang {
 	ERROR_SELECTING_CLASS("&cCould not select a class!"),
 	CHANGED_CLASS_ONE_MAN_ARMY("&fYour class will change in 10 seconds if you do not move!"),
 	CHANGED_CLASS_MESSAGE("&fYour class will change when you next respawn."),
-	VOTE_REGISTERED("&aSuccessfully cast vote!");
+	VOTE_REGISTERED("&aSuccessfully cast vote!"),
+	KILL_STREAK_NAME("&cChange Kill Streak {number}"),
+	KILL_STREAK_LORE("&eClick here to select your streak for this spot."),
+	SELECT_STREAK_INVENTORY_NAME("&c&lSelect Kill Streak");
 
 
 	private String message;

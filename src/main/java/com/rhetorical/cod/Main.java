@@ -69,7 +69,7 @@ public class Main extends JavaPlugin {
 		getPlugin().reloadConfig();
 
 		if (ComVersion.getPurchased()) {
-			codPrefix = getPlugin().getConfig().getString("prefix") + " ";
+			codPrefix = getPlugin().getConfig().getString("prefix").replace("&", "\u00A7") + " ";
 
 			if (codPrefix.equalsIgnoreCase("")) {
 				codPrefix = "[COD] ";
@@ -80,7 +80,13 @@ public class Main extends JavaPlugin {
 
 		String bukkitVersion = Bukkit.getServer().getBukkitVersion();
 
-		if (bukkitVersion.startsWith("1.8")) {
+		int v = 8;
+
+		try {
+			v = Integer.parseInt(bukkitVersion.split(".")[1].charAt(0) + "");
+		} catch(Exception ignored) {}
+
+		if (bukkitVersion.startsWith("1.8") || v < 8 ) {
 			Main.cs.sendMessage(Main.codPrefix + ChatColor.RED + "You are not on the most recent version of Spigot/Bukkit, so COM-Warfare might not work as advertised. To ensure it will work properly, please use version " + ChatColor.WHITE + "1.9 - 1.13" + ChatColor.RED + "!");
 		}
 

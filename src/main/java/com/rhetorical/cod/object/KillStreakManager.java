@@ -24,9 +24,9 @@ public class KillStreakManager {
 
 	///// END KILLSTREAK ITEMS /////
 
-	private HashMap<Player, KillStreak[]> playerKillstreaks = new HashMap<Player, KillStreak[]>();
-	private HashMap<Player, Integer> killstreakMap = new HashMap<Player, Integer>();
-	private HashMap<Player, ArrayList<KillStreak>> availableKillstreaks = new HashMap<Player, ArrayList<KillStreak>>();
+	private HashMap<Player, KillStreak[]> playerKillstreaks = new HashMap<>();
+	private HashMap<Player, Integer> killstreakMap = new HashMap<>();
+	private HashMap<Player, ArrayList<KillStreak>> availableKillstreaks = new HashMap<>();
 
 	public KillStreakManager() {
 
@@ -84,9 +84,9 @@ public class KillStreakManager {
 		for (KillStreak s : streaks) {
 			if (killstreakMap.get(p) == s.getRequiredKills()) {
 				if (!(availableKillstreaks.containsKey(p) || availableKillstreaks.get(p).contains(s))) {
-					p.getInventory().addItem(s.getKillstreakItem());
+					p.getInventory().addItem(s.getKillStreakItem());
 					if (!availableKillstreaks.containsKey(p))
-						availableKillstreaks.put(p, new ArrayList<KillStreak>());
+						availableKillstreaks.put(p, new ArrayList<>());
 
 					availableKillstreaks.get(p).add(s);
 					availableKillstreaks.put(p, availableKillstreaks.get(p));
@@ -100,6 +100,14 @@ public class KillStreakManager {
 	 * SETTING KILLSTREAKS: - All killstreaks in menu - Killstreaks when clicked change number between 1, 2, and 3. - Save button saves streaks in said position. - When streaks have 1, they're in slot 1, and so on. Slot number is just for saving convenience. - When there are 2 streaks with the same slot, saving is cancelled. - When there are 2 streaks with the same required killcount, saving is cancelled. - If the inventory is closed before the killstreaks can be saved, the saving is cancelled.
 	 * 
 	 */
+
+	public KillStreak[] getStreaks(Player p) {
+		if (!playerKillstreaks.containsKey(p)) {
+			setStreaks(p, KillStreak.UAV, KillStreak.COUNTER_UAV, KillStreak.NUKE);
+		}
+
+		return playerKillstreaks.get(p);
+	}
 
 	public boolean setStreaks(Player p, KillStreak first, KillStreak second, KillStreak third) {
 
@@ -124,7 +132,7 @@ public class KillStreakManager {
 	void streaksAfterDeath(Player p) {
 		if (availableKillstreaks.containsKey(p)) {
 			for (KillStreak k : availableKillstreaks.get(p)) {
-				p.getInventory().addItem(k.getKillstreakItem());
+				p.getInventory().addItem(k.getKillStreakItem());
 			}
 		}
 	}
