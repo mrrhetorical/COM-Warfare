@@ -13,11 +13,11 @@ public class CodPerk {
 	private int cost;
 	
 	public CodPerk(Perk perk, ItemStack item, PerkSlot slot, ArrayList<String> lore, int cost) {
-		this.setPerk(perk);
-		this.setItem(item);
-		this.setSlot(slot);
-		this.setLore(lore);
-		this.setCost(cost);
+		setPerk(perk);
+		setItem(item);
+		setSlot(slot);
+		setLore(lore);
+		setCost(cost);
 	}
 
 	public Perk getPerk() {
@@ -29,10 +29,10 @@ public class CodPerk {
 	}
 
 	public ItemStack getItem() {
-		ItemStack i = this.item;
+		ItemStack i = item;
 		ItemMeta meta = i.getItemMeta();
-		meta.setDisplayName(this.getPerk().getName());
-		meta.setLore(this.getLore());
+		meta.setDisplayName(getPerk().getName());
+		meta.setLore(getLore());
 		i.setItemMeta(meta);
 		return i;
 	}

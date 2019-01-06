@@ -909,7 +909,7 @@ public class Main extends JavaPlugin {
 					grenade = new ItemStack(Material.valueOf(wa[4]), 1, data);
 				}
 			} catch (Exception e) {
-				sendMessage(p, Main.codPrefix + Lang.MATERIAL_NOT_EXISTS.getMessage(), lang);
+				sendMessage(p, Main.codPrefix + Lang.MATERIAL_NOT_EXISTS.getMessage().replace("{name}", args[4]), lang);
 				return;
 			}
 
@@ -997,27 +997,31 @@ public class Main extends JavaPlugin {
 
 			ItemStack gunItem;
 			ItemStack ammoItem;
-
 			try {
 				String[] ga = args[5].toUpperCase().split(":");
 
-				if (ga.length == 1) {
+				if (ga.length <= 1) {
 					gunItem = new ItemStack(Material.valueOf(args[5].toUpperCase()));
 				} else {
 					byte data = Byte.parseByte(ga[1]);
 					gunItem = new ItemStack(Material.valueOf(ga[0]), 1, data);
 				}
+			} catch (Exception e) {
+				sendMessage(p, Main.codPrefix + Lang.MATERIAL_NOT_EXISTS.getMessage().replace("{name}", args[5]), lang);
+				return;
+			}
 
+			try {
 				String[] aa = args[6].toUpperCase().split(":");
 
-				if (aa.length == 1) {
+				if (aa.length <= 1) {
 					ammoItem = new ItemStack(Material.valueOf(args[6].toUpperCase()));
 				} else {
 					byte data = Byte.parseByte(aa[1]);
-					ammoItem = new ItemStack(Material.valueOf(aa[6]), 1, data);
+					ammoItem = new ItemStack(Material.valueOf(aa[0]), 1, data);
 				}
 			} catch (Exception e) {
-				sendMessage(p, Main.codPrefix + Lang.MATERIAL_NOT_EXISTS.getMessage(), lang);
+				sendMessage(p, Main.codPrefix + Lang.MATERIAL_NOT_EXISTS.getMessage().replace("{name}", args[6]), lang);
 				return;
 			}
 

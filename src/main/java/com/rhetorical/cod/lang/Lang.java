@@ -42,7 +42,7 @@ public enum Lang {
 	WEAPON_TYPE_NOT_EXISTS("&cThat weapon type does not exist! Valid types include 'tactical' and 'lethal'!"),
 	GUN_TYPE_NOT_EXISTS("&cThat gun type does not exist! Valid types include 'primary' and 'secondary'!"),
 	UNLOCK_TYPE_NOT_EXISTS("&cThat unlock type does not exist! Valid types include 'level', 'credits', and 'both'!"),
-	MATERIAL_NOT_EXISTS("&cThat material does not exist!"),
+	MATERIAL_NOT_EXISTS("&cNo material exists with the name &7{name}&c!"),
 	WEAPON_CREATED_SUCCESS("&aSuccessfully created weapon {weapon-name} as a {weapon-type} grenade!"),
 	GUN_CREATED_SUCCESS("&aSuccessfully created gun {gun-name} as a {gun-type}!"),
 	WEAPON_UNLOCKED("&aYou just unlocked the &6{gun-name}! \n &aEquip it after the match!"),
