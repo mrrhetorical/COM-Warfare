@@ -550,9 +550,44 @@ public class InventoryManager implements Listener {
 
 	public boolean setupKillStreakInventories(Player p) {
 
+		Inventory one,
+				two,
+				three;
+
+		one = Bukkit.createInventory(null, 27, Lang.SELECT_STREAK_INVENTORY_NAME.getMessage());
+		two = Bukkit.createInventory(null, 27, Lang.SELECT_STREAK_INVENTORY_NAME.getMessage());
+		three = Bukkit.createInventory(null, 27, Lang.SELECT_STREAK_INVENTORY_NAME.getMessage());
 
 
+
+		one.setItem(26, backInv);
+		two.setItem(26, backInv);
+		three.setItem(26, backInv);
+
+		killStreakInventory1.put(p, one);
+		killStreakInventory2.put(p, two);
+		killStreakInventory3.put(p, three);
 		return true;
+	}
+
+	public void openKillStreakInventory(Player p, int i) {
+
+		setupKillStreakInventories(p);
+
+		switch(i) {
+			case 1:
+				p.openInventory(killStreakInventory1.get(p));
+				return;
+			case 2:
+				p.openInventory(killStreakInventory2.get(p));
+				return;
+			case 3:
+				p.openInventory(killStreakInventory3.get(p));
+				return;
+			default:
+				p.closeInventory();
+				break;
+		}
 	}
 
 	public boolean openSelectClassInventory(Player p) {
@@ -831,6 +866,13 @@ public class InventoryManager implements Listener {
 				return;
 			}
 
+			if (e.getSlot() == 11) {
+				openKillStreakInventory(p, 1);
+			} else if (e.getSlot() == 13) {
+				openKillStreakInventory(p, 2);
+			} else if (e.getSlot() == 15) {
+				openKillStreakInventory(p, 3);
+			}
 
 
 		} else if (e.getInventory().equals(createClassInventory.get(p))) {
