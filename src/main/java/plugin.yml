@@ -1,19 +1,16 @@
 name: COM-Warfare
-author: Mr_Rhetorical
-version: 2.8.2
-api-version: 1.13
-main: com.rhetorical.cod.Main
+version: 2.8.3
 description: Call of Duty Multiplayer recreated for use in Minecraft!
+author: Mr_Rhetorical
+website: https://www.spigotmc.org/resources/21895/
+
+main: com.rhetorical.cod.Main
+api-version: 1.13
+
+softdepend: [Multiverse-Core]
+
 commands:
   cod:
-    description: Base command for COM-Warfare.
-    usage: /<command>
-  comr:
-    description: Base command for COM-Warfare.
-    usage: /<command>
-  com:
-    description: Base command for COM-Warfare.
-    usage: /<command>
-  war:
+    aliases: [comr, com, war]
     description: Base command for COM-Warfare.
     usage: /<command>
