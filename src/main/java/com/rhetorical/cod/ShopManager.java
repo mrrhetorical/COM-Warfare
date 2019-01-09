@@ -99,45 +99,32 @@ public class ShopManager {
 	}
 
 	private void loadWeapons() {
-		if (Main.loadManager.defaultLethal != null)
-			lethalWeapons.add(Main.loadManager.getDefaultLethal());
+		lethalWeapons.add(Main.loadManager.getDefaultLethal());
+		tacticalWeapons.add(Main.loadManager.getDefaultTactical());
 
-		if (Main.loadManager.defaultTactical != null)
-			tacticalWeapons.add(Main.loadManager.getDefaultTactical());
+		for (int i = 0; GunsFile.getData().contains("Weapons.LETHAL." + i + ".name"); i++) {
+			String weaponName = GunsFile.getData().getString("Weapons.LETHAL." + i + ".name");
+			UnlockType type = UnlockType.valueOf(GunsFile.getData().getString("Weapons.LETHAL." + i + ".unlockType"));
+			ItemStack weapon = GunsFile.getData().getItemStack("Weapons.LETHAL." + i + ".item");
+			int levelUnlock = GunsFile.getData().getInt("Weapons.LETHAL." + i + ".levelUnlock");
+			int creditUnlock = GunsFile.getData().getInt("Weapons.LETHAL." + i + ".creditUnlock");
 
-		String[] weaponTypes = new String[2];
-		weaponTypes[0] = "LETHAL";
-		weaponTypes[1] = "TACTICAL";
-
-		for (int k = 0; k < 2; k++) {
-
-			String s = weaponTypes[k];
-
-			for (int i = 0; GunsFile.getData().contains("Weapons." + s + "." + i); i++) {
-				String weaponName = GunsFile.getData().getString("Weapons." + s + "." + i + ".name");
-				UnlockType type = UnlockType.valueOf(GunsFile.getData().getString("Weapons." + s + "." + i + ".unlockType"));
-				Material weaponMat = Material.valueOf(GunsFile.getData().getString("Weapons." + s + "." + i + ".item"));
-				short weaponData = (short) GunsFile.getData().getInt("Weapons." + s + "." + i + ".data");
-				ItemStack weapon = new ItemStack(weaponMat, 1, weaponData);
-				int levelUnlock = GunsFile.getData().getInt("Weapons." + s + "." + i + ".levelUnlock");
-				int creditUnlock = GunsFile.getData().getInt("Weapons." + s + "." + i + ".creditUnlock");
-
-				CodWeapon grenade = new CodWeapon(weaponName, WeaponType.valueOf(s), type, weapon, levelUnlock);
-				grenade.setCreditUnlock(creditUnlock);
-
-				if (k == 0) {
-					if (!lethalWeapons.contains(grenade))
-						lethalWeapons.add(grenade);
-				} else {
-					if (!tacticalWeapons.contains(grenade))
-						tacticalWeapons.add(grenade);
-				}
-			}
-
+			CodWeapon grenade = new CodWeapon(weaponName, WeaponType.LETHAL, type, weapon, levelUnlock);
+			grenade.setCreditUnlock(creditUnlock);
+			lethalWeapons.add(grenade);
 		}
 
-		System.out.println("Loaded T:" + tacticalWeapons.size());
-		System.out.println("Loaded L:" + lethalWeapons.size());
+		for (int i = 0; GunsFile.getData().contains("Weapons.TACTICAL." + i + ".name"); i++) {
+			String weaponName = GunsFile.getData().getString("Weapons.TACTICAL." + i + ".name");
+			UnlockType type = UnlockType.valueOf(GunsFile.getData().getString("Weapons.TACTICAL." + i + ".unlockType"));
+			ItemStack weapon = GunsFile.getData().getItemStack("Weapons.TACTICAL." + i + ".item");
+			int levelUnlock = GunsFile.getData().getInt("Weapons.TACTICAL." + i + ".levelUnlock");
+			int creditUnlock = GunsFile.getData().getInt("Weapons.TACTICAL." + i + ".creditUnlock");
+
+			CodWeapon grenade = new CodWeapon(weaponName, WeaponType.TACTICAL, type, weapon, levelUnlock);
+			grenade.setCreditUnlock(creditUnlock);
+			tacticalWeapons.add(grenade);
+		}
 	}
 
 	public void savePurchaseData(Player p) {
@@ -241,12 +228,10 @@ public class ShopManager {
 				boolean found = false;
 				List<CodWeapon> allWeapons = this.getLethalWeapons();
 				allWeapons.addAll(this.getTacticalWeapons());
-				for (CodWeapon weapon : this.getLethalWeapons()) {
+				for (CodWeapon weapon : allWeapons) {
 					if (weapon.getName().equals(s)) {
 						if (!grenades.contains(weapon)) {
 							grenades.add(weapon);
-							found = true;
-							break;
 						}
 						found = true;
 						break;
@@ -452,6 +437,7 @@ public class ShopManager {
 
 		List<CodWeapon> lethalGrenades = getLethalWeapons();
 		for (CodWeapon grenade : lethalGrenades) {
+			unlockGrenade(p, grenade);
 		}
 
 		List<CodWeapon> tacticalGrenades = getTacticalWeapons();
