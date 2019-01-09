@@ -1126,27 +1126,19 @@ public class GameInstance implements Listener {
 				game.updateTabList();
 
 				if (currentMap.getGamemode() == Gamemode.TDM || currentMap.getGamemode() == Gamemode.RSB || currentMap.getGamemode() == Gamemode.DOM || currentMap.getGamemode() == Gamemode.CTF || currentMap.getGamemode() == Gamemode.KC) {
-					if (BlueTeamScore >= maxScore_TDM || RedTeamScore >= maxScore_TDM && getGamemode().equals(Gamemode.TDM)) {
+					if ((BlueTeamScore >= maxScore_TDM || RedTeamScore >= maxScore_TDM) && getGamemode().equals(Gamemode.TDM)) {
 						endGameByScore(this);
 						return;
-					}
-
-					if (BlueTeamScore >= maxScore_RSB || RedTeamScore >= maxScore_RSB && getGamemode().equals(Gamemode.RSB)) {
+					} else if ((BlueTeamScore >= maxScore_RSB || RedTeamScore >= maxScore_RSB) && getGamemode().equals(Gamemode.RSB)) {
 						endGameByScore(this);
 						return;
-					}
-
-					if (BlueTeamScore >= maxScore_DOM || RedTeamScore >= maxScore_DOM && getGamemode().equals(Gamemode.DOM)) {
+					} else if ((BlueTeamScore >= maxScore_DOM || RedTeamScore >= maxScore_DOM) && getGamemode().equals(Gamemode.DOM)) {
 						endGameByScore(this);
 						return;
-					}
-
-					if (BlueTeamScore >= maxScore_CTF || RedTeamScore >= maxScore_CTF && getGamemode().equals(Gamemode.CTF)) {
+					} else if ((BlueTeamScore >= maxScore_CTF || RedTeamScore >= maxScore_CTF) && getGamemode().equals(Gamemode.CTF)) {
 						endGameByScore(this);
 						return;
-					}
-
-					if (BlueTeamScore >= maxScore_KC || RedTeamScore >= maxScore_KC && getGamemode().equals(Gamemode.KC)) {
+					} else if ((BlueTeamScore >= maxScore_KC || RedTeamScore >= maxScore_KC) && getGamemode().equals(Gamemode.KC)) {
 						endGameByScore(this);
 						return;
 					}
@@ -1578,18 +1570,21 @@ public class GameInstance implements Listener {
 			ChatColor tColor;
 			String team;
 
-			if (victim == redFlagHolder) {
-				dropFlag(blueFlag, victim.getLocation());
-				team = "blue";
-				tColor = ChatColor.RED;
-			} else {
-				dropFlag(redFlag, victim.getLocation());
-				team = "red";
-				tColor = ChatColor.BLUE;
-			}
+			if (getGamemode() == Gamemode.CTF) {
+				if (victim == redFlagHolder) {
+					dropFlag(blueFlag, victim.getLocation());
+					team = "blue";
+					tColor = ChatColor.RED;
+				} else {
+					dropFlag(redFlag, victim.getLocation());
+					team = "red";
+					tColor = ChatColor.BLUE;
+				}
 
-			for (Player p : players) {
-				Main.sendMessage(p, Lang.FLAG_DROPPED.getMessage().replace("{team}", team).replace("{team-color}", tColor + ""), Main.lang);
+				for (Player p : players) {
+					Main.sendMessage(p, Lang.FLAG_DROPPED.getMessage().replace("{team}", team).replace("{team-color}", tColor + ""), Main.lang);
+				}
+
 			}
 
 		} else if (getGamemode().equals(Gamemode.CTF) || getGamemode().equals(Gamemode.INFECT)) {

@@ -131,8 +131,6 @@ public class Listeners implements Listener {
 		double scalar;
 		
 		if (GameManager.isInMatch(p)) {
-			e.setCancelled(true);
-			
 			scalar = (Main.defaultHealth / 20D);
 			
 			damage = e.getDamage() * scalar;
@@ -142,12 +140,14 @@ public class Listeners implements Listener {
 		}
 		
 		if ((cause == DamageCause.DROWNING || cause == DamageCause.SUICIDE) && Objects.requireNonNull(GameManager.getMatchWhichContains(p)).getState() == GameState.IN_GAME) {
+			e.setCancelled(true);
 			Objects.requireNonNull(GameManager.getMatchWhichContains(p)).kill(p, p);
 			return;
 		}
 
 		if (cause != DamageCause.ENTITY_ATTACK && cause != DamageCause.ENTITY_EXPLOSION && cause != DamageCause.ENTITY_SWEEP_ATTACK && cause != DamageCause.PROJECTILE) {
 			if (!Objects.requireNonNull(GameManager.getMatchWhichContains(p)).health.isDead(p) && Objects.requireNonNull(GameManager.getMatchWhichContains(p)).getState() == GameState.IN_GAME) {
+				e.setCancelled(true);
 				Objects.requireNonNull(GameManager.getMatchWhichContains(p)).damagePlayer(p, damage);
 			}
 		}
