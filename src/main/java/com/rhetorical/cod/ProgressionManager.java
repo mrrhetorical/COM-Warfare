@@ -142,25 +142,24 @@ public class ProgressionManager {
 	}
 
 	private double getExperienceForLevel(int level) {
-		double exp;
 
-		if (level <= 0) {
-			return 0D;
-		} else if (level == 1) {
-			return 400D;
-		} else if (level == 2) {
-			return 4000D;
-		} else if (level < 10) {
-			exp = 4000 + (600 * (level - 2));
-		} else if (level > 10 && level <= 31) {
-			exp = 4000 + (800 * level - 2);
-		} else if (level >= 31 && level <= 55) {
-			exp = 4000 + (1200 * level - 2);
-		} else {
-			exp = 4000 + (2000 * level - 2);
-		}
+//		if (level <= 0) {
+//			return 0D;
+//		} else if (level == 1) {
+//			return 400D;
+//		} else if (level == 2) {
+//			return 4000D;
+//		} else if (level < 10) {
+//			exp = 4000 + (600 * (level - 2));
+//		} else if (level > 10 && level <= 31) {
+//			exp = 4000 + (800 * level - 2);
+//		} else if (level >= 31 && level <= 55) {
+//			exp = 4000 + (1200 * level - 2);
+//		} else {
+//			exp = 4000 + (2000 * level - 2);
+//		}
 
-		return exp;
+		return (level * 120d) + 240;
 	}
 
 	public void update(Player p) {
