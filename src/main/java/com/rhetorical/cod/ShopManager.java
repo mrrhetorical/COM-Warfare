@@ -99,16 +99,21 @@ public class ShopManager {
 	}
 
 	private void loadWeapons() {
-		lethalWeapons.add(Main.loadManager.getDefaultLethal());
-		tacticalWeapons.add(Main.loadManager.getDefaultTactical());
+		if (Main.loadManager.defaultLethal != null)
+			lethalWeapons.add(Main.loadManager.getDefaultLethal());
 
-		String[] weaponTypes = {"LETHAL", "TACTICAL"};
+		if (Main.loadManager.defaultTactical != null)
+			tacticalWeapons.add(Main.loadManager.getDefaultTactical());
 
-		for (int k = 0; k < weaponTypes.length; k++) {
+		String[] weaponTypes = new String[2];
+		weaponTypes[0] = "LETHAL";
+		weaponTypes[1] = "TACTICAL";
+
+		for (int k = 0; k < 2; k++) {
 
 			String s = weaponTypes[k];
 
-			for (int i = 0; GunsFile.getData().contains("Weapons." + s + "." + i + ".name"); i++) {
+			for (int i = 0; GunsFile.getData().contains("Weapons." + s + "." + i); i++) {
 				String weaponName = GunsFile.getData().getString("Weapons." + s + "." + i + ".name");
 				UnlockType type = UnlockType.valueOf(GunsFile.getData().getString("Weapons." + s + "." + i + ".unlockType"));
 				Material weaponMat = Material.valueOf(GunsFile.getData().getString("Weapons." + s + "." + i + ".item"));
@@ -121,12 +126,18 @@ public class ShopManager {
 				grenade.setCreditUnlock(creditUnlock);
 
 				if (k == 0) {
-					lethalWeapons.add(grenade);
+					if (!lethalWeapons.contains(grenade))
+						lethalWeapons.add(grenade);
 				} else {
-					tacticalWeapons.add(grenade);
+					if (!tacticalWeapons.contains(grenade))
+						tacticalWeapons.add(grenade);
 				}
 			}
+
 		}
+
+		System.out.println("Loaded T:" + tacticalWeapons.size());
+		System.out.println("Loaded L:" + lethalWeapons.size());
 	}
 
 	public void savePurchaseData(Player p) {
@@ -372,7 +383,7 @@ public class ShopManager {
 
 			if (!purchased.get(p).contains(grenade)) {
 
-				if (Main.progressionManager.getLevel(p) == grenade.getLevelUnlock()) {
+				if (Main.progressionManager.getLevel(p) >= grenade.getLevelUnlock()) {
 
 					ArrayList<CodWeapon> grenades = purchased.get(p);
 
@@ -387,7 +398,7 @@ public class ShopManager {
 				}
 			}
 		} else if (grenade.getType() == UnlockType.BOTH) {
-			if (Main.progressionManager.getLevel(p) == grenade.getLevelUnlock()) {
+			if (Main.progressionManager.getLevel(p) >= grenade.getLevelUnlock()) {
 				Main.sendMessage(p,
 						Main.codPrefix + Lang.WEAPON_PURCHASE_UNLOCKED.getMessage().replace("{gun-name}", grenade.getName()), Main.lang);
 			}
@@ -412,12 +423,11 @@ public class ShopManager {
 					}
 				}
 			} else if (gun.getType() == UnlockType.BOTH) {
-				if (Main.progressionManager.getLevel(p) == gun.getLevelUnlock()) {
+				if (Main.progressionManager.getLevel(p) >= gun.getLevelUnlock()) {
 					Main.sendMessage(p, Main.codPrefix + Lang.WEAPON_PURCHASE_UNLOCKED.getMessage().replace("{gun-name}", gun.getName()), Main.lang);
 				}
 			}
 
-			this.savePurchaseData(p);
 		}
 
 		List<CodGun> secondaryGuns = getSecondaryGuns();
@@ -428,26 +438,28 @@ public class ShopManager {
 
 				if (!purchased.get(p).contains(gun)) {
 
-					if (Main.progressionManager.getLevel(p) == gun.getLevelUnlock()) {
+					if (Main.progressionManager.getLevel(p) >= gun.getLevelUnlock()) {
 						unlockGun(purchased, p, gun);
 					}
 				}
 			} else if (gun.getType() == UnlockType.BOTH) {
-				if (Main.progressionManager.getLevel(p) == gun.getLevelUnlock()) {
+				if (Main.progressionManager.getLevel(p) >= gun.getLevelUnlock()) {
 					Main.sendMessage(p, Main.codPrefix + Lang.WEAPON_PURCHASE_UNLOCKED.getMessage().replace("{gun-name}", gun.getName()), Main.lang);
 				}
 			}
+
 		}
 
 		List<CodWeapon> lethalGrenades = getLethalWeapons();
 		for (CodWeapon grenade : lethalGrenades) {
-			unlockGrenade(p, grenade);
 		}
 
 		List<CodWeapon> tacticalGrenades = getTacticalWeapons();
 		for (CodWeapon grenade : tacticalGrenades) {
 			unlockGrenade(p, grenade);
 		}
+
+		this.savePurchaseData(p);
 
 	}
 
