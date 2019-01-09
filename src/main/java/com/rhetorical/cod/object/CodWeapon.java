@@ -75,18 +75,22 @@ public class CodWeapon {
 	
 	public ItemStack getWeapon() {
 		if (Main.hasQualityArms()) {
-			ItemStack gun = QualityGun.getGunForName(getName());
+			if (!this.equals(Main.loadManager.blankLethal) && !this.equals(Main.loadManager.blankTactical)) {
+				ItemStack gun = QualityGun.getGunForName(getName());
 
-			if (gun.getType() != Material.AIR) {
-				return gun;
+				if (gun.getType() != Material.AIR) {
+					return gun;
+				}
 			}
 		}
 
 		if (Main.hasCrackShot()) {
-			ItemStack gun = CrackShotGun.generateWeapon(getName());
+			if (!this.equals(Main.loadManager.blankLethal) && !this.equals(Main.loadManager.blankTactical)) {
+				ItemStack gun = CrackShotGun.generateWeapon(getName());
 
-			if (gun != null)
-				return gun;
+				if (gun != null)
+					return gun;
+			}
 		}
 		ItemMeta meta = weaponItem.getItemMeta();
 		

@@ -346,6 +346,7 @@ public class GameInstance implements Listener {
 				}
 			}
 		} else {
+			setTeamArmor(p, Color.PURPLE);
 			p.getInventory().setItem(0, Main.invManager.codItem);
 			p.getInventory().setItem(8, Main.invManager.leaveItem);
 		}
@@ -867,6 +868,10 @@ public class GameInstance implements Listener {
 		GameInstance game = this;
 
 		setupNextMaps();
+
+		for (Player p : players) {
+			setTeamArmor(p, Color.PURPLE);
+		}
 
 		BukkitRunnable br = new BukkitRunnable() {
 

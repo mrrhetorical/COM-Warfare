@@ -86,18 +86,22 @@ public class CodGun extends CodWeapon {
 
 	public ItemStack getGun() {
 		if (Main.hasQualityArms()) {
-			ItemStack gun = QualityGun.getGunForName(getName());
+			if (!this.equals(Main.loadManager.blankPrimary) && !this.equals(Main.loadManager.blankSecondary)) {
+				ItemStack gun = QualityGun.getGunForName(getName());
 
-			if (gun.getType() != Material.AIR) {
-				return gun;
+				if (gun.getType() != Material.AIR) {
+					return gun;
+				}
 			}
 		}
 
 		if (Main.hasCrackShot()) {
-			ItemStack gun = CrackShotGun.generateWeapon(getName());
+			if (!this.equals(Main.loadManager.blankPrimary) && !this.equals(Main.loadManager.blankSecondary)) {
+				ItemStack gun = CrackShotGun.generateWeapon(getName());
 
-			if (gun != null)
-				return gun;
+				if (gun != null)
+					return gun;
+			}
 		}
 		ItemMeta meta = this.gunItem.getItemMeta();
 		
