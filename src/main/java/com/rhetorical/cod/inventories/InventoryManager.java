@@ -921,7 +921,7 @@ public class InventoryManager implements Listener {
 			guns.addAll(Main.shopManager.getSecondaryGuns());
 
 			for (CodGun gun : guns) {
-				if (e.getCurrentItem().getType().equals(gun.getGun().getType())) {
+				if (e.getCurrentItem().getItemMeta().getDisplayName().equals(gun.getGun().getItemMeta().getDisplayName())) {
 					int cost = gun.getCreditUnlock();
 					if (CreditManager.purchase(p, cost)) {
 						ArrayList<CodGun> purchasedGuns = Main.shopManager.purchasedGuns.get(p);
@@ -954,7 +954,7 @@ public class InventoryManager implements Listener {
 
 			for (CodWeapon grenade : grenades) {
 				if (e.getCurrentItem().getType().equals(grenade.getWeapon().getType())
-				&&e.getCurrentItem().getItemMeta().getDisplayName().equals(grenade.getName())) {
+				&&e.getCurrentItem().getItemMeta().getDisplayName().equals(grenade.getWeapon().getItemMeta().getDisplayName())) {
 					int cost = grenade.getCreditUnlock();
 					if (CreditManager.purchase(p, cost)) {
 						ArrayList<CodWeapon> purchasedGrenades = Main.shopManager.purchasedWeapons.get(p);
