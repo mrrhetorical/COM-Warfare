@@ -30,6 +30,7 @@ public enum Lang {
 	SET_BALANCE_COMMAND("&aSuccessfully set {player}'s balance to {amount} credits!"),
 	FORCE_START_FAIL("&cCould not force start arena!"),
 	COULD_NOT_FIND_GAME_PLAYER_IN("&cCould not find the game that the player is in!"),
+	MUST_NOT_BE_IN_GAME("&cYou must not be in game to use that command!"),
 	MUST_BE_IN_GAME("&cYou must be in game to use that command!"),
 	PLAYERS_BOOTED_SUCCESS("&aAll players removed from all games!"),
 	PLAYER_BOOTED_FAILURE("&cCouldn't boot all players successfully!"),

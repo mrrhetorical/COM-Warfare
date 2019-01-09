@@ -81,6 +81,13 @@ public class CodWeapon {
 				return gun;
 			}
 		}
+
+		if (Main.hasCrackShot()) {
+			ItemStack gun = CrackShotGun.generateWeapon(getName());
+
+			if (gun != null)
+				return gun;
+		}
 		ItemMeta meta = weaponItem.getItemMeta();
 		
 		meta.setDisplayName(getName());

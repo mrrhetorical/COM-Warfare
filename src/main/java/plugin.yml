@@ -1,5 +1,5 @@
 name: COM-Warfare
-version: 2.8.4
+version: 2.8.5
 description: Call of Duty Multiplayer recreated for use in Minecraft!
 author: Mr_Rhetorical
 website: https://www.spigotmc.org/resources/21895/
@@ -7,7 +7,7 @@ website: https://www.spigotmc.org/resources/21895/
 main: com.rhetorical.cod.Main
 api-version: 1.13
 
-softdepend: [Multiverse-Core]
+softdepend: [Multiverse-Core, CrackShot, QualityArmory]
 
 commands:
   cod:

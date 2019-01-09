@@ -58,6 +58,9 @@ public class Main extends JavaPlugin {
 
 	public static String header = "[COM-Warfare]";
 
+	public static boolean hasQA = false;
+	public static boolean hasCS = false;
+
 	private Metrics bMetrics;
 
 	@Override
@@ -153,6 +156,7 @@ public class Main extends JavaPlugin {
 		invManager = new InventoryManager();
 
 		QualityGun.setup();
+		CrackShotGun.setup();
 		GameManager.setupOITC();
 		GameManager.setupGunGame();
 
@@ -205,6 +209,9 @@ public class Main extends JavaPlugin {
 			Main.serverRanks.add(rank);
 		}
 
+		hasQA = Bukkit.getServer().getPluginManager().getPlugin("QualityArmory") != null;
+		hasCS = Bukkit.getServer().getPluginManager().getPlugin("CrackShot") != null;
+
 		Main.cs.sendMessage(Main.codPrefix + ChatColor.GREEN + ChatColor.BOLD + "COM-Warfare version " + ChatColor.RESET + ChatColor.WHITE + version + ChatColor.RESET + ChatColor.GREEN + ChatColor.BOLD + " is now up and running!");
 
 		if (serverMode) {
@@ -212,7 +219,6 @@ public class Main extends JavaPlugin {
 				GameManager.findMatch(p);
 			}
 		}
-
 	}
 
 	@Override
@@ -600,6 +606,12 @@ public class Main extends JavaPlugin {
 					return true;
 				}
 				Player p = (Player) sender;
+
+				if (GameManager.isInMatch(p)) {
+					sendMessage(p, Lang.MUST_NOT_BE_IN_GAME.getMessage(), lang);
+					return true;
+				}
+
 				if (lobbyLoc != null) {
 					p.teleport(lobbyLoc);
 				} else {
@@ -1141,7 +1153,11 @@ public class Main extends JavaPlugin {
 	}
 
 	public static boolean hasQualityArms() {
-		return Bukkit.getServer().getPluginManager().getPlugin("QualityArmory") != null;
+		return hasQA;
+	}
+
+	public static boolean hasCrackShot() {
+		return hasCS;
 	}
 
 }

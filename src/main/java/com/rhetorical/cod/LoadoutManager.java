@@ -126,32 +126,33 @@ public class LoadoutManager {
 		// Primary & Ammo
 
 		if (!primary.equals(Main.loadManager.blankPrimary)) {
-					p.getInventory().setItem(1, Main.hasQualityArms() ? QualityGun.getGunForName(primary.getName()) : primary.getGun());
+			p.getInventory().setItem(1, primary.getGun());
 
-					ItemStack primaryAmmo = Main.hasQualityArms() ? QualityGun.getAmmoForName(primary.getName()) : primary.getAmmo();
-					primaryAmmo.setAmount(primary.getAmmoCount());
-					p.getInventory().setItem(19, primaryAmmo);
+			ItemStack primaryAmmo = primary.getAmmo();
+			primaryAmmo.setAmount(primary.getAmmoCount());
+			p.getInventory().setItem(19, primaryAmmo);
 		}
-		
+
 		// Secondary & Ammo
 
 		if (!secondary.equals(Main.loadManager.blankSecondary)) {
-					p.getInventory().setItem(2, Main.hasQualityArms() ? QualityGun.getGunForName(secondary.getName()) : secondary.getGun());
-					if (!loadout.hasPerk(Perk.ONE_MAN_ARMY)) {
-						ItemStack secondaryAmmo = Main.hasQualityArms() ? QualityGun.getAmmoForName(secondary.getName()) : secondary.getAmmo();
-						secondaryAmmo.setAmount(secondary.getAmmoCount());
-						p.getInventory().setItem(25, secondaryAmmo);
-					}
+			p.getInventory().setItem(2, secondary.getGun());
+			if (!loadout.hasPerk(Perk.ONE_MAN_ARMY)) {
+				ItemStack secondaryAmmo = secondary.getAmmo();
+				secondaryAmmo.setAmount(secondary.getAmmoCount());
+				p.getInventory().setItem(25, secondaryAmmo);
+			}
 		}
 
 		// Grenades
 
-		if (!lethal.equals(Main.loadManager.blankLethal))
-					p.getInventory().setItem(3, Main.hasQualityArms() ? QualityGun.getGunForName(lethal.getName()) : lethal.getWeapon());
+		if (!lethal.equals(Main.loadManager.blankLethal)) {
+			p.getInventory().setItem(3, lethal.getWeapon());
+		}
 
-		if (!tactical.equals(Main.loadManager.blankTactical))
-					p.getInventory().setItem(4, Main.hasQualityArms() ? QualityGun.getGunForName(tactical.getName()) : tactical.getWeapon());
-
+		if (!tactical.equals(Main.loadManager.blankTactical)) {
+			p.getInventory().setItem(4, tactical.getWeapon());
+		}
 	}
 
 	public int getAllowedClasses(Player p) {

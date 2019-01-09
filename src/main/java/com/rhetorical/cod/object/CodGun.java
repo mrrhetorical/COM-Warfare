@@ -92,6 +92,13 @@ public class CodGun extends CodWeapon {
 				return gun;
 			}
 		}
+
+		if (Main.hasCrackShot()) {
+			ItemStack gun = CrackShotGun.generateWeapon(getName());
+
+			if (gun != null)
+				return gun;
+		}
 		ItemMeta meta = this.gunItem.getItemMeta();
 		
 		meta.setDisplayName(this.getName());

@@ -6,13 +6,10 @@ import org.bukkit.inventory.ItemStack;
 public class QualityGun {
 
     private static Class<?> apiClass;
-    private static Object apiObject;
 
     public static void setup() {
         try {
             apiClass = Class.forName("me.zombie_striker.qg.api.QualityArmory");
-//            apiClass = Class.forName("QualityArmory");
-            apiObject = apiClass.newInstance();
         } catch(ClassNotFoundException ignored) {} catch(Exception ignored) {}
     }
 
