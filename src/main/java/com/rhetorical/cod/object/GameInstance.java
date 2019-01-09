@@ -2282,11 +2282,11 @@ public class GameInstance implements Listener {
 
 	}
 
-	private void setTeamArmor(Player p, Color color) {
-		ItemStack helmet = new ItemStack(Material.LEATHER_HELMET);
-		ItemStack chest = new ItemStack(Material.LEATHER_CHESTPLATE);
-		ItemStack legs = new ItemStack(Material.LEATHER_LEGGINGS);
-		ItemStack boots = new ItemStack(Material.LEATHER_BOOTS);
+	public static void setTeamArmor(Player p, Color color) {
+		ItemStack helmet = new ItemStack(Material.LEATHER_HELMET, 1);
+		ItemStack chest = new ItemStack(Material.LEATHER_CHESTPLATE, 1);
+		ItemStack legs = new ItemStack(Material.LEATHER_LEGGINGS, 1);
+		ItemStack boots = new ItemStack(Material.LEATHER_BOOTS, 1);
 
 		LeatherArmorMeta hMeta = (LeatherArmorMeta) helmet.getItemMeta();
 		hMeta.setColor(color);
