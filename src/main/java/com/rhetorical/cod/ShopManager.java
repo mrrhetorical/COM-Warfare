@@ -406,7 +406,7 @@ public class ShopManager {
 
 				if (!purchased.get(p).contains(gun)) {
 
-					if (Main.progressionManager.getLevel(p) == gun.getLevelUnlock()) {
+					if (Main.progressionManager.getLevel(p) >= gun.getLevelUnlock()) {
 
 						unlockGun(purchased, p, gun);
 					}

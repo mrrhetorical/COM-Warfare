@@ -94,6 +94,8 @@ public class GameManager {
 	}
 
 	public static boolean findMatch(Player p) {
+
+		Main.shopManager.checkForNewGuns(p);
 		
 		try  {
 			Main.loadManager.load(p);
