@@ -474,7 +474,8 @@ public class InventoryManager implements Listener {
 
 					item.setItemMeta(gunMeta);
 
-					weaponShop.addItem(item);
+					if (!weaponShop.contains(item))
+						weaponShop.addItem(item);
 
 				}
 

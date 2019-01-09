@@ -102,7 +102,7 @@ public class ShopManager {
 		lethalWeapons.add(Main.loadManager.getDefaultLethal());
 		tacticalWeapons.add(Main.loadManager.getDefaultTactical());
 
-		for (int i = 0; GunsFile.getData().contains("Weapons.LETHAL." + i + ".name"); i++) {
+		for (int i = 0; GunsFile.getData().contains("Weapons.LETHAL." + i); i++) {
 			String weaponName = GunsFile.getData().getString("Weapons.LETHAL." + i + ".name");
 			UnlockType type = UnlockType.valueOf(GunsFile.getData().getString("Weapons.LETHAL." + i + ".unlockType"));
 			ItemStack weapon = GunsFile.getData().getItemStack("Weapons.LETHAL." + i + ".item");
@@ -114,7 +114,7 @@ public class ShopManager {
 			lethalWeapons.add(grenade);
 		}
 
-		for (int i = 0; GunsFile.getData().contains("Weapons.TACTICAL." + i + ".name"); i++) {
+		for (int i = 0; GunsFile.getData().contains("Weapons.TACTICAL." + i); i++) {
 			String weaponName = GunsFile.getData().getString("Weapons.TACTICAL." + i + ".name");
 			UnlockType type = UnlockType.valueOf(GunsFile.getData().getString("Weapons.TACTICAL." + i + ".unlockType"));
 			ItemStack weapon = GunsFile.getData().getItemStack("Weapons.TACTICAL." + i + ".item");
