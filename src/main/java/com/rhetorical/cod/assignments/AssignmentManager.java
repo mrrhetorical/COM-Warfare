@@ -1,7 +1,7 @@
 package com.rhetorical.cod.assignments;
 
 import com.rhetorical.cod.files.AssignmentFile;
-import com.rhetorical.cod.object.Gamemode;
+import com.rhetorical.cod.game.Gamemode;
 import org.bukkit.entity.Player;
 
 import java.util.*;

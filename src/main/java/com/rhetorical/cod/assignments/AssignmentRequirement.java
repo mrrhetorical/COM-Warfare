@@ -1,6 +1,6 @@
 package com.rhetorical.cod.assignments;
 
-import com.rhetorical.cod.object.Gamemode;
+import com.rhetorical.cod.game.Gamemode;
 
 public class AssignmentRequirement {
 

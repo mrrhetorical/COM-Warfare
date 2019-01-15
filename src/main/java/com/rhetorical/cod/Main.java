@@ -2,9 +2,21 @@ package com.rhetorical.cod;
 
 import com.rhetorical.cod.assignments.AssignmentManager;
 import com.rhetorical.cod.files.*;
+import com.rhetorical.cod.game.CodMap;
+import com.rhetorical.cod.game.GameInstance;
+import com.rhetorical.cod.game.GameManager;
+import com.rhetorical.cod.game.Gamemode;
+import com.rhetorical.cod.inventories.ShopManager;
+import com.rhetorical.cod.loadouts.LoadoutManager;
+import com.rhetorical.cod.perks.PerkListener;
+import com.rhetorical.cod.perks.PerkManager;
+import com.rhetorical.cod.progression.CreditManager;
+import com.rhetorical.cod.progression.ProgressionManager;
+import com.rhetorical.cod.progression.RankPerks;
+import com.rhetorical.cod.streaks.KillStreakManager;
 import com.rhetorical.cod.inventories.InventoryManager;
 import com.rhetorical.cod.lang.Lang;
-import com.rhetorical.cod.object.*;
+import com.rhetorical.cod.weapons.*;
 import com.rhetorical.tpp.McLang;
 import com.rhetorical.tpp.api.McTranslate;
 import net.md_5.bungee.api.ChatMessageType;
@@ -20,7 +32,6 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -230,8 +241,8 @@ public class Main extends JavaPlugin {
 
 	@Override
 	public void onDisable() {
-		if (GameManager.addedMaps.size() != 0) {
-			for (CodMap m : GameManager.addedMaps) {
+		if (GameManager.getAddedMaps().size() != 0) {
+			for (CodMap m : GameManager.getAddedMaps()) {
 				m.save();
 			}
 
@@ -380,7 +391,7 @@ public class Main extends JavaPlugin {
 			} else if (args[0].equalsIgnoreCase("listMaps") && hasPerm(sender, "com.map.list")) {
 				sendMessage(sender, Main.codPrefix + Lang.MAP_LIST_HEADER.getMessage(), lang);
 				int k = 0;
-				for (CodMap m : GameManager.addedMaps) {
+				for (CodMap m : GameManager.getAddedMaps()) {
 					k++;
 					StringBuilder gmr = new StringBuilder();
 					for(Gamemode gm : m.getAvailableGamemodes()) {
@@ -418,7 +429,7 @@ public class Main extends JavaPlugin {
 					CodMap newMap;
 					String mapName = args[1];
 
-					for (CodMap m : GameManager.addedMaps) {
+					for (CodMap m : GameManager.getAddedMaps()) {
 						if (m.getName().equalsIgnoreCase(mapName)) {
 							sendMessage(sender, Main.codPrefix + Lang.CREATE_MAP_ALREADY_EXISTS.getMessage(), lang);
 							return true;
@@ -427,7 +438,7 @@ public class Main extends JavaPlugin {
 
 					newMap = new CodMap(mapName);
 
-					GameManager.addedMaps.add(newMap);
+					GameManager.getAddedMaps().add(newMap);
 					String msg = Lang.CREATE_MAP_SUCCESS.getMessage();
 					msg = msg.replace("{map-name}", mapName);
 					sendMessage(sender, Main.codPrefix + msg, lang);
@@ -445,9 +456,9 @@ public class Main extends JavaPlugin {
 
 					String mapName = args[1];
 
-					for (CodMap m : GameManager.addedMaps) {
+					for (CodMap m : GameManager.getAddedMaps()) {
 						if (m.getName().equalsIgnoreCase(mapName)) {
-							GameManager.addedMaps.remove(m);
+							GameManager.getAddedMaps().remove(m);
 
 							File aFile = new File(getPlugin().getDataFolder(), "arenas.yml");
 
@@ -457,7 +468,7 @@ public class Main extends JavaPlugin {
 
 							ArenasFile.setup(getPlugin());
 
-							for (CodMap notChanged : GameManager.addedMaps) {
+							for (CodMap notChanged : GameManager.getAddedMaps()) {
 								notChanged.save();
 							}
 
@@ -506,7 +517,7 @@ public class Main extends JavaPlugin {
 					}
 					CodMap map = null;
 					String spawnMapName = args[2];
-					for (CodMap m : GameManager.addedMaps) {
+					for (CodMap m : GameManager.getAddedMaps()) {
 						if (m.getName().equalsIgnoreCase(spawnMapName)) {
 							map = m;
 						}
@@ -554,7 +565,7 @@ public class Main extends JavaPlugin {
 					CodMap map = null;
 
 					String mapName = args[2];
-					for(CodMap m : GameManager.addedMaps) {
+					for(CodMap m : GameManager.getAddedMaps()) {
 						if (m.getName().equalsIgnoreCase(mapName)){
 							map = m;
 							break;
@@ -900,10 +911,10 @@ public class Main extends JavaPlugin {
 	}
 
 	private boolean bootPlayers() {
-		GameInstance[] runningGames = new GameInstance[GameManager.runningGames.size()];
+		GameInstance[] runningGames = new GameInstance[GameManager.getRunningGames().size()];
 
 		for (int k = 0; k < runningGames.length; k++) {
-			runningGames[k] = GameManager.runningGames.get(k);
+			runningGames[k] = GameManager.getRunningGames().get(k);
 		}
 
 		for (GameInstance i : runningGames) {

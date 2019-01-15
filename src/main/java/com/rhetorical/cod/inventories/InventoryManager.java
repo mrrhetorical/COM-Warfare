@@ -2,9 +2,13 @@ package com.rhetorical.cod.inventories;
 
 import java.util.*;
 
+import com.rhetorical.cod.loadouts.Loadout;
 import com.rhetorical.cod.lang.Lang;
-import com.rhetorical.cod.object.*;
-import org.bukkit.ChatColor;
+import com.rhetorical.cod.perks.CodPerk;
+import com.rhetorical.cod.perks.Perk;
+import com.rhetorical.cod.perks.PerkSlot;
+import com.rhetorical.cod.streaks.KillStreak;
+import com.rhetorical.cod.weapons.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -17,10 +21,10 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import com.rhetorical.cod.CreditManager;
-import com.rhetorical.cod.GameManager;
+import com.rhetorical.cod.progression.CreditManager;
+import com.rhetorical.cod.game.GameManager;
 import com.rhetorical.cod.Main;
-import com.rhetorical.cod.StatHandler;
+import com.rhetorical.cod.progression.StatHandler;
 
 import static com.rhetorical.cod.Main.lastLoc;
 import static com.rhetorical.cod.Main.lobbyLoc;
