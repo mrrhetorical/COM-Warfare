@@ -1,13 +1,12 @@
 package com.rhetorical.cod.game;
 
+import com.rhetorical.cod.Main;
+import com.rhetorical.cod.files.ArenasFile;
+import org.bukkit.Location;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import org.bukkit.Location;
-
-import com.rhetorical.cod.Main;
-import com.rhetorical.cod.files.ArenasFile;
 
 public class CodMap {
 	

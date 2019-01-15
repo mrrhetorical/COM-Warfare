@@ -1,10 +1,8 @@
 package com.rhetorical.cod.perks;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
+import com.rhetorical.cod.Main;
 import com.rhetorical.cod.game.GameInstance;
+import com.rhetorical.cod.game.GameManager;
 import com.rhetorical.cod.lang.Lang;
 import com.rhetorical.cod.loadouts.Loadout;
 import org.bukkit.Bukkit;
@@ -21,8 +19,9 @@ import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import com.rhetorical.cod.game.GameManager;
-import com.rhetorical.cod.Main;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public class PerkListener implements Listener {
 

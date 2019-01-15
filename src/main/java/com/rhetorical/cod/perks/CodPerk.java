@@ -1,9 +1,9 @@
 package com.rhetorical.cod.perks;
 
-import java.util.ArrayList;
-
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+
+import java.util.ArrayList;
 
 public class CodPerk {
 	private Perk perk;

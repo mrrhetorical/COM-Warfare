@@ -1,10 +1,8 @@
 package com.rhetorical.cod.loadouts;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
 import com.rhetorical.cod.Main;
-import com.rhetorical.cod.loadouts.Loadout;
+import com.rhetorical.cod.files.GunsFile;
+import com.rhetorical.cod.files.LoadoutsFile;
 import com.rhetorical.cod.lang.Lang;
 import com.rhetorical.cod.perks.CodPerk;
 import com.rhetorical.cod.perks.Perk;
@@ -17,8 +15,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import com.rhetorical.cod.files.GunsFile;
-import com.rhetorical.cod.files.LoadoutsFile;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class LoadoutManager {
 

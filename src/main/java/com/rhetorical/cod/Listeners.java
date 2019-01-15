@@ -1,8 +1,9 @@
 package com.rhetorical.cod;
 
+import com.rhetorical.cod.game.GameInstance;
 import com.rhetorical.cod.game.GameManager;
-import com.rhetorical.cod.lang.Lang;
 import com.rhetorical.cod.game.GameState;
+import com.rhetorical.cod.lang.Lang;
 import com.rhetorical.cod.progression.CreditManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -17,8 +18,6 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-
-import com.rhetorical.cod.game.GameInstance;
 
 import java.util.Objects;
 

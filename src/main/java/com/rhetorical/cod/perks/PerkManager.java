@@ -1,15 +1,11 @@
 package com.rhetorical.cod.perks;
 
-import java.util.ArrayList;
-
 import com.rhetorical.cod.Main;
 import com.rhetorical.cod.lang.Lang;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
-import com.rhetorical.cod.perks.CodPerk;
-import com.rhetorical.cod.perks.Perk;
-import com.rhetorical.cod.perks.PerkSlot;
+import java.util.ArrayList;
 
 public class PerkManager {
 

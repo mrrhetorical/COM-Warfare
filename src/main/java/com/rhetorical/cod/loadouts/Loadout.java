@@ -1,5 +1,6 @@
 package com.rhetorical.cod.loadouts;
 
+import com.rhetorical.cod.Main;
 import com.rhetorical.cod.perks.CodPerk;
 import com.rhetorical.cod.perks.Perk;
 import com.rhetorical.cod.perks.PerkSlot;
@@ -10,8 +11,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
-
-import com.rhetorical.cod.Main;
 
 public class Loadout implements Listener {
 

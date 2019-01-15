@@ -1,12 +1,12 @@
 package com.rhetorical.cod;
 
+import org.bukkit.Bukkit;
+
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
-
-import org.bukkit.Bukkit;
 
 class DependencyManager {
 

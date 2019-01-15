@@ -1,14 +1,13 @@
 package com.rhetorical.cod.streaks;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
+import com.rhetorical.cod.Main;
+import com.rhetorical.cod.files.KillstreaksFile;
 import com.rhetorical.cod.lang.Lang;
 import org.bukkit.entity.Player;
 
-import com.rhetorical.cod.Main;
-import com.rhetorical.cod.files.KillstreaksFile;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 
 public class KillStreakManager {

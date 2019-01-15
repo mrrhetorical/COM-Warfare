@@ -1,25 +1,20 @@
 package com.rhetorical.cod.inventories;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
 import com.rhetorical.cod.Main;
+import com.rhetorical.cod.files.GunsFile;
+import com.rhetorical.cod.files.ShopFile;
 import com.rhetorical.cod.lang.Lang;
+import com.rhetorical.cod.perks.CodPerk;
+import com.rhetorical.cod.weapons.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import com.rhetorical.cod.files.GunsFile;
-import com.rhetorical.cod.files.ShopFile;
-import com.rhetorical.cod.weapons.CodGun;
-import com.rhetorical.cod.perks.CodPerk;
-import com.rhetorical.cod.weapons.CodWeapon;
-import com.rhetorical.cod.weapons.GunType;
-import com.rhetorical.cod.weapons.UnlockType;
-import com.rhetorical.cod.weapons.WeaponType;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public class ShopManager {
 

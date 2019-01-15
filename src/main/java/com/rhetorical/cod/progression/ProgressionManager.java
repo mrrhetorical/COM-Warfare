@@ -1,15 +1,14 @@
 package com.rhetorical.cod.progression;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
 import com.rhetorical.cod.ComVersion;
 import com.rhetorical.cod.Main;
+import com.rhetorical.cod.files.ProgressionFile;
 import com.rhetorical.cod.lang.Lang;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import com.rhetorical.cod.files.ProgressionFile;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class ProgressionManager {
 

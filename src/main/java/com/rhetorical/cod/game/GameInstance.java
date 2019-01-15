@@ -1,6 +1,7 @@
 package com.rhetorical.cod.game;
 
-import com.rhetorical.cod.*;
+import com.rhetorical.cod.ComVersion;
+import com.rhetorical.cod.Main;
 import com.rhetorical.cod.lang.Lang;
 import com.rhetorical.cod.loadouts.Loadout;
 import com.rhetorical.cod.perks.Perk;
@@ -25,7 +26,10 @@ import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scoreboard.*;
+import org.bukkit.scoreboard.DisplaySlot;
+import org.bukkit.scoreboard.Objective;
+import org.bukkit.scoreboard.Score;
+import org.bukkit.scoreboard.Scoreboard;
 
 import java.util.*;
 
@@ -85,7 +89,7 @@ public class GameInstance implements Listener {
 
 	private CodMap[] nextMaps = new CodMap[2];
 	private Gamemode[] nextModes = new Gamemode[2];
-	private ArrayList<Player>[] mapVotes = new ArrayList[2];
+	private ArrayList[] mapVotes = new ArrayList[2];
 
 	public GameInstance(ArrayList<Player> pls, CodMap map) {
 

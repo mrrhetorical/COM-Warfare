@@ -1,14 +1,12 @@
 package com.rhetorical.cod.progression;
 
-import java.util.HashMap;
-
 import com.rhetorical.cod.Main;
+import com.rhetorical.cod.files.CreditsFile;
 import com.rhetorical.cod.lang.Lang;
 import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
-import com.rhetorical.cod.files.CreditsFile;
+import java.util.HashMap;
 
 public class CreditManager {
 	private static HashMap<Player, Integer> creditMap = new HashMap<>();

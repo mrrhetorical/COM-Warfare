@@ -1,11 +1,10 @@
 package com.rhetorical.cod.progression;
 
-import java.util.ArrayList;
-
+import com.rhetorical.cod.files.StatsFile;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import com.rhetorical.cod.files.StatsFile;
+import java.util.ArrayList;
 
 public class StatHandler {
 

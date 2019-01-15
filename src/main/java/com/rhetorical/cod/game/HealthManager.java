@@ -1,11 +1,11 @@
 package com.rhetorical.cod.game;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffectType;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class HealthManager {
 	private HashMap<Player, Double> healthMap = new HashMap<Player, Double>();

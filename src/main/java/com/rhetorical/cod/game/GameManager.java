@@ -1,12 +1,7 @@
 package com.rhetorical.cod.game;
 
-import java.util.*;
-
 import com.rhetorical.cod.Main;
-import com.rhetorical.cod.game.CodMap;
-import com.rhetorical.cod.game.GameInstance;
-import com.rhetorical.cod.game.GameState;
-import com.rhetorical.cod.game.Gamemode;
+import com.rhetorical.cod.files.ArenasFile;
 import com.rhetorical.cod.lang.Lang;
 import com.rhetorical.cod.weapons.CodGun;
 import com.rhetorical.cod.weapons.CodWeapon;
@@ -14,7 +9,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
-import com.rhetorical.cod.files.ArenasFile;
+import java.util.*;
 
 public class GameManager {
 

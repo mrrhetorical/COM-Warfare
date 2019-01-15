@@ -1,8 +1,6 @@
 package com.rhetorical.cod.lang;
 
-import com.rhetorical.cod.Main;
 import com.rhetorical.cod.files.LangFile;
-import org.bukkit.ChatColor;
 
 public enum Lang {
 

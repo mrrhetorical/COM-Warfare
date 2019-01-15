@@ -1,8 +1,7 @@
 package com.rhetorical.cod.game;
 
-import org.bukkit.entity.Player;
-
 import com.rhetorical.cod.progression.StatHandler;
+import org.bukkit.entity.Player;
 
 public class CodScore {
 
