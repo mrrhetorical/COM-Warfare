@@ -23,9 +23,11 @@ public class AssignmentManager {
 			Gamemode mode = Gamemode.valueOf(AssignmentFile.getData().getString(base + "requiredMode"));
 			int amt = AssignmentFile.getData().getInt(base + "amount");
 
+			int progress = AssignmentFile.getData().getInt(base + "progress");
+
 			AssignmentRequirement requirement = new AssignmentRequirement(type, amt, mode);
 
-			Assignment assignment = new Assignment(p, requirement, requirement.getAssignmentType().getBaseReward() * requirement.getRequired());
+			Assignment assignment = new Assignment(p, requirement, progress,requirement.getAssignmentType().getBaseReward() * requirement.getRequired());
 			if (!assignments.contains(assignment)) {
 				assignments.add(assignment);
 			}
@@ -44,7 +46,7 @@ public class AssignmentManager {
 				int required;
 
 				if (type != AssignmentType.KILLS)
-					required = (new Random()).nextInt(4);
+					required = (new Random()).nextInt(4) + 1;
 				else
 					required = (new Random()).nextInt(50) + 25;
 				AssignmentRequirement requirement = new AssignmentRequirement(type, required, mode);
@@ -67,6 +69,7 @@ public class AssignmentManager {
 			AssignmentFile.getData().set(base + "assignmentType", assignment.getRequirement().getAssignmentType().toString());
 			AssignmentFile.getData().set(base + "requiredMode", assignment.getRequirement().getReqMode().toString());
 			AssignmentFile.getData().set(base + "amount", assignment.getRequirement().getRequired());
+			AssignmentFile.getData().set(base + "progress", assignment.getProgress());
 		}
 
 		AssignmentFile.saveData();

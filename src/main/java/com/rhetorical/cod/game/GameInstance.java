@@ -775,7 +775,7 @@ public class GameInstance implements Listener {
 //			if (!scoreBar.getPlayers().contains(p)) {
 //				scoreBar.addPlayer(p);
 //			}
-				List<Player> players = (List<Player>) scoreBar.getClass().getMethod("getPlayers").invoke(scoreBar);
+				List players = (List) scoreBar.getClass().getMethod("getPlayers").invoke(scoreBar);
 				if (!players.contains(p)) {
 					scoreBar.getClass().getMethod("addPlayer", Player.class).invoke(scoreBar, p);
 				}
@@ -1113,6 +1113,9 @@ public class GameInstance implements Listener {
 				}
 
 				if (currentMap.getGamemode() == Gamemode.INFECT) {
+					BlueTeamScore = blueTeam.size();
+					RedTeamScore = redTeam.size();
+
 					if (blueTeam.size() == 0) {
 						endGameByScore(this);
 						return;
@@ -1351,6 +1354,10 @@ public class GameInstance implements Listener {
 			}
 
 			return highestScoringPlayer.getDisplayName();
+		}
+
+		if (getGamemode() == Gamemode.INFECT && BlueTeamScore > 0) {
+			return "blue";
 		}
 
 		if (RedTeamScore > BlueTeamScore) {
