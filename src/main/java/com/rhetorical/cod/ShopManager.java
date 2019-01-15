@@ -44,6 +44,19 @@ public class ShopManager {
 		}
 	}
 
+	public void prestigePlayer(Player p) {
+		ArrayList<CodGun> guns = new ArrayList<>();
+		ArrayList<CodWeapon> grenades = new ArrayList<>();
+		ArrayList<CodPerk> perks = new ArrayList<>();
+
+		purchasedGuns.put(p, guns);
+		purchasedWeapons.put(p, grenades);
+		purchasedPerks.put(p, perks);
+
+		savePurchaseData(p);
+		loadPurchaseData(p);
+	}
+
 	private void loadGuns() {
 
 		if (Main.loadManager.getDefaultPrimary() == null) {
@@ -383,7 +396,7 @@ public class ShopManager {
 				}
 			}
 		} else if (grenade.getType() == UnlockType.BOTH) {
-			if (Main.progressionManager.getLevel(p) >= grenade.getLevelUnlock()) {
+			if (Main.progressionManager.getLevel(p) == grenade.getLevelUnlock()) {
 				Main.sendMessage(p,
 						Main.codPrefix + Lang.WEAPON_PURCHASE_UNLOCKED.getMessage().replace("{gun-name}", grenade.getName()), Main.lang);
 			}
@@ -408,7 +421,7 @@ public class ShopManager {
 					}
 				}
 			} else if (gun.getType() == UnlockType.BOTH) {
-				if (Main.progressionManager.getLevel(p) >= gun.getLevelUnlock()) {
+				if (Main.progressionManager.getLevel(p) == gun.getLevelUnlock()) {
 					Main.sendMessage(p, Main.codPrefix + Lang.WEAPON_PURCHASE_UNLOCKED.getMessage().replace("{gun-name}", gun.getName()), Main.lang);
 				}
 			}

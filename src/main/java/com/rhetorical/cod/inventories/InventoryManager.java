@@ -853,6 +853,13 @@ public class InventoryManager implements Listener {
 				p.openInventory(leaderboardInventory);
 			} else if (e.getCurrentItem().equals(scoreStreaks)) {
 				this.openKillStreaksInventory(p);
+			} else if (e.getCurrentItem().getType() == Material.ANVIL) {
+				if (Main.progressionManager.getLevel(p) == Main.progressionManager.maxLevel) {
+					Main.progressionManager.addPrestigeLevel(p);
+					p.closeInventory();
+				} else {
+					Main.sendMessage(p, Lang.ERROR_NOT_HIGH_ENOUGH_LEVEL.getMessage(), Main.lang);
+				}
 			}
 		} else if (e.getInventory().equals(mainShopInventory)) {
 			if (e.getCurrentItem().equals(gunShopItem)) {
@@ -1252,7 +1259,8 @@ public class InventoryManager implements Listener {
 //				return;
 			}
 
-			if (item.equals(voteItemA) || altItem.equals(voteItemA)) {
+			if ((item.getItemMeta() != null && item.getItemMeta().getDisplayName().equals(voteItemA.getItemMeta().getDisplayName()))
+					|| (altItem.getItemMeta() != null && altItem.getItemMeta().getDisplayName().equals(voteItemA.getItemMeta().getDisplayName()))) {
 				try {
 					Objects.requireNonNull(GameManager.getMatchWhichContains(e.getPlayer())).addVote(0, e.getPlayer());
 				} catch (Exception ignored) {
@@ -1262,7 +1270,8 @@ public class InventoryManager implements Listener {
 				Main.sendMessage(e.getPlayer(), Main.codPrefix + Lang.VOTE_REGISTERED.getMessage(), Main.lang);
 			}
 
-			if (item.equals(voteItemB) || altItem.equals(voteItemB)) {
+			if ((item.getItemMeta() != null && item.getItemMeta().getDisplayName().equals(voteItemB.getItemMeta().getDisplayName()))
+					|| (altItem.getItemMeta() != null && altItem.getItemMeta().getDisplayName().equals(voteItemB.getItemMeta().getDisplayName()))) {
 				try {
 					Objects.requireNonNull(GameManager.getMatchWhichContains(e.getPlayer())).addVote(1, e.getPlayer());
 				} catch (Exception ignored) {

@@ -245,6 +245,10 @@ public class CodMap {
 		return getGamemode();
 	}
 
+	public void setGamemode(Gamemode mode) {
+		currentGamemode = mode;
+	}
+
 	//Changes the gamemode (if possible) to the given gamemode.
 	public boolean changeGamemode(Gamemode toChange) {
 		if (!getAvailableGamemodes().contains(toChange))
@@ -297,5 +301,13 @@ public class CodMap {
 
 	public List<Gamemode> getAvailableGamemodes() {
 		return this.availableGamemodes;
+	}
+
+	public Gamemode getRandomGameMode() {
+		List<Gamemode> modes = getAvailableGamemodes();
+		if (modes.size() == 0)
+			return null;
+		Collections.shuffle(modes);
+		return modes.get(0);
 	}
 }

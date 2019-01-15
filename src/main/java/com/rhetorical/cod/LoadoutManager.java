@@ -113,8 +113,6 @@ public class LoadoutManager {
 	}
 
 	public void giveLoadout(Player p, Loadout loadout) {
-		p.getInventory().clear();
-
 		CodGun primary = loadout.getPrimary();
 		CodGun secondary = loadout.getSecondary();
 		CodWeapon lethal = loadout.getLethal();
@@ -162,9 +160,6 @@ public class LoadoutManager {
 		for (int i = 1; i <= Main.progressionManager.getPrestigeLevel(p); i++) {
 			switch (i) {
 				case 1:
-					classes++;
-					break;
-				case 3:
 					classes++;
 					break;
 				case 5:
@@ -286,6 +281,13 @@ public class LoadoutManager {
 		return defaultTactical;
 	}
 
+	public void prestigePlayer(Player p) {
+		ArrayList<Loadout> loadouts = new ArrayList<>();
+		playerLoadouts.put(p, loadouts);
+		save(p);
+		load(p);
+	}
+
 	public boolean load(Player p) {
 
 		ArrayList<Loadout> l = new ArrayList<>();
@@ -396,18 +398,31 @@ public class LoadoutManager {
 			k++;
 		}
 
+		if (k < getAllowedClasses(p)) {
+			for (int i = k; i < getAllowedClasses(p); i++) {
+				Loadout loadout = getDefaultLoadout(p, i);
+				l.add(loadout);
+			}
+		}
+
 		if (l.isEmpty()) {
-			for (int i = 0; i < 5; i++) {
-				Loadout loadout = new Loadout(p, Lang.CLASS_PREFIX.getMessage() + " " + (i + 1), this.getDefaultPrimary(),
-						this.getDefaultSecondary(), this.getDefaultLethal(), this.getDefaultTactical(),
-						Main.perkManager.getDefaultPerk(PerkSlot.ONE), Main.perkManager.getDefaultPerk(PerkSlot.TWO),
-						Main.perkManager.getDefaultPerk(PerkSlot.THREE));
+			for (int i = 0; i < getAllowedClasses(p); i++) {
+				Loadout loadout = getDefaultLoadout(p, i);
 				l.add(loadout);
 			}
 		}
 
 		playerLoadouts.put(p, l);
 		return true;
+	}
+
+	private Loadout getDefaultLoadout(Player p, int i) {
+		Loadout loadout = new Loadout(p, Lang.CLASS_PREFIX.getMessage() + " " + (i + 1), this.getDefaultPrimary(),
+				this.getDefaultSecondary(), this.getDefaultLethal(), this.getDefaultTactical(),
+				Main.perkManager.getDefaultPerk(PerkSlot.ONE), Main.perkManager.getDefaultPerk(PerkSlot.TWO),
+				Main.perkManager.getDefaultPerk(PerkSlot.THREE));
+
+		return loadout;
 	}
 
 	public void save(Player p) {

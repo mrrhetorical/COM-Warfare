@@ -77,6 +77,7 @@ public class GameInstance implements Listener {
 	private boolean isLegacy = Main.isLegacy();
 
 	private CodMap[] nextMaps = new CodMap[2];
+	private Gamemode[] nextModes = new Gamemode[2];
 	private ArrayList<Player>[] mapVotes = new ArrayList[2];
 
 	public GameInstance(ArrayList<Player> pls, CodMap map) {
@@ -176,12 +177,18 @@ public class GameInstance implements Listener {
 		nextMaps[1] = m2 == null ? currentMap : m2;
 		mapVotes[0] = new ArrayList<>();
 		mapVotes[1] = new ArrayList<>();
+
+		if (nextMaps[0] != null)
+			nextModes[0] = nextMaps[0].getRandomGameMode();
+		if (nextMaps[1] != null)
+			nextModes[1] = nextMaps[1].getRandomGameMode();
 	}
 
 	private void clearNextMaps() {
 		if (nextMaps[0] != null && nextMaps[0] != currentMap) {
 			GameManager.usedMaps.remove(nextMaps[0]);
 		}
+
 		if (nextMaps[1] != null && nextMaps[1] != currentMap) {
 			GameManager.usedMaps.remove(nextMaps[1]);
 		}
@@ -250,6 +257,21 @@ public class GameInstance implements Listener {
 		}
 	}
 
+	public void changeMap(CodMap map, Gamemode mode) {
+		if (map == null)
+			return;
+
+		GameManager.usedMaps.remove(getMap());
+
+		currentMap = map;
+		map.setGamemode(mode);
+		if (mode == Gamemode.INFECT) {
+			gameTime = Main.getPlugin().getConfig().getInt("maxScore.INFECT");
+		} else {
+			gameTime = Main.getPlugin().getConfig().getInt("gameTime." + mode.toString());
+		}
+	}
+
 	private void changeGamemode(Gamemode gm) {
 		if (getState() != GameState.WAITING && getState() != GameState.STARTING)
 			return;
@@ -273,7 +295,8 @@ public class GameInstance implements Listener {
 
 
 		new PlayerSnapshot(p);
-		p.setPlayerListName(ChatColor.WHITE + "[P" + Main.progressionManager.getPrestigeLevel(p) + "L" +
+		String prestige = Main.progressionManager.getPrestigeLevel(p) > 0 ? ChatColor.WHITE + "[" + ChatColor.GREEN + Main.progressionManager.getPrestigeLevel(p) + ChatColor.WHITE + "]-" : "";
+		p.setPlayerListName(ChatColor.WHITE + prestige + "[" +
 				Main.progressionManager.getLevel(p) + "] " + ChatColor.YELLOW + p.getDisplayName());
 
 		health.addPlayer(p);
@@ -431,6 +454,8 @@ public class GameInstance implements Listener {
 		players.remove(p);
 		hungerManager.removePlayer(p);
 		ffaPlayerScores.remove(p);
+
+		Main.progressionManager.saveData(p);
 
 		if (players.size() == 0) {
 			GameManager.removeInstance(this);
@@ -900,6 +925,27 @@ public class GameInstance implements Listener {
 					System.out.println();
 				}catch(Exception ignored) {}
 
+				if (t == 20) {
+					CodMap[] maps = nextMaps;
+					int votes = 0;
+					if (mapVotes[0].size() > mapVotes[1].size()) {
+						changeMap(maps[0], nextModes[0]);
+						votes = mapVotes[0].size();
+					} else if (mapVotes[1].size() > mapVotes[0].size()) {
+						changeMap(maps[1], nextModes[1]);
+						votes = mapVotes[1].size();
+					} else {
+						int index = (new Random()).nextInt(2);
+						changeMap(maps[index], nextModes[index]);
+						votes = -1;
+					}
+					clearNextMaps();
+
+					for (Player p : game.players) {
+						Main.sendMessage(p, Main.codPrefix + Lang.MAP_VOTING_NEXT_MAP.getMessage().replace("{map}", game.currentMap.getName()), Main.lang);
+					}
+				}
+
 				if (t % 30 == 0 || (t % 10 == 0 && t < 30) || (t % 5 == 0 && t < 15)) {
 					for (Player p : game.players) {
 						Main.sendMessage(p, Main.codPrefix + Lang.GAME_STARTING_MESSAGE.getMessage().replace("{time}", getFancyTime(t)), Main.lang);
@@ -907,14 +953,15 @@ public class GameInstance implements Listener {
 						if (t > 20) {
 							Main.sendMessage(p, Main.codPrefix + Lang.MAP_VOTING_HEADER.getMessage(), Main.lang);
 							Main.sendMessage(p, Main.codPrefix + ChatColor.GRAY + "===============", Main.lang);
-							Main.sendMessage(p, Main.codPrefix + Lang.MAP_VOTING_NAMES.getMessage().replace("{1}", nextMaps[0].getName()).replace("{2}", nextMaps[1].getName()), Main.lang);
+							Main.sendMessage(p, Main.codPrefix + Lang.MAP_VOTING_NAMES.getMessage().replace("{1}", nextMaps[0].getName() + " - " + nextModes[0].toString()).replace("{2}", nextMaps[1].getName() + " - " + nextModes	[1].toString()), Main.lang);
 							Main.sendMessage(p, Main.codPrefix + Lang.MAP_VOTING_VOTES.getMessage().replace("{1}", mapVotes[0].size() + "").replace("{2}", mapVotes[1].size() + ""), Main.lang);
 						}
 					}
 				}
 
 				for (Player p : game.players) {
-					p.setPlayerListName(ChatColor.WHITE + "[P" + Main.progressionManager.getPrestigeLevel(p) + "L" +
+					String prestige = Main.progressionManager.getPrestigeLevel(p) > 0 ? ChatColor.WHITE + "[" + ChatColor.GREEN + Main.progressionManager.getPrestigeLevel(p) + ChatColor.WHITE + "]-" : "";
+					p.setPlayerListName(ChatColor.WHITE + prestige + "[" +
 							Main.progressionManager.getLevel(p) + "] " + ChatColor.YELLOW + p.getDisplayName());
 					try {
 						p.getClass().getMethod("setPlayerListHeader", String.class).invoke(p, Lang.LOBBY_HEADER.getMessage());
@@ -922,37 +969,30 @@ public class GameInstance implements Listener {
 					} catch(NoSuchMethodException ignored) {} catch(Exception ignored) {}
 
 					if (t > 20) {
-						if (p.getInventory().getItem(3) == null || !p.getInventory().getItem(3).equals(Main.invManager.voteItemA)) {
-							p.getInventory().setItem(3, Main.invManager.voteItemA);
+						if (p.getInventory().getItem(3) == null || !p.getInventory().getItem(3).getType().equals(Main.invManager.voteItemA.getType())) {
+							ItemStack voteItem = Main.invManager.voteItemA;
+							ItemMeta voteMeta = voteItem.getItemMeta();
+							List<String> lore = new ArrayList<>();
+							lore.add(Lang.VOTE_MAP_NAME.getMessage().replace("{map}", nextMaps[0].getName()));
+							lore.add(Lang.VOTE_MAP_MODE.getMessage().replace("{mode}", nextModes[0].toString()));
+							voteMeta.setLore(lore);
+							voteItem.setItemMeta(voteMeta);
+							p.getInventory().setItem(3, voteItem);
 						}
 
-						if (p.getInventory().getItem(4) == null || !p.getInventory().getItem(4).equals(Main.invManager.voteItemB)) {
-							p.getInventory().setItem(4, Main.invManager.voteItemB);
+						if (p.getInventory().getItem(4) == null || !p.getInventory().getItem(4).getType().equals(Main.invManager.voteItemB.getType())) {
+							ItemStack voteItem = Main.invManager.voteItemB;
+							ItemMeta voteMeta = voteItem.getItemMeta();
+							List<String> lore = new ArrayList<>();
+							lore.add(Lang.VOTE_MAP_NAME.getMessage().replace("{map}", nextMaps[1].getName()));
+							lore.add(Lang.VOTE_MAP_MODE.getMessage().replace("{mode}", nextModes[1].toString()));
+							voteMeta.setLore(lore);
+							voteItem.setItemMeta(voteMeta);
+							p.getInventory().setItem(4, voteItem);
 						}
 					} else {
 						p.getInventory().setItem(3, new ItemStack(Material.AIR));
 						p.getInventory().setItem(4, new ItemStack(Material.AIR));
-					}
-				}
-
-				if (t == 20) {
-					CodMap[] maps = nextMaps;
-					int votes = 0;
-					if (mapVotes[0].size() > mapVotes[1].size()) {
-						changeMap(maps[0]);
-						votes = mapVotes[0].size();
-					} else if (mapVotes[1].size() > mapVotes[0].size()) {
-						changeMap(maps[1]);
-						votes = mapVotes[1].size();
-					} else {
-						int index = (new Random()).nextInt(2);
-						changeMap(maps[index]);
-						votes = -1;
-					}
-					clearNextMaps();
-
-					for (Player p : game.players) {
-						Main.sendMessage(p, Main.codPrefix + Lang.MAP_VOTING_NEXT_MAP.getMessage().replace("{map}", game.currentMap.getName()), Main.lang);
 					}
 				}
 
@@ -1481,8 +1521,8 @@ public class GameInstance implements Listener {
 				p.getClass().getMethod("setPlayerListHeader", String.class).invoke(p, Main.header);
 				p.getClass().getMethod("setPlayerListFooter", String.class).invoke(p, ChatColor.WHITE + "Playing " + ChatColor.GOLD + getMap().getGamemode().toString() + ChatColor.WHITE + " on " + ChatColor.GOLD + getMap().getName() + ChatColor.WHITE + "!");
 			} catch(NoSuchMethodException ig) {} catch(Exception ignored) {}
-			String prestige = Main.progressionManager.getPrestigeLevel(p) > 0 ? "P" + Main.progressionManager.getPrestigeLevel(p) : "";
-			p.setPlayerListName(ChatColor.WHITE + "[" + prestige + "L" +
+			String prestige = Main.progressionManager.getPrestigeLevel(p) > 0 ? ChatColor.WHITE + "[" + ChatColor.GREEN + Main.progressionManager.getPrestigeLevel(p) + ChatColor.WHITE + "]-" : "";
+			p.setPlayerListName(ChatColor.WHITE + prestige + "[" +
 					Main.progressionManager.getLevel(p) + "] " + teamColor + p.getDisplayName() + ChatColor.WHITE + " [K] " +
 					ChatColor.GREEN + score.getKills() + ChatColor.WHITE + " [D] " + ChatColor.GREEN + score.getDeaths() +
 					ChatColor.WHITE + " [S] " + ChatColor.GREEN + score.getKillstreak());
@@ -1544,7 +1584,7 @@ public class GameInstance implements Listener {
 				}
 
 				Main.sendMessage(killer, "" + ChatColor.RED + ChatColor.BOLD + "YOU " + ChatColor.RESET + "" + ChatColor.WHITE + "[" + Lang.KILLED_TEXT.getMessage() +"] " + ChatColor.RESET + ChatColor.BLUE + ChatColor.BOLD + victim.getDisplayName(), Main.lang);
-				Main.sendTitle(killer, "", ChatColor.YELLOW + "+" + xp + "xp");
+				Main.sendActionBar(killer, ChatColor.YELLOW + "+" + xp + "xp");
 
 				Main.progressionManager.addExperience(killer, xp);
 				CreditManager.setCredits(killer, CreditManager.getCredits(killer) + rank.getKillCredits());
@@ -1562,7 +1602,7 @@ public class GameInstance implements Listener {
 				}
 
 				Main.sendMessage(killer,  "" + ChatColor.BLUE + ChatColor.BOLD + "YOU " + ChatColor.RESET + ChatColor.WHITE + "[" + Lang.KILLED_TEXT.getMessage() + "] " + ChatColor.RESET + ChatColor.RED + ChatColor.BOLD + victim.getDisplayName(), Main.lang);
-				Main.sendTitle(killer, "", ChatColor.YELLOW + "+" + xp + "xp");
+				Main.sendActionBar(killer, ChatColor.YELLOW + "+" + xp + "xp");
 				Main.progressionManager.addExperience(killer, xp);
 				CreditManager.setCredits(killer, CreditManager.getCredits(killer) + rank.getKillCredits());
 				kill(victim, killer);
@@ -1595,7 +1635,7 @@ public class GameInstance implements Listener {
 		} else if (getGamemode().equals(Gamemode.CTF) || getGamemode().equals(Gamemode.INFECT)) {
 			if (redTeam.contains(killer)) {
 				Main.sendMessage(killer, "" + ChatColor.RED + ChatColor.BOLD + "YOU " + ChatColor.RESET + "" + ChatColor.WHITE + "[" + Lang.KILLED_TEXT.getMessage() + "] " + ChatColor.RESET + ChatColor.BLUE + ChatColor.BOLD + victim.getDisplayName(), Main.lang);
-				Main.sendTitle(killer, "", ChatColor.YELLOW + "+" + rank.getKillExperience() + "xp");
+				Main.sendActionBar(killer, ChatColor.YELLOW + "+" + rank.getKillExperience() + "xp");
 
 				Main.progressionManager.addExperience(killer, rank.getKillExperience());
 				CreditManager.setCredits(killer, CreditManager.getCredits(killer) + rank.getKillCredits());
@@ -1603,7 +1643,7 @@ public class GameInstance implements Listener {
 				updateScores(victim, killer, rank);
 			} else if (blueTeam.contains(killer)) {
 				Main.sendMessage(killer,  "" + ChatColor.BLUE + ChatColor.BOLD + "YOU " + ChatColor.RESET + ChatColor.WHITE + "[" + Lang.KILLED_TEXT.getMessage() + "] " + ChatColor.RESET + ChatColor.RED + ChatColor.BOLD + victim.getDisplayName(), Main.lang);
-				Main.sendTitle(killer, "", ChatColor.YELLOW + "+" + rank.getKillExperience() + "xp");
+				Main.sendActionBar(killer,  ChatColor.YELLOW + "+" + rank.getKillExperience() + "xp");
 				CreditManager.setCredits(killer, CreditManager.getCredits(killer) + rank.getKillCredits());
 				Main.progressionManager.addExperience(killer, rank.getKillExperience());
 				kill(victim, killer);
@@ -1612,7 +1652,7 @@ public class GameInstance implements Listener {
 
 		} else if (getGamemode().equals(Gamemode.FFA) || getGamemode().equals(Gamemode.GUN) || getGamemode().equals(Gamemode.OITC)) {
 			Main.sendMessage(killer, "" + ChatColor.GREEN + ChatColor.BOLD + "YOU " + ChatColor.RESET + ChatColor.WHITE + "[" + Lang.KILLED_TEXT.getMessage() + "] " + ChatColor.RESET	 + ChatColor.GOLD + ChatColor.BOLD + victim.getDisplayName(), Main.lang);
-			Main.sendTitle(killer, "", ChatColor.YELLOW + "+" + rank.getKillExperience() + "xp");
+			Main.sendActionBar(killer, ChatColor.YELLOW + "+" + rank.getKillExperience() + "xp");
 			Main.progressionManager.addExperience(killer, rank.getKillExperience());
 			CreditManager.setCredits(killer, CreditManager.getCredits(killer) + rank.getKillCredits());
 			kill(victim, killer);
@@ -1770,7 +1810,7 @@ public class GameInstance implements Listener {
 					ChatColor t1 = redTeam.contains(attacker) ? ChatColor.RED : blueTeam.contains(attacker) ? ChatColor.BLUE : ChatColor.LIGHT_PURPLE;
 					ChatColor t2 = t1 == ChatColor.RED ? ChatColor.BLUE : t1 == ChatColor.BLUE ? ChatColor.RED : ChatColor.LIGHT_PURPLE;
 					Main.sendMessage(attacker,  "" + t1 + ChatColor.BOLD + "YOU " + ChatColor.RESET + ChatColor.WHITE + "[" + Lang.DOWNED_TEXT.getMessage() + "] " + ChatColor.RESET + t2 + ChatColor.BOLD + victim.getDisplayName(), Main.lang);
-					Main.sendTitle(attacker, "", ChatColor.YELLOW + "+" + xp + "xp");
+					Main.sendActionBar(attacker, ChatColor.YELLOW + "+" + xp + "xp");
 					Main.progressionManager.addExperience(attacker, xp);
 					CreditManager.setCredits(attacker, CreditManager.getCredits(attacker) + Main.getRank(attacker).getKillCredits());
 				} else {
@@ -1995,7 +2035,7 @@ public class GameInstance implements Listener {
 				}
 			} else if (getGamemode() == Gamemode.KC) {
 				p.sendMessage(Lang.KILL_DENIED.getMessage());
-				Main.sendTitle(p, "", ChatColor.YELLOW + "+" + (Main.getRank(p).getKillExperience() / 2) + "xp!");
+				Main.sendActionBar(p, ChatColor.YELLOW + "+" + (Main.getRank(p).getKillExperience() / 2) + "xp!");
 				Main.progressionManager.addExperience(p, Main.getRank(p).getKillExperience() / 2);
 			}
 		} else {
@@ -2003,7 +2043,7 @@ public class GameInstance implements Listener {
 				p.sendMessage(Main.codPrefix + Lang.SPAWN_DENIED.getMessage().replace("{player}", tagOwner.getName()));
 			} else if (getGamemode() == Gamemode.KC) {
 				p.sendMessage(Lang.KILL_CONFIRMED.getMessage());
-				Main.sendTitle(p, "", ChatColor.YELLOW + "+" + Main.getRank(p).getKillExperience() + "xp!");
+				Main.sendActionBar(p,ChatColor.YELLOW + "+" + Main.getRank(p).getKillExperience() + "xp!");
 				Main.progressionManager.addExperience(p, Main.getRank(p).getKillExperience());
 				if (isOnRedTeam(p)) {
 					addRedPoint();

@@ -131,6 +131,13 @@ public class Listeners implements Listener {
 		double scalar;
 		
 		if (GameManager.isInMatch(p)) {
+
+			if(Objects.requireNonNull(GameManager.getMatchWhichContains(p)).getState() != GameState.IN_GAME) {
+				e.setDamage(0d);
+				e.setCancelled(true);
+				return;
+			}
+
 			scalar = (Main.defaultHealth / 20D);
 			
 			damage = e.getDamage() * scalar;

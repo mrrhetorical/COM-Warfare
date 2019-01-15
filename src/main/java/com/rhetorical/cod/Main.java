@@ -6,6 +6,8 @@ import com.rhetorical.cod.lang.Lang;
 import com.rhetorical.cod.object.*;
 import com.rhetorical.tpp.McLang;
 import com.rhetorical.tpp.api.McTranslate;
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.*;
 import org.bukkit.command.Command;
@@ -17,6 +19,7 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -849,6 +852,32 @@ public class Main extends JavaPlugin {
 			} else if (args[0].equalsIgnoreCase("notes") && hasPerm(sender, "com.patchNotes")) {
 				PatchNotes.getPatchNotes(sender);
 				return true;
+			} else if (args[0].equalsIgnoreCase("setLevel") && hasPerm(sender, "com.modifyLevel")) {
+				if (args.length < 3) {
+					sendMessage(sender, codPrefix + Lang.INCORRECT_USAGE.getMessage().replace("{command}", "/cod setLevel (player) (level)"));
+					return true;
+				}
+
+				int level = -1;
+				Player player = Bukkit.getPlayer(args[1]);
+
+				if(player == null) {
+					sendMessage(sender, codPrefix + Lang.ERROR_PLAYER_NOT_EXISTS.getMessage());
+					return true;
+				}
+
+				try {
+					level = Integer.parseInt(args[2]);
+					if (level > progressionManager.maxLevel)
+						throw new NumberFormatException();
+				} catch(NumberFormatException e) {
+					sendMessage(sender, codPrefix + Lang.INCORRECT_USAGE.getMessage().replace("{command}", "/cod setLevel (player) (level)"));
+					return true;
+				}
+
+				Main.progressionManager.setLevel(player, level, true);
+				sendMessage(sender, Lang.SET_LEVEL_SUCCESS.getMessage().replace("{player}", player.getDisplayName()).replace("{level}", level + ""));
+				return true;
 			} else {
 				sender.sendMessage(Main.codPrefix + Lang.UNKNOWN_COMMAND.getMessage());
 				return true;
@@ -1122,24 +1151,33 @@ public class Main extends JavaPlugin {
 		sendMessage(target, translatedMessage);
 	}
 
-	public static void sendTitle(Player p, String title, String subtitle) {
+	public static void sendTitle(Player p, String title, String subtitle, int... timings) {
+
+		int start;
+		int linger;
+		int stop;
+
+		if (timings.length < 3) {
+			start = 10;
+			linger = 20;
+			stop = 10;
+		} else {
+			start = timings[0];
+			linger = timings[1];
+			stop = timings[2];
+		}
 		try {
-			Object[] args = new Object[5];
-			args[0] = title;
-			args[1] = subtitle;
-			args[2] = 10;
-			args[3] = 20;
-			args[4] = 10;
-			p.getClass().getMethod("sendTitle", String.class, String.class, Integer.class, Integer.class, Integer.class).invoke(p, args);
+			Class.forName("org.bukkit.entity.Player").getMethod("sendTitle", String.class, String.class, int.class, int.class, int.class).invoke(p, title, subtitle, start, linger, stop);
 		} catch(Exception e) {
-			p.sendMessage(title);
-			p.sendMessage(subtitle);
+			e.printStackTrace();
+//			p.sendMessage(title);
+//			p.sendMessage(subtitle);
 		}
 //		p.sendTitle(title, subtitle, 10, 0, 10);
 	}
 
 	public static void sendActionBar(Player p, String message) {
-		//TODO: Implement
+		p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
 	}
 
 	public static void openMainMenu(Player p) {

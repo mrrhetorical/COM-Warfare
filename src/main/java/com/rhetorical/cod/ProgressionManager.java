@@ -20,7 +20,7 @@ public class ProgressionManager {
 	private HashMap<Player, Double> experience = new HashMap<>();
 	// Start from 0
 
-	private final int maxLevel;
+	public final int maxLevel;
 	private final int maxPrestigeLevel;
 
 	ProgressionManager() {
@@ -46,9 +46,15 @@ public class ProgressionManager {
 
 	}
 
-	private void setLevel(Player p, int level, boolean showMessage) {
-		this.level.put(p, level);
-
+	public void setLevel(Player p, int level, boolean showMessage) {
+		if (level > getLevel(p)) {
+			for (int i = getLevel(p) + 1; i <= level; i++) {
+				this.level.put(p, i);
+				Main.shopManager.checkForNewGuns(p);
+			}
+		} else {
+			this.level.put(p, level);
+		}
 		if (showMessage) {
 			p.sendMessage(Main.codPrefix + Lang.RANK_UP_MESSAGE.getMessage().replace("{level}", getLevel(p) + ""));
 		}
@@ -56,6 +62,7 @@ public class ProgressionManager {
 	}
 
 	private void addLevel(Player p) {
+		this.setExperience(p, 0);
 		if (!this.level.containsKey(p)) {
 			this.level.put(p, 1);
 		}
@@ -66,6 +73,8 @@ public class ProgressionManager {
 		if (this.getLevel(p) == this.maxLevel) {
 			p.sendMessage(Main.codPrefix + Lang.RANK_UP_READY_TO_PRESTIGE.getMessage());
 		}
+
+		Main.shopManager.checkForNewGuns(p);
 	}
 
 	public int getLevel(Player p) {
@@ -85,18 +94,26 @@ public class ProgressionManager {
 
 	}
 
-	public void addPrestigeLevel(Player p) {
-		if (!this.prestigeLevel.containsKey(p)) {
-			this.prestigeLevel.put(p, 0);
+	public boolean addPrestigeLevel(Player p) {
+		if (!prestigeLevel.containsKey(p)) {
+			prestigeLevel.put(p, 0);
 		}
 
-		if (getPrestigeLevel(p) >= maxPrestigeLevel)
-			return;
+		if (getPrestigeLevel(p) >= maxPrestigeLevel) {
+			Main.sendMessage(p, Lang.ALREADY_HIGHEST_PRESTIGE.getMessage(), Main.lang);
+			return false;
+		}
 
-		this.prestigeLevel.put(p, this.prestigeLevel.get(p) + 1);
+		this.prestigeLevel.put(p, prestigeLevel.get(p) + 1);
+		setExperience(p, 0d);
+		setLevel(p, 1, false);
+
+		Main.shopManager.prestigePlayer(p);
+
+
 		p.sendMessage(Main.codPrefix + Lang.RANK_UP_PRESTIGE_MESSAGE.getMessage().replace("{level}", getPrestigeLevel(p) + ""));
 		p.sendMessage(Main.codPrefix + Lang.RANK_RESET_MESSAGE.getMessage());
-		setLevel(p, 1, false);
+		return true;
 	}
 
 	public int getPrestigeLevel(Player p) {
@@ -115,21 +132,26 @@ public class ProgressionManager {
 
 	public void addExperience(Player p, double experience) {
 		int level = getLevel(p);
+
+		if (level == maxLevel)
+			return;
+
 		double requiredExperience = getExperienceForLevel(level);
 
-		double current = getExperience(p);
-		this.setExperience(p, current + experience);
-
-		if (this.getExperience(p) >= requiredExperience) {
-			this.setExperience(p, 0D);
-			if (this.getLevel(p) < this.maxLevel) {
-				this.addLevel(p);
-			}
-
-		}
+		double current = getExperience(p) + experience;
 
 		StatHandler.addExperience(p, experience);
 
+		if (current >= requiredExperience) {
+			double difference = current - requiredExperience;
+			if (this.getLevel(p) < this.maxLevel) {
+				addLevel(p);
+			}
+			if (difference != 0d)
+				addExperience(p, difference);
+		} else {
+			setExperience(p, current);
+		}
 		update(p);
 	}
 

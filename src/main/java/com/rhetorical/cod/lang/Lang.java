@@ -47,7 +47,7 @@ public enum Lang {
 	WEAPON_CREATED_SUCCESS("&aSuccessfully created weapon {weapon-name} as a {weapon-type} grenade!"),
 	GUN_CREATED_SUCCESS("&aSuccessfully created gun {gun-name} as a {gun-type}!"),
 	WEAPON_UNLOCKED("&aYou just unlocked the &6{gun-name}! \n &aEquip it after the match!"),
-	WEAPON_PURCHASE_UNLOCKED("&The &6{gun-name} is now available for purchase!"),
+	WEAPON_PURCHASE_UNLOCKED("&aThe &6{gun-name} is now available for purchase!"),
 	RANK_UP_MESSAGE("&7Congratulations! You just ranked up to level &e{level}&r&7!"),
 	RANK_UP_PRESTIGE_MESSAGE("&7Congratulations! You just ranked up to prestige level &e{level}&r&7!"),
 	RANK_UP_READY_TO_PRESTIGE("&7Congratulations! You have just reached the highest rank! Visit the prestige menu to get your reward!"),
@@ -74,6 +74,7 @@ public enum Lang {
 	PLAYER_JOINED_LOBBY("&7{player} has joined your lobby!"),
 	PLAYER_LEAVE_GAME("&7You have left the lobby!"),
 	PLAYER_NOT_IN_GAME("&7You are not in a match!"),
+	ERROR_PLAYER_NOT_EXISTS("&cNo player exists with that name!"),
 	RAN_OUT_OF_MAPS("&cCOM-Warfare ran out of maps to use!"),
 	CURRENT_GAME_REMOVED("&cThe current game has been removed!"),
 	INSUFFICIENT_FUNDS("&cInsufficient funds!"),
@@ -194,7 +195,12 @@ public enum Lang {
 	KILL_STREAK_NAME("&cChange Kill Streak {number}"),
 	KILL_STREAK_LORE("&eClick here to select your streak for this spot."),
 	SELECT_STREAK_INVENTORY_NAME("&c&lSelect Kill Streak"),
-	CHANGE_STREAK_SUCCESS("&aSuccessfully changed kill streak!");
+	CHANGE_STREAK_SUCCESS("&aSuccessfully changed kill streak!"),
+	VOTE_MAP_NAME("&6Map: &f{map}"),
+	VOTE_MAP_MODE("&6Mode: &f{mode}"),
+	SET_LEVEL_SUCCESS("&aSuccessfully changed &f{player}&a's level to &f{level}&a!"),
+	ERROR_NOT_HIGH_ENOUGH_LEVEL("&cYou can't prestige because you aren't a high enough level!"),
+	ALREADY_HIGHEST_PRESTIGE("&cYou can't prestige because you are already the max prestige level!");
 
 
 	private String message;
