@@ -103,6 +103,8 @@ public class GameManager {
 		} catch(Exception e) {
 			Main.sendMessage(Main.cs, Main.codPrefix + Lang.ERROR_READING_PLAYER_LOADOUT.getMessage(), Main.lang);
 		}
+
+		Main.assignmentManager.load(p);
 		
 		Main.progressionManager.loadData(p);
 		Main.progressionManager.saveData(p);

@@ -1,5 +1,6 @@
 package com.rhetorical.cod;
 
+import com.rhetorical.cod.assignments.AssignmentManager;
 import com.rhetorical.cod.files.*;
 import com.rhetorical.cod.inventories.InventoryManager;
 import com.rhetorical.cod.lang.Lang;
@@ -43,6 +44,7 @@ public class Main extends JavaPlugin {
 	public static ShopManager shopManager;
 	public static PerkListener perkListener;
 	public static KillStreakManager killstreakManager;
+	public static AssignmentManager assignmentManager;
 
 	public static Object lang;
 	private static Object translate;
@@ -149,6 +151,7 @@ public class Main extends JavaPlugin {
 		LoadoutsFile.setup(getPlugin());
 		StatsFile.setup(getPlugin());
 		KillstreaksFile.setup(getPlugin());
+		AssignmentFile.setup(getPlugin());
 
 		progressionManager = new ProgressionManager();
 		perkManager = new PerkManager();
@@ -157,6 +160,7 @@ public class Main extends JavaPlugin {
 		perkListener = new PerkListener();
 		killstreakManager = new KillStreakManager();
 		invManager = new InventoryManager();
+		assignmentManager = new AssignmentManager();
 
 		QualityGun.setup();
 		CrackShotGun.setup();
