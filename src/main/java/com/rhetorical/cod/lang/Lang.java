@@ -204,6 +204,7 @@ public enum Lang {
 	ASSIGNMENT_HEADER("&6&lAssignment"),
 	ASSIGNMENT_TYPE("&fType: &a{type}"),
 	ASSIGNMENT_AMOUNT("&fAmount: &a{amount}"),
+	ASSIGNMENT_PROGRESS("&fProgress: &a{amount}"),
 	ASSIGNMENT_REWARD("&fReward: &a{amount}");
 
 

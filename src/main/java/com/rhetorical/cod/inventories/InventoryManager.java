@@ -456,6 +456,7 @@ public class InventoryManager implements Listener {
 			List<String> lore = new ArrayList<>();
 			lore.add(Lang.ASSIGNMENT_TYPE.getMessage().replace("{type}", assignment.getRequirement().getAssignmentType().toString()));
 			lore.add(Lang.ASSIGNMENT_AMOUNT.getMessage().replace("{amount}", assignment.getRequirement().getRequired () + ""));
+			lore.add(Lang.ASSIGNMENT_PROGRESS.getMessage().replace("{amount}", assignment.getProgress() + ""));
 			lore.add(Lang.ASSIGNMENT_REWARD.getMessage().replace("{amount}", assignment.getReward() + ""));
 			meta.setLore(lore);
 			item.setItemMeta(meta);

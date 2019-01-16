@@ -34,7 +34,7 @@ public class Assignment {
 		return reward;
 	}
 
-	int getProgress() {
+	public int getProgress() {
 		return progress;
 	}
 
