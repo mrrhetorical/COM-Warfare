@@ -1,6 +1,8 @@
 package com.rhetorical.cod.inventories;
 
 import com.rhetorical.cod.Main;
+import com.rhetorical.cod.assignments.Assignment;
+import com.rhetorical.cod.assignments.AssignmentType;
 import com.rhetorical.cod.game.GameManager;
 import com.rhetorical.cod.lang.Lang;
 import com.rhetorical.cod.loadouts.Loadout;
@@ -39,6 +41,7 @@ public class InventoryManager implements Listener {
 	public HashMap<Player, Inventory> createClassInventory = new HashMap<>();
 	private HashMap<Player, Inventory> selectClassInventory = new HashMap<>();
 	private HashMap<Player, Inventory> personalStatistics = new HashMap<>();
+	private HashMap<Player, Inventory> assignmentsInventory = new HashMap<>();
 	private HashMap<Player, Inventory> mainKillStreakInventory = new HashMap<>();
 	private HashMap<Player, Inventory> killStreakInventory1 = new HashMap<>();
 	private HashMap<Player, Inventory> killStreakInventory2 = new HashMap<>();
@@ -49,6 +52,8 @@ public class InventoryManager implements Listener {
 	private ItemStack createClass = new ItemStack(Material.CHEST);
 	private ItemStack scoreStreaks = new ItemStack(Material.DIAMOND);
 	private ItemStack combatRecord = new ItemStack(Material.PAPER);
+	private ItemStack prestigeItem = new ItemStack(Material.ANVIL);
+	private ItemStack assignmentsItem = new ItemStack(Material.GOLD_INGOT);
 	private ItemStack leaderboard = new ItemStack(Material.PAPER);
 
 	private ItemStack shopItem = new ItemStack(Material.EMERALD);
@@ -81,6 +86,7 @@ public class InventoryManager implements Listener {
 
 		return i.equals(this.selectClassInventory.get(p)) || i.equals(leaderboardInventory) || i.equals(personalStatistics.get(p)) || i.equals(mainShopInventory) || i.equals(Main.shopManager.gunShop.get(p)) || i.equals(Main.shopManager.weaponShop.get(p)) || i.equals(Main.shopManager.perkShop.get(p))
 				|| i.equals(this.mainKillStreakInventory.get(p))
+				|| i.equals(this.assignmentsInventory.get(p))
 				|| i.equals(this.killStreakInventory1.get(p)) || i.equals(this.killStreakInventory2.get(p)) || i.equals(this.killStreakInventory3.get(p));
 
 	}
@@ -172,25 +178,25 @@ public class InventoryManager implements Listener {
 
 		mainInventory.setItem(11, scoreStreaks);
 
-		ItemStack prestige = new ItemStack(Material.ANVIL);
-		ItemMeta prestigeMeta = prestige.getItemMeta();
+		prestigeItem = new ItemStack(Material.ANVIL);
+		ItemMeta prestigeMeta = prestigeItem.getItemMeta();
 		prestigeMeta.setDisplayName(Lang.INVENTORY_PRESTIGE_NAME.getMessage());
 		ArrayList<String> prestigeLore = new ArrayList<>();
 		prestigeLore.add(Lang.INVENTORY_PRESTIGE_LORE.getMessage());
 		prestigeMeta.setLore(prestigeLore);
-		prestige.setItemMeta(prestigeMeta);
+		prestigeItem.setItemMeta(prestigeMeta);
 
-		mainInventory.setItem(18, prestige);
+		mainInventory.setItem(18, prestigeItem);
 
-		ItemStack assignments = new ItemStack(Material.GOLD_INGOT);
-		ItemMeta assignmentMeta = assignments.getItemMeta();
+		assignmentsItem = new ItemStack(Material.GOLD_INGOT);
+		ItemMeta assignmentMeta = assignmentsItem.getItemMeta();
 		assignmentMeta.setDisplayName(Lang.INVENTORY_ASSIGNMENTS_NAME.getMessage());
 		ArrayList<String> assignmentLore = new ArrayList<>();
 		assignmentLore.add(Lang.INVENTORY_ASSIGNMENTS_LORE.getMessage());
 		assignmentMeta.setLore(assignmentLore);
-		assignments.setItemMeta(assignmentMeta);
+		assignmentsItem.setItemMeta(assignmentMeta);
 
-		mainInventory.setItem(7, assignments);
+		mainInventory.setItem(7, assignmentsItem);
 
 		combatRecord = new ItemStack(Material.PAPER);
 		ItemMeta combatRecordMeta = combatRecord.getItemMeta();
@@ -421,6 +427,56 @@ public class InventoryManager implements Listener {
 			loadout.setPerkInventory(1, perk2);
 			loadout.setPerkInventory(2, perk3);
 		}
+	}
+
+	private void setupAssignmentsInventory(Player p) {
+		List<Assignment> assignments = Main.assignmentManager.getAssignments(p);
+
+		Inventory inventory = Bukkit.createInventory(null, 27, Lang.INVENTORY_ASSIGNMENTS_NAME.getMessage());
+
+		for (int i = 0; i < assignments.size(); i++) {
+			Assignment assignment = assignments.get(i);
+
+			Material material;
+
+			if (assignment.getRequirement().getAssignmentType() == AssignmentType.KILLS) {
+				material = Material.ARROW;
+			} else if (assignment.getRequirement().getAssignmentType() == AssignmentType.PLAY_MODE) {
+				try {
+					material = Material.valueOf("EXPERIENCE_BOTTLE");
+				} catch(Exception e) {
+					material = Material.valueOf("EXP_BOTTLE");
+				}
+			} else {
+				material = Material.GOLD_INGOT;
+			}
+			ItemStack item = new ItemStack(material);
+			ItemMeta meta = item.getItemMeta();
+			meta.setDisplayName(Lang.ASSIGNMENT_HEADER.getMessage());
+			List<String> lore = new ArrayList<>();
+			lore.add(Lang.ASSIGNMENT_TYPE.getMessage().replace("{type}", assignment.getRequirement().getAssignmentType().toString()));
+			lore.add(Lang.ASSIGNMENT_AMOUNT.getMessage().replace("{amount}", assignment.getRequirement().getRequired () + ""));
+			lore.add(Lang.ASSIGNMENT_REWARD.getMessage().replace("{amount}", assignment.getReward() + ""));
+			meta.setLore(lore);
+			item.setItemMeta(meta);
+
+			if (i == 0) {
+				inventory.setItem(11, item);
+			} else if (i == 1) {
+				inventory.setItem(13, item);
+			} else if (i == 2) {
+				inventory.setItem(15, item);
+			}
+
+			inventory.setItem(26, backInv);
+		}
+
+		assignmentsInventory.put(p, inventory);
+	}
+
+	public void openAssignmentsInventory(Player p) {
+		setupAssignmentsInventory(p);
+		p.openInventory(assignmentsInventory.get(p));
 	}
 
 	private void setupShopInventories(Player p) {
@@ -856,7 +912,9 @@ public class InventoryManager implements Listener {
 				p.openInventory(leaderboardInventory);
 			} else if (e.getCurrentItem().equals(scoreStreaks)) {
 				this.openKillStreaksInventory(p);
-			} else if (e.getCurrentItem().getType() == Material.ANVIL) {
+			} else if (e.getCurrentItem().equals(assignmentsItem)) {
+				this.openAssignmentsInventory(p);
+			} else if (e.getCurrentItem().equals(prestigeItem)) {
 				if (Main.progressionManager.getLevel(p) == Main.progressionManager.maxLevel) {
 					Main.progressionManager.addPrestigeLevel(p);
 					p.closeInventory();

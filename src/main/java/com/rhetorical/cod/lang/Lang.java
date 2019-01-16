@@ -200,7 +200,11 @@ public enum Lang {
 	ERROR_NOT_HIGH_ENOUGH_LEVEL("&cYou can't prestige because you aren't a high enough level!"),
 	ALREADY_HIGHEST_PRESTIGE("&cYou can't prestige because you are already the max prestige level!"),
 	ASSIGNMENT_COMPLETED("&aCongratulations! You just completed an assignment! \n" +
-			"You were just rewarded &6{amount}&a credits!");
+			"You were just rewarded &6{amount}&a credits!"),
+	ASSIGNMENT_HEADER("&6&lAssignment"),
+	ASSIGNMENT_TYPE("&fType: &a{type}"),
+	ASSIGNMENT_AMOUNT("&fAmount: &a{amount}"),
+	ASSIGNMENT_REWARD("&fReward: &a{amount}");
 
 
 	private String message;

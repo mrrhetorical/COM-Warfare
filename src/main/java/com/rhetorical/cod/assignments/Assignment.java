@@ -13,14 +13,14 @@ public class Assignment {
 	private int progress = 0;
 	private boolean completed = false;
 
-	public Assignment(Player assignee, AssignmentRequirement assignmentRequirement, int progress, int reward) {
+	Assignment(Player assignee, AssignmentRequirement assignmentRequirement, int progress, int reward) {
 		this.assignee = assignee;
 		this.assignmentRequirement = assignmentRequirement;
-		addProgress(progress, Gamemode.ANY);
+		setProgress(progress);
 		this.reward = reward;
 	}
 
-	public Assignment (Player assignee, AssignmentRequirement assignmentRequirement, int reward) {
+	Assignment (Player assignee, AssignmentRequirement assignmentRequirement, int reward) {
 		this.assignee = assignee;
 		this.assignmentRequirement = assignmentRequirement;
 		this.reward = reward;
@@ -34,23 +34,31 @@ public class Assignment {
 		return reward;
 	}
 
-	public int getProgress() {
+	int getProgress() {
 		return progress;
 	}
 
-	public void addProgress(int amount, Gamemode currentMode) {
+	private void setProgress(int amount) {
+		progress = amount;
+	}
+
+	void addProgress(int amount, Gamemode currentMode) {
 		if (getRequirement().getReqMode() == currentMode
 				|| getRequirement().getReqMode() == Gamemode.ANY) {
 			progress += amount;
 		}
 
-		if (progress > getRequirement().getRequired()) {
+		checkProgress();
+	}
+
+	void checkProgress() {
+		if (progress >= getRequirement().getRequired()) {
 			completed = true;
 			Main.assignmentManager.completeAssignment(assignee, this);
 		}
 	}
 
-	public boolean isCompleted() {
+	boolean isCompleted() {
 		return completed;
 	}
 

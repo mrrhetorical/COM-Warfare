@@ -43,6 +43,17 @@ public class AssignmentManager {
 
 		playerAssignments.put(p, assignments);
 		save(p);
+
+		Assignment[] assignmentArray = new Assignment[assignments.size()];
+
+		for (int i = 0; i < assignments.size(); i++) {
+			assignmentArray[i] = assignments.get(i);
+		}
+
+		for (int i = 0; i < assignmentArray.length; i++) {
+			Assignment a = assignmentArray[i];
+			a.checkProgress();
+		}
 	}
 
 	public void save(Player p) {
@@ -75,8 +86,12 @@ public class AssignmentManager {
 
 		if (type != AssignmentType.KILLS)
 			required = (new Random()).nextInt(4) + 1;
-		else
-			required = (new Random()).nextInt(50) + 25;
+		else {
+			required = (new Random()).nextInt(45) + 5;
+			while (required % 5 != 0) {
+				required++;
+			}
+		}
 		AssignmentRequirement requirement = new AssignmentRequirement(type, required, mode);
 		int reward = type.getBaseReward() * required;
 
@@ -122,6 +137,13 @@ public class AssignmentManager {
 
 
 		Main.sendMessage(p, Lang.ASSIGNMENT_COMPLETED.getMessage().replace("{amount}", assignment.getReward() + ""), Main.lang);
+	}
+
+	public List<Assignment> getAssignments(Player p) {
+		if (!playerAssignments.containsKey(p))
+			load(p);
+
+		return playerAssignments.get(p);
 	}
 
 }
