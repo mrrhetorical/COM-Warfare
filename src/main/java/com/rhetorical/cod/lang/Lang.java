@@ -205,7 +205,12 @@ public enum Lang {
 	ASSIGNMENT_TYPE("&fType: &a{type}"),
 	ASSIGNMENT_AMOUNT("&fAmount: &a{amount}"),
 	ASSIGNMENT_PROGRESS("&fProgress: &a{amount}"),
-	ASSIGNMENT_REWARD("&fReward: &a{amount}");
+	ASSIGNMENT_REWARD("&fReward: &a{amount}"),
+	ASSIGNMENT_MODE("&fMode: &a{mode}"),
+	ASSIGNMENT_KILL_PLAYERS("Kill Players"),
+	ASSIGNMENT_PLAY_MATCH("Play Game Mode"),
+	ASSIGNMENT_WIN_MATCH("Win Matches"),
+	ASSIGNMENT_WIN_MODE("Win Math on Game Mode");
 
 
 	private String message;
