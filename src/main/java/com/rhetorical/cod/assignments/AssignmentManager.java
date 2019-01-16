@@ -45,7 +45,7 @@ public class AssignmentManager {
 		save(p);
 	}
 
-	private void save(Player p) {
+	public void save(Player p) {
 		List<Assignment> assignments = playerAssignments.get(p);
 		for (int i = 0; i < assignments.size(); i++) {
 			String base = "Players." + p.getName() + ".Assignments." + i + ".";

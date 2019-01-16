@@ -2,6 +2,7 @@ package com.rhetorical.cod.game;
 
 import com.rhetorical.cod.ComVersion;
 import com.rhetorical.cod.Main;
+import com.rhetorical.cod.assignments.AssignmentManager;
 import com.rhetorical.cod.lang.Lang;
 import com.rhetorical.cod.loadouts.Loadout;
 import com.rhetorical.cod.perks.Perk;
@@ -468,6 +469,8 @@ public class GameInstance implements Listener {
 
 		Main.progressionManager.saveData(p);
 
+		Main.assignmentManager.save(p);
+
 		if (players.size() == 0) {
 			GameManager.removeInstance(this);
 		}
@@ -771,6 +774,8 @@ public class GameInstance implements Listener {
 			}
 
 			Main.assignmentManager.updateAssignments(p, 0, getGamemode(), won);
+
+			Main.assignmentManager.save(p);
 
 			Main.shopManager.checkForNewGuns(p);
 
