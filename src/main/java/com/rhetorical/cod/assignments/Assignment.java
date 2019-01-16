@@ -1,5 +1,6 @@
 package com.rhetorical.cod.assignments;
 
+import com.rhetorical.cod.Main;
 import com.rhetorical.cod.game.Gamemode;
 import org.bukkit.entity.Player;
 
@@ -45,6 +46,7 @@ public class Assignment {
 
 		if (progress > getRequirement().getRequired()) {
 			completed = true;
+			Main.assignmentManager.completeAssignment(assignee, this);
 		}
 	}
 

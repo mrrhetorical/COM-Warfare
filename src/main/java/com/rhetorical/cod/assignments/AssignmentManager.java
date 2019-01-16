@@ -1,7 +1,10 @@
 package com.rhetorical.cod.assignments;
 
+import com.rhetorical.cod.Main;
 import com.rhetorical.cod.files.AssignmentFile;
 import com.rhetorical.cod.game.Gamemode;
+import com.rhetorical.cod.lang.Lang;
+import com.rhetorical.cod.progression.CreditManager;
 import org.bukkit.entity.Player;
 
 import java.util.*;
@@ -34,24 +37,7 @@ public class AssignmentManager {
 		}
 
 		while (assignments.size() < 3) {
-				int index = (new Random()).nextInt(AssignmentType.values().length);
-				int mIndex = (new Random()).nextInt(Gamemode.values().length);
-				AssignmentType type = AssignmentType.values()[index];
-				Gamemode mode;
-				if (type == AssignmentType.PLAY_MODE || type == AssignmentType.WIN_GAME_MODE)
-					mode = Gamemode.values()[mIndex];
-				else
-					mode = Gamemode.ANY;
-
-				int required;
-
-				if (type != AssignmentType.KILLS)
-					required = (new Random()).nextInt(4) + 1;
-				else
-					required = (new Random()).nextInt(50) + 25;
-				AssignmentRequirement requirement = new AssignmentRequirement(type, required, mode);
-				int reward = type.getBaseReward() * required;
-				Assignment assignment = new Assignment(p, requirement, reward);
+				Assignment assignment = generateAssignment(p);
 				assignments.add(assignment);
 		}
 
@@ -73,6 +59,69 @@ public class AssignmentManager {
 		}
 
 		AssignmentFile.saveData();
+	}
+
+	private Assignment generateAssignment(Player p) {
+		int index = (new Random()).nextInt(AssignmentType.values().length);
+		int mIndex = (new Random()).nextInt(Gamemode.values().length);
+		AssignmentType type = AssignmentType.values()[index];
+		Gamemode mode;
+		if (type == AssignmentType.PLAY_MODE || type == AssignmentType.WIN_GAME_MODE)
+			mode = Gamemode.values()[mIndex];
+		else
+			mode = Gamemode.ANY;
+
+		int required;
+
+		if (type != AssignmentType.KILLS)
+			required = (new Random()).nextInt(4) + 1;
+		else
+			required = (new Random()).nextInt(50) + 25;
+		AssignmentRequirement requirement = new AssignmentRequirement(type, required, mode);
+		int reward = type.getBaseReward() * required;
+
+		return new Assignment(p, requirement, reward);
+	}
+
+	public void updateAssignments(Player p, int kills, Gamemode gamemode, boolean... gameWon) {
+		List<Assignment> assignments = playerAssignments.get(p);
+
+		for (Assignment assignment : assignments) {
+			if (assignment.getRequirement().getAssignmentType() == AssignmentType.KILLS) {
+				assignment.addProgress(kills, gamemode);
+			} else if (assignment.getRequirement().getAssignmentType() == AssignmentType.WIN_GAME
+					|| assignment.getRequirement().getAssignmentType() == AssignmentType.WIN_GAME_MODE){
+				if (gameWon.length < 1)
+					continue;
+				assignment.addProgress(gameWon[0] ? 1 : 0, gamemode);
+			} else if (assignment.getRequirement().getAssignmentType() == AssignmentType.PLAY_MODE) {
+				assignment.addProgress(1, gamemode);
+			}
+		}
+
+		playerAssignments.put(p, assignments);
+	}
+
+	public void completeAssignment(Player p, Assignment assignment) {
+		if (!playerAssignments.get(p).contains(assignment))
+			return;
+
+		if (!assignment.isCompleted())
+			return;
+
+		List<Assignment> assignments = playerAssignments.get(p);
+		assignments.remove(assignment);
+
+		assignments.add(generateAssignment(p));
+
+		save(p);
+
+		playerAssignments.put(p, assignments);
+
+		CreditManager.setCredits(p, CreditManager.getCredits(p) + assignment.getReward());
+
+
+		Main.sendMessage(p, Lang.ASSIGNMENT_COMPLETED.getMessage().replace("{amount}", assignment.getReward() + ""), Main.lang);
 	}
 
 }

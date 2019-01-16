@@ -198,7 +198,9 @@ public enum Lang {
 	VOTE_MAP_MODE("&6Mode: &f{mode}"),
 	SET_LEVEL_SUCCESS("&aSuccessfully changed &f{player}&a's level to &f{level}&a!"),
 	ERROR_NOT_HIGH_ENOUGH_LEVEL("&cYou can't prestige because you aren't a high enough level!"),
-	ALREADY_HIGHEST_PRESTIGE("&cYou can't prestige because you are already the max prestige level!");
+	ALREADY_HIGHEST_PRESTIGE("&cYou can't prestige because you are already the max prestige level!"),
+	ASSIGNMENT_COMPLETED("&aCongratulations! You just completed an assignment! \n" +
+			"You were just rewarded &6{amount}&a credits!");
 
 
 	private String message;

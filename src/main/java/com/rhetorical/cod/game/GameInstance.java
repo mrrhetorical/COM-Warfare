@@ -760,6 +760,18 @@ public class GameInstance implements Listener {
 
 		for (Player p : players) {
 
+			boolean won = false;
+
+			if (getWinningTeam().equalsIgnoreCase("red") && redTeam.contains(p)) {
+				won = true;
+			} else if (getWinningTeam().equalsIgnoreCase("blue") && blueTeam.contains(p)) {
+				won = true;
+			} else if (getWinningTeam().equals(p.getDisplayName())) {
+				won = true;
+			}
+
+			Main.assignmentManager.updateAssignments(p, 0, getGamemode(), won);
+
 			Main.shopManager.checkForNewGuns(p);
 
 			if (freeForAllBar.containsKey(p)) {
@@ -1425,6 +1437,8 @@ public class GameInstance implements Listener {
 	public void kill(Player p, Player killer) {
 
 		Main.killstreakManager.kill(p, killer);
+
+		Main.assignmentManager.updateAssignments(p, 1, getGamemode());
 
 		if (getGamemode() == Gamemode.DESTROY || getGamemode() == Gamemode.RESCUE) {
 			p.setGameMode(GameMode.SPECTATOR);
