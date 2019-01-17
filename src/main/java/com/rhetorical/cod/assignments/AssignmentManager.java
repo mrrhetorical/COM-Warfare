@@ -101,11 +101,17 @@ public class AssignmentManager {
 	public void updateAssignments(Player p, int kills, Gamemode gamemode, boolean... gameWon) {
 		List<Assignment> assignments = playerAssignments.get(p);
 
-		for (Assignment assignment : assignments) {
+		Assignment[] assignmentArray = new Assignment[assignments.size()];
+
+		for (int i = 0; i < assignments.size(); i++) {
+			assignmentArray[i] = assignments.get(i);
+		}
+
+		for (Assignment assignment : assignmentArray) {
 			if (assignment.getRequirement().getAssignmentType() == AssignmentType.KILLS) {
 				assignment.addProgress(kills, gamemode);
 			} else if (assignment.getRequirement().getAssignmentType() == AssignmentType.WIN_GAME
-					|| assignment.getRequirement().getAssignmentType() == AssignmentType.WIN_GAME_MODE){
+					|| assignment.getRequirement().getAssignmentType() == AssignmentType.WIN_GAME_MODE) {
 				if (gameWon.length < 1)
 					continue;
 				assignment.addProgress(gameWon[0] ? 1 : 0, gamemode);

@@ -25,7 +25,7 @@ public class KillStreakManager {
 		if (!killstreakMap.containsKey(killer))
 			killstreakMap.put(killer, 0);
 
-		killstreakMap.put(killer, killstreakMap.get(p) + 1);
+		killstreakMap.put(killer, killstreakMap.get(killer) + 1);
 
 		killstreakMap.put(p, 0);
 
@@ -37,18 +37,31 @@ public class KillStreakManager {
 
 		for (KillStreak s : streaks) {
 			if (killstreakMap.get(p) == s.getRequiredKills()) {
-				if (!(availableKillstreaks.containsKey(p) || availableKillstreaks.get(p).contains(s))) {
-					p.getInventory().addItem(s.getKillStreakItem());
-					if (!availableKillstreaks.containsKey(p))
-						availableKillstreaks.put(p, new ArrayList<>());
+				p.getInventory().addItem(s.getKillStreakItem());
+				if (!availableKillstreaks.containsKey(p))
+					availableKillstreaks.put(p, new ArrayList<>());
 
-					ArrayList<KillStreak> st = availableKillstreaks.get(p);
-					st.add(s);
-					availableKillstreaks.put(p, st);
-				}
+				ArrayList<KillStreak> st = availableKillstreaks.get(p);
+				st.add(s);
+				availableKillstreaks.put(p, st);
 			}
 		}
 
+	}
+
+	public void reset(Player p) {
+		availableKillstreaks.put(p, new ArrayList<>());
+		killstreakMap.put(p, 0);
+	}
+
+	public void useStreak(Player p, KillStreak streak) {
+		if (!availableKillstreaks.containsKey(p))
+			availableKillstreaks.put(p, new ArrayList<>());
+
+		ArrayList<KillStreak> active = availableKillstreaks.get(p);
+		active.remove(streak);
+
+		availableKillstreaks.put(p, active);
 	}
 
 	public KillStreak[] getStreaks(Player p) {
@@ -64,19 +77,6 @@ public class KillStreakManager {
 		streaks[slot] = streak;
 		playerKillstreaks.put(p, streaks);
 		saveStreaks(p);
-	}
-
-
-	public boolean hasStreakActive(Player p, KillStreak ks) {
-
-		if (playerKillstreaks.containsKey(p))
-			for (KillStreak s : playerKillstreaks.get(p)) {
-				if (s.equals(ks)) {
-					return true;
-				}
-			}
-
-		return false;
 	}
 
 	public void streaksAfterDeath(Player p) {

@@ -3,12 +3,14 @@ package com.rhetorical.cod.game;
 import com.rhetorical.cod.ComVersion;
 import com.rhetorical.cod.Main;
 import com.rhetorical.cod.assignments.AssignmentManager;
+import com.rhetorical.cod.files.KillstreaksFile;
 import com.rhetorical.cod.lang.Lang;
 import com.rhetorical.cod.loadouts.Loadout;
 import com.rhetorical.cod.perks.Perk;
 import com.rhetorical.cod.progression.CreditManager;
 import com.rhetorical.cod.progression.RankPerks;
 import com.rhetorical.cod.progression.StatHandler;
+import com.rhetorical.cod.streaks.KillStreak;
 import com.rhetorical.cod.weapons.CodGun;
 import com.rhetorical.cod.weapons.CodWeapon;
 import org.bukkit.*;
@@ -19,9 +21,11 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.potion.PotionEffect;
@@ -91,6 +95,19 @@ public class GameInstance implements Listener {
 	private CodMap[] nextMaps = new CodMap[2];
 	private Gamemode[] nextModes = new Gamemode[2];
 	private ArrayList[] mapVotes = new ArrayList[2];
+
+	private boolean blueUavActive;
+	private boolean redUavActive;
+
+	private boolean blueCounterUavActive;
+	private boolean redCounterUavActive;
+	private boolean pinkCounterUavActive;
+
+	private boolean blueDogsActive;
+	private boolean redDogsActive;
+
+	private boolean blueNukeActive;
+	private boolean redNukeActive;
 
 	public GameInstance(ArrayList<Player> pls, CodMap map) {
 
@@ -507,6 +524,8 @@ public class GameInstance implements Listener {
 				p.setScoreboard(scoreboard);
 			}
 
+			Main.killstreakManager.reset(p);
+
 			playerScores.put(p, new CodScore(p));
 
 			if (getGamemode() != Gamemode.FFA && getGamemode() != Gamemode.OITC && getGamemode() != Gamemode.GUN) {
@@ -582,7 +601,6 @@ public class GameInstance implements Listener {
 		p.setHealth(20d);
 		p.setFoodLevel(20);
 		Loadout loadout = Main.loadManager.getActiveLoadout(p);
-		Main.killstreakManager.streaksAfterDeath(p);
 
 		if (blueTeam.contains(p)) {
 			setTeamArmor(p, Color.BLUE);
@@ -671,6 +689,8 @@ public class GameInstance implements Listener {
 			p.getInventory().setItem(1, gunItem);
 			p.getInventory().setItem(19, ammo);
 		}
+
+		Main.killstreakManager.streaksAfterDeath(p);
 	}
 
 	private void dropDogTag(Player p) {
@@ -2391,5 +2411,308 @@ public class GameInstance implements Listener {
 		p.getInventory().setLeggings(legs);
 		p.getInventory().setBoots(boots);
 		p.updateInventory();
+	}
+
+	@EventHandler
+	public void onInteract(PlayerInteractEvent e) {
+
+		if (!players.contains(e.getPlayer()))
+			return;
+
+		Player p = e.getPlayer();
+
+		if (p.getItemInHand().equals(KillStreak.UAV.getKillStreakItem())) {
+			if (isOnBlueTeam(p)) {
+				if (!blueUavActive) {
+					startUav(p);
+				} else {
+					Main.sendMessage(p, Lang.KILLSTREAK_AIRSPACE_OCCUPIED.getMessage(), Main.lang);
+				}
+			} else if (isOnRedTeam(p)) {
+				if (!redUavActive) {
+					startUav(p);
+				} else {
+					Main.sendMessage(p, Lang.KILLSTREAK_AIRSPACE_OCCUPIED.getMessage(), Main.lang);
+				}
+
+			} else {
+				startUav(p);
+			}
+		} else if (p.getItemInHand().equals(KillStreak.COUNTER_UAV.getKillStreakItem())) {
+			startCounterUav(p);
+			if (!isOnBlueTeam(p) && !isOnRedTeam(p)) {
+				if (!pinkCounterUavActive) {
+					startCounterUav(p);
+				} else {
+					Main.sendMessage(p, Lang.KILLSTREAK_AIRSPACE_OCCUPIED.getMessage(), Main.lang);
+				}
+			}
+		} else if (p.getItemInHand().equals(KillStreak.DOGS.getKillStreakItem())) {
+			startDogs(p);
+		} else if (p.getItemInHand().equals(KillStreak.NUKE.getKillStreakItem())) {
+
+		}
+
+	}
+
+	private void startUav(Player owner) {
+
+		if (!players.contains(owner))
+			return;
+
+		owner.getInventory().remove(KillStreak.UAV.getKillStreakItem());
+		Main.killstreakManager.useStreak(owner, KillStreak.UAV);
+
+		BukkitRunnable br = new BukkitRunnable() {
+
+			int t = 10;
+
+			@Override
+			public void run() {
+				t--;
+
+				if (t < 0) {
+					this.cancel();
+				}
+
+				if(isOnBlueTeam(owner)) {
+					if (redCounterUavActive)
+						return;
+
+					//blue launched
+					for (Player p : redTeam) {
+						if (health.isDead(p))
+							continue;
+						Firework fw = p.getLocation().getWorld().spawn(p.getLocation(), Firework.class);
+						FireworkMeta fwm = fw.getFireworkMeta();
+						fwm.addEffect(FireworkEffect.builder()
+								.flicker(false)
+								.trail(true)
+								.with(FireworkEffect.Type.BALL)
+								.withColor(Color.RED)
+								.build());
+
+						fwm.setPower(3);
+
+						fw.setFireworkMeta(fwm);
+					}
+				} else if(isOnRedTeam(owner)) {
+					//red launched
+					if (blueCounterUavActive)
+						return;
+
+					for (Player p : blueTeam) {
+						if (health.isDead(p))
+							continue;
+						Firework fw = p.getLocation().getWorld().spawn(p.getLocation(), Firework.class);
+						FireworkMeta fwm = fw.getFireworkMeta();
+						fwm.addEffect(FireworkEffect.builder()
+								.flicker(false)
+								.trail(true)
+								.with(FireworkEffect.Type.BALL)
+								.withColor(Color.BLUE)
+								.build());
+
+						fwm.setPower(3);
+
+						fw.setFireworkMeta(fwm);
+					}
+				} else {
+					//pink
+					if (pinkCounterUavActive)
+						return;
+
+					for (Player p : players) {
+						if (p == owner)
+							continue;
+
+						if (health.isDead(p))
+							continue;
+
+						Firework fw = p.getLocation().getWorld().spawn(p.getLocation(), Firework.class);
+						FireworkMeta fwm = fw.getFireworkMeta();
+						fwm.addEffect(FireworkEffect.builder()
+								.flicker(false)
+								.trail(true)
+								.with(FireworkEffect.Type.BALL)
+								.withColor(Color.PURPLE)
+								.build());
+
+						fwm.setPower(3);
+
+						fw.setFireworkMeta(fwm);
+					}
+				}
+			}
+		};
+
+		br.runTaskTimer(Main.getPlugin(), 3L, 60L);
+	}
+
+	private void startCounterUav(Player owner) {
+
+		if (!players.contains(owner))
+			return;
+
+		Main.killstreakManager.useStreak(owner, KillStreak.COUNTER_UAV);
+
+		owner.getInventory().remove(KillStreak.COUNTER_UAV.getKillStreakItem());
+
+		if (isOnBlueTeam(owner)) {
+			blueCounterUavActive = true;
+		} else if (isOnRedTeam(owner)) {
+			redCounterUavActive = true;
+		} else {
+			pinkCounterUavActive = true;
+		}
+
+		BukkitRunnable br = new BukkitRunnable() {
+			@Override
+			public void run() {
+				if (isOnBlueTeam(owner)) {
+					blueCounterUavActive = false;
+				} else if (isOnRedTeam(owner)) {
+					redCounterUavActive = false;
+				} else {
+					pinkCounterUavActive = false;
+				}
+			}
+		};
+
+		br.runTaskLater(Main.getPlugin(), 20L * 20L);
+
+	}
+
+	private HashMap<Player, Wolf[]> dogsScoreStreak = new HashMap<>();
+
+	private void startDogs(Player owner) {
+		if (!players.contains(owner))
+			return;
+
+		Main.killstreakManager.useStreak(owner, KillStreak.DOGS);
+
+		owner.getInventory().remove(KillStreak.DOGS.getKillStreakItem());
+
+		Wolf[] wolves = new Wolf[8];
+
+		for (int i = 0; i < 8; i++) {
+			Wolf wolf = owner.getLocation().getWorld().spawn(owner.getLocation(), Wolf.class);
+			wolf.setOwner(owner);
+			wolf.setAngry(true);
+			DyeColor collarColor;
+
+			if (isOnBlueTeam(owner))
+				collarColor = DyeColor.BLUE;
+			else if (isOnRedTeam(owner))
+				collarColor = DyeColor.RED;
+			else
+				collarColor = DyeColor.PINK;
+
+			wolf.setCollarColor(collarColor);
+			wolf.setCanPickupItems(false);
+			wolf.setCustomName(owner.getDisplayName() + "'s Dog");
+			wolf.setCustomNameVisible(true);
+
+			wolves[i] = wolf;
+		}
+
+		for (int i = 0; i < wolves.length; i++) {
+			Wolf wolf = wolves[i];
+
+			if (isOnBlueTeam(owner)) {
+				Player target;
+				int index = (new Random()).nextInt(redTeam.size());
+				target = redTeam.get(index);
+
+				wolf.setTarget(target);
+			} else if (isOnRedTeam(owner)) {
+				Player target;
+				int index = (new Random()).nextInt(blueTeam.size());
+				target = blueTeam.get(index);
+
+				wolf.setTarget(target);
+			} else {
+				Player target;
+				do {
+					int index = (new Random()).nextInt(players.size());
+					target = players.get(index);
+				} while (target != owner);
+
+				wolf.setTarget(target);
+			}
+		}
+
+		if (dogsScoreStreak.containsKey(owner)) {
+			Wolf[] currentWolves = dogsScoreStreak.get(owner);
+			Wolf[] newWolves = new Wolf[currentWolves.length + wolves.length];
+			for (int i = 0; i < currentWolves.length; i++) {
+				newWolves[i] = currentWolves[i];
+			}
+
+			for (int i = currentWolves.length, k = 0; i < currentWolves.length + wolves.length; i++, k++) {
+				newWolves[i] = wolves[k];
+			}
+
+			dogsScoreStreak.put(owner, newWolves);
+		}
+
+		BukkitRunnable br = new BukkitRunnable() {
+			int t = 30;
+
+			@Override
+			public void run() {
+				t--;
+
+				if (t < 0) {
+
+					Wolf[] currentWolves = dogsScoreStreak.get(owner);
+					if (Arrays.equals(currentWolves, wolves))
+						dogsScoreStreak.remove(owner);
+
+					for (Wolf w : wolves) {
+						Objects.requireNonNull(w).remove();
+					}
+					this.cancel();
+					return;
+				}
+				for (Wolf w : wolves) {
+					if (w == null)
+						continue;
+
+					if (w.getTarget() == null
+							|| !(w.getTarget() instanceof Player)
+							|| (w.getTarget() instanceof Player && health.isDead(((Player) w.getTarget())))) {
+						if (isOnBlueTeam(owner)) {
+							Player target;
+							int index = (new Random()).nextInt(redTeam.size());
+							target = redTeam.get(index);
+
+							w.setTarget(target);
+
+						} else if (isOnRedTeam(owner)) {
+							Player target;
+							int index = (new Random()).nextInt(blueTeam.size());
+							target = blueTeam.get(index);
+
+							w.setTarget(target);
+						} else {
+							Player target;
+							do {
+								int index = (new Random()).nextInt(players.size());
+								target = players.get(index);
+							} while (target != owner);
+
+							w.setTarget(target);
+						}
+					}
+				}
+			}
+		};
+
+		br.runTaskTimer(Main.getPlugin(), 0L, 20L);
+	}
+
+	private void startNuke(Player owner, int launcher) {
+
 	}
 }
