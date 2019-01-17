@@ -499,7 +499,7 @@ public class InventoryManager implements Listener {
 
 					ArrayList<String> lore = new ArrayList<>();
 
-					lore.add(Lang.SHOP_COST + ": " + gun.getCreditUnlock());
+					lore.add(Lang.SHOP_COST.getMessage() + ": " + gun.getCreditUnlock());
 
 					gunMeta.setLore(lore);
 
@@ -1025,7 +1025,7 @@ public class InventoryManager implements Listener {
 
 			for (CodWeapon grenade : grenades) {
 				if (e.getCurrentItem().getType().equals(grenade.getWeapon().getType())
-				&&e.getCurrentItem().getItemMeta().getDisplayName().equals(grenade.getWeapon().getItemMeta().getDisplayName())) {
+				&& Objects.requireNonNull(e.getCurrentItem().getItemMeta()).getDisplayName().equals(grenade.getWeapon().getItemMeta().getDisplayName())) {
 					int cost = grenade.getCreditUnlock();
 					if (CreditManager.purchase(p, cost)) {
 						ArrayList<CodWeapon> purchasedGrenades = Main.shopManager.purchasedWeapons.get(p);
