@@ -250,8 +250,22 @@ public class Main extends JavaPlugin {
 		}
 	}
 
-	static boolean hasPerm(CommandSender p, String s) {
+	static boolean hasPerm(CommandSender p, String s, boolean... inGame) {
+
+		boolean canUseInGame = false;
+
+		if (inGame.length > 0) {
+			canUseInGame = inGame[0];
+		}
 		if (p.hasPermission(s) || p.hasPermission("com.*") || p instanceof ConsoleCommandSender || p.isOp()) {
+			if (p instanceof Player) {
+				if (GameManager.isInMatch((Player) p)) {
+					if (!canUseInGame){
+						sendMessage(p, Main.codPrefix + Lang.NOT_ALLOWED_IN_GAME.getMessage(), lang);
+						return false;
+					}
+				}
+			}
 			return true;
 		} else {
 			sendMessage(p, Main.codPrefix + Lang.NO_PERMISSION.getMessage(), lang);
@@ -286,7 +300,7 @@ public class Main extends JavaPlugin {
 			openMainMenu(p);
 			return true;
 		} else {
-			if (args[0].equalsIgnoreCase("help") && hasPerm(sender, "com.help")) {
+			if (args[0].equalsIgnoreCase("help") && hasPerm(sender, "com.help", true)) {
 
 				if (args.length == 2) {
 					int page;
@@ -388,7 +402,7 @@ public class Main extends JavaPlugin {
 				}
 
 				return true;
-			} else if (args[0].equalsIgnoreCase("listMaps") && hasPerm(sender, "com.map.list")) {
+			} else if (args[0].equalsIgnoreCase("listMaps") && hasPerm(sender, "com.map.list", true)) {
 				sendMessage(sender, Main.codPrefix + Lang.MAP_LIST_HEADER.getMessage(), lang);
 				int k = 0;
 				for (CodMap m : GameManager.getAddedMaps()) {
@@ -693,7 +707,7 @@ public class Main extends JavaPlugin {
 					sendMessage(sender, Main.codPrefix + Lang.INCORRECT_USAGE.getMessage().replace("{command}", "/cod createWeapon (name) (Lethal/Tactical) (Unlock Type: level/credits/both) (Grenade Material) (Level Unlock) (Cost)"));
 					return true;
 				}
-			} else if (args[0].equalsIgnoreCase("start") && hasPerm(sender, "com.forceStart")) {
+			} else if (args[0].equalsIgnoreCase("start") && hasPerm(sender, "com.forceStart", true)) {
 				if (!(sender instanceof Player)) {
 					sendMessage(cs, ChatColor.RED + Lang.MUST_BE_PLAYER.getMessage(), lang);
 					return true;
@@ -718,7 +732,7 @@ public class Main extends JavaPlugin {
 				}
 
 				return true;
-			} else if (args[0].equalsIgnoreCase("class") && hasPerm(sender, "com.selectClass")) {
+			} else if (args[0].equalsIgnoreCase("class") && hasPerm(sender, "com.selectClass", true)) {
 				if (!(sender instanceof Player)) {
 					sendMessage(cs, Lang.MUST_BE_PLAYER.getMessage(), lang);
 					return true;
@@ -735,7 +749,7 @@ public class Main extends JavaPlugin {
 				p.closeInventory();
 				p.openInventory(invManager.mainShopInventory);
 				return true;
-			} else if (args[0].equalsIgnoreCase("boot") && hasPerm(sender, "com.bootAll")) {
+			} else if (args[0].equalsIgnoreCase("boot") && hasPerm(sender, "com.bootAll", true)) {
 				boolean result = bootPlayers();
 				if (result) {
 					sender.sendMessage(Main.codPrefix + Lang.PLAYERS_BOOTED_SUCCESS.getMessage());
@@ -778,7 +792,7 @@ public class Main extends JavaPlugin {
 				}
 				sendMessage(sender, Main.codPrefix + Lang.INCORRECT_USAGE.getMessage().replace("{command}", "/cod add [oitc/gun] (gun name)"));
 				return true;
-			} else if (args[0].equalsIgnoreCase("changeMap") && hasPerm(sender, "com.changeMap")) {
+			} else if (args[0].equalsIgnoreCase("changeMap") && hasPerm(sender, "com.changeMap", true)) {
 				if (!(sender instanceof Player)) {
 					sendMessage(cs, Main.codPrefix + Lang.MUST_BE_PLAYER.getMessage(), lang);
 					return true;
@@ -805,7 +819,7 @@ public class Main extends JavaPlugin {
 				GameManager.changeMap(Objects.requireNonNull(GameManager.getMatchWhichContains(p)), map);
 				sendMessage(p, codPrefix + Lang.MAP_CHANGE_SUCCESS.getMessage().replace("{map-name}", map.getName()));
 				return true;
-			} else if (args[0].equalsIgnoreCase("changeMode") && hasPerm(sender, "com.changeMode")) {
+			} else if (args[0].equalsIgnoreCase("changeMode") && hasPerm(sender, "com.changeMode", true)) {
 				if (!(sender instanceof Player)) {
 					sendMessage(cs, Main.codPrefix + Lang.MUST_BE_PLAYER.getMessage(), lang);
 					return true;

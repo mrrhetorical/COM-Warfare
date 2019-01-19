@@ -676,11 +676,10 @@ public class InventoryManager implements Listener {
 			return false;
 		}
 
-		if (this.selectClassInventory.get(p) == null) {
-			this.setupSelectClassInventory(p);
-		}
+		setupSelectClassInventory(p);
 
-		p.openInventory(this.selectClassInventory.get(p));
+
+		p.openInventory(selectClassInventory.get(p));
 		return true;
 	}
 

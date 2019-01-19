@@ -6,6 +6,7 @@ public enum Lang {
 
 	UNKNOWN_COMMAND("&cUnknown Command! Try using '/cod help' for a list of commands."),
 	NO_PERMISSION("&cYou don't have permission to do that!"),
+	NOT_ALLOWED_IN_GAME("&cYou can't do that while in a match!"),
 	INCORRECT_USAGE("&cIncorrect usage! Correct usage: '{command}'"),
 	MUST_BE_PLAYER("&cYou must be a player to execute this command."),
 	NOT_PROPER_PAGE("&cYou didn't specify a proper page."),
