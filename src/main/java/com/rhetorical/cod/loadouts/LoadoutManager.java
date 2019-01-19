@@ -131,7 +131,7 @@ public class LoadoutManager {
 
 			ItemStack primaryAmmo = primary.getAmmo();
 			primaryAmmo.setAmount(primary.getAmmoCount());
-			p.getInventory().setItem(19, primaryAmmo);
+			p.getInventory().setItem(28, primaryAmmo);
 		}
 
 		// Secondary & Ammo
@@ -141,7 +141,7 @@ public class LoadoutManager {
 			if (!loadout.hasPerk(Perk.ONE_MAN_ARMY)) {
 				ItemStack secondaryAmmo = secondary.getAmmo();
 				secondaryAmmo.setAmount(secondary.getAmmoCount());
-				p.getInventory().setItem(25, secondaryAmmo);
+				p.getInventory().setItem(29, secondaryAmmo);
 			}
 		}
 

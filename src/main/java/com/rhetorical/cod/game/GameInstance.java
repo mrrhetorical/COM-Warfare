@@ -20,6 +20,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
@@ -684,11 +685,11 @@ public class GameInstance implements Listener {
 			ammo.setAmount(gun.getAmmoCount());
 
 			p.getInventory().setItem(1, gunItem);
-			p.getInventory().setItem(19, ammo);
+			p.getInventory().setItem(28, ammo);
 		}
 
-		p.getInventory().setItem(16, Main.invManager.selectClass);
-		p.getInventory().setItem(17, Main.invManager.leaveItem);
+		p.getInventory().setItem(32, Main.invManager.selectClass);
+		p.getInventory().setItem(35, Main.invManager.leaveItem);
 
 		Main.killstreakManager.streaksAfterDeath(p);
 	}
@@ -1907,6 +1908,32 @@ public class GameInstance implements Listener {
 	}
 
 	@EventHandler(priority = EventPriority.HIGHEST)
+	public void onPlayerHitWolf(EntityDamageByEntityEvent e) {
+		if (!(e.getDamager() instanceof Player || e.getDamager() instanceof Projectile))
+			return;
+
+		if (!(e.getEntity() instanceof Wolf))
+			return;
+
+		double scalar = (Main.defaultHealth / 20d) * 0.4d;
+		double damage = e.getDamage() * scalar;
+
+		for (Player p : dogsScoreStreak.keySet()) {
+			for (Wolf w : dogsScoreStreak.get(p)) {
+				if (w.equals(e.getEntity())) {
+					e.setDamage(damage);
+					if (w.getHealth() - damage <= 0d) {
+						e.getEntity().remove();
+						e.setCancelled(true);
+						return;
+					}
+				}
+			}
+
+		}
+	}
+
+	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerHitByWeapon(EntityDamageByEntityEvent e) {
 
 		Projectile bullet;
@@ -1917,25 +1944,6 @@ public class GameInstance implements Listener {
 				return;
 			}
 		} else {
-			return;
-		}
-
-		if (!(bullet.getShooter() instanceof Player))
-			return;
-
-		if (!(e.getEntity() instanceof Player)) {
-			if (e.getEntity() instanceof Wolf) {
-				for (Player p : dogsScoreStreak.keySet()) {
-					for (Wolf w : dogsScoreStreak.get(p)) {
-						if (w.equals(e.getEntity())) {
-							e.getEntity().remove();
-							break;
-						}
-					}
-
-				}
-			}
-
 			return;
 		}
 
@@ -1973,11 +1981,16 @@ public class GameInstance implements Listener {
 		}
 	}
 
-	public void damagePlayer(Player p, double damage) {
+	public void damagePlayer(Player p, double damage, Player... damagers) {
 		health.damage(p, damage);
 		if (health.isDead(p)) {
 			if (!Main.loadManager.getCurrentLoadout(p).hasPerk(Perk.LAST_STAND)) {
-				Main.sendMessage(p, "" + ChatColor.GREEN + ChatColor.BOLD + "YOU " + ChatColor.RESET + "" + ChatColor.WHITE + "[" + Lang.KILLED_TEXT.getMessage() + "] " + ChatColor.RESET + ChatColor.GREEN + ChatColor.BOLD + "YOURSELF", Main.lang);
+				if (damagers.length > 0) {
+					ChatColor tColor = isOnBlueTeam(damagers[0]) ? ChatColor.BLUE : isOnRedTeam(damagers[0]) ? ChatColor.RED : ChatColor.LIGHT_PURPLE;
+					Main.sendMessage(p, "" + tColor + ChatColor.BOLD + damagers[0].getDisplayName() +  " " + ChatColor.RESET + "" + ChatColor.WHITE + "[" + Lang.KILLED_TEXT.getMessage() + "] " + ChatColor.RESET + ChatColor.GREEN + ChatColor.BOLD + "YOU", Main.lang);
+				} else {
+					Main.sendMessage(p, "" + ChatColor.GREEN + ChatColor.BOLD + "YOU " + ChatColor.RESET + "" + ChatColor.WHITE + "[" + Lang.KILLED_TEXT.getMessage() + "] " + ChatColor.RESET + ChatColor.GREEN + ChatColor.BOLD + "YOURSELF", Main.lang);
+				}
 				kill(p, p);
 			} else {
 				Main.perkListener.lastStand(p, this);
@@ -2480,7 +2493,7 @@ public class GameInstance implements Listener {
 		} else if (p.getItemInHand().equals(KillStreak.DOGS.getKillStreakItem())) {
 			startDogs(p);
 		} else if (p.getItemInHand().equals(KillStreak.NUKE.getKillStreakItem())) {
-
+			startNuke(p);
 		}
 
 	}
@@ -2618,7 +2631,7 @@ public class GameInstance implements Listener {
 
 	}
 
-	private HashMap<Player, Wolf[]> dogsScoreStreak = new HashMap<>();
+	public HashMap<Player, Wolf[]> dogsScoreStreak = new HashMap<>();
 
 	private void startDogs(Player owner) {
 		if (!players.contains(owner))

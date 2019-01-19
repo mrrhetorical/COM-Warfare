@@ -8,10 +8,12 @@ import com.rhetorical.cod.progression.CreditManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Wolf;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
@@ -116,15 +118,46 @@ public class Listeners implements Listener {
 			e.setCancelled(true);
 		}
 	}
+
+	@EventHandler
+	public void onPlayerHitByWolf(EntityDamageByEntityEvent e) {
+		System.out.println("BP 1");
+		if (!(e.getDamager() instanceof Wolf && e.getEntity() instanceof Player))
+			return;
+
+		Player p = (Player) e.getEntity();
+
+		if (!GameManager.isInMatch(p))
+			return;
+
+		System.out.println("BP 2");
+
+		if (Objects.requireNonNull(GameManager.getMatchWhichContains(p)).getState() != GameState.IN_GAME) {
+			e.setDamage(0d);
+			e.setCancelled(true);
+			return;
+		}
+
+		System.out.println("BP 2");
+
+		double damage = Main.defaultHealth;
+		for (Player pp : Objects.requireNonNull(GameManager.getMatchWhichContains(p)).dogsScoreStreak.keySet()) {
+			for (Wolf w : Objects.requireNonNull(GameManager.getMatchWhichContains(p)).dogsScoreStreak.get(pp)) {
+				if (w.getCustomName().equals(e.getDamager().getCustomName())) {
+					Objects.requireNonNull(GameManager.getMatchWhichContains(p)).damagePlayer(p, damage, pp);
+					System.out.println("BP 3");
+				}
+			}
+		}
+		System.out.println("BP 4");
+		e.setCancelled(true);
+	}
 	
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onPlayerHit(EntityDamageEvent e) {
-		
-		Player p;
-		
 		if (!(e.getEntity() instanceof Player)) return;
 		
-		p = (Player) e.getEntity();
+		Player p = (Player) e.getEntity();
 		
 		DamageCause cause = e.getCause();
 		
@@ -146,7 +179,7 @@ public class Listeners implements Listener {
 		} else {
 			return;
 		}
-		
+
 		if ((cause == DamageCause.DROWNING || cause == DamageCause.SUICIDE) && Objects.requireNonNull(GameManager.getMatchWhichContains(p)).getState() == GameState.IN_GAME) {
 			e.setCancelled(true);
 			Objects.requireNonNull(GameManager.getMatchWhichContains(p)).kill(p, p);

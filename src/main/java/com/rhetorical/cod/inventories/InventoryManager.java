@@ -1096,6 +1096,8 @@ public class InventoryManager implements Listener {
 			Loadout current = Main.loadManager.getLoadouts(p).get(slot);
 			Main.loadManager.setActiveLoadout(p, current);
 
+			p.closeInventory();
+
 			if (!hasOneManArmy) {
 				Main.sendMessage(p, Main.codPrefix + Lang.CHANGED_CLASS_MESSAGE.getMessage(), Main.lang);
 				Main.perkListener.oneManArmy(p);
