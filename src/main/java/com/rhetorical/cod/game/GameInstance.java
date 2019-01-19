@@ -2687,7 +2687,7 @@ public class GameInstance implements Listener {
 			wolf.setCanPickupItems(false);
 			wolf.setCustomName(owner.getDisplayName() + "'s Dog");
 			wolf.setCustomNameVisible(true);
-			wolf.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 20, 2));
+			wolf.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 20 * 20, 2));
 
 			wolves[i] = wolf;
 		}
@@ -2728,7 +2728,7 @@ public class GameInstance implements Listener {
 		dogsScoreStreak.put(owner, wolves);
 
 		BukkitRunnable br = new BukkitRunnable() {
-			int t = 30;
+			int t = 60;
 
 			@Override
 			public void run() {
