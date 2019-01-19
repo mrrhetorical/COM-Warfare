@@ -103,11 +103,9 @@ public class GameInstance implements Listener {
 	private boolean redCounterUavActive;
 	private boolean pinkCounterUavActive;
 
-	private boolean blueDogsActive;
-	private boolean redDogsActive;
-
 	private boolean blueNukeActive;
 	private boolean redNukeActive;
+	private Player pinkNukeActive;
 
 	public GameInstance(ArrayList<Player> pls, CodMap map) {
 
@@ -1377,6 +1375,10 @@ public class GameInstance implements Listener {
 	private String getWinningTeam() {
 
 		if (getGamemode().equals(Gamemode.FFA) || getGamemode().equals(Gamemode.OITC) || getGamemode().equals(Gamemode.GUN)) {
+
+			if (pinkNukeActive != null)
+				return pinkNukeActive.getDisplayName();
+
 			int highestScore = 0;
 			Player highestScoringPlayer = null;
 			for (Player p : ffaPlayerScores.keySet()) {
@@ -1396,6 +1398,11 @@ public class GameInstance implements Listener {
 		if (getGamemode() == Gamemode.INFECT && BlueTeamScore > 0) {
 			return "blue";
 		}
+
+		if (redNukeActive)
+			return "red";
+		else if (blueNukeActive)
+			return "blue";
 
 		if (RedTeamScore > BlueTeamScore) {
 			return "red";
@@ -1908,6 +1915,22 @@ public class GameInstance implements Listener {
 
 		if (!(bullet.getShooter() instanceof Player))
 			return;
+
+		if (!(e.getEntity() instanceof Player)) {
+			if (e.getEntity() instanceof Wolf) {
+				for (Player p : dogsScoreStreak.keySet()) {
+					for (Wolf w : dogsScoreStreak.get(p)) {
+						if (w.equals(e.getEntity())) {
+							e.getEntity().remove();
+							break;
+						}
+					}
+
+				}
+			}
+
+			return;
+		}
 
 		Player victim = (Player) e.getEntity();
 		Player shooter = (Player) bullet.getShooter();
@@ -2460,6 +2483,11 @@ public class GameInstance implements Listener {
 		if (!players.contains(owner))
 			return;
 
+		if (isOnRedTeam(owner))
+			redUavActive = true;
+		else if (isOnBlueTeam(owner))
+			blueUavActive = true;
+
 		owner.getInventory().remove(KillStreak.UAV.getKillStreakItem());
 		Main.killstreakManager.useStreak(owner, KillStreak.UAV);
 
@@ -2712,7 +2740,56 @@ public class GameInstance implements Listener {
 		br.runTaskTimer(Main.getPlugin(), 0L, 20L);
 	}
 
-	private void startNuke(Player owner, int launcher) {
+	private void startNuke(Player owner) {
+		if (!players.contains(owner))
+			return;
 
+		Main.killstreakManager.useStreak(owner, KillStreak.NUKE);
+		owner.getInventory().remove(KillStreak.NUKE.getKillStreakItem());
+
+		if (!redNukeActive && !blueNukeActive && pinkNukeActive == null) {
+
+			ChatColor tColor;
+			String launcher = owner.getDisplayName();
+
+			if (isOnRedTeam(owner)) {
+				redNukeActive = true;
+				tColor = ChatColor.RED;
+			} else if (isOnBlueTeam(owner)) {
+				blueNukeActive = true;
+				tColor = ChatColor.BLUE;
+			} else {
+				tColor = ChatColor.LIGHT_PURPLE;
+				pinkNukeActive = owner;
+			}
+
+			BukkitRunnable br = new BukkitRunnable() {
+
+				int t = 10;
+
+				@Override
+				public void run() {
+					t--;
+
+					if (t < 0 || getState() != GameState.IN_GAME) {
+						if (getState() == GameState.IN_GAME) {
+							stopGame();
+						}
+						blueNukeActive = false;
+						redNukeActive = false;
+						pinkNukeActive = null;
+						this.cancel();
+					}
+
+					for (Player p : players) {
+						Main.sendTitle(p, Lang.NUKE_LAUNCHED_TITLE.getMessage()
+								.replace("{team-color}", tColor + "")
+								.replace("{team}", launcher), Lang.NUKE_LAUNCHED_SUBTITLE.getMessage().replace("{time}", Integer.toString(t)), 0, 20, 0);
+					}
+				}
+			};
+
+			br.runTaskTimer(Main.getPlugin(), 0L, 20L);
+		}
 	}
 }

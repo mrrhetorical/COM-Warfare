@@ -211,7 +211,9 @@ public enum Lang {
 	ASSIGNMENT_PLAY_MATCH("Play Game Mode"),
 	ASSIGNMENT_WIN_MATCH("Win Matches"),
 	ASSIGNMENT_WIN_MODE("Win Match on Game Mode"),
-	KILLSTREAK_AIRSPACE_OCCUPIED("&cWait to use that! The airspace is too full!");
+	KILLSTREAK_AIRSPACE_OCCUPIED("&cWait to use that! The airspace is too full!"),
+	NUKE_LAUNCHED_TITLE("A nuke was called by {team-color}{team}!"),
+	NUKE_LAUNCHED_SUBTITLE("It will launch in {time} seconds!");
 
 
 	private String message;
