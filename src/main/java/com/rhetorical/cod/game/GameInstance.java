@@ -1651,9 +1651,7 @@ public class GameInstance implements Listener {
 	private void handleDeath(Player killer, Player victim) {
 
 		RankPerks rank = Main.getRank(killer);
-
-		Main.killstreakManager.checkStreaks(killer);
-
+		
 		if (getGamemode().equals(Gamemode.TDM) || getGamemode().equals(Gamemode.KC) || getGamemode().equals(Gamemode.RSB) || getGamemode().equals(Gamemode.DOM) || getGamemode().equals(Gamemode.RESCUE) || getGamemode().equals(Gamemode.DESTROY)) {
 			if (isOnRedTeam(killer)) {
 
