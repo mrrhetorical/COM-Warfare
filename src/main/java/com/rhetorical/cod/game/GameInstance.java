@@ -1938,8 +1938,7 @@ public class GameInstance implements Listener {
 			}
 		}
 
-		double scalar = (Main.defaultHealth / 20d) * 0.4d;
-		scalar /= 4d;
+		double scalar = (20d / Main.defaultHealth) * 0.4d;
 		double damage = e.getDamage() * scalar;
 
 		for (Player p : dogsScoreStreak.keySet()) {
@@ -2730,7 +2729,7 @@ public class GameInstance implements Listener {
 		dogsScoreStreak.put(owner, wolves);
 
 		BukkitRunnable br = new BukkitRunnable() {
-			int t = 60;
+			int t = 45;
 
 			@Override
 			public void run() {
@@ -2748,9 +2747,29 @@ public class GameInstance implements Listener {
 					this.cancel();
 					return;
 				}
-				for (Wolf w : wolves) {
-					if (w == null)
-						continue;
+				for (int i = 0; i < wolves.length; i++) {
+					Wolf w = wolves[i];
+					if (w == null) {
+						Wolf wolf = owner.getLocation().getWorld().spawn(owner.getLocation(), Wolf.class);
+						wolf.setOwner(owner);
+						wolf.setAngry(true);
+						DyeColor collarColor;
+
+						if (isOnBlueTeam(owner))
+							collarColor = DyeColor.BLUE;
+						else if (isOnRedTeam(owner))
+							collarColor = DyeColor.RED;
+						else
+							collarColor = DyeColor.PINK;
+
+						wolf.setCollarColor(collarColor);
+						wolf.setCanPickupItems(false);
+						wolf.setCustomName(owner.getDisplayName() + "'s Dog");
+						wolf.setCustomNameVisible(true);
+						wolf.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 20 * 20, 2));
+						wolves[i] = wolf;
+						w = wolves[i];
+					}
 
 					w.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 20, 2));
 
