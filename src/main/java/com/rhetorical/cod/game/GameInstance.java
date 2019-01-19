@@ -1939,6 +1939,7 @@ public class GameInstance implements Listener {
 		}
 
 		double scalar = (Main.defaultHealth / 20d) * 0.4d;
+		scalar /= 4d;
 		double damage = e.getDamage() * scalar;
 
 		for (Player p : dogsScoreStreak.keySet()) {
@@ -1948,11 +1949,12 @@ public class GameInstance implements Listener {
 			}
 			for (Wolf w : dogsScoreStreak.get(p)) {
 				if (w.equals(e.getEntity())) {
-					e.setDamage(damage);
 					if (w.getHealth() - damage <= 0d) {
 						e.getEntity().remove();
 						e.setCancelled(true);
-						return;
+					} else {
+						w.setHealth(w.getHealth() - damage);
+						e.setCancelled(true);
 					}
 				}
 			}
