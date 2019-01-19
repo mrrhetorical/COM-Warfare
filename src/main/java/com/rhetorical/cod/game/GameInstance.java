@@ -633,12 +633,12 @@ public class GameInstance implements Listener {
 			p.getInventory().setItem(0, Main.loadManager.knife);
 			if (!primary.equals(Main.loadManager.blankPrimary)) {
 				p.getInventory().setItem(1, primary.getGun());
-				p.getInventory().setItem(19, primaryAmmo);
+				p.getInventory().setItem(28, primaryAmmo);
 			}
 
 			if (!secondary.equals(Main.loadManager.blankSecondary)) {
 				p.getInventory().setItem(2, secondary.getGun());
-				p.getInventory().setItem(25, secondaryAmmo);
+				p.getInventory().setItem(29, secondaryAmmo);
 			}
 
 			if (Math.random() > 0.5 && !lethal.equals(Main.loadManager.blankLethal)) {
