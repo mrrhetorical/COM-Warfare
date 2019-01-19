@@ -67,6 +67,8 @@ public class InventoryManager implements Listener {
 	public ItemStack voteItemA = new ItemStack(Material.PAPER);
 	public ItemStack voteItemB = new ItemStack(Material.PAPER);
 
+	public ItemStack selectClass = new ItemStack(Material.CHEST);
+
 	public boolean shouldCancelClick(Inventory i, Player p) {
 		if (i.equals(mainInventory)) {
 			return true;
@@ -125,6 +127,10 @@ public class InventoryManager implements Listener {
 		ItemMeta backInvMeta = backInv.getItemMeta();
 		backInvMeta.setDisplayName(Lang.INVENTORY_BACK_BUTTON_NAME.getMessage());
 		backInv.setItemMeta(backInvMeta);
+
+		ItemMeta classMeta = selectClass.getItemMeta();
+		classMeta.setDisplayName(Lang.INVENTORY_SELECT_CLASS_TITLE.getMessage());
+		selectClass.setItemMeta(classMeta);
 
 		{
 			ItemMeta voteMeta = voteItemA.getItemMeta();

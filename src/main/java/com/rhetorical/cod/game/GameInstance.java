@@ -647,7 +647,6 @@ public class GameInstance implements Listener {
 			if (Math.random() > 0.5 && !lethal.equals(Main.loadManager.blankTactical)) {
 				p.getInventory().setItem(4, tactical.getWeapon());
 			}
-
 		} else if (getGamemode() == Gamemode.DOM
 				|| getGamemode() == Gamemode.CTF
 				|| getGamemode() == Gamemode.KC
@@ -687,6 +686,9 @@ public class GameInstance implements Listener {
 			p.getInventory().setItem(1, gunItem);
 			p.getInventory().setItem(19, ammo);
 		}
+
+		p.getInventory().setItem(16, Main.invManager.selectClass);
+		p.getInventory().setItem(17, Main.invManager.leaveItem);
 
 		Main.killstreakManager.streaksAfterDeath(p);
 	}
@@ -1894,6 +1896,11 @@ public class GameInstance implements Listener {
 		Player p = (Player) e.getWhoClicked();
 
 		if (getPlayers().contains(p)) {
+			if (e.getCurrentItem() != null && e.getCurrentItem().equals(Main.invManager.selectClass)) {
+				Main.invManager.openSelectClassInventory(p);
+			} else if (e.getCurrentItem() != null && e.getCurrentItem().equals(Main.invManager.leaveItem)) {
+				GameManager.leaveMatch(p);
+			}
 			e.setCancelled(true);
 		}
 
