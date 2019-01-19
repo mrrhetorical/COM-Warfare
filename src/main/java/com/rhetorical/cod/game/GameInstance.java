@@ -2691,18 +2691,13 @@ public class GameInstance implements Listener {
 		}
 
 		if (dogsScoreStreak.containsKey(owner)) {
-			Wolf[] currentWolves = dogsScoreStreak.get(owner);
-			Wolf[] newWolves = new Wolf[currentWolves.length + wolves.length];
-			for (int i = 0; i < currentWolves.length; i++) {
-				newWolves[i] = currentWolves[i];
+			for (Wolf w : dogsScoreStreak.get(owner)) {
+				if (w != null)
+					w.remove();
 			}
-
-			for (int i = currentWolves.length, k = 0; i < currentWolves.length + wolves.length; i++, k++) {
-				newWolves[i] = wolves[k];
-			}
-
-			dogsScoreStreak.put(owner, newWolves);
 		}
+
+		dogsScoreStreak.put(owner, wolves);
 
 		BukkitRunnable br = new BukkitRunnable() {
 			int t = 30;
