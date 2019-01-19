@@ -1476,7 +1476,7 @@ public class GameInstance implements Listener {
 
 	public void kill(Player p, Player killer) {
 
-		Main.killstreakManager.kill(p, killer);
+		Main.killstreakManager.checkStreaks(killer);
 
 		Main.assignmentManager.updateAssignments(p, 1, getGamemode());
 
@@ -1628,6 +1628,14 @@ public class GameInstance implements Listener {
 		return forceStarted;
 	}
 
+	public CodScore getScore(Player p) {
+		if (!playerScores.containsKey(p)) {
+			playerScores.put(p, new CodScore(p));
+		}
+
+		return playerScores.get(p);
+	}
+
 	public GameState getState() {
 		return state;
 	}
@@ -1644,7 +1652,7 @@ public class GameInstance implements Listener {
 
 		RankPerks rank = Main.getRank(killer);
 
-		Main.killstreakManager.kill(victim, killer);
+		Main.killstreakManager.checkStreaks(killer);
 
 		if (getGamemode().equals(Gamemode.TDM) || getGamemode().equals(Gamemode.KC) || getGamemode().equals(Gamemode.RSB) || getGamemode().equals(Gamemode.DOM) || getGamemode().equals(Gamemode.RESCUE) || getGamemode().equals(Gamemode.DESTROY)) {
 			if (isOnRedTeam(killer)) {
@@ -1920,10 +1928,26 @@ public class GameInstance implements Listener {
 		if (!(e.getEntity() instanceof Wolf))
 			return;
 
+		Player damager;
+
+		if (e.getDamager() instanceof Player) {
+			damager = (Player) e.getDamager();
+		} else {
+			if (((Projectile) e.getDamager()).getShooter() instanceof Player) {
+				damager = (Player) ((Projectile)e.getDamager()).getShooter();
+			} else {
+				return;
+			}
+		}
+
 		double scalar = (Main.defaultHealth / 20d) * 0.4d;
 		double damage = e.getDamage() * scalar;
 
 		for (Player p : dogsScoreStreak.keySet()) {
+			if (p.equals(damager)) {
+				e.setCancelled(true);
+				continue;
+			}
 			for (Wolf w : dogsScoreStreak.get(p)) {
 				if (w.equals(e.getEntity())) {
 					e.setDamage(damage);
@@ -1952,7 +1976,7 @@ public class GameInstance implements Listener {
 			return;
 		}
 
-		if ((e.getEntity() instanceof Player))
+		if (!(e.getEntity() instanceof Player))
 			return;
 
 		Player victim = (Player) e.getEntity();
@@ -2665,6 +2689,7 @@ public class GameInstance implements Listener {
 			wolf.setCanPickupItems(false);
 			wolf.setCustomName(owner.getDisplayName() + "'s Dog");
 			wolf.setCustomNameVisible(true);
+			wolf.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 20, 2));
 
 			wolves[i] = wolf;
 		}
@@ -2726,6 +2751,8 @@ public class GameInstance implements Listener {
 				for (Wolf w : wolves) {
 					if (w == null)
 						continue;
+
+					w.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 1, 2));
 
 					if (w.getTarget() == null
 							|| !(w.getTarget() instanceof Player)
@@ -2791,7 +2818,7 @@ public class GameInstance implements Listener {
 				public void run() {
 					t--;
 
-					if (t < 0 || getState() != GameState.IN_GAME) {
+					if (t < 1 || getState() != GameState.IN_GAME) {
 						if (getState() == GameState.IN_GAME) {
 							stopGame();
 						}
@@ -2804,7 +2831,7 @@ public class GameInstance implements Listener {
 					for (Player p : players) {
 						Main.sendTitle(p, Lang.NUKE_LAUNCHED_TITLE.getMessage()
 								.replace("{team-color}", tColor + "")
-								.replace("{team}", launcher), Lang.NUKE_LAUNCHED_SUBTITLE.getMessage().replace("{time}", Integer.toString(t)), 0, 20, 0);
+								.replace("{team}", launcher), Lang.NUKE_LAUNCHED_SUBTITLE.getMessage().replace("{time}", Integer.toString(t)), 1, 20, 1);
 					}
 				}
 			};

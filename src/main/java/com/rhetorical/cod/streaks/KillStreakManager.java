@@ -2,12 +2,14 @@ package com.rhetorical.cod.streaks;
 
 import com.rhetorical.cod.Main;
 import com.rhetorical.cod.files.KillstreaksFile;
+import com.rhetorical.cod.game.GameManager;
 import com.rhetorical.cod.lang.Lang;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 
 public class KillStreakManager {
@@ -15,28 +17,13 @@ public class KillStreakManager {
 	///// END KILLSTREAK ITEMS /////
 
 	private HashMap<Player, KillStreak[]> playerKillstreaks = new HashMap<>();
-	private HashMap<Player, Integer> killstreakMap = new HashMap<>();
 	private HashMap<Player, ArrayList<KillStreak>> availableKillstreaks = new HashMap<>();
 
-	public void kill(Player p, Player killer) {
-		if (!killstreakMap.containsKey(p))
-			killstreakMap.put(p, 0);
-
-		if (!killstreakMap.containsKey(killer))
-			killstreakMap.put(killer, 0);
-
-		killstreakMap.put(killer, killstreakMap.get(killer) + 1);
-
-		killstreakMap.put(p, 0);
-
-		checkStreaks(killer);
-	}
-
-	private void checkStreaks(Player p) {
+	public void checkStreaks(Player p) {
 		KillStreak[] streaks = playerKillstreaks.get(p);
 
 		for (KillStreak s : streaks) {
-			if (killstreakMap.get(p) == s.getRequiredKills()) {
+			if (Objects.requireNonNull(GameManager.getMatchWhichContains(p)).getScore(p).getKillstreak() == s.getRequiredKills()) {
 				p.getInventory().addItem(s.getKillStreakItem());
 				if (!availableKillstreaks.containsKey(p))
 					availableKillstreaks.put(p, new ArrayList<>());
@@ -51,7 +38,6 @@ public class KillStreakManager {
 
 	public void reset(Player p) {
 		availableKillstreaks.put(p, new ArrayList<>());
-		killstreakMap.put(p, 0);
 	}
 
 	public void useStreak(Player p, KillStreak streak) {
