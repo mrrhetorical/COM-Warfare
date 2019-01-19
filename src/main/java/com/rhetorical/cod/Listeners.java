@@ -121,7 +121,6 @@ public class Listeners implements Listener {
 
 	@EventHandler
 	public void onPlayerHitByWolf(EntityDamageByEntityEvent e) {
-		System.out.println("BP 1");
 		if (!(e.getDamager() instanceof Wolf && e.getEntity() instanceof Player))
 			return;
 
@@ -130,7 +129,6 @@ public class Listeners implements Listener {
 		if (!GameManager.isInMatch(p))
 			return;
 
-		System.out.println("BP 2");
 
 		if (Objects.requireNonNull(GameManager.getMatchWhichContains(p)).getState() != GameState.IN_GAME) {
 			e.setDamage(0d);
@@ -138,18 +136,14 @@ public class Listeners implements Listener {
 			return;
 		}
 
-		System.out.println("BP 2");
-
 		double damage = Main.defaultHealth;
 		for (Player pp : Objects.requireNonNull(GameManager.getMatchWhichContains(p)).dogsScoreStreak.keySet()) {
 			for (Wolf w : Objects.requireNonNull(GameManager.getMatchWhichContains(p)).dogsScoreStreak.get(pp)) {
 				if (w.getCustomName().equals(e.getDamager().getCustomName())) {
 					Objects.requireNonNull(GameManager.getMatchWhichContains(p)).damagePlayer(p, damage, pp);
-					System.out.println("BP 3");
 				}
 			}
 		}
-		System.out.println("BP 4");
 		e.setCancelled(true);
 	}
 	

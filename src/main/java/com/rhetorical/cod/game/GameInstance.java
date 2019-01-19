@@ -1139,6 +1139,11 @@ public class GameInstance implements Listener {
 					return;
 				}
 
+				if (getState() != GameState.IN_GAME) {
+					this.cancel();
+					return;
+				}
+
 				t--;
 
 				String counter = getFancyTime(t);
@@ -1947,6 +1952,9 @@ public class GameInstance implements Listener {
 			return;
 		}
 
+		if ((e.getEntity() instanceof Player))
+			return;
+
 		Player victim = (Player) e.getEntity();
 		Player shooter = (Player) bullet.getShooter();
 
@@ -1985,10 +1993,7 @@ public class GameInstance implements Listener {
 		health.damage(p, damage);
 		if (health.isDead(p)) {
 			if (!Main.loadManager.getCurrentLoadout(p).hasPerk(Perk.LAST_STAND)) {
-				if (damagers.length > 0) {
-					ChatColor tColor = isOnBlueTeam(damagers[0]) ? ChatColor.BLUE : isOnRedTeam(damagers[0]) ? ChatColor.RED : ChatColor.LIGHT_PURPLE;
-					Main.sendMessage(p, "" + tColor + ChatColor.BOLD + damagers[0].getDisplayName() +  " " + ChatColor.RESET + "" + ChatColor.WHITE + "[" + Lang.KILLED_TEXT.getMessage() + "] " + ChatColor.RESET + ChatColor.GREEN + ChatColor.BOLD + "YOU", Main.lang);
-				} else {
+				if (damagers.length < 1) {
 					Main.sendMessage(p, "" + ChatColor.GREEN + ChatColor.BOLD + "YOU " + ChatColor.RESET + "" + ChatColor.WHITE + "[" + Lang.KILLED_TEXT.getMessage() + "] " + ChatColor.RESET + ChatColor.GREEN + ChatColor.BOLD + "YOURSELF", Main.lang);
 				}
 				kill(p, p);
