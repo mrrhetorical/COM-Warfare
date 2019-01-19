@@ -1476,8 +1476,6 @@ public class GameInstance implements Listener {
 
 	public void kill(Player p, Player killer) {
 
-		Main.killstreakManager.checkStreaks(killer);
-
 		Main.assignmentManager.updateAssignments(p, 1, getGamemode());
 
 		if (getGamemode() == Gamemode.DESTROY || getGamemode() == Gamemode.RESCUE) {
@@ -1651,7 +1649,7 @@ public class GameInstance implements Listener {
 	private void handleDeath(Player killer, Player victim) {
 
 		RankPerks rank = Main.getRank(killer);
-		
+
 		if (getGamemode().equals(Gamemode.TDM) || getGamemode().equals(Gamemode.KC) || getGamemode().equals(Gamemode.RSB) || getGamemode().equals(Gamemode.DOM) || getGamemode().equals(Gamemode.RESCUE) || getGamemode().equals(Gamemode.DESTROY)) {
 			if (isOnRedTeam(killer)) {
 
@@ -1794,6 +1792,8 @@ public class GameInstance implements Listener {
 		killerScore.addScore(rank.getKillExperience());
 
 		killerScore.addKillstreak();
+
+		Main.killstreakManager.checkStreaks(killer);
 
 		killerScore.addKill();
 
@@ -2750,7 +2750,7 @@ public class GameInstance implements Listener {
 					if (w == null)
 						continue;
 
-					w.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 1, 2));
+					w.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 20, 2));
 
 					if (w.getTarget() == null
 							|| !(w.getTarget() instanceof Player)
