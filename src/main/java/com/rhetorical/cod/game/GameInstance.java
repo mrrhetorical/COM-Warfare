@@ -660,12 +660,11 @@ public class GameInstance implements Listener {
 			p.getInventory().setItem(0, Main.loadManager.knife);
 
 			if (getGamemode() != Gamemode.INFECT || (getGamemode() == Gamemode.INFECT && blueTeam.contains(p))) {
-
 				Main.loadManager.giveLoadout(p, loadout);
 			}
 
 			if (getGamemode() == Gamemode.INFECT && redTeam.contains(p)) {
-				p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 20 * gameTime, 1));
+				p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 20 * gameTime, 3));
 			}
 
 		} else if (getGamemode() == Gamemode.OITC) {
@@ -2000,6 +1999,11 @@ public class GameInstance implements Listener {
 			return;
 		}
 		if (!health.isDead(victim)) {
+
+			if (getGamemode() == Gamemode.OITC) {
+				damage = health.defaultHealth * 2;
+			}
+
 			health.damage(victim, damage);
 
 			if (health.isDead(victim)) {

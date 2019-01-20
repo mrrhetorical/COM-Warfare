@@ -1,6 +1,9 @@
 package com.rhetorical.cod.game;
 
+import org.bukkit.Effect;
+import org.bukkit.EntityEffect;
 import org.bukkit.GameMode;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffectType;
 
@@ -11,11 +14,11 @@ public class HealthManager {
 	private HashMap<Player, Double> healthMap = new HashMap<Player, Double>();
 	
 	public double defaultHealth;
-	
+
 	public HealthManager(ArrayList<Player> pls, double health) {
 		
 		this.defaultHealth = health;
-		
+
 		for (Player p : pls) {
 			healthMap.put(p, health);
 		}
@@ -50,7 +53,9 @@ public class HealthManager {
 		double health = getHealth(p) - damage;
 		
 		healthMap.put(p, health);
-		
+		p.playEffect(EntityEffect.HURT);
+		p.playEffect(p.getLocation(), Effect.STEP_SOUND, Material.REDSTONE_BLOCK);
+
 		update(p);
 	}
 	
