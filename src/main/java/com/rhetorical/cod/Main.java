@@ -878,9 +878,6 @@ public class Main extends JavaPlugin {
 
 				sendMessage(sender, Main.codPrefix + Lang.BLACKLIST_SUCCESS.getMessage().replace("{mode}", mode.toString()).replace("{map-name}", map.getName()));
 				return true;
-			} else if (args[0].equalsIgnoreCase("notes") && hasPerm(sender, "com.patchNotes")) {
-				PatchNotes.getPatchNotes(sender);
-				return true;
 			} else if (args[0].equalsIgnoreCase("setLevel") && hasPerm(sender, "com.modifyLevel")) {
 				if (args.length < 3) {
 					sendMessage(sender, codPrefix + Lang.INCORRECT_USAGE.getMessage().replace("{command}", "/cod setLevel (player) (level)"));
