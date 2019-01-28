@@ -13,6 +13,8 @@ import com.rhetorical.cod.progression.StatHandler;
 import com.rhetorical.cod.streaks.KillStreak;
 import com.rhetorical.cod.weapons.CodGun;
 import com.rhetorical.cod.weapons.CodWeapon;
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.*;
 import org.bukkit.block.Banner;
 import org.bukkit.entity.*;
@@ -255,6 +257,16 @@ public class GameInstance implements Listener {
 			health.update(p);
 			p.getInventory().clear();
 			p.teleport(Main.lobbyLoc);
+
+			setTeamArmor(p, Color.PURPLE);
+			p.getInventory().setItem(0, Main.invManager.codItem);
+			p.getInventory().setItem(8, Main.invManager.leaveItem);
+
+			try {
+				scoreBar.getClass().getMethod("setTitle", String.class).invoke(scoreBar, ChatColor.GOLD + getMap().getName() + " " + ChatColor.GRAY + "«" + ChatColor.WHITE + getFancyTime(lobbyTime) + ChatColor.RESET + "" + ChatColor.GRAY + "» " + ChatColor.GOLD + getMap().getGamemode().toString());
+			}catch(NoClassDefFoundError e) {
+				System.out.println();
+			} catch(Exception ignored) {}
 		}
 
 		playerScores.clear();
@@ -270,12 +282,14 @@ public class GameInstance implements Listener {
 
 	public void changeMap(CodMap map) {
 
-		if (map == null)
-			return;
+		if (map != null) {
+			GameManager.usedMaps.remove(getMap());
 
-		GameManager.usedMaps.remove(getMap());
+			currentMap = map;
+		}
 
-		currentMap = map;
+		map = currentMap;
+
 		map.changeGamemode();
 		Gamemode gameMode = getGamemode();
 		if (gameMode == Gamemode.INFECT) {
@@ -489,6 +503,10 @@ public class GameInstance implements Listener {
 
 		if (players.size() == 0) {
 			GameManager.removeInstance(this);
+		} else if ((redTeam.size() > 0 && blueTeam.size() == 0)
+				|| (blueTeam.size() > 0 && redTeam.size() == 0)
+				|| getPlayers().size() == 1) {
+			stopGame();
 		}
 
 		if (PlayerSnapshot.hasSnapshot(p)) {
@@ -506,6 +524,7 @@ public class GameInstance implements Listener {
 			p.getClass().getMethod("setPlayerListHeader", String.class).invoke(p, "");
 			p.getClass().getMethod("setPlayerListFooter", String.class).invoke(p, "");
 		} catch(NoSuchMethodException ignored) {} catch(Exception ignored) {}
+
 		System.gc();
 	}
 
@@ -590,10 +609,6 @@ public class GameInstance implements Listener {
 	}
 
 	private void spawnCodPlayer(Player p, Location L) {
-		if (p.getLocation().getWorld() != L.getWorld()) {
-			//Move the player to the world before spawning if they aren't yet in the world.
-			p.teleport(L.getWorld().getSpawnLocation());
-		}
 		p.teleport(L);
 		p.getInventory().clear();
 		p.setGameMode(GameMode.ADVENTURE);

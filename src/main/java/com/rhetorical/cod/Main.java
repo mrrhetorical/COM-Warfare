@@ -385,7 +385,7 @@ public class Main extends JavaPlugin {
 					Main.lastLoc.put(p, l);
 				}
 				return true;
-			} else if (args[0].equalsIgnoreCase("leave") && hasPerm(sender, "com.leave")) {
+			} else if (args[0].equalsIgnoreCase("leave") && hasPerm(sender, "com.leave", true)) {
 				if (!(sender instanceof Player)) {
 					sendMessage(cs, Lang.MUST_BE_PLAYER.getMessage(), lang);
 					return true;
@@ -649,7 +649,7 @@ public class Main extends JavaPlugin {
 				} else {
 					sendMessage(p, Main.codPrefix + Lang.LOBBY_NOT_EXISTS.getMessage(), lang);
 				}
-			} else if (args[0].equalsIgnoreCase("balance")) {
+			} else if (args[0].equalsIgnoreCase("balance") && hasPerm(sender, "com.join", true)) {
 				if (!(sender instanceof Player)) {
 					sendMessage(cs, ChatColor.RED + Lang.MUST_BE_PLAYER.getMessage(), lang);
 					return true;
@@ -740,7 +740,7 @@ public class Main extends JavaPlugin {
 				Player p = (Player) sender;
 				Main.invManager.openSelectClassInventory(p);
 				return true;
-			} else if (args[0].equalsIgnoreCase("shop") && hasPerm(sender, "com.openShop")) {
+			} else if (args[0].equalsIgnoreCase("shop") && hasPerm(sender, "com.openShop", true)) {
 				if (!(sender instanceof Player)) {
 					sendMessage(cs, Lang.MUST_BE_PLAYER.getMessage(), lang);
 					return true;
