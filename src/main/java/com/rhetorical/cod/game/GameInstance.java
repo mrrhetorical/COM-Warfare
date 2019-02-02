@@ -93,8 +93,6 @@ public class GameInstance implements Listener {
 
 	private HashMap<Player, CodScore> playerScores = new HashMap<>();
 
-	private boolean isLegacy = Main.isLegacy();
-
 	private CodMap[] nextMaps = new CodMap[2];
 	private Gamemode[] nextModes = new Gamemode[2];
 	private ArrayList[] mapVotes = new ArrayList[2];
@@ -177,8 +175,6 @@ public class GameInstance implements Listener {
 	}
 
 	private void updateScoreBoard(String time) {
-		if (!isLegacy)
-			return;
 
 		scoreboardObjective.setDisplayName("" + ChatColor.WHITE + ChatColor.BOLD + time);
 		if (getGamemode() != Gamemode.FFA && getGamemode() != Gamemode.OITC && getGamemode() != Gamemode.GUN) {
@@ -249,8 +245,8 @@ public class GameInstance implements Listener {
 
 		health = new HealthManager(players, Main.defaultHealth);
 
-		if (isLegacy)
-			resetScoreBoard();
+//		if (isLegacy)
+		resetScoreBoard();
 
 		for (Player p : players) {
 			p.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
@@ -336,6 +332,8 @@ public class GameInstance implements Listener {
 			return;
 
 
+		players.add(p);
+
 		new PlayerSnapshot(p);
 		String prestige = Main.progressionManager.getPrestigeLevel(p) > 0 ? ChatColor.WHITE + "[" + ChatColor.GREEN + Main.progressionManager.getPrestigeLevel(p) + ChatColor.WHITE + "]-" : "";
 		p.setPlayerListName(ChatColor.WHITE + prestige + "[" +
@@ -362,8 +360,6 @@ public class GameInstance implements Listener {
 
 		p.teleport(Main.lobbyLoc);
 
-		players.add(p);
-
 		playerScores.put(p, new CodScore(p));
 
 		try {
@@ -377,9 +373,9 @@ public class GameInstance implements Listener {
 		if (getState() == GameState.IN_GAME) {
 			assignTeams();
 
-			if (isLegacy) {
-				p.setScoreboard(scoreboard);
-			}
+//			if (isLegacy)
+
+			p.setScoreboard(scoreboard);
 
 			if (getGamemode() == Gamemode.OITC) {
 				ffaPlayerScores.put(p, maxScore_OITC);
@@ -457,9 +453,9 @@ public class GameInstance implements Listener {
 
 		Main.shopManager.checkForNewGuns(p);
 
-		if (isLegacy) {
-			p.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
-		}
+//		if (isLegacy)
+		p.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
+
 
 		try {
 //		if (scoreBar.getPlayers().contains(p)) {
@@ -538,9 +534,9 @@ public class GameInstance implements Listener {
 		playerScores.clear();
 
 		for (Player p : players) {
-			if (isLegacy) {
-				p.setScoreboard(scoreboard);
-			}
+//			if (isLegacy)
+			p.setScoreboard(scoreboard);
+
 
 			Main.killstreakManager.reset(p);
 
@@ -799,6 +795,8 @@ public class GameInstance implements Listener {
 		for (Player p : players) {
 
 			boolean won = false;
+
+			p.removePotionEffect(PotionEffectType.SPEED);
 
 			if (getWinningTeam().equalsIgnoreCase("red") && redTeam.contains(p)) {
 				won = true;
@@ -1162,8 +1160,8 @@ public class GameInstance implements Listener {
 
 				String counter = getFancyTime(t);
 
-				if (isLegacy)
-					updateScoreBoard(counter);
+//				if (isLegacy)
+				updateScoreBoard(counter);
 
 				if (currentMap.getGamemode() == Gamemode.DOM) {
 					game.checkFlags();
@@ -2567,6 +2565,10 @@ public class GameInstance implements Listener {
 				t--;
 
 				if (t < 0) {
+					if (isOnRedTeam(owner))
+						redUavActive = false;
+					else if (isOnBlueTeam(owner))
+						blueUavActive = false;
 					this.cancel();
 				}
 

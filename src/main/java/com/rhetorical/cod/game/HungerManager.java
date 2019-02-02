@@ -12,20 +12,27 @@ import java.util.List;
 public class HungerManager {
 
 
-	private List<Player> pls = new ArrayList<>();
+	private List<Player> hungerPlayers = new ArrayList<>();
+	private List<Player> healthPlayers = new ArrayList<>();
 
 	public HungerManager() {
 	}
 
 	public void addPlayer(Player p) {
-		if (!pls.contains(p)) {
-			pls.add(p);
+		if (!hungerPlayers.contains(p)) {
+			hungerPlayers.add(p);
 			startHungerTask(p);
+		}
+
+		if (!healthPlayers.contains(p)) {
+			healthPlayers.add(p);
+			startHealthTask(p);
 		}
 	}
 
-	public void removePlayer(Player p) {
-		pls.remove(p);
+	void removePlayer(Player p) {
+		hungerPlayers.remove(p);
+		healthPlayers.remove(p);
 	}
 
 	private void startHungerTask(Player p) {
@@ -33,7 +40,7 @@ public class HungerManager {
 			@Override
 			public void run() {
 
-				if (!pls.contains(p)) {
+				if (!hungerPlayers.contains(p)) {
 					this.cancel();
 					return;
 				}
@@ -46,7 +53,7 @@ public class HungerManager {
 
 					if (p.isSprinting()) {
 						if (p.getFoodLevel() > 6) {
-							p.setFoodLevel(p.getFoodLevel() - 2);
+							p.setFoodLevel(p.getFoodLevel() - 1);
 						}
 					} else {
 						if (!p.isSprinting() && p.getFoodLevel() < 20) {
@@ -62,6 +69,41 @@ public class HungerManager {
 		};
 
 		br.runTaskTimer(Main.getPlugin(), 20L, 20L);
+	}
+
+	private void startHealthTask(Player p) {
+		BukkitRunnable br = new BukkitRunnable() {
+
+			private int timeSinceLastDamage = 0;
+			private GameInstance game = GameManager.getMatchWhichContains(p);
+			private double lastHealth = game.health.defaultHealth;
+
+
+			@Override
+			public void run() {
+				if (!healthPlayers.contains(p) || game == null) {
+					this.cancel();
+					return;
+				}
+
+				timeSinceLastDamage += 5L;
+
+				if (game.health.getHealth(p) < lastHealth) {
+					lastHealth = game.health.getHealth(p);
+					timeSinceLastDamage = 0;
+					return;
+				}
+
+				lastHealth = game.health.getHealth(p);
+
+				if (timeSinceLastDamage >= 100L) {
+					game.health.heal(p, 5d);
+				}
+
+			}
+		};
+
+		br.runTaskTimer(Main.getPlugin(), 0L, 5L);
 	}
 
 

@@ -292,15 +292,24 @@ public class Main extends JavaPlugin {
 		String dColor = "" + ChatColor.WHITE + ChatColor.BOLD;
 
 		if (args.length == 0) {
-			if (!(sender instanceof Player)) {
-				sendMessage(cs, Lang.MUST_BE_PLAYER.getMessage(), lang);
+
+			if (!hasPerm(sender, "com.help"))
 				return true;
-			}
-			Player p = (Player) sender;
-			openMainMenu(p);
+
+			sendMessage(sender, "-===\u00A76\u00A7lCOM-Warfare Help\u00A7r===-");
+			sendMessage(sender, "\u00A7f[\u00A7lPage 1 of 5\u00A7r\u00A7l]");
+
+			sendMessage(sender, "\u00A7f\u00A7lType the command to see specifics.", lang);
+			sendMessage(sender, cColor + "/cod help [page number] | " + dColor + "Opens a help page.");
+			sendMessage(sender, cColor + "/cod | " + dColor + "Opens the main menu.");
+			sendMessage(sender, cColor + "/cod join | " + dColor + "Joins a game through the matchmaker.");
+			sendMessage(sender, cColor + "/cod leave | " + dColor + "Leaves the current game.");
+			sendMessage(sender, cColor + "/cod shop | " + dColor + "Opens the shop.");
 			return true;
 		} else {
-			if (args[0].equalsIgnoreCase("help") && hasPerm(sender, "com.help", true)) {
+			if (args[0].equalsIgnoreCase("help")) {
+				if (!hasPerm(sender, "com.help", true))
+					return true;
 
 				if (args.length == 2) {
 					int page;
@@ -371,11 +380,16 @@ public class Main extends JavaPlugin {
 
 				}
 
-			} else if (args[0].equalsIgnoreCase("join") && hasPerm(sender, "com.join")) {
+			} else if (args[0].equalsIgnoreCase("join")) {
+
 				if (!(sender instanceof Player)) {
 					sendMessage(cs, Lang.MUST_BE_PLAYER.getMessage(), lang);
 					return true;
 				}
+
+				if (!hasPerm(sender, "com.join"))
+					return true;
+
 				Player p = (Player) sender;
 				boolean b = GameManager.findMatch(p);
 				if (b) {
@@ -385,11 +399,15 @@ public class Main extends JavaPlugin {
 					Main.lastLoc.put(p, l);
 				}
 				return true;
-			} else if (args[0].equalsIgnoreCase("leave") && hasPerm(sender, "com.leave", true)) {
+			} else if (args[0].equalsIgnoreCase("leave")) {
 				if (!(sender instanceof Player)) {
 					sendMessage(cs, Lang.MUST_BE_PLAYER.getMessage(), lang);
 					return true;
 				}
+
+				if (!hasPerm(sender, "com.leave", true))
+					return true;
+
 				Player p = (Player) sender;
 				GameManager.leaveMatch(p);
 				if (lastLoc.containsKey(p)) {
@@ -402,7 +420,11 @@ public class Main extends JavaPlugin {
 				}
 
 				return true;
-			} else if (args[0].equalsIgnoreCase("listMaps") && hasPerm(sender, "com.map.list", true)) {
+			} else if (args[0].equalsIgnoreCase("listMaps")) {
+
+				if (!hasPerm(sender, "com.map.list", true))
+					return true;
+
 				sendMessage(sender, Main.codPrefix + Lang.MAP_LIST_HEADER.getMessage(), lang);
 				int k = 0;
 				for (CodMap m : GameManager.getAddedMaps()) {
@@ -438,7 +460,12 @@ public class Main extends JavaPlugin {
 					sendMessage(sender, entry, lang);
 				}
 				return true;
-			} else if (args[0].equalsIgnoreCase("createMap") && hasPerm(sender, "com.map.create")) {
+			} else if (args[0].equalsIgnoreCase("createMap")) {
+
+
+				if (!hasPerm(sender, "com.map.create"))
+					return true;
+
 				if (args.length >= 2) {
 					CodMap newMap;
 					String mapName = args[1];
@@ -463,7 +490,10 @@ public class Main extends JavaPlugin {
 					sendMessage(sender, Main.codPrefix + msg);
 					return true;
 				}
-			} else if (args[0].equalsIgnoreCase("removeMap") && hasPerm(sender, "com.map.remove")) {
+			} else if (args[0].equalsIgnoreCase("removeMap")) {
+
+				if (!hasPerm(sender, "com.map.remove"))
+					return true;
 
 				if (args.length >= 2) {
 					GameManager.loadMaps();
@@ -500,7 +530,11 @@ public class Main extends JavaPlugin {
 					return true;
 				}
 
-			} else if (args[0].equalsIgnoreCase("set") && hasPerm(sender, "com.map.modify")) {
+			} else if (args[0].equalsIgnoreCase("set")) {
+
+				if (!hasPerm(sender, "com.map.modify"))
+					return true;
+
 				if (!(sender instanceof Player)) {
 					sendMessage(cs, Lang.MUST_BE_PLAYER.getMessage(), lang);
 					return true;
@@ -522,7 +556,10 @@ public class Main extends JavaPlugin {
 					getPlugin().reloadConfig();
 					sendMessage(p, Main.codPrefix + Lang.SET_LOBBY_SUCCESS.getMessage(), lang);
 					return true;
-				} else if (args[1].equalsIgnoreCase("spawn") && hasPerm(p, "com.map.addSpawn")) {
+				} else if (args[1].equalsIgnoreCase("spawn")) {
+
+					if (!hasPerm(p, "com.map.addSpawn"))
+						return true;
 
 					if (args.length < 4) {
 						String msg = Lang.INCORRECT_USAGE.getMessage().replace("{command}", "/cod set spawn (map name) (team)");
@@ -568,7 +605,10 @@ public class Main extends JavaPlugin {
 					String msg = Lang.SET_SPAWN_SUCCESS.getMessage().replace("{team}", team).replace("{map-name}", map.getName());
 					sendMessage(p, Main.codPrefix + msg);
 
-				} else if (args[1].equalsIgnoreCase("flag") && hasPerm(p, "com.map.modify")) {
+				} else if (args[1].equalsIgnoreCase("flag")) {
+
+					if (!hasPerm(p, "com.map.modify"))
+						return true;
 
 					if (args.length < 4) {
 						String msg = Lang.INCORRECT_USAGE.getMessage().replace("{command}", "/cod set flag (map name) (red/blue/a/b/c)");
@@ -632,11 +672,17 @@ public class Main extends JavaPlugin {
 					return true;
 				}
 
-			} else if (args[0].equalsIgnoreCase("lobby") && hasPerm(sender, "com.lobby")) {
+			} else if (args[0].equalsIgnoreCase("lobby")) {
+
 				if (!(sender instanceof Player)) {
 					sendMessage(cs, ChatColor.RED + Lang.MUST_BE_PLAYER.getMessage(), lang);
 					return true;
 				}
+
+
+				if (!hasPerm(sender, "com.lobby"))
+					return true;
+
 				Player p = (Player) sender;
 
 				if (GameManager.isInMatch(p)) {
@@ -649,20 +695,30 @@ public class Main extends JavaPlugin {
 				} else {
 					sendMessage(p, Main.codPrefix + Lang.LOBBY_NOT_EXISTS.getMessage(), lang);
 				}
-			} else if (args[0].equalsIgnoreCase("balance") && hasPerm(sender, "com.join", true)) {
+			} else if (args[0].equalsIgnoreCase("balance")) {
 				if (!(sender instanceof Player)) {
 					sendMessage(cs, ChatColor.RED + Lang.MUST_BE_PLAYER.getMessage(), lang);
 					return true;
 				}
+
+
+				if (!hasPerm(sender, "com.join", true))
+					return true;
+
 				Player p = (Player) sender;
 				int credits = CreditManager.getCredits(p);
 				sendMessage(p, codPrefix + Lang.BALANCE_COMMAND.getMessage().replace("{credits}", credits + ""), lang);
 			} else if (args[0].equalsIgnoreCase("credits")) {
-				if (!(args.length >= 3)) {
+				if (!(args.length >= 3) && (hasPerm(sender, "com.credits.give") || hasPerm(sender	, "com.credits.set"))) {
 					sendMessage(sender, Main.codPrefix + Lang.INCORRECT_USAGE.getMessage().replace("{command}", "/cod credits [give/set] {player} (amount)"));
 					return true;
 				}
-				if (args[1].equalsIgnoreCase("give") && hasPerm(sender, "com.credits.give")) {
+
+				if (args[1].equalsIgnoreCase("give")) {
+
+					if (!hasPerm(sender, "com.credits.give"))
+						return true;
+
 					String playerName = args[2];
 					int amount;
 					try {
@@ -676,7 +732,11 @@ public class Main extends JavaPlugin {
 					CreditManager.setCredits(playerName, CreditManager.getCredits(playerName) + amount);
 					sendMessage(sender, Main.codPrefix + Lang.GIVE_BALANCE_COMMAND.getMessage().replace("{player}", playerName).replace("{amount}", amount + "").replace("{total}", CreditManager.getCredits(playerName) + ""), lang);
 					return true;
-				} else if (args[1].equalsIgnoreCase("set") && hasPerm(sender, "com.credits.set")) {
+				} else if (args[1].equalsIgnoreCase("set")) {
+
+					if (!hasPerm(sender, "com.credits.set"))
+						return true;
+
 					String playerName = args[2];
 					int amount;
 					try {
@@ -690,7 +750,10 @@ public class Main extends JavaPlugin {
 					sendMessage(sender, Main.codPrefix + Lang.SET_BALANCE_COMMAND.getMessage().replace("{player}", playerName).replace("{amount}", amount + ""), lang);
 					return true;
 				}
-			} else if (args[0].equalsIgnoreCase("createGun") && hasPerm(sender, "com.createGun")) {
+			} else if (args[0].equalsIgnoreCase("createGun")) {
+
+				if (!hasPerm(sender, "com.createGun"))
+					return true;
 
 				if (args.length >= 9) {
 					createGun(sender, args);
@@ -699,7 +762,11 @@ public class Main extends JavaPlugin {
 					sendMessage(sender, Main.codPrefix + Lang.INCORRECT_USAGE.getMessage().replace("{command}", "/cod createGun (Gun name) (Primary/Secondary) (Unlock type: level/credits/both) (Ammo Amount) (Gun Material) (Ammo Material) (Level Unlock) (Cost)"));
 					return true;
 				}
-			} else if ((args[0].equalsIgnoreCase("createWeapon") || args[0].equalsIgnoreCase("createGrenade")) && hasPerm(sender, "com.createWeapon")) {
+			} else if ((args[0].equalsIgnoreCase("createWeapon") || args[0].equalsIgnoreCase("createGrenade"))) {
+
+				if (!hasPerm(sender, "com.createWeapon"))
+					return true;
+
 				if (args.length >= 7) {
 					createWeapon(sender, args);
 					return true;
@@ -707,11 +774,15 @@ public class Main extends JavaPlugin {
 					sendMessage(sender, Main.codPrefix + Lang.INCORRECT_USAGE.getMessage().replace("{command}", "/cod createWeapon (name) (Lethal/Tactical) (Unlock Type: level/credits/both) (Grenade Material) (Level Unlock) (Cost)"));
 					return true;
 				}
-			} else if (args[0].equalsIgnoreCase("start") && hasPerm(sender, "com.forceStart", true)) {
+			} else if (args[0].equalsIgnoreCase("start")) {
 				if (!(sender instanceof Player)) {
 					sendMessage(cs, ChatColor.RED + Lang.MUST_BE_PLAYER.getMessage(), lang);
 					return true;
 				}
+
+				if (!hasPerm(sender, "com.forceStart", true))
+					return true;
+
 				Player p = (Player) sender;
 				if (GameManager.isInMatch(p)) {
 					try {
@@ -732,31 +803,47 @@ public class Main extends JavaPlugin {
 				}
 
 				return true;
-			} else if (args[0].equalsIgnoreCase("class") && hasPerm(sender, "com.selectClass", true)) {
+			} else if (args[0].equalsIgnoreCase("class")) {
 				if (!(sender instanceof Player)) {
 					sendMessage(cs, Lang.MUST_BE_PLAYER.getMessage(), lang);
 					return true;
 				}
+
+				if (!hasPerm(sender, "com.selectClass", true))
+					return true;
+
 				Player p = (Player) sender;
 				Main.invManager.openSelectClassInventory(p);
 				return true;
-			} else if (args[0].equalsIgnoreCase("shop") && hasPerm(sender, "com.openShop", true)) {
+			} else if (args[0].equalsIgnoreCase("shop")) {
 				if (!(sender instanceof Player)) {
 					sendMessage(cs, Lang.MUST_BE_PLAYER.getMessage(), lang);
 					return true;
 				}
+
+				if (!hasPerm(sender, "com.openShop", true))
+					return true;
+
 				Player p = (Player) sender;
 				p.closeInventory();
 				p.openInventory(invManager.mainShopInventory);
 				return true;
-			} else if (args[0].equalsIgnoreCase("boot") && hasPerm(sender, "com.bootAll", true)) {
+			} else if (args[0].equalsIgnoreCase("boot")) {
+
+				if (!hasPerm(sender, "com.bootAll", true))
+					return true;
+
 				boolean result = bootPlayers();
 				if (result) {
 					sender.sendMessage(Main.codPrefix + Lang.PLAYERS_BOOTED_SUCCESS.getMessage());
 				} else {
 					sender.sendMessage(Main.codPrefix + Lang.PLAYER_BOOTED_FAILURE.getMessage());
 				}
-			} else if (args[0].equalsIgnoreCase("add") && hasPerm(sender, "com.add")) {
+			} else if (args[0].equalsIgnoreCase("add")) {
+
+				if (!hasPerm(sender, "com.add"))
+					return true;
+
 				if (args.length	< 3) {
 					sendMessage(sender, Lang.INCORRECT_USAGE.getMessage().replace("{command}", "/cod add [oitc/gun] (gun name)"));
 					return true;
@@ -792,11 +879,15 @@ public class Main extends JavaPlugin {
 				}
 				sendMessage(sender, Main.codPrefix + Lang.INCORRECT_USAGE.getMessage().replace("{command}", "/cod add [oitc/gun] (gun name)"));
 				return true;
-			} else if (args[0].equalsIgnoreCase("changeMap") && hasPerm(sender, "com.changeMap", true)) {
+			} else if (args[0].equalsIgnoreCase("changeMap")) {
 				if (!(sender instanceof Player)) {
 					sendMessage(cs, Main.codPrefix + Lang.MUST_BE_PLAYER.getMessage(), lang);
 					return true;
 				}
+
+				if (!hasPerm(sender, "com.changeMap", true))
+					return true;
+
 				Player p = (Player) sender;
 
 				if (args.length < 2) {
@@ -819,11 +910,15 @@ public class Main extends JavaPlugin {
 				GameManager.changeMap(Objects.requireNonNull(GameManager.getMatchWhichContains(p)), map);
 				sendMessage(p, codPrefix + Lang.MAP_CHANGE_SUCCESS.getMessage().replace("{map-name}", map.getName()));
 				return true;
-			} else if (args[0].equalsIgnoreCase("changeMode") && hasPerm(sender, "com.changeMode", true)) {
+			} else if (args[0].equalsIgnoreCase("changeMode")) {
 				if (!(sender instanceof Player)) {
 					sendMessage(cs, Main.codPrefix + Lang.MUST_BE_PLAYER.getMessage(), lang);
 					return true;
 				}
+
+				if (!hasPerm(sender, "com.changeMode", true))
+					return true;
+
 				Player p = (Player) sender;
 				if (args.length < 2) {
 					sendMessage(p, codPrefix + Lang.INCORRECT_USAGE.getMessage().replace("{command}", "/cod changeMode (name)"));
@@ -852,7 +947,11 @@ public class Main extends JavaPlugin {
 				Objects.requireNonNull(GameManager.getMatchWhichContains(p)).getMap().changeGamemode(mode);
 				sendMessage(p, codPrefix + Lang.GAME_MODE_CHANGE_SUCCESS.getMessage().replace("{game-mode}", mode.toString()));
 				return true;
-			} else if (args[0].equalsIgnoreCase("blacklist") && hasPerm(sender, "com.blacklist")) {
+			} else if (args[0].equalsIgnoreCase("blacklist")) {
+
+				if (!hasPerm(sender, "com.blacklist"))
+					return true;
+
 				if (args.length	< 3) {
 					sendMessage(sender, codPrefix + Lang.INCORRECT_USAGE.getMessage().replace("{command}", "/cod blacklist (map) (mode)"));
 					return true;
@@ -878,7 +977,11 @@ public class Main extends JavaPlugin {
 
 				sendMessage(sender, Main.codPrefix + Lang.BLACKLIST_SUCCESS.getMessage().replace("{mode}", mode.toString()).replace("{map-name}", map.getName()));
 				return true;
-			} else if (args[0].equalsIgnoreCase("setLevel") && hasPerm(sender, "com.modifyLevel")) {
+			} else if (args[0].equalsIgnoreCase("setLevel")) {
+
+				if (!hasPerm(sender, "com.modifyLevel"))
+					return true;
+
 				if (args.length < 3) {
 					sendMessage(sender, codPrefix + Lang.INCORRECT_USAGE.getMessage().replace("{command}", "/cod setLevel (player) (level)"));
 					return true;

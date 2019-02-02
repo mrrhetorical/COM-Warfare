@@ -36,7 +36,7 @@ public class HealthManager {
 		}
 	}
 	
-	private double getHealth(Player p) {
+	public double getHealth(Player p) {
 		if (!healthMap.containsKey(p)) {
 			healthMap.put(p, this.defaultHealth);
 		}
@@ -56,6 +56,19 @@ public class HealthManager {
 		p.playEffect(EntityEffect.HURT);
 		p.playEffect(p.getLocation(), Effect.STEP_SOUND, Material.REDSTONE_BLOCK);
 
+		update(p);
+	}
+
+	public void heal(Player p, double healing) {
+		if (p.getGameMode() != GameMode.SURVIVAL && p.getGameMode() != GameMode.ADVENTURE) return;
+
+		double health = getHealth(p) + healing;
+
+		if (health > defaultHealth) {
+			health = defaultHealth;
+		}
+
+		healthMap.put(p, health);
 		update(p);
 	}
 	

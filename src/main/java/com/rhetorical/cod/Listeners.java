@@ -75,7 +75,7 @@ public class Listeners implements Listener {
 			e.setCancelled(true);
 		}
 
-		if (!Main.hasPerm(sender, "com.chat"))
+		if (!Main.hasPerm(sender, "com.chat", true))
 			return;
 
 		for (Player receiver : Bukkit.getOnlinePlayers()) {

@@ -1082,6 +1082,8 @@ public class InventoryManager implements Listener {
 			int slot;
 			try {
 				slot = e.getSlot();
+				if (slot > Main.loadManager.getAllowedClasses(p) -1)
+					throw new NullPointerException();
 			} catch (NullPointerException exception) {
 				Main.sendMessage(Main.cs, Lang.ERROR_SELECTING_CLASS.getMessage(), Main.lang);
 				return;
