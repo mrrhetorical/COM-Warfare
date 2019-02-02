@@ -184,6 +184,9 @@ public class GameManager {
 
 		Objects.requireNonNull(getMatchWhichContains(p)).removePlayer(p);
 		Main.sendMessage(p, Main.codPrefix + Lang.PLAYER_LEAVE_GAME.getMessage(), Main.lang);
+		if (Main.serverMode) {
+			p.kickPlayer("");
+		}
 	}
 
 	public static boolean isInMatch(Player p) {

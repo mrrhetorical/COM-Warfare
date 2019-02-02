@@ -245,9 +245,6 @@ public class GameInstance implements Listener {
 
 		health = new HealthManager(players, Main.defaultHealth);
 
-//		if (isLegacy)
-		resetScoreBoard();
-
 		for (Player p : players) {
 			p.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
 			health.update(p);
@@ -461,7 +458,7 @@ public class GameInstance implements Listener {
 //		if (scoreBar.getPlayers().contains(p)) {
 //			scoreBar.removePlayer(p);
 //		}
-			List<Player> players = (List<Player>) scoreBar.getClass().getMethod("getPlayers").invoke(scoreBar);
+			ArrayList players = (ArrayList) scoreBar.getClass().getMethod("getPlayers").invoke(scoreBar);
 			if (players.contains(p)) {
 				scoreBar.getClass().getMethod("removePlayer", Player.class).invoke(scoreBar, p);
 			}
@@ -502,7 +499,9 @@ public class GameInstance implements Listener {
 		} else if ((redTeam.size() > 0 && blueTeam.size() == 0)
 				|| (blueTeam.size() > 0 && redTeam.size() == 0)
 				|| getPlayers().size() == 1) {
-			stopGame();
+			if (getState() == GameState.IN_GAME) {
+				stopGame();
+			}
 		}
 
 		if (PlayerSnapshot.hasSnapshot(p)) {
@@ -526,9 +525,7 @@ public class GameInstance implements Listener {
 
 	private void startGame() {
 
-		if (forceStarted) {
-			forceStarted = false;
-		}
+		forceStarted = false;
 
 		assignTeams();
 		playerScores.clear();
@@ -792,6 +789,8 @@ public class GameInstance implements Listener {
 
 	private void stopGame() {
 
+		setState(GameState.STOPPING);
+
 		for (Player p : players) {
 
 			boolean won = false;
@@ -842,8 +841,6 @@ public class GameInstance implements Listener {
 
 		if (getGamemode() == Gamemode.DOM)
 			despawnDomFlags();
-
-		setState(GameState.STOPPING);
 
 		GameInstance game = this;
 
@@ -1094,7 +1091,6 @@ public class GameInstance implements Listener {
 			for (Player p : players) {
 				if (!currentMap.getGamemode().equals(Gamemode.FFA) && !currentMap.getGamemode().equals(Gamemode.OITC) && !currentMap.getGamemode().equals(Gamemode.GUN)) {
 					try {
-						//scoreBar.addPlayer(p);
 						scoreBar.getClass().getMethod("addPlayer", Player.class).invoke(scoreBar, p);
 					}catch(NoClassDefFoundError e) {
 						System.out.println();

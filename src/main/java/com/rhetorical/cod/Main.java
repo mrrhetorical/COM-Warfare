@@ -63,7 +63,7 @@ public class Main extends JavaPlugin {
 	public static int minPlayers = 6;
 	public static int maxPlayers = 12;
 
-	static boolean serverMode = false;
+	public static boolean serverMode = false;
 
 	public static double defaultHealth = 20D;
 
