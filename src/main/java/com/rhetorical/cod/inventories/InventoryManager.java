@@ -991,13 +991,16 @@ public class InventoryManager implements Listener {
 				return;
 			}
 
+			if (e.getCurrentItem().getItemMeta() == null)
+				return;
+
 			Main.shopManager.loadPurchaseData(p);
 
 			ArrayList<CodGun> guns = Main.shopManager.getPrimaryGuns();
 			guns.addAll(Main.shopManager.getSecondaryGuns());
 
 			for (CodGun gun : guns) {
-				if (e.getCurrentItem().getItemMeta().getDisplayName().equals(gun.getGun().getItemMeta().getDisplayName())) {
+				if (Objects.requireNonNull(e.getCurrentItem().getItemMeta()).getDisplayName().equals(gun.getGun().getItemMeta().getDisplayName())) {
 					int cost = gun.getCreditUnlock();
 					if (CreditManager.purchase(p, cost)) {
 						ArrayList<CodGun> purchasedGuns = Main.shopManager.purchasedGuns.get(p);

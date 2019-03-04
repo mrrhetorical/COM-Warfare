@@ -32,6 +32,8 @@ public class CodGun extends CodWeapon {
 		this.ammo = a;
 		this.ammoItem = ammoI;
 		this.gunItem = gunI;
+
+		setupGunItem();
 	}
 	
 	public void save() {
@@ -83,7 +85,7 @@ public class CodGun extends CodWeapon {
 		return this.unlockType;
 	}
 
-	public ItemStack getGun() {
+	private ItemStack setupGunItem() {
 		if (Main.hasQualityArms()) {
 			if (!this.equals(Main.loadManager.blankPrimary) && !this.equals(Main.loadManager.blankSecondary)) {
 				ItemStack gun = QualityGun.getGunForName(getName());
@@ -102,12 +104,16 @@ public class CodGun extends CodWeapon {
 					return gun;
 			}
 		}
+
 		ItemMeta meta = this.gunItem.getItemMeta();
-		
+
 		meta.setDisplayName(this.getName());
-		
+
 		this.gunItem.setItemMeta(meta);
-		
+		return this.gunItem;
+	}
+
+	public ItemStack getGun() {
 		return this.gunItem;
 	}
 
