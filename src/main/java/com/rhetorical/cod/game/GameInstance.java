@@ -84,7 +84,7 @@ public class GameInstance implements Listener {
 	private Objective scoreboardObjective = scoreboard.registerNewObjective("game_stats", "dummy");
 
 	public HealthManager health;
-	public HungerManager hungerManager;
+	private HungerManager hungerManager;
 
 	private HashMap<Player, CodScore> playerScores = new HashMap<>();
 
@@ -103,7 +103,7 @@ public class GameInstance implements Listener {
 	private boolean redNukeActive;
 	private Player pinkNukeActive;
 
-	public GameInstance(ArrayList<Player> pls, CodMap map) {
+	GameInstance(ArrayList<Player> pls, CodMap map) {
 
 		try {
 			scoreBar = Bukkit.createBossBar(ChatColor.GRAY + "«" + ChatColor.WHITE + getFancyTime(Main.getPlugin().getConfig().getInt("lobbyTime")) + ChatColor.RESET + "" + ChatColor.GRAY + "»", org.bukkit.boss.BarColor.GREEN, org.bukkit.boss.BarStyle.SEGMENTED_10);
@@ -264,11 +264,11 @@ public class GameInstance implements Listener {
 		}
 	}
 
-	public long getId() {
+	long getId() {
 		return id;
 	}
 
-	public void changeMap(CodMap map) {
+	void changeMap(CodMap map) {
 
 		if (map != null) {
 			GameManager.usedMaps.remove(getMap());
@@ -287,7 +287,7 @@ public class GameInstance implements Listener {
 		}
 	}
 
-	public void changeMap(CodMap map, Gamemode mode) {
+	void changeMap(CodMap map, Gamemode mode) {
 		if (map == null)
 			return;
 
@@ -312,7 +312,7 @@ public class GameInstance implements Listener {
 		currentMap.changeGamemode(gm);
 	}
 
-	public void addPlayer(Player p) {
+	void addPlayer(Player p) {
 
 		if (p == null)
 			return;
