@@ -77,6 +77,12 @@ public class Main extends JavaPlugin {
 	public static boolean hasQA = false;
 	public static boolean hasCS = false;
 
+	public static String reward_highestKD;
+	public static String reward_highestScore;
+	public static String reward_maxLevel;
+	public static String reward_maxPrestige;
+	public static String reward_maxPrestigeMaxLevel;
+
 	private Metrics bMetrics;
 
 	@Override
@@ -196,6 +202,11 @@ public class Main extends JavaPlugin {
 			serverMode = getPlugin().getConfig().getBoolean("serverMode");
 			defaultHealth = getPlugin().getConfig().getDouble("defaultHealth");
 			translate_api_key = getPlugin().getConfig().getString("translate.api_key");
+			reward_highestKD = getPlugin().getConfig().getString("Rewards.Highest_KD");
+			reward_highestScore = getPlugin().getConfig().getString("Rewards.Highest_Score");
+			reward_maxLevel = getPlugin().getConfig().getString("Rewards.Max_Level");
+			reward_maxPrestige = getPlugin().getConfig().getString("Rewards.Max_Prestige");
+			reward_maxPrestigeMaxLevel = getPlugin().getConfig().getString("Rewards.Max_Prestige_Max_Level");
 		}
 
 		if (ComVersion.getPurchased()) {

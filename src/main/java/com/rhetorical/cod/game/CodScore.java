@@ -60,6 +60,10 @@ public class CodScore {
 	public double getScore() {
 		return this.score;
 	}
+
+	public double getRatio() {
+		return getDeaths() != 0 ? ((float) getKills() / (float) getDeaths()) : 0d;
+	}
 	
 	public void setScore(double score) {
 		this.score = score;

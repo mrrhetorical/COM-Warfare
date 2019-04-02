@@ -60,6 +60,19 @@ OITC_Gun: none
 #GunProgression: A list of the gun's names to be used in gun game. Players will spawn with the top gun, and with every kill, they will receive the next gun in the list until there is no more.
 GunProgression: []
 
+#Rewards: Commands to execute when certain conditions are met. use {PLAYER} for the player's name.
+Rewards:
+  #When a player reaches the max level.
+  Max_Level: 'none'
+  #When a player reaches the max prestige.
+  Max_Prestige: 'none'
+  #When a player reaches the max level at the max prestige.
+  Max_Prestige_Max_Level: 'none'
+  #When a player earns the highest KD in a match.
+  Highest_KD: 'none'
+  #When a player earns the highest score in a match.
+  Highest_Score: 'none'
+
 #Rank Tiers: The tiers at which players can receive different rewards. All players can get the default one. The permission for each tier are 'com.[tier]' Default: default rank {PREMIUM-ONLY}
 RankTiers:
   0:

@@ -786,6 +786,32 @@ public class GameInstance implements Listener {
 
 		setState(GameState.STOPPING);
 
+
+		CodScore highestScore = null;
+		CodScore highestKD = null;
+
+		for (CodScore score : playerScores.values()) {
+			if (highestScore == null || score.getScore() > highestScore.getScore()) {
+				highestScore = score;
+			}
+
+			if (highestKD == null || score.getRatio() > highestKD.getRatio()) {
+				highestKD = score;
+			}
+		}
+
+		if (!Main.reward_highestScore.equalsIgnoreCase("none") && highestScore != null) {
+			String cmd = Main.reward_highestScore.replace("{PLAYER}", highestScore.getOwner().getName());
+			Bukkit.getServer().dispatchCommand(Main.cs, cmd);
+		}
+
+		if (!Main.reward_highestKD.equalsIgnoreCase("none") && highestKD != null) {
+			String cmd = Main.reward_highestKD.replace("{PLAYER}", highestScore.getOwner().getName());
+			Bukkit.getServer().dispatchCommand(Main.cs, cmd);
+		}
+
+
+
 		for (Player p : players) {
 
 			boolean won = false;
