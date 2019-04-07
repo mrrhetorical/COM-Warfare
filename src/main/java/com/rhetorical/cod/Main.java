@@ -998,7 +998,7 @@ public class Main extends JavaPlugin {
 					return true;
 				}
 
-				int level = -1;
+				int level;
 				Player player = Bukkit.getPlayer(args[1]);
 
 				if(player == null) {
@@ -1016,6 +1016,7 @@ public class Main extends JavaPlugin {
 				}
 
 				Main.progressionManager.setLevel(player, level, true);
+				Main.progressionManager.saveData(player);
 				sendMessage(sender, Lang.SET_LEVEL_SUCCESS.getMessage().replace("{player}", player.getDisplayName()).replace("{level}", level + ""));
 				return true;
 			} else {
