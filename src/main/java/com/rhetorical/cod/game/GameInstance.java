@@ -3,6 +3,7 @@ package com.rhetorical.cod.game;
 import com.rhetorical.cod.ComVersion;
 import com.rhetorical.cod.Main;
 import com.rhetorical.cod.lang.Lang;
+import com.rhetorical.cod.lang.LevelNames;
 import com.rhetorical.cod.loadouts.Loadout;
 import com.rhetorical.cod.perks.Perk;
 import com.rhetorical.cod.progression.CreditManager;
@@ -327,9 +328,12 @@ public class GameInstance implements Listener {
 		players.add(p);
 
 		new PlayerSnapshot(p);
+		int level = Main.progressionManager.getLevel(p);
 		String prestige = Main.progressionManager.getPrestigeLevel(p) > 0 ? ChatColor.WHITE + "[" + ChatColor.GREEN + Main.progressionManager.getPrestigeLevel(p) + ChatColor.WHITE + "]-" : "";
-		p.setPlayerListName(ChatColor.WHITE + prestige + "[" +
-				Main.progressionManager.getLevel(p) + "] " + ChatColor.YELLOW + p.getDisplayName());
+		String levelName = LevelNames.getInstance().getLevelName(level);
+		levelName = !levelName.equals("") ? "[" + levelName + "] " : "";
+		p.setPlayerListName(ChatColor.WHITE + levelName + prestige + "[" +
+				level + "] " + ChatColor.YELLOW + p.getDisplayName());
 
 		health.addPlayer(p);
 		hungerManager.addPlayer(p);
@@ -1039,9 +1043,12 @@ public class GameInstance implements Listener {
 				}
 
 				for (Player p : game.players) {
+					int level = Main.progressionManager.getLevel(p);
 					String prestige = Main.progressionManager.getPrestigeLevel(p) > 0 ? ChatColor.WHITE + "[" + ChatColor.GREEN + Main.progressionManager.getPrestigeLevel(p) + ChatColor.WHITE + "]-" : "";
-					p.setPlayerListName(ChatColor.WHITE + prestige + "[" +
-							Main.progressionManager.getLevel(p) + "] " + ChatColor.YELLOW + p.getDisplayName());
+					String levelName = LevelNames.getInstance().getLevelName(level);
+					levelName = !levelName.equals("") ? "[" + levelName + "] " : "";
+					p.setPlayerListName(ChatColor.WHITE + levelName + prestige + "[" +
+							level + "] " + ChatColor.YELLOW + p.getDisplayName());
 					try {
 						p.getClass().getMethod("setPlayerListHeader", String.class).invoke(p, Lang.LOBBY_HEADER.getMessage());
 						p.getClass().getMethod("setPlayerListFooter", String.class).invoke(p, Lang.LOBBY_FOOTER.getMessage().replace("{time}", getFancyTime(t)));
@@ -1620,9 +1627,13 @@ public class GameInstance implements Listener {
 				p.getClass().getMethod("setPlayerListHeader", String.class).invoke(p, Main.header);
 				p.getClass().getMethod("setPlayerListFooter", String.class).invoke(p, ChatColor.WHITE + "Playing " + ChatColor.GOLD + getMap().getGamemode().toString() + ChatColor.WHITE + " on " + ChatColor.GOLD + getMap().getName() + ChatColor.WHITE + "!");
 			} catch(NoSuchMethodException ig) {} catch(Exception ignored) {}
+
+			int level = Main.progressionManager.getLevel(p);
 			String prestige = Main.progressionManager.getPrestigeLevel(p) > 0 ? ChatColor.WHITE + "[" + ChatColor.GREEN + Main.progressionManager.getPrestigeLevel(p) + ChatColor.WHITE + "]-" : "";
-			p.setPlayerListName(ChatColor.WHITE + prestige + "[" +
-					Main.progressionManager.getLevel(p) + "] " + teamColor + p.getDisplayName() + ChatColor.WHITE + " [K] " +
+			String levelName = LevelNames.getInstance().getLevelName(level);
+			levelName = !levelName.equals("") ? "[" + levelName + "] " : "";
+			p.setPlayerListName(ChatColor.WHITE + levelName + prestige + "[" +
+					level + "] " + teamColor + p.getDisplayName() + ChatColor.WHITE + " [K] " +
 					ChatColor.GREEN + score.getKills() + ChatColor.WHITE + " [D] " + ChatColor.GREEN + score.getDeaths() +
 					ChatColor.WHITE + " [S] " + ChatColor.GREEN + score.getKillstreak());
 		}

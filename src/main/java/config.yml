@@ -73,6 +73,12 @@ Rewards:
   #When a player earns the highest score in a match.
   Highest_Score: 'none'
 
+#Level Names: The names for each level that will be shown next to players' levels on the scoreboard and chat.
+LevelNames:
+  1: 'PVT'
+  2: 'PFC'
+
+
 #Rank Tiers: The tiers at which players can receive different rewards. All players can get the default one. The permission for each tier are 'com.[tier]' Default: default rank {PREMIUM-ONLY}
 RankTiers:
   0:

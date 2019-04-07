@@ -4,6 +4,7 @@ import com.rhetorical.cod.game.GameInstance;
 import com.rhetorical.cod.game.GameManager;
 import com.rhetorical.cod.game.GameState;
 import com.rhetorical.cod.lang.Lang;
+import com.rhetorical.cod.lang.LevelNames;
 import com.rhetorical.cod.progression.CreditManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -98,9 +99,18 @@ public class Listeners implements Listener {
 						tColor = ChatColor.LIGHT_PURPLE;
 					}
 
+					int level = Main.progressionManager.getLevel(sender);
+					int pLevel = Main.progressionManager.getPrestigeLevel(sender);
+					String prestige = pLevel > 0 ? ChatColor.WHITE + "[" + ChatColor.GREEN + pLevel + ChatColor.WHITE + "]-" : "";
+					String levelName = LevelNames.getInstance().getLevelName(level);
+					levelName = !levelName.equals("") ? "[" + levelName + "] " : "";
+
+					String name = ChatColor.WHITE + levelName + prestige + "[" + level + "] "
+							+ tColor + sender.getDisplayName();
+
 					String msg = Lang.CHAT_FORMAT.getMessage();
 					msg = msg.replace("{team-color}", tColor + "");
-					msg = msg.replace("{player}", sender.getDisplayName());
+					msg = msg.replace("{player}", name);
 					msg = msg.replace("{message}", message);
 
 					receiver.sendMessage(msg);
