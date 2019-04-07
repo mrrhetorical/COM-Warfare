@@ -4,6 +4,7 @@ import com.rhetorical.cod.game.GameInstance;
 import com.rhetorical.cod.game.GameManager;
 import com.rhetorical.cod.game.GameState;
 import com.rhetorical.cod.lang.Lang;
+import com.rhetorical.cod.lang.LevelNames;
 import com.rhetorical.cod.progression.CreditManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -81,26 +82,41 @@ public class Listeners implements Listener {
 		for (Player receiver : Bukkit.getOnlinePlayers()) {
 			if (GameManager.isInMatch(receiver)) {
 				if (GameManager.getMatchWhichContains(sender) == GameManager.getMatchWhichContains(receiver)) {
-					if (receiver == sender) {
-						receiver.sendMessage("\u00A7a" + sender.getDisplayName() + " \u00A7r\u00A7f»\u00A7r \u00A77" + message);
-						continue;
-					}
+//					if (receiver == sender) {
+//						receiver.sendMessage(ChatColor.GREEN + sender.getDisplayName() + ChatColor.RESET + ChatColor.WHITE + "»" + ChatColor.RESET + ChatColor.GRAY + message);
+//						continue;
+//					}
 
 					GameInstance i = GameManager.getMatchWhichContains(sender);
 
 					ChatColor tColor = ChatColor.GRAY;
 
-					if (Objects.requireNonNull(i).isOnBlueTeam(sender)) {
-						tColor = ChatColor.BLUE;
-					} else if (i.isOnRedTeam(sender)) {
-						tColor = ChatColor.RED;
-					} else if (i.isOnPinkTeam(sender)) {
-						tColor = ChatColor.LIGHT_PURPLE;
+					if (i != null) {
+						if (receiver.equals(sender)) {
+							tColor = ChatColor.GREEN;
+						} else if (i.isOnBlueTeam(sender)) {
+							tColor = ChatColor.BLUE;
+						} else if (i.isOnRedTeam(sender)) {
+							tColor = ChatColor.RED;
+						} else if (i.isOnPinkTeam(sender)) {
+							tColor = ChatColor.LIGHT_PURPLE;
+						}
+					} else {
+						continue;
 					}
+
+					int level = Main.progressionManager.getLevel(sender);
+					int pLevel = Main.progressionManager.getPrestigeLevel(sender);
+					String prestige = pLevel > 0 ? ChatColor.WHITE + "[" + ChatColor.GREEN + pLevel + ChatColor.WHITE + "]-" : "";
+					String levelName = LevelNames.getInstance().getLevelName(level);
+					levelName = !levelName.equals("") ? "[" + levelName + "] " : "";
+
+					String name = ChatColor.WHITE + levelName + prestige + "[" + level + "] "
+							+ tColor + sender.getDisplayName();
 
 					String msg = Lang.CHAT_FORMAT.getMessage();
 					msg = msg.replace("{team-color}", tColor + "");
-					msg = msg.replace("{player}", sender.getDisplayName());
+					msg = msg.replace("{player}", name);
 					msg = msg.replace("{message}", message);
 
 					receiver.sendMessage(msg);
