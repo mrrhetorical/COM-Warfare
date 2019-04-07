@@ -454,16 +454,13 @@ public class GameInstance implements Listener {
 
 
 		try {
-//		if (scoreBar.getPlayers().contains(p)) {
-//			scoreBar.removePlayer(p);
-//		}
-			ArrayList players = (ArrayList) scoreBar.getClass().getMethod("getPlayers").invoke(scoreBar);
-			if (players.contains(p)) {
+			List pls = (List) scoreBar.getClass().getMethod("getPlayers").invoke(scoreBar);
+			if (pls.contains(p)) {
 				scoreBar.getClass().getMethod("removePlayer", Player.class).invoke(scoreBar, p);
 			}
-		} catch(NoClassDefFoundError e) {
-			System.out.println();
-		}catch(Exception ignored) {}
+		} catch(NoClassDefFoundError ignored) {
+		}catch(Exception ignored) {
+		}
 
 		if (freeForAllBar.containsKey(p)) {
 			if (freeForAllBar.get(p) == null) {
