@@ -791,6 +791,14 @@ public class GameInstance implements Listener {
 		CodScore highestScore = null;
 		CodScore highestKD = null;
 
+		for (Player p : getPlayers()) {
+			if (p.getGameMode().equals(GameMode.SPECTATOR)) {
+				Location spawnPoint = isOnPinkTeam(p) ? currentMap.getPinkSpawn() : isOnBlueTeam(p) ? currentMap.getBlueSpawn() : currentMap.getRedSpawn();
+				spawnCodPlayer(p, spawnPoint);
+			}
+			p.setGameMode(GameMode.ADVENTURE);
+		}
+
 		for (CodScore score : playerScores.values()) {
 			if (highestScore == null || score.getScore() > highestScore.getScore()) {
 				highestScore = score;
@@ -813,7 +821,7 @@ public class GameInstance implements Listener {
 
 
 
-		for (Player p : players) {
+		for (Player p : getPlayers()) {
 
 			boolean won = false;
 
