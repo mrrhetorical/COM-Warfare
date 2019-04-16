@@ -11,6 +11,9 @@ import org.bukkit.entity.Player;
 
 import java.util.*;
 
+import static com.rhetorical.cod.Main.lastLoc;
+import static com.rhetorical.cod.Main.lobbyLoc;
+
 public class GameManager {
 
 	static ArrayList<GameInstance> runningGames = new ArrayList<>();
@@ -183,6 +186,16 @@ public class GameManager {
 		}
 
 		Objects.requireNonNull(getMatchWhichContains(p)).removePlayer(p);
+
+		if (Main.lastLoc.containsKey(p)) {
+			p.teleport(lastLoc.get(p));
+			lastLoc.remove(p);
+		} else {
+			if (lobbyLoc != null) {
+				p.teleport(lobbyLoc);
+			}
+		}
+
 		Main.sendMessage(p, Main.codPrefix + Lang.PLAYER_LEAVE_GAME.getMessage(), Main.lang);
 		if (Main.serverMode) {
 			p.kickPlayer("");

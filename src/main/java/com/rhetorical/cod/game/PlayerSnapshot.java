@@ -12,7 +12,6 @@ class PlayerSnapshot {
 
     private static List<PlayerSnapshot> snapshots = new ArrayList<>();
 
-
     private Player owner;
     private String listName;
     private double experience;
