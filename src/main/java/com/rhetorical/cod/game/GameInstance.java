@@ -787,7 +787,6 @@ public class GameInstance implements Listener {
 
 		setState(GameState.STOPPING);
 
-
 		CodScore highestScore = null;
 		CodScore highestKD = null;
 
@@ -819,8 +818,6 @@ public class GameInstance implements Listener {
 			Bukkit.getServer().dispatchCommand(Main.cs, cmd);
 		}
 
-
-
 		for (Player p : getPlayers()) {
 
 			boolean won = false;
@@ -843,7 +840,6 @@ public class GameInstance implements Listener {
 
 			if (freeForAllBar.containsKey(p)) {
 				try {
-//				freeForAllBar.get(p).removeAll();
 					freeForAllBar.get(p).getClass().getMethod("removeAll").invoke(freeForAllBar.get(p));
 				}catch(NoClassDefFoundError e) {
 					System.out.println();
@@ -851,9 +847,6 @@ public class GameInstance implements Listener {
 			}
 
 			try {
-//			if (!scoreBar.getPlayers().contains(p)) {
-//				scoreBar.addPlayer(p);
-//			}
 				List players = (List) scoreBar.getClass().getMethod("getPlayers").invoke(scoreBar);
 				if (!players.contains(p)) {
 					scoreBar.getClass().getMethod("addPlayer", Player.class).invoke(scoreBar, p);

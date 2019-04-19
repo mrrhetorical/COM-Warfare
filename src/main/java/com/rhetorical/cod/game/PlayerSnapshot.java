@@ -3,8 +3,10 @@ package com.rhetorical.cod.game;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
@@ -69,6 +71,11 @@ class PlayerSnapshot {
 
         if (snapshot == null)
             return;
+
+		final Collection<PotionEffect> potionEffects = p.getActivePotionEffects();
+		for (PotionEffect effect : potionEffects) {
+			p.removePotionEffect(effect.getType());
+		}
 
         p.setPlayerListName(snapshot.listName);
         p.setExp((float) snapshot.experience);
