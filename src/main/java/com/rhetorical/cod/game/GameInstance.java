@@ -512,6 +512,10 @@ public class GameInstance implements Listener {
 
 		forceStarted = false;
 
+		blueTeam.clear();
+		redTeam.clear();
+		ffaPlayerScores.clear();
+
 		assignTeams();
 		playerScores.clear();
 
@@ -752,8 +756,9 @@ public class GameInstance implements Listener {
 				Main.sendMessage(p, Main.codPrefix + Lang.ASSIGNED_TO_TEAM.getMessage().replace("{team-color}", tColor + "").replace("{team}", team), Main.lang);
 			}
 		} else if (getGamemode() == Gamemode.INFECT) {
+			Collections.shuffle(players);
 			for (Player p : players) {
-				if (redTeam.size() != 0) {
+				if (redTeam.size() > 0) {
 					blueTeam.add(p);
 					continue;
 				}
