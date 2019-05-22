@@ -274,6 +274,8 @@ public class GameInstance implements Listener {
 		map = currentMap;
 
 		map.changeGamemode();
+
+		updateTimeLeft();
 	}
 
 	void changeMap(CodMap map, Gamemode mode) {
@@ -287,7 +289,7 @@ public class GameInstance implements Listener {
 		updateTimeLeft();
 	}
 
-	private void changeGamemode(Gamemode gm) {
+	public void changeGamemode(Gamemode gm) {
 		if (getState() != GameState.WAITING && getState() != GameState.STARTING)
 			return;
 
@@ -295,6 +297,8 @@ public class GameInstance implements Listener {
 			return;
 
 		currentMap.changeGamemode(gm);
+
+		updateTimeLeft();
 	}
 
 	void addPlayer(Player p) {
@@ -512,7 +516,6 @@ public class GameInstance implements Listener {
 		playerScores.clear();
 
 		for (Player p : players) {
-//			if (isLegacy)
 			p.setScoreboard(scoreboard);
 
 
@@ -653,7 +656,7 @@ public class GameInstance implements Listener {
 			}
 
 			if (getGamemode() == Gamemode.INFECT && redTeam.contains(p)) {
-				p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 20 * gameTime, 3));
+				p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 20 * gameTime, 1));
 			}
 
 		} else if (getGamemode() == Gamemode.OITC) {
@@ -942,14 +945,12 @@ public class GameInstance implements Listener {
 		setState(GameState.STARTING);
 
 		try {
-//			scoreBar.removeAll();
 			scoreBar.getClass().getMethod("removeAll").invoke(scoreBar);
 		} catch(NoClassDefFoundError e) {
 			System.out.println();
 		}catch(Exception ignored) {}
 		for (Player p : players) {
 			try {
-//				scoreBar.addPlayer(p);
 				scoreBar.getClass().getMethod("addPlayer", Player.class).invoke(scoreBar, p);
 			} catch(Exception ignored) {}
 			p.getInventory().setItem(0, Main.invManager.codItem);
@@ -964,6 +965,9 @@ public class GameInstance implements Listener {
 			setTeamArmor(p, Color.PURPLE);
 		}
 
+		changeMap(nextMaps[0], nextModes[0]);
+
+
 		BukkitRunnable br = new BukkitRunnable() {
 
 			int t = time;
@@ -976,34 +980,24 @@ public class GameInstance implements Listener {
 				String counter = getFancyTime(t);
 
 				try {
-//				scoreBar.setTitle(ChatColor.GOLD + getMap().getName() + " " + ChatColor.GRAY + "«" + ChatColor.WHITE + counter + ChatColor.RESET + "" + ChatColor.GRAY + "» " + ChatColor.GOLD + getMap().getGamemode().toString());
-				scoreBar.getClass().getMethod("setTitle", String.class).invoke(scoreBar, ChatColor.GOLD + getMap().getName() + " " + ChatColor.GRAY + "«" + ChatColor.WHITE + counter + ChatColor.RESET + "" + ChatColor.GRAY + "» " + ChatColor.GOLD + getMap().getGamemode().toString());
-				}catch(NoClassDefFoundError e) {
-					System.out.println();
-				} catch(Exception ignored) {}
+					scoreBar.getClass().getMethod("setTitle", String.class).invoke(scoreBar, ChatColor.GOLD + getMap().getName() + " " + ChatColor.GRAY + "«" + ChatColor.WHITE + counter + ChatColor.RESET + "" + ChatColor.GRAY + "» " + ChatColor.GOLD + getMap().getGamemode().toString());
+				} catch(Exception|NoClassDefFoundError ignored) {}
 
 				double progress = (((double) t) / ((double) lobbyTime));
 
 				try {
-//				scoreBar.setProgress(progress);
 					scoreBar.getClass().getMethod("setProgress", Double.class).invoke(scoreBar, progress);
-				} catch(NoClassDefFoundError e) {
-					System.out.println();
-				}catch(Exception ignored) {}
+				} catch(Exception|NoClassDefFoundError ignored) {}
 
 				if (t == 20) {
 					CodMap[] maps = nextMaps;
-					int votes = 0;
 					if (mapVotes[0].size() > mapVotes[1].size()) {
 						changeMap(maps[0], nextModes[0]);
-						votes = mapVotes[0].size();
 					} else if (mapVotes[1].size() > mapVotes[0].size()) {
 						changeMap(maps[1], nextModes[1]);
-						votes = mapVotes[1].size();
 					} else {
 						int index = (new Random()).nextInt(2);
 						changeMap(maps[index], nextModes[index]);
-						votes = -1;
 					}
 					clearNextMaps();
 
@@ -1035,7 +1029,7 @@ public class GameInstance implements Listener {
 					try {
 						p.getClass().getMethod("setPlayerListHeader", String.class).invoke(p, Lang.LOBBY_HEADER.getMessage());
 						p.getClass().getMethod("setPlayerListFooter", String.class).invoke(p, Lang.LOBBY_FOOTER.getMessage().replace("{time}", getFancyTime(t)));
-					} catch(NoSuchMethodException ignored) {} catch(Exception ignored) {}
+					} catch(Exception ignored) {}
 
 					if (t > 20) {
 						if (p.getInventory().getItem(3) == null || !p.getInventory().getItem(3).getType().equals(Main.invManager.voteItemA.getType())) {

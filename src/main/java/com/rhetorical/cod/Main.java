@@ -2,10 +2,7 @@ package com.rhetorical.cod;
 
 import com.rhetorical.cod.assignments.AssignmentManager;
 import com.rhetorical.cod.files.*;
-import com.rhetorical.cod.game.CodMap;
-import com.rhetorical.cod.game.GameInstance;
-import com.rhetorical.cod.game.GameManager;
-import com.rhetorical.cod.game.Gamemode;
+import com.rhetorical.cod.game.*;
 import com.rhetorical.cod.inventories.InventoryManager;
 import com.rhetorical.cod.inventories.ShopManager;
 import com.rhetorical.cod.lang.Lang;
@@ -916,6 +913,16 @@ public class Main extends JavaPlugin {
 					return true;
 				}
 
+				GameInstance game = GameManager.getMatchWhichContains(p);
+				if (game == null)
+					return true;
+
+				if (game.getState() != GameState.WAITING && game.getState() != GameState.STARTING) {
+					sendMessage(p, codPrefix + Lang.MUST_NOT_BE_IN_GAME.getMessage());
+					return true;
+				}
+
+
 				CodMap map = GameManager.getMapForName(args[1]);
 
 				if (map == null) {
@@ -923,7 +930,7 @@ public class Main extends JavaPlugin {
 					return true;
 				}
 
-				GameManager.changeMap(Objects.requireNonNull(GameManager.getMatchWhichContains(p)), map);
+				GameManager.changeMap(game, map);
 				sendMessage(p, codPrefix + Lang.MAP_CHANGE_SUCCESS.getMessage().replace("{map-name}", map.getName()));
 				return true;
 			} else if (args[0].equalsIgnoreCase("changeMode")) {
@@ -946,21 +953,30 @@ public class Main extends JavaPlugin {
 					return true;
 				}
 
+				GameInstance game = GameManager.getMatchWhichContains(p);
+				if (game == null)
+					return true;
+
+				if (game.getState() != GameState.WAITING && game.getState() != GameState.STARTING) {
+					sendMessage(p, codPrefix + Lang.MUST_NOT_BE_IN_GAME.getMessage());
+					return true;
+				}
+
 				Gamemode mode;
 
 				try {
-					mode = Gamemode.valueOf(args[1]);
+					mode = Gamemode.valueOf(args[1].toUpperCase());
 				} catch(Exception e) {
 					sendMessage(p, codPrefix + Lang.GAME_MODE_NOT_EXISTS_WITH_NAME.getMessage());
 					return true;
 				}
 
-				if (!Objects.requireNonNull(GameManager.getMatchWhichContains(p)).getMap().getAvailableGamemodes().contains(mode)) {
+				if (!game.getMap().getAvailableGamemodes().contains(mode)) {
 					sendMessage(p, codPrefix + Lang.GAME_MODE_NOT_SET_UP_ON_MAP.getMessage());
 					return true;
 				}
 
-				Objects.requireNonNull(GameManager.getMatchWhichContains(p)).getMap().changeGamemode(mode);
+				Objects.requireNonNull(GameManager.getMatchWhichContains(p)).changeGamemode(mode);
 				sendMessage(p, codPrefix + Lang.GAME_MODE_CHANGE_SUCCESS.getMessage().replace("{game-mode}", mode.toString()));
 				return true;
 			} else if (args[0].equalsIgnoreCase("blacklist")) {
