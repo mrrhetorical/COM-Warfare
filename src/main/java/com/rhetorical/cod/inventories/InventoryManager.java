@@ -593,7 +593,7 @@ public class InventoryManager implements Listener {
 
 			Loadout loadout = Main.loadManager.getLoadouts(p).get(i);
 
-			ItemStack item = loadout.getPrimary().getGun();
+			ItemStack item = loadout.getPrimary().getGun().clone();
 
 			ItemMeta meta = item.getItemMeta();
 			meta.setDisplayName(loadout.getName());
