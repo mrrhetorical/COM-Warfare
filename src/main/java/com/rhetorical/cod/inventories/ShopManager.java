@@ -206,7 +206,7 @@ public class ShopManager {
 
 			for (String s : gunList) {
 				boolean found = false;
-				List<CodGun> allGuns = this.getPrimaryGuns();
+				List<CodGun> allGuns = new ArrayList<>(getPrimaryGuns());
 				allGuns.addAll(this.getSecondaryGuns());
 				for (CodGun gun : allGuns) {
 					if (gun.getName().equals(s)) {
@@ -235,7 +235,7 @@ public class ShopManager {
 		if (weaponList != null) {
 			for (String s : weaponList) {
 				boolean found = false;
-				List<CodWeapon> allWeapons = this.getLethalWeapons();
+				List<CodWeapon> allWeapons = new ArrayList<>(getLethalWeapons());
 				allWeapons.addAll(this.getTacticalWeapons());
 				for (CodWeapon weapon : allWeapons) {
 					if (weapon.getName().equals(s)) {
@@ -444,7 +444,7 @@ public class ShopManager {
 
 		}
 
-		List<CodWeapon> lethalGrenades = getLethalWeapons();
+		List<CodWeapon> lethalGrenades = new ArrayList<>(getLethalWeapons());
 		for (CodWeapon grenade : lethalGrenades) {
 			unlockGrenade(p, grenade);
 		}

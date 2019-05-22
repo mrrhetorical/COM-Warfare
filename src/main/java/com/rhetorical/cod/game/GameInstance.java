@@ -644,9 +644,10 @@ public class GameInstance implements Listener {
 				p.getInventory().setItem(3, lethal.getWeapon());
 			}
 
-			if (Math.random() > 0.5 && !lethal.equals(Main.loadManager.blankTactical)) {
+			if (Math.random() > 0.5 && !tactical.equals(Main.loadManager.blankTactical)) {
 				p.getInventory().setItem(4, tactical.getWeapon());
 			}
+
 		} else if (getGamemode() == Gamemode.DOM
 				|| getGamemode() == Gamemode.CTF
 				|| getGamemode() == Gamemode.KC

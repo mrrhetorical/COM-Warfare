@@ -486,7 +486,7 @@ public class LoadoutManager {
 		int size = Main.shopManager.getPrimaryGuns().size() - 1;
 		int position;
 
-		if (size != 0) {
+		if (Main.shopManager.getPrimaryGuns().size() > 0) {
 			position = (int) Math.round(Math.random() * size);
 		} else {
 			return blankPrimary;
@@ -499,7 +499,7 @@ public class LoadoutManager {
 		int size = Main.shopManager.getSecondaryGuns().size() - 1;
 		int position;
 
-		if (size != 0) {
+		if (Main.shopManager.getSecondaryGuns().size() > 0) {
 			position = (int) Math.round(Math.random() * size);
 		} else {
 			return blankSecondary;
@@ -512,7 +512,7 @@ public class LoadoutManager {
 		int size = Main.shopManager.getLethalWeapons().size() - 1;
 		int position;
 
-		if (size != 0) {
+		if (Main.shopManager.getLethalWeapons().size() > 0) {
 			position = (int) Math.round(Math.random() * size);
 		} else {
 			return blankLethal;
@@ -525,7 +525,7 @@ public class LoadoutManager {
 		int size = Main.shopManager.getTacticalWeapons().size() - 1;
 		int position;
 
-		if (size != 0) {
+		if (Main.shopManager.getTacticalWeapons().size() > 0) {
 			position = (int) Math.round(Math.random() * size);
 		} else {
 			return blankTactical;

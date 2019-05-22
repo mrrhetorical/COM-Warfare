@@ -494,7 +494,7 @@ public class InventoryManager implements Listener {
 		Inventory weaponShop = Bukkit.createInventory(p, 36, Lang.INVENTORY_GRENADE_SHOP_NAME.getMessage());
 		Inventory perkShop = Bukkit.createInventory(p, 36, Lang.INVENTORY_PERK_SHOP_NAME.getMessage());
 
-		ArrayList<CodGun> guns = Main.shopManager.getPrimaryGuns();
+		List<CodGun> guns = new ArrayList<>(Main.shopManager.getPrimaryGuns());
 		guns.addAll(Main.shopManager.getSecondaryGuns());
 
 		for (CodGun gun : guns) {
@@ -521,7 +521,7 @@ public class InventoryManager implements Listener {
 
 		}
 
-		ArrayList<CodWeapon> grenades = Main.shopManager.getLethalWeapons();
+		List<CodWeapon> grenades = new ArrayList<>(Main.shopManager.getLethalWeapons());
 		grenades.addAll(Main.shopManager.getTacticalWeapons());
 
 		for (CodWeapon grenade : grenades) {
@@ -998,7 +998,7 @@ public class InventoryManager implements Listener {
 
 			Main.shopManager.loadPurchaseData(p);
 
-			ArrayList<CodGun> guns = Main.shopManager.getPrimaryGuns();
+			List<CodGun> guns = new ArrayList<>(Main.shopManager.getPrimaryGuns());
 			guns.addAll(Main.shopManager.getSecondaryGuns());
 
 			for (CodGun gun : guns) {
@@ -1030,7 +1030,7 @@ public class InventoryManager implements Listener {
 
 			Main.shopManager.loadPurchaseData(p);
 
-			ArrayList<CodWeapon> grenades = Main.shopManager.getLethalWeapons();
+			List<CodWeapon> grenades = new ArrayList<>(Main.shopManager.getLethalWeapons());
 			grenades.addAll(Main.shopManager.getTacticalWeapons());
 
 			for (CodWeapon grenade : grenades) {
