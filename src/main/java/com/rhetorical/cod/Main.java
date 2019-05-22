@@ -112,7 +112,7 @@ public class Main extends JavaPlugin {
 		} catch(Exception ignored) {}
 
 		if (bukkitVersion.startsWith("1.8") || v < 8 ) {
-			Main.cs.sendMessage(Main.codPrefix + ChatColor.RED + "You are not on the most recent version of Spigot/Bukkit, so COM-Warfare might not work as advertised. To ensure it will work properly, please use version " + ChatColor.WHITE + "1.9 - 1.13" + ChatColor.RED + "!");
+			Main.cs.sendMessage(Main.codPrefix + "You are not on the most recent version of Spigot/Bukkit, so COM-Warfare might not work as advertised. To ensure it will work properly, please use version 1.9 - 1.14!");
 		}
 
 		Main.cs.sendMessage(Main.codPrefix + "Checking dependencies...");
@@ -120,19 +120,19 @@ public class Main extends JavaPlugin {
 		DependencyManager dm = new DependencyManager();
 		if (!dm.checkDependencies()) {
 			if (getPlugin().getConfig().getBoolean("auto-download-dependency")) {
-				Main.cs.sendMessage(Main.codPrefix + ChatColor.RED + "One or more dependencies were not found, will attempt to download them.");
+				Main.cs.sendMessage(Main.codPrefix + "One or more dependencies were not found, will attempt to download them.");
 				try {
 					dm.downloadDependencies();
 				} catch (Exception e) {
-					Main.cs.sendMessage(Main.codPrefix + ChatColor.RED +"Could not download dependencies! Make sure that the plugins folder can be written to!");
-					Main.cs.sendMessage(Main.codPrefix + ChatColor.RED + "Not all dependencies for COM-Warfare are installed! The plugin likely will not work as intended!");
+					Main.cs.sendMessage(Main.codPrefix + "Could not download dependencies! Make sure that the plugins folder can be written to!");
+					Main.cs.sendMessage(Main.codPrefix + "Not all dependencies for COM-Warfare are installed! The plugin may not work as intended and may throw errors!");
 				}
 			} else {
-				Main.cs.sendMessage(Main.codPrefix + ChatColor.RED + "Could not download dependencies! You must set the value for \"auto-download-dependency\" to 'true' in the config to automatically download them!");
-				Main.cs.sendMessage(ChatColor.RED + "Not all dependencies for COM-Warfare are installed! The plugin likely will not work as intended!");
+				Main.cs.sendMessage(Main.codPrefix + "Could not download dependencies! You must set the value for \"auto-download-dependency\" to 'true' in the config to automatically download them!");
+				Main.cs.sendMessage("Not all dependencies for COM-Warfare are installed! The plugin likely will not work as intended!");
 			}
 		} else {
-			Main.cs.sendMessage(Main.codPrefix + ChatColor.GREEN + "All dependencies are installed!");
+			Main.cs.sendMessage(Main.codPrefix + "All dependencies are installed!");
 		}
 
 		try {

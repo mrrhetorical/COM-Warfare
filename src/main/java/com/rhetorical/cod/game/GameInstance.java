@@ -118,14 +118,8 @@ public class GameInstance implements Listener {
 		currentMap = map;
 		Main.getPlugin().reloadConfig();
 
-		if (getGamemode() != Gamemode.INFECT) {
-			gameTime = Main.getPlugin().getConfig().getInt("gameTime." + getGamemode().toString());
-		} else {
-			if (ComVersion.getPurchased())
-				gameTime = Main.getPlugin().getConfig().getInt("maxScore.INFECT");
-			else
-				gameTime = 120;
-		}
+		updateTimeLeft();
+
 		lobbyTime = Main.getPlugin().getConfig().getInt("lobbyTime");
 
 		if (ComVersion.getPurchased()) {
@@ -280,12 +274,6 @@ public class GameInstance implements Listener {
 		map = currentMap;
 
 		map.changeGamemode();
-		Gamemode gameMode = getGamemode();
-		if (gameMode == Gamemode.INFECT) {
-			gameTime = Main.getPlugin().getConfig().getInt("maxScore.INFECT");
-		} else {
-			gameTime = Main.getPlugin().getConfig().getInt("gameTime." + gameMode.toString());
-		}
 	}
 
 	void changeMap(CodMap map, Gamemode mode) {
@@ -296,11 +284,7 @@ public class GameInstance implements Listener {
 
 		currentMap = map;
 		map.setGamemode(mode);
-		if (mode == Gamemode.INFECT) {
-			gameTime = Main.getPlugin().getConfig().getInt("maxScore.INFECT");
-		} else {
-			gameTime = Main.getPlugin().getConfig().getInt("gameTime." + mode.toString());
-		}
+		updateTimeLeft();
 	}
 
 	private void changeGamemode(Gamemode gm) {
@@ -1124,7 +1108,7 @@ public class GameInstance implements Listener {
 				} else {
 
 					try {
-						Object bar = Bukkit.createBossBar(ChatColor.GRAY + "«" + ChatColor.WHITE + getFancyTime(Main.getPlugin().getConfig().getInt("gameTime." + getGamemode().toString())) + ChatColor.RESET + ChatColor.WHITE + "»", org.bukkit.boss.BarColor.GREEN, org.bukkit.boss.BarStyle.SEGMENTED_10);
+						Object bar = Bukkit.createBossBar(ChatColor.GRAY + "«" + ChatColor.WHITE + getFancyTime(gameTime) + ChatColor.RESET + ChatColor.WHITE + "»", org.bukkit.boss.BarColor.GREEN, org.bukkit.boss.BarStyle.SEGMENTED_10);
 						freeForAllBar.put(p, bar);
 						freeForAllBar.get(p).getClass().getMethod("addPlayer", Player.class).invoke(freeForAllBar.get(p), p);
 
@@ -1160,7 +1144,6 @@ public class GameInstance implements Listener {
 		BukkitRunnable br = new BukkitRunnable() {
 
 			int t = time;
-			int gameTime = time;
 
 			@Override
 			public void run() {
@@ -2903,6 +2886,17 @@ public class GameInstance implements Listener {
 			};
 
 			br.runTaskTimer(Main.getPlugin(), 0L, 20L);
+		}
+	}
+
+	private void updateTimeLeft() {
+		if (getGamemode() != Gamemode.INFECT) {
+			gameTime = Main.getPlugin().getConfig().getInt("gameTime." + getGamemode().toString());
+		} else {
+			if (ComVersion.getPurchased())
+				gameTime = Main.getPlugin().getConfig().getInt("maxScore.INFECT");
+			else
+				gameTime = 120;
 		}
 	}
 }

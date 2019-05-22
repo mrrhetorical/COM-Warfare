@@ -10,24 +10,14 @@ public class CrackShotGun {
 	public static void setup() {
 		try {
 			apiClass = Class.forName("com.shampaggon.crackshot.CSUtility");
-		} catch(ClassNotFoundException ignored) {
-			ignored.printStackTrace();
-		}
-		catch(Exception ignored) {
-			ignored.printStackTrace();
-		}
+		} catch(Exception ignored) {}
 	}
 
 	public static ItemStack generateWeapon(String name) {
 		ItemStack item = null;
 		try {
 			item = (ItemStack) apiClass.getMethod("generateWeapon", String.class).invoke(apiClass.newInstance(), name);
-		} catch(NoSuchMethodException ignored) {
-			ignored.printStackTrace();
-		}
-		catch(Exception ignored) {
-			ignored.printStackTrace();
-		}
+		} catch(Exception ignored) {}
 
 		return item == null ? new ItemStack(Material.AIR) : item;
 	}

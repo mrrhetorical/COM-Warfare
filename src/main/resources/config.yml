@@ -1,6 +1,11 @@
 #Prefix: The prefix for the plugin to use {PREMIUM-ONLY}
 prefix: '&l&f[&cCOM&f]&r'
-#Auto download dependencies: Automatically download all required dependencies if this plugin cannot find them on the computer. By having this value set to 'true', you understand and thereby give permission for this application to download files that are required to run features of this plugin onto this computer.
+#Auto download dependencies: Automatically download all required dependencies if this plugin cannot find them on the
+# computer. By having this value set to 'true', you understand and thereby give permission for this plugin to
+# download files that are required in order for this plugin to properly function, as well as give permission for this
+# plugin to automatically restart the server it is running on after successfully downloading all dependencies.
+# For restarting to work properly, in your 'spigot.yml', ensure that the value under 'settings.restart-script' is set
+# to your restart script location.
 auto-download-dependency: false
 #Lang: The two letter abbreviation for what language the plugin will be translated to. Set to 'none' if you don't want to use the translation service. Default: EN {PREMIUM-ONLY}
 lang: 'EN'
