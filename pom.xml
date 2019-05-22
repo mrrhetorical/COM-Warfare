@@ -51,16 +51,6 @@
     </dependencies>
 
     <build>
-        <resources>
-            <resource>
-                <directory>src/main/java</directory>
-                <includes>
-                    <include>plugin.yml</include>
-                    <include>config.yml</include>
-                </includes>
-            </resource>
-        </resources>
-
         <plugins>
             <plugin>
                 <version>3.8.0</version>
@@ -99,7 +89,7 @@
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>2.3.2</version>
                 <configuration>
-                    <finalName>com-warfare-1.8-13</finalName>
+                    <finalName>com-warfare</finalName>
                 </configuration>
             </plugin>
 
