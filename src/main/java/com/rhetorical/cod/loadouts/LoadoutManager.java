@@ -57,10 +57,10 @@ public class LoadoutManager {
 		lethalMeta.setDisplayName(Lang.NO_LETHAL.getMessage());
 		tacticalMeta.setDisplayName(Lang.NO_TACTICAL.getMessage());
 
-		blankPrimary = new CodGun("No Primary", GunType.Primary, UnlockType.LEVEL, 0, new ItemStack(Material.AIR), emptyPrimary, 0);
-		blankSecondary = new CodGun("No Secondary", GunType.Secondary, UnlockType.LEVEL, 0, new ItemStack(Material.AIR), emptySecondary, 0);
-		blankLethal = new CodWeapon("No Lethal", WeaponType.LETHAL, UnlockType.LEVEL, emptyLethal, 0);
-		blankTactical = new CodWeapon("No Tactical", WeaponType.TACTICAL, UnlockType.LEVEL, emptyTactical, 0);
+		blankPrimary = new CodGun("No Primary", GunType.Primary, UnlockType.LEVEL, 0, new ItemStack(Material.AIR), emptyPrimary, 0, true);
+		blankSecondary = new CodGun("No Secondary", GunType.Secondary, UnlockType.LEVEL, 0, new ItemStack(Material.AIR), emptySecondary, 0, true);
+		blankLethal = new CodWeapon("No Lethal", WeaponType.LETHAL, UnlockType.LEVEL, emptyLethal, 0, true);
+		blankTactical = new CodWeapon("No Tactical", WeaponType.TACTICAL, UnlockType.LEVEL, emptyTactical, 0, true);
 
 		emptyPrimary.setItemMeta(primaryMeta);
 		emptySecondary.setItemMeta(secondaryMeta);
@@ -132,7 +132,7 @@ public class LoadoutManager {
 		// Primary & Ammo
 
 		if (!primary.equals(Main.loadManager.blankPrimary)) {
-			p.getInventory().setItem(1, primary.getGun());
+			p.getInventory().setItem(1, primary.getGunItem());
 
 			ItemStack primaryAmmo = primary.getAmmo();
 			primaryAmmo.setAmount(primary.getAmmoCount());
@@ -142,7 +142,7 @@ public class LoadoutManager {
 		// Secondary & Ammo
 
 		if (!secondary.equals(Main.loadManager.blankSecondary)) {
-			p.getInventory().setItem(2, secondary.getGun());
+			p.getInventory().setItem(2, secondary.getGunItem());
 			if (!loadout.hasPerk(Perk.ONE_MAN_ARMY)) {
 				ItemStack secondaryAmmo = secondary.getAmmo();
 				secondaryAmmo.setAmount(secondary.getAmmoCount());
@@ -153,11 +153,11 @@ public class LoadoutManager {
 		// Grenades
 
 		if (!lethal.equals(Main.loadManager.blankLethal)) {
-			p.getInventory().setItem(3, lethal.getWeapon());
+			p.getInventory().setItem(3, lethal.getWeaponItem());
 		}
 
 		if (!tactical.equals(Main.loadManager.blankTactical)) {
-			p.getInventory().setItem(4, tactical.getWeapon());
+			p.getInventory().setItem(4, tactical.getWeaponItem());
 		}
 	}
 

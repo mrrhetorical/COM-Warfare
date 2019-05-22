@@ -403,7 +403,7 @@ public class ShopManager {
 
 		Main.shopManager.loadPurchaseData(p);
 
-		List<CodGun> primaryGuns = getPrimaryGuns();
+		List<CodGun> primaryGuns = new ArrayList<>(getPrimaryGuns());
 		for (CodGun gun : primaryGuns) {
 			if (gun.getType() == UnlockType.LEVEL) {
 
@@ -424,7 +424,7 @@ public class ShopManager {
 
 		}
 
-		List<CodGun> secondaryGuns = getSecondaryGuns();
+		List<CodGun> secondaryGuns = new ArrayList<>(getSecondaryGuns());
 		for (CodGun gun : secondaryGuns) {
 			if (gun.getType() == UnlockType.LEVEL) {
 

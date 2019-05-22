@@ -615,11 +615,8 @@ public class GameInstance implements Listener {
 		if (getGamemode() == Gamemode.RSB) {
 
 			CodGun primary = Main.loadManager.getRandomPrimary();
-
 			CodGun secondary = Main.loadManager.getRandomSecondary();
-
 			CodWeapon lethal = Main.loadManager.getRandomLethal();
-
 			CodWeapon tactical = Main.loadManager.getRandomTactical();
 
 			ItemStack primaryAmmo = primary.getAmmo();
@@ -631,21 +628,21 @@ public class GameInstance implements Listener {
 
 			p.getInventory().setItem(0, Main.loadManager.knife);
 			if (!primary.equals(Main.loadManager.blankPrimary)) {
-				p.getInventory().setItem(1, primary.getGun());
+				p.getInventory().setItem(1, primary.getGunItem());
 				p.getInventory().setItem(28, primaryAmmo);
 			}
 
 			if (!secondary.equals(Main.loadManager.blankSecondary)) {
-				p.getInventory().setItem(2, secondary.getGun());
+				p.getInventory().setItem(2, secondary.getGunItem());
 				p.getInventory().setItem(29, secondaryAmmo);
 			}
 
 			if (Math.random() > 0.5 && !lethal.equals(Main.loadManager.blankLethal)) {
-				p.getInventory().setItem(3, lethal.getWeapon());
+				p.getInventory().setItem(3, lethal.getWeaponItem());
 			}
 
 			if (Math.random() > 0.5 && !tactical.equals(Main.loadManager.blankTactical)) {
-				p.getInventory().setItem(4, tactical.getWeapon());
+				p.getInventory().setItem(4, tactical.getWeaponItem());
 			}
 
 		} else if (getGamemode() == Gamemode.DOM
@@ -669,7 +666,7 @@ public class GameInstance implements Listener {
 
 		} else if (getGamemode() == Gamemode.OITC) {
 			p.getInventory().setItem(0, Main.loadManager.knife);
-			p.getInventory().setItem(1, GameManager.oitcGun.getGun());
+			p.getInventory().setItem(1, GameManager.oitcGun.getGunItem());
 			ItemStack ammo = GameManager.oitcGun.getAmmo();
 			ammo.setAmount(1);
 			p.getInventory().setItem(8, ammo);
@@ -679,7 +676,7 @@ public class GameInstance implements Listener {
 			}
 			p.getInventory().setItem(0, Main.loadManager.knife);
 			CodGun gun = GameManager.gunGameGuns.get(ffaPlayerScores.get(p));
-			ItemStack gunItem = gun.getGun();
+			ItemStack gunItem = gun.getGunItem();
 			ItemStack ammo = gun.getAmmo();
 			ammo.setAmount(gun.getAmmoCount());
 
@@ -1814,7 +1811,7 @@ public class GameInstance implements Listener {
 				CodGun gun;
 				try {
 					gun = GameManager.gunGameGuns.get(ffaPlayerScores.get(killer));
-					ItemStack gunItem = gun.getGun();
+					ItemStack gunItem = gun.getMenuItem();
 					ItemStack ammo = gun.getAmmo();
 					ammo.setAmount(gun.getAmmoCount());
 

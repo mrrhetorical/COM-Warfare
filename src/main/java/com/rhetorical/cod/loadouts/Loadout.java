@@ -261,7 +261,7 @@ public class Loadout implements Listener {
 
 		if (e.getInventory().equals(this.getPrimaryInventory())) {
 			for (CodGun gun : Main.shopManager.getPrimaryGuns()) {
-				if (gun.getGun().equals(e.getCurrentItem())) {
+				if (gun.getMenuItem().equals(e.getCurrentItem())) {
 					this.setPrimary(gun);
 					p.closeInventory();
 					p.openInventory(Main.invManager.createClassInventory.get(p));

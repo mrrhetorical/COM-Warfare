@@ -13,7 +13,8 @@ public class CodGun extends CodWeapon {
 
 	private UnlockType unlockType;
 	private int ammo;
-	private ItemStack gunItem;
+	private final ItemStack gunItem;
+	private ItemStack menuItem;
 	private ItemStack ammoItem;
 	
 	private GunType gunType;
@@ -32,9 +33,30 @@ public class CodGun extends CodWeapon {
 		this.unlockType = UnlockType.LEVEL;
 		this.ammo = a;
 		this.ammoItem = ammoI;
-		this.gunItem = gunI;
 
-		gunItem = setupGunItem();
+		gunItem = setupWeaponItem(gunI);
+		menuItem = setupMenuItem(gunI);
+	}
+
+	public CodGun(String name, GunType gunT, UnlockType t, int a, ItemStack ammoI, ItemStack gunI, int levelUnlock, boolean isBlank) {
+
+		super(name, null, t, gunI, levelUnlock, isBlank);
+
+		this.name = name;
+		this.setGunType(gunT);
+		this.levelUnlock = levelUnlock;
+		this.creditUnlock = 0;
+		this.unlockType = UnlockType.LEVEL;
+		this.ammo = a;
+		this.ammoItem = ammoI;
+
+		if (!isBlank) {
+			gunItem = setupWeaponItem(gunI);
+			menuItem = setupMenuItem(gunI);
+		} else {
+			gunItem = gunI;
+			menuItem = gunI;
+		}
 	}
 	
 	public void save() {
@@ -86,42 +108,12 @@ public class CodGun extends CodWeapon {
 		return this.unlockType;
 	}
 
-	private ItemStack setupGunItem() {
-		if (Main.hasQualityArms()) {
-			if (!this.equals(Main.loadManager.blankPrimary) && !this.equals(Main.loadManager.blankSecondary)) {
-				ItemStack gun = QualityGun.getGunForName(getName());
-
-				if (gun.getType() != Material.AIR) {
-					return gun;
-				}
-			}
-		}
-
-		if (Main.hasCrackShot()) {
-			if (!this.equals(Main.loadManager.blankPrimary) && !this.equals(Main.loadManager.blankSecondary)) {
-				ItemStack gun = CrackShotGun.generateWeapon(getName());
-
-				if (gun != null)
-					return gun;
-			}
-		}
-
-		ItemMeta meta = gunItem.getItemMeta();
-		if (meta != null) {
-			meta.setDisplayName(this.getName());
-			meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-		}
-
-		this.gunItem.setItemMeta(meta);
-		return this.gunItem;
-	}
-
-	public ItemStack getGun() {
-		return gunItem;
-	}
-
-	public ItemStack getGunClone() {
+	public ItemStack getGunItem() {
 		return gunItem.clone();
+	}
+
+	public ItemStack getMenuItem() {
+		return menuItem.clone();
 	}
 
 	public int getLevelUnlock() {
@@ -138,10 +130,6 @@ public class CodGun extends CodWeapon {
 
 	public void setType(UnlockType type) {
 		this.unlockType = type;
-	}
-
-	public void setGunItem(ItemStack gun) {
-		this.gunItem = gun;
 	}
 
 	public boolean setLevelUnlock(int i) {

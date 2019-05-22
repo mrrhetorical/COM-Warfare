@@ -85,6 +85,12 @@ public class Main extends JavaPlugin {
 	private Metrics bMetrics;
 
 	@Override
+	public void onLoad() {
+		hasQA = Bukkit.getServer().getPluginManager().getPlugin("QualityArmory") != null;
+		hasCS = Bukkit.getServer().getPluginManager().getPlugin("CrackShot") != null;
+	}
+
+	@Override
 	public void onEnable() {
 
 		ComVersion.setup(true);
@@ -169,6 +175,9 @@ public class Main extends JavaPlugin {
 		KillstreaksFile.setup(getPlugin());
 		AssignmentFile.setup(getPlugin());
 
+		QualityGun.setup();
+		CrackShotGun.setup();
+
 		progressionManager = new ProgressionManager();
 		perkManager = new PerkManager();
 		loadManager = new LoadoutManager(new HashMap<>());
@@ -178,8 +187,6 @@ public class Main extends JavaPlugin {
 		invManager = new InventoryManager();
 		assignmentManager = new AssignmentManager();
 
-		QualityGun.setup();
-		CrackShotGun.setup();
 		GameManager.setupOITC();
 		GameManager.setupGunGame();
 
@@ -236,9 +243,6 @@ public class Main extends JavaPlugin {
 			RankPerks rank = new RankPerks("default", 1, 100, 0);
 			Main.serverRanks.add(rank);
 		}
-
-		hasQA = Bukkit.getServer().getPluginManager().getPlugin("QualityArmory") != null;
-		hasCS = Bukkit.getServer().getPluginManager().getPlugin("CrackShot") != null;
 
 		Main.cs.sendMessage(Main.codPrefix + ChatColor.GREEN + ChatColor.BOLD + "COM-Warfare version " + ChatColor.RESET + ChatColor.WHITE + version + ChatColor.RESET + ChatColor.GREEN + ChatColor.BOLD + " is now up and running!");
 
@@ -722,8 +726,9 @@ public class Main extends JavaPlugin {
 				int credits = CreditManager.getCredits(p);
 				sendMessage(p, codPrefix + Lang.BALANCE_COMMAND.getMessage().replace("{credits}", credits + ""), lang);
 			} else if (args[0].equalsIgnoreCase("credits")) {
-				if (!(args.length >= 3) && (hasPerm(sender, "com.credits.give") || hasPerm(sender	, "com.credits.set"))) {
-					sendMessage(sender, Main.codPrefix + Lang.INCORRECT_USAGE.getMessage().replace("{command}", "/cod credits [give/set] {player} (amount)"));
+				if (args.length < 3) {
+					if (hasPerm(sender, "com.credits.give"))
+						sendMessage(sender, Main.codPrefix + Lang.INCORRECT_USAGE.getMessage().replace("{command}", "/cod credits [give/set] {player} (amount)"));
 					return true;
 				}
 
@@ -1255,18 +1260,18 @@ public class Main extends JavaPlugin {
 			sendMessage(p, codPrefix + Lang.GUN_CREATED_SUCCESS.getMessage().replace("{gun-name}", name).replace("{gun-type}", gunType.toString()), lang);
 
 			switch (gunType) {
-			case Primary:
-				ArrayList<CodGun> pList = Main.shopManager.getPrimaryGuns();
-				pList.add(gun);
-				Main.shopManager.setPrimaryGuns(pList);
-				break;
-			case Secondary:
-				ArrayList<CodGun> sList = Main.shopManager.getSecondaryGuns();
-				sList.add(gun);
-				Main.shopManager.setSecondaryGuns(sList);
-				break;
-			default:
-				break;
+				case Primary:
+					ArrayList<CodGun> pList = Main.shopManager.getPrimaryGuns();
+					pList.add(gun);
+					Main.shopManager.setPrimaryGuns(pList);
+					break;
+				case Secondary:
+					ArrayList<CodGun> sList = Main.shopManager.getSecondaryGuns();
+					sList.add(gun);
+					Main.shopManager.setSecondaryGuns(sList);
+					break;
+				default:
+					break;
 			}
 		} else {
 			sendMessage(p, Main.codPrefix + Lang.INCORRECT_USAGE.getMessage().replace("{command}", command) , lang);

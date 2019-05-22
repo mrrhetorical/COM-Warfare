@@ -12,7 +12,8 @@ public class CodWeapon {
 	private String name;
 	
 	private UnlockType unlockType;
-	private ItemStack weaponItem;
+	private final ItemStack weaponItem;
+	private final ItemStack menuItem;
 	
 	private WeaponType weaponType;
 	
@@ -26,10 +27,25 @@ public class CodWeapon {
 		unlockType = t;
 	
 		name = n;
-		weaponItem = weaponI;
-		weaponItem = getWeaponItem();
+		weaponItem = setupWeaponItem(weaponI);
+		menuItem = setupMenuItem(weaponI);
 	}
-	
+
+	public CodWeapon(String n, WeaponType wt, UnlockType t, ItemStack weaponI, int levelUnlock, boolean isBlank) {
+		this.levelUnlock = levelUnlock;
+		weaponType = wt;
+
+		unlockType = t;
+
+		name = n;
+		if (!isBlank) {
+			weaponItem = setupWeaponItem(weaponI);
+			menuItem = setupMenuItem(weaponI);
+		} else {
+			weaponItem = weaponI;
+			menuItem = weaponI;
+		}
+	}
 	public void save() {
 		
 		GunsFile.reloadData();
@@ -73,12 +89,12 @@ public class CodWeapon {
 		return unlockType;
 	}
 	
-	public ItemStack getWeaponItem() {
+	protected ItemStack setupWeaponItem(ItemStack weaponItem) {
 		if (Main.hasQualityArms()) {
 			if (!this.equals(Main.loadManager.blankLethal) && !this.equals(Main.loadManager.blankTactical)) {
 				ItemStack gun = QualityGun.getGunForName(getName());
 
-				if (gun.getType() != Material.AIR) {
+				if (gun != null && gun.getType() != Material.AIR) {
 					return gun;
 				}
 			}
@@ -88,7 +104,7 @@ public class CodWeapon {
 			if (!this.equals(Main.loadManager.blankLethal) && !this.equals(Main.loadManager.blankTactical)) {
 				ItemStack gun = CrackShotGun.generateWeapon(getName());
 
-				if (gun != null)
+				if (gun != null && gun.getType() != Material.AIR)
 					return gun;
 			}
 		}
@@ -104,11 +120,39 @@ public class CodWeapon {
 		return weaponItem;
 	}
 
-	public ItemStack getWeapon() {
-		return weaponItem;
+	protected ItemStack setupMenuItem(ItemStack gunItem) {
+		ItemStack gun = null;
+		if (Main.hasQualityArms()) {
+			if (!this.equals(Main.loadManager.blankPrimary) && !this.equals(Main.loadManager.blankSecondary)) {
+				gun = QualityGun.getGunForName(getName());
+			}
+		}
+
+		if (Main.hasCrackShot()) {
+			if (!this.equals(Main.loadManager.blankPrimary) && !this.equals(Main.loadManager.blankSecondary)) {
+				gun = CrackShotGun.generateWeapon(getName());
+			}
+		}
+
+		if (gun == null || gun.getType() == Material.AIR)
+			gun = gunItem;
+
+		ItemMeta meta = gun.getItemMeta();
+		if (meta != null) {
+			meta.setDisplayName(getName());
+			meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+		}
+
+		gun.setItemMeta(meta);
+
+		return gun;
 	}
 
-	public ItemStack getWeaponClone() {
+	public ItemStack getMenuItem() {
+		return menuItem.clone();
+	}
+
+	public ItemStack getWeaponItem() {
 		return weaponItem.clone();
 	}
 
@@ -127,11 +171,7 @@ public class CodWeapon {
 	public void setType(UnlockType type) {
 		unlockType = type;
 	}
-	
-	public void setWeaponItem(ItemStack weapon) {
-		weaponItem = weapon;
-	}
-	
+
 	public boolean setLevelUnlock(int i) {
 		if (!(i > 0) && i != -1) {
 			return false;
