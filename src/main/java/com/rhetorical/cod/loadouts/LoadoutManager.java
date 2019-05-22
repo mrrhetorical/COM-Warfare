@@ -12,6 +12,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -72,10 +73,13 @@ public class LoadoutManager {
 
 		knife = new ItemStack(Material.IRON_SWORD);
 		ItemMeta knifeMeta = knife.getItemMeta();
-		knifeMeta.setDisplayName(ChatColor.YELLOW + "Knife");
-		ArrayList<String> knifeLore = new ArrayList<>();
-		knifeLore.add(Lang.KNIFE_LORE.getMessage());
-		knifeMeta.setLore(knifeLore);
+		if (knifeMeta != null) {
+			knifeMeta.setDisplayName(ChatColor.YELLOW + "Knife");
+			ArrayList<String> knifeLore = new ArrayList<>();
+			knifeLore.add(Lang.KNIFE_LORE.getMessage());
+			knifeMeta.setLore(knifeLore);
+			knifeMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+		}
 		knife.setItemMeta(knifeMeta);
 	}
 
