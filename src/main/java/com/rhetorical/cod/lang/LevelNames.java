@@ -23,7 +23,7 @@ public class LevelNames {
 
 	private void setup() {
 		FileConfiguration config = Main.getPlugin().getConfig();
-		for (int i = 0; i < Main.progressionManager.maxLevel; i++) {
+		for (int i = 1; i <= Main.progressionManager.maxLevel; i++) {
 			if (config.contains("LevelNames." + i)) {
 				levelNames.put(i, config.getString("LevelNames." + i));
 			}
