@@ -2,10 +2,7 @@ package com.rhetorical.cod;
 
 import com.rhetorical.cod.assignments.AssignmentManager;
 import com.rhetorical.cod.files.*;
-import com.rhetorical.cod.game.CodMap;
-import com.rhetorical.cod.game.GameInstance;
-import com.rhetorical.cod.game.GameManager;
-import com.rhetorical.cod.game.Gamemode;
+import com.rhetorical.cod.game.*;
 import com.rhetorical.cod.inventories.InventoryManager;
 import com.rhetorical.cod.inventories.ShopManager;
 import com.rhetorical.cod.lang.Lang;
@@ -83,7 +80,15 @@ public class Main extends JavaPlugin {
 	public static String reward_maxPrestige;
 	public static String reward_maxPrestigeMaxLevel;
 
+	private static boolean disabling = false;
+
 	private Metrics bMetrics;
+
+	@Override
+	public void onLoad() {
+		hasQA = Bukkit.getServer().getPluginManager().getPlugin("QualityArmory") != null;
+		hasCS = Bukkit.getServer().getPluginManager().getPlugin("CrackShot") != null;
+	}
 
 	@Override
 	public void onEnable() {
@@ -112,7 +117,7 @@ public class Main extends JavaPlugin {
 		} catch(Exception ignored) {}
 
 		if (bukkitVersion.startsWith("1.8") || v < 8 ) {
-			Main.cs.sendMessage(Main.codPrefix + ChatColor.RED + "You are not on the most recent version of Spigot/Bukkit, so COM-Warfare might not work as advertised. To ensure it will work properly, please use version " + ChatColor.WHITE + "1.9 - 1.13" + ChatColor.RED + "!");
+			Main.cs.sendMessage(Main.codPrefix + "You are not on the most recent version of Spigot/Bukkit, so COM-Warfare might not work as advertised. To ensure it will work properly, please use version 1.9 - 1.14!");
 		}
 
 		Main.cs.sendMessage(Main.codPrefix + "Checking dependencies...");
@@ -120,19 +125,19 @@ public class Main extends JavaPlugin {
 		DependencyManager dm = new DependencyManager();
 		if (!dm.checkDependencies()) {
 			if (getPlugin().getConfig().getBoolean("auto-download-dependency")) {
-				Main.cs.sendMessage(Main.codPrefix + ChatColor.RED + "One or more dependencies were not found, will attempt to download them.");
+				Main.cs.sendMessage(Main.codPrefix + "One or more dependencies were not found, will attempt to download them.");
 				try {
 					dm.downloadDependencies();
 				} catch (Exception e) {
-					Main.cs.sendMessage(Main.codPrefix + ChatColor.RED +"Could not download dependencies! Make sure that the plugins folder can be written to!");
-					Main.cs.sendMessage(Main.codPrefix + ChatColor.RED + "Not all dependencies for COM-Warfare are installed! The plugin likely will not work as intended!");
+					Main.cs.sendMessage(Main.codPrefix + "Could not download dependencies! Make sure that the plugins folder can be written to!");
+					Main.cs.sendMessage(Main.codPrefix + "Not all dependencies for COM-Warfare are installed! The plugin may not work as intended and may throw errors!");
 				}
 			} else {
-				Main.cs.sendMessage(Main.codPrefix + ChatColor.RED + "Could not download dependencies! You must set the value for \"auto-download-dependency\" to 'true' in the config to automatically download them!");
-				Main.cs.sendMessage(ChatColor.RED + "Not all dependencies for COM-Warfare are installed! The plugin likely will not work as intended!");
+				Main.cs.sendMessage(Main.codPrefix + "Could not download dependencies! You must set the value for \"auto-download-dependency\" to 'true' in the config to automatically download them!");
+				Main.cs.sendMessage("Not all dependencies for COM-Warfare are installed! The plugin likely will not work as intended!");
 			}
 		} else {
-			Main.cs.sendMessage(Main.codPrefix + ChatColor.GREEN + "All dependencies are installed!");
+			Main.cs.sendMessage(Main.codPrefix + "All dependencies are installed!");
 		}
 
 		try {
@@ -170,6 +175,9 @@ public class Main extends JavaPlugin {
 		KillstreaksFile.setup(getPlugin());
 		AssignmentFile.setup(getPlugin());
 
+		QualityGun.setup();
+		CrackShotGun.setup();
+
 		progressionManager = new ProgressionManager();
 		perkManager = new PerkManager();
 		loadManager = new LoadoutManager(new HashMap<>());
@@ -179,8 +187,6 @@ public class Main extends JavaPlugin {
 		invManager = new InventoryManager();
 		assignmentManager = new AssignmentManager();
 
-		QualityGun.setup();
-		CrackShotGun.setup();
 		GameManager.setupOITC();
 		GameManager.setupGunGame();
 
@@ -238,9 +244,6 @@ public class Main extends JavaPlugin {
 			Main.serverRanks.add(rank);
 		}
 
-		hasQA = Bukkit.getServer().getPluginManager().getPlugin("QualityArmory") != null;
-		hasCS = Bukkit.getServer().getPluginManager().getPlugin("CrackShot") != null;
-
 		Main.cs.sendMessage(Main.codPrefix + ChatColor.GREEN + ChatColor.BOLD + "COM-Warfare version " + ChatColor.RESET + ChatColor.WHITE + version + ChatColor.RESET + ChatColor.GREEN + ChatColor.BOLD + " is now up and running!");
 
 		if (serverMode) {
@@ -252,6 +255,9 @@ public class Main extends JavaPlugin {
 
 	@Override
 	public void onDisable() {
+
+		disabling = true;
+
 		if (GameManager.getAddedMaps().size() != 0) {
 			for (CodMap m : GameManager.getAddedMaps()) {
 				m.save();
@@ -720,8 +726,9 @@ public class Main extends JavaPlugin {
 				int credits = CreditManager.getCredits(p);
 				sendMessage(p, codPrefix + Lang.BALANCE_COMMAND.getMessage().replace("{credits}", credits + ""), lang);
 			} else if (args[0].equalsIgnoreCase("credits")) {
-				if (!(args.length >= 3) && (hasPerm(sender, "com.credits.give") || hasPerm(sender	, "com.credits.set"))) {
-					sendMessage(sender, Main.codPrefix + Lang.INCORRECT_USAGE.getMessage().replace("{command}", "/cod credits [give/set] {player} (amount)"));
+				if (args.length < 3) {
+					if (hasPerm(sender, "com.credits.give"))
+						sendMessage(sender, Main.codPrefix + Lang.INCORRECT_USAGE.getMessage().replace("{command}", "/cod credits [give/set] {player} (amount)"));
 					return true;
 				}
 
@@ -911,6 +918,16 @@ public class Main extends JavaPlugin {
 					return true;
 				}
 
+				GameInstance game = GameManager.getMatchWhichContains(p);
+				if (game == null)
+					return true;
+
+				if (game.getState() != GameState.WAITING && game.getState() != GameState.STARTING) {
+					sendMessage(p, codPrefix + Lang.MUST_NOT_BE_IN_GAME.getMessage());
+					return true;
+				}
+
+
 				CodMap map = GameManager.getMapForName(args[1]);
 
 				if (map == null) {
@@ -918,7 +935,7 @@ public class Main extends JavaPlugin {
 					return true;
 				}
 
-				GameManager.changeMap(Objects.requireNonNull(GameManager.getMatchWhichContains(p)), map);
+				GameManager.changeMap(game, map);
 				sendMessage(p, codPrefix + Lang.MAP_CHANGE_SUCCESS.getMessage().replace("{map-name}", map.getName()));
 				return true;
 			} else if (args[0].equalsIgnoreCase("changeMode")) {
@@ -941,21 +958,30 @@ public class Main extends JavaPlugin {
 					return true;
 				}
 
+				GameInstance game = GameManager.getMatchWhichContains(p);
+				if (game == null)
+					return true;
+
+				if (game.getState() != GameState.WAITING && game.getState() != GameState.STARTING) {
+					sendMessage(p, codPrefix + Lang.MUST_NOT_BE_IN_GAME.getMessage());
+					return true;
+				}
+
 				Gamemode mode;
 
 				try {
-					mode = Gamemode.valueOf(args[1]);
+					mode = Gamemode.valueOf(args[1].toUpperCase());
 				} catch(Exception e) {
 					sendMessage(p, codPrefix + Lang.GAME_MODE_NOT_EXISTS_WITH_NAME.getMessage());
 					return true;
 				}
 
-				if (!Objects.requireNonNull(GameManager.getMatchWhichContains(p)).getMap().getAvailableGamemodes().contains(mode)) {
+				if (!game.getMap().getAvailableGamemodes().contains(mode)) {
 					sendMessage(p, codPrefix + Lang.GAME_MODE_NOT_SET_UP_ON_MAP.getMessage());
 					return true;
 				}
 
-				Objects.requireNonNull(GameManager.getMatchWhichContains(p)).getMap().changeGamemode(mode);
+				Objects.requireNonNull(GameManager.getMatchWhichContains(p)).changeGamemode(mode);
 				sendMessage(p, codPrefix + Lang.GAME_MODE_CHANGE_SUCCESS.getMessage().replace("{game-mode}", mode.toString()));
 				return true;
 			} else if (args[0].equalsIgnoreCase("blacklist")) {
@@ -1234,18 +1260,18 @@ public class Main extends JavaPlugin {
 			sendMessage(p, codPrefix + Lang.GUN_CREATED_SUCCESS.getMessage().replace("{gun-name}", name).replace("{gun-type}", gunType.toString()), lang);
 
 			switch (gunType) {
-			case Primary:
-				ArrayList<CodGun> pList = Main.shopManager.getPrimaryGuns();
-				pList.add(gun);
-				Main.shopManager.setPrimaryGuns(pList);
-				break;
-			case Secondary:
-				ArrayList<CodGun> sList = Main.shopManager.getSecondaryGuns();
-				sList.add(gun);
-				Main.shopManager.setSecondaryGuns(sList);
-				break;
-			default:
-				break;
+				case Primary:
+					ArrayList<CodGun> pList = Main.shopManager.getPrimaryGuns();
+					pList.add(gun);
+					Main.shopManager.setPrimaryGuns(pList);
+					break;
+				case Secondary:
+					ArrayList<CodGun> sList = Main.shopManager.getSecondaryGuns();
+					sList.add(gun);
+					Main.shopManager.setSecondaryGuns(sList);
+					break;
+				default:
+					break;
 			}
 		} else {
 			sendMessage(p, Main.codPrefix + Lang.INCORRECT_USAGE.getMessage().replace("{command}", command) , lang);
@@ -1337,6 +1363,10 @@ public class Main extends JavaPlugin {
 
 	public static boolean hasCrackShot() {
 		return hasCS;
+	}
+
+	public static boolean isDisabling() {
+		return disabling;
 	}
 
 }

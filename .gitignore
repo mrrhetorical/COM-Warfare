@@ -1,12 +1,10 @@
-
-*.class
-
-\.idea/workspace\.xml
-
+#Maven & Build
 target/
-
 dependency-reduced-pom\.xml
+.class
+build.cmd
 
+#IntelliJ
 com-warfare\.iml
-
 \.idea/
+\.idea/workspace\.xml

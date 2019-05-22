@@ -3,6 +3,7 @@ package com.rhetorical.cod.inventories;
 import com.rhetorical.cod.Main;
 import com.rhetorical.cod.assignments.Assignment;
 import com.rhetorical.cod.assignments.AssignmentType;
+import com.rhetorical.cod.game.GameInstance;
 import com.rhetorical.cod.game.GameManager;
 import com.rhetorical.cod.lang.Lang;
 import com.rhetorical.cod.loadouts.Loadout;
@@ -301,61 +302,77 @@ public class InventoryManager implements Listener {
 				header = new ItemStack(Material.valueOf("WORKBENCH"));
 			}
 			ItemMeta headerMeta = header.getItemMeta();
-			headerMeta.setDisplayName(loadout.getName());
-			ArrayList<String> headerLore = new ArrayList<>();
-			headerLore.add(Lang.INVENTORY_LOADOUT_HEADER_LORE.getMessage());
-			headerMeta.setLore(headerLore);
-			header.setItemMeta(headerMeta);
+			if (headerMeta != null) {
+				headerMeta.setDisplayName(loadout.getName());
+				ArrayList<String> headerLore = new ArrayList<>();
+				headerLore.add(Lang.INVENTORY_LOADOUT_HEADER_LORE.getMessage());
+				headerMeta.setLore(headerLore);
+				header.setItemMeta(headerMeta);
+			}
 
-			ItemStack primary = loadout.getPrimary().getGun();
+			ItemStack primary = loadout.getPrimary().getMenuItem();
 			ItemMeta primaryMeta = primary.getItemMeta();
-			primaryMeta.setDisplayName(Lang.INVENTORY_PRIMARY_WEAPON_NAME.getMessage().replace("{gun}", loadout.getPrimary().getName()));
-			ArrayList<String> primaryLore = new ArrayList<>();
-			primaryLore.add(Lang.INVENTORY_PRIMARY_WEAPON_LORE.getMessage());
-			primaryMeta.setLore(primaryLore);
-			primary.setItemMeta(primaryMeta);
+			if (primaryMeta != null) {
+				primaryMeta.setDisplayName(Lang.INVENTORY_PRIMARY_WEAPON_NAME.getMessage().replace("{gun}", loadout.getPrimary().getName()));
+				ArrayList<String> primaryLore = new ArrayList<>();
+				primaryLore.add(Lang.INVENTORY_PRIMARY_WEAPON_LORE.getMessage());
+				primaryMeta.setLore(primaryLore);
+				primary.setItemMeta(primaryMeta);
+			}
 
-			ItemStack secondary = loadout.getSecondary().getGun();
+			ItemStack secondary = loadout.getSecondary().getMenuItem();
 			ItemMeta secondaryMeta = secondary.getItemMeta();
-			secondaryMeta.setDisplayName(Lang.INVENTORY_SECONDARY_WEAPON_NAME.getMessage().replace("{gun}", loadout.getSecondary().getName()));
-			ArrayList<String> secondaryLore = new ArrayList<>();
-			secondaryLore.add(Lang.INVENTORY_SECONDARY_WEAPON_LORE.getMessage());
-			secondaryMeta.setLore(secondaryLore);
-			secondary.setItemMeta(secondaryMeta);
+			if (secondaryMeta != null) {
+				secondaryMeta.setDisplayName(Lang.INVENTORY_SECONDARY_WEAPON_NAME.getMessage().replace("{gun}", loadout.getSecondary().getName()));
+				ArrayList<String> secondaryLore = new ArrayList<>();
+				secondaryLore.add(Lang.INVENTORY_SECONDARY_WEAPON_LORE.getMessage());
+				secondaryMeta.setLore(secondaryLore);
+				secondary.setItemMeta(secondaryMeta);
+			}
 
-			ItemStack lethal = loadout.getLethal().getWeapon();
+			ItemStack lethal = loadout.getLethal().getMenuItem();
 			ItemMeta lethalMeta = lethal.getItemMeta();
-			lethalMeta.setDisplayName(Lang.INVENTORY_LETHAL_WEAPON_NAME.getMessage().replace("{gun}", loadout.getLethal().getName()));
-			ArrayList<String> lethalLore = new ArrayList<>();
-			lethalLore.add(Lang.INVENTORY_LETHAL_WEAPON_LORE.getMessage());
-			lethalMeta.setLore(lethalLore);
-			lethal.setItemMeta(lethalMeta);
+			if (lethalMeta != null) {
+				lethalMeta.setDisplayName(Lang.INVENTORY_LETHAL_WEAPON_NAME.getMessage().replace("{gun}", loadout.getLethal().getName()));
+				ArrayList<String> lethalLore = new ArrayList<>();
+				lethalLore.add(Lang.INVENTORY_LETHAL_WEAPON_LORE.getMessage());
+				lethalMeta.setLore(lethalLore);
+				lethal.setItemMeta(lethalMeta);
+			}
 
-			ItemStack tactical = loadout.getTactical().getWeapon();
+			ItemStack tactical = loadout.getTactical().getMenuItem();
 			ItemMeta tacticalMeta = tactical.getItemMeta();
-			tacticalMeta.setDisplayName(Lang.INVENTORY_TACTICAL_WEAPON_NAME.getMessage().replace("{gun}", loadout.getTactical().getName()));
-			ArrayList<String> tacticalLore = new ArrayList<>();
-			tacticalLore.add(Lang.INVENTORY_TACTICAL_WEAPON_LORE.getMessage());
-			tacticalMeta.setLore(tacticalLore);
-			tactical.setItemMeta(tacticalMeta);
+			if (tacticalMeta != null) {
+				tacticalMeta.setDisplayName(Lang.INVENTORY_TACTICAL_WEAPON_NAME.getMessage().replace("{gun}", loadout.getTactical().getName()));
+				ArrayList<String> tacticalLore = new ArrayList<>();
+				tacticalLore.add(Lang.INVENTORY_TACTICAL_WEAPON_LORE.getMessage());
+				tacticalMeta.setLore(tacticalLore);
+				tactical.setItemMeta(tacticalMeta);
+			}
 
 			ItemStack perkOne = loadout.getPerk1().getItem();
 			ItemMeta perkOneMeta = perkOne.getItemMeta();
-			perkOneMeta.setDisplayName(Lang.INVENTORY_PERK_NAME.getMessage().replace("{i}", "1").replace("{perk}", loadout.getPerk1().getPerk().getName()));
-			perkOneMeta.setLore(loadout.getPerk1().getLore());
-			perkOne.setItemMeta(perkOneMeta);
+			if (perkOneMeta != null) {
+				perkOneMeta.setDisplayName(Lang.INVENTORY_PERK_NAME.getMessage().replace("{i}", "1").replace("{perk}", loadout.getPerk1().getPerk().getName()));
+				perkOneMeta.setLore(loadout.getPerk1().getLore());
+				perkOne.setItemMeta(perkOneMeta);
+			}
 
 			ItemStack perkTwo = loadout.getPerk2().getItem();
 			ItemMeta perkTwoMeta = perkTwo.getItemMeta();
-			perkTwoMeta.setDisplayName(Lang.INVENTORY_PERK_NAME.getMessage().replace("{i}", "2").replace("{perk}", loadout.getPerk2().getPerk().getName()));
-			perkTwoMeta.setLore(loadout.getPerk2().getLore());
-			perkTwo.setItemMeta(perkTwoMeta);
+			if(perkTwoMeta != null) {
+				perkTwoMeta.setDisplayName(Lang.INVENTORY_PERK_NAME.getMessage().replace("{i}", "2").replace("{perk}", loadout.getPerk2().getPerk().getName()));
+				perkTwoMeta.setLore(loadout.getPerk2().getLore());
+				perkTwo.setItemMeta(perkTwoMeta);
+			}
 
 			ItemStack perkThree = loadout.getPerk3().getItem();
 			ItemMeta perkThreeMeta = perkThree.getItemMeta();
-			perkThreeMeta.setDisplayName(Lang.INVENTORY_PERK_NAME.getMessage().replace("{i}", "3").replace("{perk}", loadout.getPerk3().getPerk().getName()));
-			perkThreeMeta.setLore(loadout.getPerk3().getLore());
-			perkThree.setItemMeta(perkThreeMeta);
+			if (perkThreeMeta != null) {
+				perkThreeMeta.setDisplayName(Lang.INVENTORY_PERK_NAME.getMessage().replace("{i}", "3").replace("{perk}", loadout.getPerk3().getPerk().getName()));
+				perkThreeMeta.setLore(loadout.getPerk3().getLore());
+				perkThree.setItemMeta(perkThreeMeta);
+			}
 
 			customClassInventory.setItem(line, header);
 			customClassInventory.setItem(line + 1, primary);
@@ -386,24 +403,24 @@ public class InventoryManager implements Listener {
 			Inventory perk2 = Bukkit.createInventory(p, 27, "Perk Two");
 			Inventory perk3 = Bukkit.createInventory(p, 27, "Perk Three");
 
-			// primary.addItem(Main.loadManager.getDefaultPrimary().getGun());
-			// secondary.addItem(Main.loadManager.getDefaultSecondary().getGun());
-			// lethal.addItem(Main.loadManager.getDefaultLethal().getWeapon());
-			// tactical.addItem(Main.loadManager.getDefaultTactical().getWeapon());
+			// primary.addItem(Main.loadManager.getDefaultPrimary().getMenuItem());
+			// secondary.addItem(Main.loadManager.getDefaultSecondary().getMenuItem());
+			// lethal.addItem(Main.loadManager.getDefaultLethal().getMenuItem());
+			// tactical.addItem(Main.loadManager.getDefaultTactical().getMenuItem());
 
 			for (CodGun gun : Main.shopManager.getPurchasedGuns().get(p)) {
 				if (gun.getGunType() == GunType.Primary) {
-					primary.addItem(gun.getGun());
+					primary.addItem(gun.getMenuItem());
 				} else {
-					secondary.addItem(gun.getGun());
+					secondary.addItem(gun.getMenuItem());
 				}
 			}
 
 			for (CodWeapon weapon : Main.shopManager.getPurchasedWeapons().get(p)) {
 				if (weapon.getWeaponType() == WeaponType.LETHAL) {
-					lethal.addItem(weapon.getWeapon());
+					lethal.addItem(weapon.getMenuItem());
 				} else {
-					tactical.addItem(weapon.getWeapon());
+					tactical.addItem(weapon.getMenuItem());
 				}
 			}
 
@@ -492,14 +509,14 @@ public class InventoryManager implements Listener {
 		Inventory weaponShop = Bukkit.createInventory(p, 36, Lang.INVENTORY_GRENADE_SHOP_NAME.getMessage());
 		Inventory perkShop = Bukkit.createInventory(p, 36, Lang.INVENTORY_PERK_SHOP_NAME.getMessage());
 
-		ArrayList<CodGun> guns = Main.shopManager.getPrimaryGuns();
+		List<CodGun> guns = new ArrayList<>(Main.shopManager.getPrimaryGuns());
 		guns.addAll(Main.shopManager.getSecondaryGuns());
 
 		for (CodGun gun : guns) {
 			if (gun.getType() == UnlockType.BOTH || gun.getType() == UnlockType.CREDITS) {
-				if ((gun.getType() == UnlockType.CREDITS || Main.progressionManager.getLevel(p) >= gun.getLevelUnlock()) && !Main.shopManager.getPurchasedGuns().get(p).contains(gun)) {
+				if (((gun.getType() == UnlockType.CREDITS || Main.progressionManager.getLevel(p) >= gun.getLevelUnlock())) && !Main.shopManager.getPurchasedGuns().get(p).contains(gun)) {
 
-					ItemStack item = gun.getGun();
+					ItemStack item = gun.getMenuItem();
 
 					ItemMeta gunMeta = item.getItemMeta();
 
@@ -519,31 +536,26 @@ public class InventoryManager implements Listener {
 
 		}
 
-		ArrayList<CodWeapon> grenades = Main.shopManager.getLethalWeapons();
+		List<CodWeapon> grenades = new ArrayList<>(Main.shopManager.getLethalWeapons());
 		grenades.addAll(Main.shopManager.getTacticalWeapons());
 
 		for (CodWeapon grenade : grenades) {
-			if (grenade == null)
-				continue;
-
 			if (grenade.getType() == UnlockType.BOTH || grenade.getType() == UnlockType.CREDITS) {
-				if ((grenade.getType() == UnlockType.CREDITS || Main.progressionManager.getLevel(p) >= grenade.getLevelUnlock()) && !Main.shopManager.getPurchasedWeapons().get(p).contains(grenade)) {
+				if (((grenade.getType() == UnlockType.CREDITS || Main.progressionManager.getLevel(p) >= grenade.getLevelUnlock()) && !Main.shopManager.getPurchasedWeapons().get(p).contains(grenade))) {
 
-					ItemStack item = grenade.getWeapon();
+					ItemStack item = grenade.getMenuItem();
 
 					ItemMeta gunMeta = item.getItemMeta();
 
-					ArrayList<String> lore = new ArrayList<>();
-
-					lore.add(Lang.SHOP_COST.getMessage() + ": " + grenade.getCreditUnlock());
-
-					gunMeta.setLore(lore);
-
-					item.setItemMeta(gunMeta);
+					if (gunMeta != null) {
+						ArrayList<String> lore = new ArrayList<>();
+						lore.add(Lang.SHOP_COST.getMessage() + ": " + grenade.getCreditUnlock());
+						gunMeta.setLore(lore);
+						item.setItemMeta(gunMeta);
+					}
 
 					if (!weaponShop.contains(item))
 						weaponShop.addItem(item);
-
 				}
 
 			}
@@ -593,7 +605,7 @@ public class InventoryManager implements Listener {
 
 			Loadout loadout = Main.loadManager.getLoadouts(p).get(i);
 
-			ItemStack item = loadout.getPrimary().getGun();
+			ItemStack item = loadout.getPrimary().getMenuItem();
 
 			ItemMeta meta = item.getItemMeta();
 			meta.setDisplayName(loadout.getName());
@@ -996,11 +1008,14 @@ public class InventoryManager implements Listener {
 
 			Main.shopManager.loadPurchaseData(p);
 
-			ArrayList<CodGun> guns = Main.shopManager.getPrimaryGuns();
+			List<CodGun> guns = new ArrayList<>(Main.shopManager.getPrimaryGuns());
 			guns.addAll(Main.shopManager.getSecondaryGuns());
 
 			for (CodGun gun : guns) {
-				if (Objects.requireNonNull(e.getCurrentItem().getItemMeta()).getDisplayName().equals(gun.getGun().getItemMeta().getDisplayName())) {
+				if (!e.getCurrentItem().hasItemMeta() || !e.getCurrentItem().getItemMeta().hasDisplayName() )
+					return;
+
+				if (e.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase(gun.getName())) {
 					int cost = gun.getCreditUnlock();
 					if (CreditManager.purchase(p, cost)) {
 						ArrayList<CodGun> purchasedGuns = Main.shopManager.purchasedGuns.get(p);
@@ -1012,10 +1027,8 @@ public class InventoryManager implements Listener {
 						Main.invManager.setupCreateClassInventory(p);
 						Main.invManager.setupPlayerSelectionInventories(p);
 						p.openInventory(mainInventory);
-						return;
-					} else {
-						return;
 					}
+					return;
 				}
 			}
 
@@ -1028,12 +1041,14 @@ public class InventoryManager implements Listener {
 
 			Main.shopManager.loadPurchaseData(p);
 
-			ArrayList<CodWeapon> grenades = Main.shopManager.getLethalWeapons();
+			List<CodWeapon> grenades = new ArrayList<>(Main.shopManager.getLethalWeapons());
 			grenades.addAll(Main.shopManager.getTacticalWeapons());
 
 			for (CodWeapon grenade : grenades) {
-				if (e.getCurrentItem().getType().equals(grenade.getWeapon().getType())
-				&& Objects.requireNonNull(e.getCurrentItem().getItemMeta()).getDisplayName().equals(grenade.getWeapon().getItemMeta().getDisplayName())) {
+				if (!e.getCurrentItem().hasItemMeta() || !e.getCurrentItem().getItemMeta().hasDisplayName())
+					return;
+
+				if (e.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase(grenade.getName())) {
 					int cost = grenade.getCreditUnlock();
 					if (CreditManager.purchase(p, cost)) {
 						ArrayList<CodWeapon> purchasedGrenades = Main.shopManager.purchasedWeapons.get(p);
@@ -1085,7 +1100,7 @@ public class InventoryManager implements Listener {
 			int slot;
 			try {
 				slot = e.getSlot();
-				if (slot > Main.loadManager.getAllowedClasses(p) -1)
+				if (slot > Main.loadManager.getAllowedClasses(p) - 1)
 					throw new NullPointerException();
 			} catch (NullPointerException exception) {
 				Main.sendMessage(Main.cs, Lang.ERROR_SELECTING_CLASS.getMessage(), Main.lang);
@@ -1100,6 +1115,11 @@ public class InventoryManager implements Listener {
 
 			Loadout current = Main.loadManager.getLoadouts(p).get(slot);
 			Main.loadManager.setActiveLoadout(p, current);
+
+			GameInstance game = GameManager.getMatchWhichContains(p);
+
+			if (game != null)
+				game.changeClass(p);
 
 			p.closeInventory();
 
@@ -1149,7 +1169,7 @@ public class InventoryManager implements Listener {
 					}
 
 					for (CodGun gun : Main.shopManager.getPurchasedGuns().get(p)) {
-						if (gun.getGun().equals(item)) {
+						if (gun.getMenuItem().equals(item)) {
 							loadout.setPrimary(gun);
 							Main.invManager.setupCreateClassInventory(p);
 							p.openInventory(Main.invManager.createClassInventory.get(p));
@@ -1157,7 +1177,7 @@ public class InventoryManager implements Listener {
 						}
 					}
 
-					if (Main.loadManager.getDefaultPrimary().getGun().equals(item)) {
+					if (Main.loadManager.getDefaultPrimary().getMenuItem().equals(item)) {
 						loadout.setPrimary(Main.loadManager.getDefaultPrimary());
 						Main.invManager.setupCreateClassInventory(p);
 						p.openInventory(Main.invManager.createClassInventory.get(p));
@@ -1174,7 +1194,7 @@ public class InventoryManager implements Listener {
 					}
 
 					for (CodGun gun : Main.shopManager.getPurchasedGuns().get(p)) {
-						if (gun.getGun().equals(item)) {
+						if (gun.getMenuItem().equals(item)) {
 							loadout.setSecondary(gun);
 							Main.invManager.setupCreateClassInventory(p);
 							p.openInventory(Main.invManager.createClassInventory.get(p));
@@ -1182,7 +1202,7 @@ public class InventoryManager implements Listener {
 						}
 					}
 
-					if (Main.loadManager.getDefaultSecondary().getGun().equals(item)) {
+					if (Main.loadManager.getDefaultSecondary().getMenuItem().equals(item)) {
 						loadout.setSecondary(Main.loadManager.getDefaultSecondary());
 						Main.invManager.setupCreateClassInventory(p);
 						p.openInventory(Main.invManager.createClassInventory.get(p));
@@ -1199,7 +1219,7 @@ public class InventoryManager implements Listener {
 					}
 
 					for (CodWeapon grenade : Main.shopManager.getPurchasedWeapons().get(p)) {
-						if (grenade.getWeapon().equals(item)) {
+						if (grenade.getMenuItem().equals(item)) {
 							loadout.setLethal(grenade);
 							Main.invManager.setupCreateClassInventory(p);
 							p.openInventory(Main.invManager.createClassInventory.get(p));
@@ -1207,7 +1227,7 @@ public class InventoryManager implements Listener {
 						}
 					}
 
-					if (Main.loadManager.getDefaultLethal().getWeapon().equals(item)) {
+					if (Main.loadManager.getDefaultLethal().getMenuItem().equals(item)) {
 
 						loadout.setLethal(Main.loadManager.getDefaultLethal());
 						Main.invManager.setupCreateClassInventory(p);
@@ -1225,7 +1245,7 @@ public class InventoryManager implements Listener {
 					}
 
 					for (CodWeapon grenade : Main.shopManager.getPurchasedWeapons().get(p)) {
-						if (grenade.getWeapon().equals(item)) {
+						if (grenade.getMenuItem().equals(item)) {
 							loadout.setTactical(grenade);
 							Main.invManager.setupCreateClassInventory(p);
 							p.openInventory(Main.invManager.createClassInventory.get(p));
@@ -1233,7 +1253,7 @@ public class InventoryManager implements Listener {
 						}
 					}
 
-					if (Main.loadManager.getDefaultTactical().getWeapon().equals(item)) {
+					if (Main.loadManager.getDefaultTactical().getMenuItem().equals(item)) {
 						loadout.setTactical(Main.loadManager.getDefaultTactical());
 						Main.invManager.setupCreateClassInventory(p);
 						p.openInventory(Main.invManager.createClassInventory.get(p));

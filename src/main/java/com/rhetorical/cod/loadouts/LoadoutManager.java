@@ -12,10 +12,12 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.HashMap;
 
 public class LoadoutManager {
@@ -55,10 +57,10 @@ public class LoadoutManager {
 		lethalMeta.setDisplayName(Lang.NO_LETHAL.getMessage());
 		tacticalMeta.setDisplayName(Lang.NO_TACTICAL.getMessage());
 
-		blankPrimary = new CodGun("No Primary", GunType.Primary, UnlockType.LEVEL, 0, new ItemStack(Material.AIR), emptyPrimary, 0);
-		blankSecondary = new CodGun("No Secondary", GunType.Secondary, UnlockType.LEVEL, 0, new ItemStack(Material.AIR), emptySecondary, 0);
-		blankLethal = new CodWeapon("No Lethal", WeaponType.LETHAL, UnlockType.LEVEL, emptyLethal, 0);
-		blankTactical = new CodWeapon("No Tactical", WeaponType.TACTICAL, UnlockType.LEVEL, emptyTactical, 0);
+		blankPrimary = new CodGun("No Primary", GunType.Primary, UnlockType.LEVEL, 0, new ItemStack(Material.AIR), emptyPrimary, 0, true);
+		blankSecondary = new CodGun("No Secondary", GunType.Secondary, UnlockType.LEVEL, 0, new ItemStack(Material.AIR), emptySecondary, 0, true);
+		blankLethal = new CodWeapon("No Lethal", WeaponType.LETHAL, UnlockType.LEVEL, emptyLethal, 0, true);
+		blankTactical = new CodWeapon("No Tactical", WeaponType.TACTICAL, UnlockType.LEVEL, emptyTactical, 0, true);
 
 		emptyPrimary.setItemMeta(primaryMeta);
 		emptySecondary.setItemMeta(secondaryMeta);
@@ -72,10 +74,13 @@ public class LoadoutManager {
 
 		knife = new ItemStack(Material.IRON_SWORD);
 		ItemMeta knifeMeta = knife.getItemMeta();
-		knifeMeta.setDisplayName(ChatColor.YELLOW + "Knife");
-		ArrayList<String> knifeLore = new ArrayList<>();
-		knifeLore.add(Lang.KNIFE_LORE.getMessage());
-		knifeMeta.setLore(knifeLore);
+		if (knifeMeta != null) {
+			knifeMeta.setDisplayName(ChatColor.YELLOW + "Knife");
+			ArrayList<String> knifeLore = new ArrayList<>();
+			knifeLore.add(Lang.KNIFE_LORE.getMessage());
+			knifeMeta.setLore(knifeLore);
+			knifeMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+		}
 		knife.setItemMeta(knifeMeta);
 	}
 
@@ -127,7 +132,7 @@ public class LoadoutManager {
 		// Primary & Ammo
 
 		if (!primary.equals(Main.loadManager.blankPrimary)) {
-			p.getInventory().setItem(1, primary.getGun());
+			p.getInventory().setItem(1, primary.getGunItem());
 
 			ItemStack primaryAmmo = primary.getAmmo();
 			primaryAmmo.setAmount(primary.getAmmoCount());
@@ -137,7 +142,7 @@ public class LoadoutManager {
 		// Secondary & Ammo
 
 		if (!secondary.equals(Main.loadManager.blankSecondary)) {
-			p.getInventory().setItem(2, secondary.getGun());
+			p.getInventory().setItem(2, secondary.getGunItem());
 			if (!loadout.hasPerk(Perk.ONE_MAN_ARMY)) {
 				ItemStack secondaryAmmo = secondary.getAmmo();
 				secondaryAmmo.setAmount(secondary.getAmmoCount());
@@ -148,11 +153,11 @@ public class LoadoutManager {
 		// Grenades
 
 		if (!lethal.equals(Main.loadManager.blankLethal)) {
-			p.getInventory().setItem(3, lethal.getWeapon());
+			p.getInventory().setItem(3, lethal.getWeaponItem());
 		}
 
 		if (!tactical.equals(Main.loadManager.blankTactical)) {
-			p.getInventory().setItem(4, tactical.getWeapon());
+			p.getInventory().setItem(4, tactical.getWeaponItem());
 		}
 	}
 
@@ -253,9 +258,8 @@ public class LoadoutManager {
 
 			String weaponName = GunsFile.getData().getString("Weapons.LETHAL.default.name");
 			UnlockType type = UnlockType.valueOf(GunsFile.getData().getString("Weapons.LETHAL.default.unlockType"));
-			Material mat = Material.valueOf(GunsFile.getData().getString("Weapons.LETHAL.default.item"));
+			ItemStack weapon = GunsFile.getData().getItemStack("Weapons.LETHAL.default.item");
 			short data = (short) GunsFile.getData().getInt("Weapons.LETHAL.default.data");
-			ItemStack weapon = new ItemStack(mat, 1, data);
 
 			defaultLethal = new CodWeapon(weaponName, WeaponType.LETHAL, type, weapon, 0);
 		}
@@ -274,9 +278,8 @@ public class LoadoutManager {
 
 			String weaponName = GunsFile.getData().getString("Weapons.TACTICAL.default.name");
 			UnlockType type = UnlockType.valueOf(GunsFile.getData().getString("Weapons.TACTICAL.default.unlockType"));
-			Material mat = Material.valueOf(GunsFile.getData().getString("Weapons.TACTICAL.default.item"));
+			ItemStack weapon = GunsFile.getData().getItemStack("Weapons.TACTICAL.default.item");
 			short data = (short) GunsFile.getData().getInt("Weapons.TACTICAL.default.data");
-			ItemStack weapon = new ItemStack(mat, 1, data);
 
 			defaultTactical = new CodWeapon(weaponName, WeaponType.TACTICAL, type, weapon, 0);
 		}
@@ -471,6 +474,10 @@ public class LoadoutManager {
 		return this.activeLoadouts.get(p);
 	}
 
+	public Map<Player, Loadout> getActiveLoadouts() {
+		return activeLoadouts;
+	}
+
 	public void setActiveLoadout(Player p, Loadout loadout) {
 		this.activeLoadouts.put(p, loadout);
 	}
@@ -479,7 +486,7 @@ public class LoadoutManager {
 		int size = Main.shopManager.getPrimaryGuns().size() - 1;
 		int position;
 
-		if (size != 0) {
+		if (Main.shopManager.getPrimaryGuns().size() > 0) {
 			position = (int) Math.round(Math.random() * size);
 		} else {
 			return blankPrimary;
@@ -492,7 +499,7 @@ public class LoadoutManager {
 		int size = Main.shopManager.getSecondaryGuns().size() - 1;
 		int position;
 
-		if (size != 0) {
+		if (Main.shopManager.getSecondaryGuns().size() > 0) {
 			position = (int) Math.round(Math.random() * size);
 		} else {
 			return blankSecondary;
@@ -505,7 +512,7 @@ public class LoadoutManager {
 		int size = Main.shopManager.getLethalWeapons().size() - 1;
 		int position;
 
-		if (size != 0) {
+		if (Main.shopManager.getLethalWeapons().size() > 0) {
 			position = (int) Math.round(Math.random() * size);
 		} else {
 			return blankLethal;
@@ -518,7 +525,7 @@ public class LoadoutManager {
 		int size = Main.shopManager.getTacticalWeapons().size() - 1;
 		int position;
 
-		if (size != 0) {
+		if (Main.shopManager.getTacticalWeapons().size() > 0) {
 			position = (int) Math.round(Math.random() * size);
 		} else {
 			return blankTactical;

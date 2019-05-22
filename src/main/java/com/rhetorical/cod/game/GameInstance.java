@@ -104,6 +104,8 @@ public class GameInstance implements Listener {
 	private boolean redNukeActive;
 	private Player pinkNukeActive;
 
+	private boolean pastClassChange = true;
+
 	GameInstance(ArrayList<Player> pls, CodMap map) {
 
 		try {
@@ -118,14 +120,8 @@ public class GameInstance implements Listener {
 		currentMap = map;
 		Main.getPlugin().reloadConfig();
 
-		if (getGamemode() != Gamemode.INFECT) {
-			gameTime = Main.getPlugin().getConfig().getInt("gameTime." + getGamemode().toString());
-		} else {
-			if (ComVersion.getPurchased())
-				gameTime = Main.getPlugin().getConfig().getInt("maxScore.INFECT");
-			else
-				gameTime = 120;
-		}
+		updateTimeLeft();
+
 		lobbyTime = Main.getPlugin().getConfig().getInt("lobbyTime");
 
 		if (ComVersion.getPurchased()) {
@@ -280,12 +276,8 @@ public class GameInstance implements Listener {
 		map = currentMap;
 
 		map.changeGamemode();
-		Gamemode gameMode = getGamemode();
-		if (gameMode == Gamemode.INFECT) {
-			gameTime = Main.getPlugin().getConfig().getInt("maxScore.INFECT");
-		} else {
-			gameTime = Main.getPlugin().getConfig().getInt("gameTime." + gameMode.toString());
-		}
+
+		updateTimeLeft();
 	}
 
 	void changeMap(CodMap map, Gamemode mode) {
@@ -296,14 +288,10 @@ public class GameInstance implements Listener {
 
 		currentMap = map;
 		map.setGamemode(mode);
-		if (mode == Gamemode.INFECT) {
-			gameTime = Main.getPlugin().getConfig().getInt("maxScore.INFECT");
-		} else {
-			gameTime = Main.getPlugin().getConfig().getInt("gameTime." + mode.toString());
-		}
+		updateTimeLeft();
 	}
 
-	private void changeGamemode(Gamemode gm) {
+	public void changeGamemode(Gamemode gm) {
 		if (getState() != GameState.WAITING && getState() != GameState.STARTING)
 			return;
 
@@ -311,6 +299,8 @@ public class GameInstance implements Listener {
 			return;
 
 		currentMap.changeGamemode(gm);
+
+		updateTimeLeft();
 	}
 
 	void addPlayer(Player p) {
@@ -496,7 +486,8 @@ public class GameInstance implements Listener {
 				|| (blueTeam.size() > 0 && redTeam.size() == 0)
 				|| getPlayers().size() == 1) {
 			if (getState() == GameState.IN_GAME) {
-				stopGame();
+				if (!Main.isDisabling())
+					stopGame();
 			}
 		}
 
@@ -523,13 +514,17 @@ public class GameInstance implements Listener {
 
 		forceStarted = false;
 
+		blueTeam.clear();
+		redTeam.clear();
+		ffaPlayerScores.clear();
+
 		assignTeams();
 		playerScores.clear();
 
 		for (Player p : players) {
-//			if (isLegacy)
 			p.setScoreboard(scoreboard);
 
+			Main.loadManager.getActiveLoadouts().remove(p);
 
 			Main.killstreakManager.reset(p);
 
@@ -620,11 +615,8 @@ public class GameInstance implements Listener {
 		if (getGamemode() == Gamemode.RSB) {
 
 			CodGun primary = Main.loadManager.getRandomPrimary();
-
 			CodGun secondary = Main.loadManager.getRandomSecondary();
-
 			CodWeapon lethal = Main.loadManager.getRandomLethal();
-
 			CodWeapon tactical = Main.loadManager.getRandomTactical();
 
 			ItemStack primaryAmmo = primary.getAmmo();
@@ -636,22 +628,23 @@ public class GameInstance implements Listener {
 
 			p.getInventory().setItem(0, Main.loadManager.knife);
 			if (!primary.equals(Main.loadManager.blankPrimary)) {
-				p.getInventory().setItem(1, primary.getGun());
+				p.getInventory().setItem(1, primary.getGunItem());
 				p.getInventory().setItem(28, primaryAmmo);
 			}
 
 			if (!secondary.equals(Main.loadManager.blankSecondary)) {
-				p.getInventory().setItem(2, secondary.getGun());
+				p.getInventory().setItem(2, secondary.getGunItem());
 				p.getInventory().setItem(29, secondaryAmmo);
 			}
 
 			if (Math.random() > 0.5 && !lethal.equals(Main.loadManager.blankLethal)) {
-				p.getInventory().setItem(3, lethal.getWeapon());
+				p.getInventory().setItem(3, lethal.getWeaponItem());
 			}
 
-			if (Math.random() > 0.5 && !lethal.equals(Main.loadManager.blankTactical)) {
-				p.getInventory().setItem(4, tactical.getWeapon());
+			if (Math.random() > 0.5 && !tactical.equals(Main.loadManager.blankTactical)) {
+				p.getInventory().setItem(4, tactical.getWeaponItem());
 			}
+
 		} else if (getGamemode() == Gamemode.DOM
 				|| getGamemode() == Gamemode.CTF
 				|| getGamemode() == Gamemode.KC
@@ -668,12 +661,12 @@ public class GameInstance implements Listener {
 			}
 
 			if (getGamemode() == Gamemode.INFECT && redTeam.contains(p)) {
-				p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 20 * gameTime, 3));
+				p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 20 * gameTime, 1));
 			}
 
 		} else if (getGamemode() == Gamemode.OITC) {
 			p.getInventory().setItem(0, Main.loadManager.knife);
-			p.getInventory().setItem(1, GameManager.oitcGun.getGun());
+			p.getInventory().setItem(1, GameManager.oitcGun.getGunItem());
 			ItemStack ammo = GameManager.oitcGun.getAmmo();
 			ammo.setAmount(1);
 			p.getInventory().setItem(8, ammo);
@@ -683,7 +676,7 @@ public class GameInstance implements Listener {
 			}
 			p.getInventory().setItem(0, Main.loadManager.knife);
 			CodGun gun = GameManager.gunGameGuns.get(ffaPlayerScores.get(p));
-			ItemStack gunItem = gun.getGun();
+			ItemStack gunItem = gun.getGunItem();
 			ItemStack ammo = gun.getAmmo();
 			ammo.setAmount(gun.getAmmoCount());
 
@@ -764,8 +757,9 @@ public class GameInstance implements Listener {
 				Main.sendMessage(p, Main.codPrefix + Lang.ASSIGNED_TO_TEAM.getMessage().replace("{team-color}", tColor + "").replace("{team}", team), Main.lang);
 			}
 		} else if (getGamemode() == Gamemode.INFECT) {
+			Collections.shuffle(players);
 			for (Player p : players) {
-				if (redTeam.size() != 0) {
+				if (redTeam.size() > 0) {
 					blueTeam.add(p);
 					continue;
 				}
@@ -957,14 +951,12 @@ public class GameInstance implements Listener {
 		setState(GameState.STARTING);
 
 		try {
-//			scoreBar.removeAll();
 			scoreBar.getClass().getMethod("removeAll").invoke(scoreBar);
 		} catch(NoClassDefFoundError e) {
 			System.out.println();
 		}catch(Exception ignored) {}
 		for (Player p : players) {
 			try {
-//				scoreBar.addPlayer(p);
 				scoreBar.getClass().getMethod("addPlayer", Player.class).invoke(scoreBar, p);
 			} catch(Exception ignored) {}
 			p.getInventory().setItem(0, Main.invManager.codItem);
@@ -979,6 +971,9 @@ public class GameInstance implements Listener {
 			setTeamArmor(p, Color.PURPLE);
 		}
 
+		changeMap(nextMaps[0], nextModes[0]);
+
+
 		BukkitRunnable br = new BukkitRunnable() {
 
 			int t = time;
@@ -991,34 +986,24 @@ public class GameInstance implements Listener {
 				String counter = getFancyTime(t);
 
 				try {
-//				scoreBar.setTitle(ChatColor.GOLD + getMap().getName() + " " + ChatColor.GRAY + "«" + ChatColor.WHITE + counter + ChatColor.RESET + "" + ChatColor.GRAY + "» " + ChatColor.GOLD + getMap().getGamemode().toString());
-				scoreBar.getClass().getMethod("setTitle", String.class).invoke(scoreBar, ChatColor.GOLD + getMap().getName() + " " + ChatColor.GRAY + "«" + ChatColor.WHITE + counter + ChatColor.RESET + "" + ChatColor.GRAY + "» " + ChatColor.GOLD + getMap().getGamemode().toString());
-				}catch(NoClassDefFoundError e) {
-					System.out.println();
-				} catch(Exception ignored) {}
+					scoreBar.getClass().getMethod("setTitle", String.class).invoke(scoreBar, ChatColor.GOLD + getMap().getName() + " " + ChatColor.GRAY + "«" + ChatColor.WHITE + counter + ChatColor.RESET + "" + ChatColor.GRAY + "» " + ChatColor.GOLD + getMap().getGamemode().toString());
+				} catch(Exception|NoClassDefFoundError ignored) {}
 
 				double progress = (((double) t) / ((double) lobbyTime));
 
 				try {
-//				scoreBar.setProgress(progress);
 					scoreBar.getClass().getMethod("setProgress", Double.class).invoke(scoreBar, progress);
-				} catch(NoClassDefFoundError e) {
-					System.out.println();
-				}catch(Exception ignored) {}
+				} catch(Exception|NoClassDefFoundError ignored) {}
 
 				if (t == 20) {
 					CodMap[] maps = nextMaps;
-					int votes = 0;
 					if (mapVotes[0].size() > mapVotes[1].size()) {
 						changeMap(maps[0], nextModes[0]);
-						votes = mapVotes[0].size();
 					} else if (mapVotes[1].size() > mapVotes[0].size()) {
 						changeMap(maps[1], nextModes[1]);
-						votes = mapVotes[1].size();
 					} else {
 						int index = (new Random()).nextInt(2);
 						changeMap(maps[index], nextModes[index]);
-						votes = -1;
 					}
 					clearNextMaps();
 
@@ -1050,7 +1035,7 @@ public class GameInstance implements Listener {
 					try {
 						p.getClass().getMethod("setPlayerListHeader", String.class).invoke(p, Lang.LOBBY_HEADER.getMessage());
 						p.getClass().getMethod("setPlayerListFooter", String.class).invoke(p, Lang.LOBBY_FOOTER.getMessage().replace("{time}", getFancyTime(t)));
-					} catch(NoSuchMethodException ignored) {} catch(Exception ignored) {}
+					} catch(Exception ignored) {}
 
 					if (t > 20) {
 						if (p.getInventory().getItem(3) == null || !p.getInventory().getItem(3).getType().equals(Main.invManager.voteItemA.getType())) {
@@ -1104,6 +1089,8 @@ public class GameInstance implements Listener {
 
 	private void startGameTimer(int time, boolean newRound) {
 
+		pastClassChange = false;
+
 		if (!newRound) {
 			setState(GameState.IN_GAME);
 
@@ -1124,7 +1111,7 @@ public class GameInstance implements Listener {
 				} else {
 
 					try {
-						Object bar = Bukkit.createBossBar(ChatColor.GRAY + "«" + ChatColor.WHITE + getFancyTime(Main.getPlugin().getConfig().getInt("gameTime." + getGamemode().toString())) + ChatColor.RESET + ChatColor.WHITE + "»", org.bukkit.boss.BarColor.GREEN, org.bukkit.boss.BarStyle.SEGMENTED_10);
+						Object bar = Bukkit.createBossBar(ChatColor.GRAY + "«" + ChatColor.WHITE + getFancyTime(gameTime) + ChatColor.RESET + ChatColor.WHITE + "»", org.bukkit.boss.BarColor.GREEN, org.bukkit.boss.BarStyle.SEGMENTED_10);
 						freeForAllBar.put(p, bar);
 						freeForAllBar.get(p).getClass().getMethod("addPlayer", Player.class).invoke(freeForAllBar.get(p), p);
 
@@ -1160,7 +1147,6 @@ public class GameInstance implements Listener {
 		BukkitRunnable br = new BukkitRunnable() {
 
 			int t = time;
-			int gameTime = time;
 
 			@Override
 			public void run() {
@@ -1176,6 +1162,10 @@ public class GameInstance implements Listener {
 				if (getState() != GameState.IN_GAME) {
 					this.cancel();
 					return;
+				}
+
+				if (time - t == 10) {
+					pastClassChange = true;
 				}
 
 				t--;
@@ -1684,6 +1674,21 @@ public class GameInstance implements Listener {
 		return getMap().getGamemode();
 	}
 
+	public boolean isPastClassChange() {
+		return pastClassChange;
+	}
+
+	public void changeClass(Player p) {
+		if (!isPastClassChange()) {
+			if (isOnBlueTeam(p))
+				spawnCodPlayer(p, getMap().getBlueSpawn());
+			else if (isOnRedTeam(p))
+				spawnCodPlayer(p, getMap().getRedSpawn());
+			else
+				spawnCodPlayer(p, getMap().getPinkSpawn());
+		}
+	}
+
 	private void handleDeath(Player killer, Player victim) {
 
 		RankPerks rank = Main.getRank(killer);
@@ -1806,7 +1811,7 @@ public class GameInstance implements Listener {
 				CodGun gun;
 				try {
 					gun = GameManager.gunGameGuns.get(ffaPlayerScores.get(killer));
-					ItemStack gunItem = gun.getGun();
+					ItemStack gunItem = gun.getMenuItem();
 					ItemStack ammo = gun.getAmmo();
 					ammo.setAmount(gun.getAmmoCount());
 
@@ -2903,6 +2908,17 @@ public class GameInstance implements Listener {
 			};
 
 			br.runTaskTimer(Main.getPlugin(), 0L, 20L);
+		}
+	}
+
+	private void updateTimeLeft() {
+		if (getGamemode() != Gamemode.INFECT) {
+			gameTime = Main.getPlugin().getConfig().getInt("gameTime." + getGamemode().toString());
+		} else {
+			if (ComVersion.getPurchased())
+				gameTime = Main.getPlugin().getConfig().getInt("maxScore.INFECT");
+			else
+				gameTime = 120;
 		}
 	}
 }

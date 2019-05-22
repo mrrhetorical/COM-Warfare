@@ -57,10 +57,10 @@ public class PerkListener implements Listener {
 						Loadout loadout = Main.loadManager.getCurrentLoadout(p);
 						p.getInventory().clear();
 						p.getInventory().setItem(0, Main.loadManager.knife);
-						p.getInventory().setItem(1, loadout.getPrimary().getGun());
-						p.getInventory().setItem(2, loadout.getSecondary().getGun());
-						p.getInventory().setItem(3, loadout.getLethal().getWeapon());
-						p.getInventory().setItem(4, loadout.getTactical().getWeapon());
+						p.getInventory().setItem(1, loadout.getPrimary().getMenuItem());
+						p.getInventory().setItem(2, loadout.getSecondary().getMenuItem());
+						p.getInventory().setItem(3, loadout.getLethal().getMenuItem());
+						p.getInventory().setItem(4, loadout.getTactical().getMenuItem());
 
 						ItemStack primaryAmmo = loadout.getPrimary().getAmmo();
 						primaryAmmo.setAmount(loadout.getPrimary().getAmmoCount());
