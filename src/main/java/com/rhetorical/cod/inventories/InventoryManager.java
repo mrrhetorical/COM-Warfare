@@ -3,6 +3,7 @@ package com.rhetorical.cod.inventories;
 import com.rhetorical.cod.Main;
 import com.rhetorical.cod.assignments.Assignment;
 import com.rhetorical.cod.assignments.AssignmentType;
+import com.rhetorical.cod.game.GameInstance;
 import com.rhetorical.cod.game.GameManager;
 import com.rhetorical.cod.lang.Lang;
 import com.rhetorical.cod.loadouts.Loadout;
@@ -1086,7 +1087,7 @@ public class InventoryManager implements Listener {
 			int slot;
 			try {
 				slot = e.getSlot();
-				if (slot > Main.loadManager.getAllowedClasses(p) -1)
+				if (slot > Main.loadManager.getAllowedClasses(p) - 1)
 					throw new NullPointerException();
 			} catch (NullPointerException exception) {
 				Main.sendMessage(Main.cs, Lang.ERROR_SELECTING_CLASS.getMessage(), Main.lang);
@@ -1101,6 +1102,11 @@ public class InventoryManager implements Listener {
 
 			Loadout current = Main.loadManager.getLoadouts(p).get(slot);
 			Main.loadManager.setActiveLoadout(p, current);
+
+			GameInstance game = GameManager.getMatchWhichContains(p);
+
+			if (game != null)
+				game.changeClass(p);
 
 			p.closeInventory();
 
@@ -1154,8 +1160,6 @@ public class InventoryManager implements Listener {
 							loadout.setPrimary(gun);
 							Main.invManager.setupCreateClassInventory(p);
 							p.openInventory(Main.invManager.createClassInventory.get(p));
-							if (Main.loadManager.getActiveLoadout(p).equals(loadout))
-								Main.loadManager.setActiveLoadout(p, loadout);
 							return;
 						}
 					}
@@ -1164,8 +1168,6 @@ public class InventoryManager implements Listener {
 						loadout.setPrimary(Main.loadManager.getDefaultPrimary());
 						Main.invManager.setupCreateClassInventory(p);
 						p.openInventory(Main.invManager.createClassInventory.get(p));
-						if (Main.loadManager.getActiveLoadout(p).equals(loadout))
-							Main.loadManager.setActiveLoadout(p, loadout);
 						return;
 					}
 
@@ -1183,8 +1185,6 @@ public class InventoryManager implements Listener {
 							loadout.setSecondary(gun);
 							Main.invManager.setupCreateClassInventory(p);
 							p.openInventory(Main.invManager.createClassInventory.get(p));
-							if (Main.loadManager.getActiveLoadout(p).equals(loadout))
-								Main.loadManager.setActiveLoadout(p, loadout);
 							return;
 						}
 					}
@@ -1193,8 +1193,6 @@ public class InventoryManager implements Listener {
 						loadout.setSecondary(Main.loadManager.getDefaultSecondary());
 						Main.invManager.setupCreateClassInventory(p);
 						p.openInventory(Main.invManager.createClassInventory.get(p));
-						if (Main.loadManager.getActiveLoadout(p).equals(loadout))
-							Main.loadManager.setActiveLoadout(p, loadout);
 						return;
 					}
 
@@ -1212,8 +1210,6 @@ public class InventoryManager implements Listener {
 							loadout.setLethal(grenade);
 							Main.invManager.setupCreateClassInventory(p);
 							p.openInventory(Main.invManager.createClassInventory.get(p));
-							if (Main.loadManager.getActiveLoadout(p).equals(loadout))
-								Main.loadManager.setActiveLoadout(p, loadout);
 							return;
 						}
 					}
@@ -1223,8 +1219,6 @@ public class InventoryManager implements Listener {
 						loadout.setLethal(Main.loadManager.getDefaultLethal());
 						Main.invManager.setupCreateClassInventory(p);
 						p.openInventory(Main.invManager.createClassInventory.get(p));
-						if (Main.loadManager.getActiveLoadout(p).equals(loadout))
-							Main.loadManager.setActiveLoadout(p, loadout);
 						return;
 					}
 
@@ -1242,8 +1236,6 @@ public class InventoryManager implements Listener {
 							loadout.setTactical(grenade);
 							Main.invManager.setupCreateClassInventory(p);
 							p.openInventory(Main.invManager.createClassInventory.get(p));
-							if (Main.loadManager.getActiveLoadout(p).equals(loadout))
-								Main.loadManager.setActiveLoadout(p, loadout);
 							return;
 						}
 					}
@@ -1252,8 +1244,6 @@ public class InventoryManager implements Listener {
 						loadout.setTactical(Main.loadManager.getDefaultTactical());
 						Main.invManager.setupCreateClassInventory(p);
 						p.openInventory(Main.invManager.createClassInventory.get(p));
-						if (Main.loadManager.getActiveLoadout(p).equals(loadout))
-							Main.loadManager.setActiveLoadout(p, loadout);
 						return;
 					}
 
@@ -1271,8 +1261,6 @@ public class InventoryManager implements Listener {
 							loadout.setPerk(PerkSlot.ONE, perk);
 							Main.invManager.setupCreateClassInventory(p);
 							p.openInventory(Main.invManager.createClassInventory.get(p));
-							if (Main.loadManager.getActiveLoadout(p).equals(loadout))
-								Main.loadManager.setActiveLoadout(p, loadout);
 							return;
 						}
 					}
@@ -1289,8 +1277,6 @@ public class InventoryManager implements Listener {
 							loadout.setPerk(PerkSlot.TWO, perk);
 							Main.invManager.setupCreateClassInventory(p);
 							p.openInventory(Main.invManager.createClassInventory.get(p));
-							if (Main.loadManager.getActiveLoadout(p).equals(loadout))
-								Main.loadManager.setActiveLoadout(p, loadout);
 							return;
 						}
 					}
@@ -1307,8 +1293,6 @@ public class InventoryManager implements Listener {
 							loadout.setPerk(PerkSlot.THREE, perk);
 							Main.invManager.setupCreateClassInventory(p);
 							p.openInventory(Main.invManager.createClassInventory.get(p));
-							if (Main.loadManager.getActiveLoadout(p).equals(loadout))
-								Main.loadManager.setActiveLoadout(p, loadout);
 							return;
 						}
 					}

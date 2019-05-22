@@ -17,6 +17,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.HashMap;
 
 public class LoadoutManager {
@@ -471,6 +472,10 @@ public class LoadoutManager {
 		this.activeLoadouts.computeIfAbsent(p, k -> this.getLoadouts(p).get(0));
 
 		return this.activeLoadouts.get(p);
+	}
+
+	public Map<Player, Loadout> getActiveLoadouts() {
+		return activeLoadouts;
 	}
 
 	public void setActiveLoadout(Player p, Loadout loadout) {

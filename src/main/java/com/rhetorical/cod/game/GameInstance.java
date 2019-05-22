@@ -104,6 +104,8 @@ public class GameInstance implements Listener {
 	private boolean redNukeActive;
 	private Player pinkNukeActive;
 
+	private boolean pastClassChange = true;
+
 	GameInstance(ArrayList<Player> pls, CodMap map) {
 
 		try {
@@ -522,6 +524,7 @@ public class GameInstance implements Listener {
 		for (Player p : players) {
 			p.setScoreboard(scoreboard);
 
+			Main.loadManager.getActiveLoadouts().remove(p);
 
 			Main.killstreakManager.reset(p);
 
@@ -1088,6 +1091,8 @@ public class GameInstance implements Listener {
 
 	private void startGameTimer(int time, boolean newRound) {
 
+		pastClassChange = false;
+
 		if (!newRound) {
 			setState(GameState.IN_GAME);
 
@@ -1159,6 +1164,10 @@ public class GameInstance implements Listener {
 				if (getState() != GameState.IN_GAME) {
 					this.cancel();
 					return;
+				}
+
+				if (time - t == 10) {
+					pastClassChange = true;
 				}
 
 				t--;
@@ -1665,6 +1674,21 @@ public class GameInstance implements Listener {
 
 	private Gamemode getGamemode() {
 		return getMap().getGamemode();
+	}
+
+	public boolean isPastClassChange() {
+		return pastClassChange;
+	}
+
+	public void changeClass(Player p) {
+		if (!isPastClassChange()) {
+			if (isOnBlueTeam(p))
+				spawnCodPlayer(p, getMap().getBlueSpawn());
+			else if (isOnRedTeam(p))
+				spawnCodPlayer(p, getMap().getRedSpawn());
+			else
+				spawnCodPlayer(p, getMap().getPinkSpawn());
+		}
 	}
 
 	private void handleDeath(Player killer, Player victim) {
