@@ -253,9 +253,8 @@ public class LoadoutManager {
 
 			String weaponName = GunsFile.getData().getString("Weapons.LETHAL.default.name");
 			UnlockType type = UnlockType.valueOf(GunsFile.getData().getString("Weapons.LETHAL.default.unlockType"));
-			Material mat = Material.valueOf(GunsFile.getData().getString("Weapons.LETHAL.default.item"));
+			ItemStack weapon = GunsFile.getData().getItemStack("Weapons.LETHAL.default.item");
 			short data = (short) GunsFile.getData().getInt("Weapons.LETHAL.default.data");
-			ItemStack weapon = new ItemStack(mat, 1, data);
 
 			defaultLethal = new CodWeapon(weaponName, WeaponType.LETHAL, type, weapon, 0);
 		}
@@ -274,9 +273,8 @@ public class LoadoutManager {
 
 			String weaponName = GunsFile.getData().getString("Weapons.TACTICAL.default.name");
 			UnlockType type = UnlockType.valueOf(GunsFile.getData().getString("Weapons.TACTICAL.default.unlockType"));
-			Material mat = Material.valueOf(GunsFile.getData().getString("Weapons.TACTICAL.default.item"));
+			ItemStack weapon = GunsFile.getData().getItemStack("Weapons.TACTICAL.default.item");
 			short data = (short) GunsFile.getData().getInt("Weapons.TACTICAL.default.data");
-			ItemStack weapon = new ItemStack(mat, 1, data);
 
 			defaultTactical = new CodWeapon(weaponName, WeaponType.TACTICAL, type, weapon, 0);
 		}

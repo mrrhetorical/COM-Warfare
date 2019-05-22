@@ -3,6 +3,7 @@ package com.rhetorical.cod.weapons;
 import com.rhetorical.cod.Main;
 import com.rhetorical.cod.files.GunsFile;
 import org.bukkit.Material;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -15,7 +16,6 @@ public class CodWeapon {
 	
 	private WeaponType weaponType;
 	
-	
 	private int levelUnlock;
 	private int creditUnlock;
 	
@@ -27,6 +27,7 @@ public class CodWeapon {
 	
 		name = n;
 		weaponItem = weaponI;
+		weaponItem = getWeaponItem();
 	}
 	
 	public void save() {
@@ -35,7 +36,7 @@ public class CodWeapon {
 		
 		if (levelUnlock <= 1 & creditUnlock <= 0 && !GunsFile.getData().contains("Weapons." + weaponType.toString() + ".default.name")) {
 			GunsFile.getData().set("Weapons." + weaponType.toString() + ".default.name", name);
-			GunsFile.getData().set("Weapons." + weaponType.toString() + ".default.item", weaponItem.getType().toString());
+			GunsFile.getData().set("Weapons." + weaponType.toString() + ".default.item", weaponItem);
 			GunsFile.getData().set("Weapons." + weaponType.toString() + ".default.data", weaponItem.getDurability());
 			GunsFile.getData().set("Weapons." + weaponType.toString() + ".default.unlockType", unlockType.toString());
 			GunsFile.getData().set("Weapons." + weaponType.toString() + ".default.levelUnlock", levelUnlock);
@@ -55,7 +56,7 @@ public class CodWeapon {
 		}
 		
 		GunsFile.getData().set("Weapons." + weaponType.toString() + "." + k + ".name", name);
-		GunsFile.getData().set("Weapons." + weaponType.toString() + "." + k + ".item", weaponItem.getType().toString());
+		GunsFile.getData().set("Weapons." + weaponType.toString() + "." + k + ".item", weaponItem);
 		GunsFile.getData().set("Weapons." + weaponType.toString() + "." + k + ".data", weaponItem.getDurability());
 		GunsFile.getData().set("Weapons." + weaponType.toString() + "." + k + ".unlockType", unlockType.toString());
 		GunsFile.getData().set("Weapons." + weaponType.toString() + "." + k + ".levelUnlock", levelUnlock);
@@ -72,7 +73,7 @@ public class CodWeapon {
 		return unlockType;
 	}
 	
-	public ItemStack getWeapon() {
+	public ItemStack getWeaponItem() {
 		if (Main.hasQualityArms()) {
 			if (!this.equals(Main.loadManager.blankLethal) && !this.equals(Main.loadManager.blankTactical)) {
 				ItemStack gun = QualityGun.getGunForName(getName());
@@ -92,14 +93,21 @@ public class CodWeapon {
 			}
 		}
 		ItemMeta meta = weaponItem.getItemMeta();
-		
-		meta.setDisplayName(getName());
+
+		if (meta != null) {
+			meta.setDisplayName(getName());
+			meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+		}
 		
 		weaponItem.setItemMeta(meta);
 		
 		return weaponItem;
 	}
-	
+
+	public ItemStack getWeapon() {
+		return weaponItem;
+	}
+
 	public int getLevelUnlock() {
 		return levelUnlock;
 	}

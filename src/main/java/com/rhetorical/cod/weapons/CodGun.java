@@ -3,6 +3,7 @@ package com.rhetorical.cod.weapons;
 import com.rhetorical.cod.Main;
 import com.rhetorical.cod.files.GunsFile;
 import org.bukkit.Material;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -33,7 +34,7 @@ public class CodGun extends CodWeapon {
 		this.ammoItem = ammoI;
 		this.gunItem = gunI;
 
-		setupGunItem();
+		gunItem = setupGunItem();
 	}
 	
 	public void save() {
@@ -105,9 +106,11 @@ public class CodGun extends CodWeapon {
 			}
 		}
 
-		ItemMeta meta = this.gunItem.getItemMeta();
-
-		meta.setDisplayName(this.getName());
+		ItemMeta meta = gunItem.getItemMeta();
+		if (meta != null) {
+			meta.setDisplayName(this.getName());
+			meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+		}
 
 		this.gunItem.setItemMeta(meta);
 		return this.gunItem;
