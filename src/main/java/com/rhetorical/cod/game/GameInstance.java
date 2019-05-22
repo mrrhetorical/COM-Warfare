@@ -480,7 +480,8 @@ public class GameInstance implements Listener {
 				|| (blueTeam.size() > 0 && redTeam.size() == 0)
 				|| getPlayers().size() == 1) {
 			if (getState() == GameState.IN_GAME) {
-				stopGame();
+				if (!Main.isDisabling())
+					stopGame();
 			}
 		}
 

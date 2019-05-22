@@ -83,6 +83,8 @@ public class Main extends JavaPlugin {
 	public static String reward_maxPrestige;
 	public static String reward_maxPrestigeMaxLevel;
 
+	private static boolean disabling = false;
+
 	private Metrics bMetrics;
 
 	@Override
@@ -252,6 +254,9 @@ public class Main extends JavaPlugin {
 
 	@Override
 	public void onDisable() {
+
+		disabling = true;
+
 		if (GameManager.getAddedMaps().size() != 0) {
 			for (CodMap m : GameManager.getAddedMaps()) {
 				m.save();
@@ -1337,6 +1342,10 @@ public class Main extends JavaPlugin {
 
 	public static boolean hasCrackShot() {
 		return hasCS;
+	}
+
+	public static boolean isDisabling() {
+		return disabling;
 	}
 
 }
