@@ -307,7 +307,7 @@ public class InventoryManager implements Listener {
 			headerMeta.setLore(headerLore);
 			header.setItemMeta(headerMeta);
 
-			ItemStack primary = loadout.getPrimary().getGun();
+			ItemStack primary = loadout.getPrimary().getGunClone();
 			ItemMeta primaryMeta = primary.getItemMeta();
 			primaryMeta.setDisplayName(Lang.INVENTORY_PRIMARY_WEAPON_NAME.getMessage().replace("{gun}", loadout.getPrimary().getName()));
 			ArrayList<String> primaryLore = new ArrayList<>();
@@ -315,7 +315,7 @@ public class InventoryManager implements Listener {
 			primaryMeta.setLore(primaryLore);
 			primary.setItemMeta(primaryMeta);
 
-			ItemStack secondary = loadout.getSecondary().getGun();
+			ItemStack secondary = loadout.getSecondary().getGunClone();
 			ItemMeta secondaryMeta = secondary.getItemMeta();
 			secondaryMeta.setDisplayName(Lang.INVENTORY_SECONDARY_WEAPON_NAME.getMessage().replace("{gun}", loadout.getSecondary().getName()));
 			ArrayList<String> secondaryLore = new ArrayList<>();
@@ -323,7 +323,7 @@ public class InventoryManager implements Listener {
 			secondaryMeta.setLore(secondaryLore);
 			secondary.setItemMeta(secondaryMeta);
 
-			ItemStack lethal = loadout.getLethal().getWeapon();
+			ItemStack lethal = loadout.getLethal().getWeaponClone();
 			ItemMeta lethalMeta = lethal.getItemMeta();
 			lethalMeta.setDisplayName(Lang.INVENTORY_LETHAL_WEAPON_NAME.getMessage().replace("{gun}", loadout.getLethal().getName()));
 			ArrayList<String> lethalLore = new ArrayList<>();
@@ -331,7 +331,7 @@ public class InventoryManager implements Listener {
 			lethalMeta.setLore(lethalLore);
 			lethal.setItemMeta(lethalMeta);
 
-			ItemStack tactical = loadout.getTactical().getWeapon();
+			ItemStack tactical = loadout.getTactical().getWeaponClone();
 			ItemMeta tacticalMeta = tactical.getItemMeta();
 			tacticalMeta.setDisplayName(Lang.INVENTORY_TACTICAL_WEAPON_NAME.getMessage().replace("{gun}", loadout.getTactical().getName()));
 			ArrayList<String> tacticalLore = new ArrayList<>();
@@ -499,7 +499,7 @@ public class InventoryManager implements Listener {
 			if (gun.getType() == UnlockType.BOTH || gun.getType() == UnlockType.CREDITS) {
 				if ((gun.getType() == UnlockType.CREDITS || Main.progressionManager.getLevel(p) >= gun.getLevelUnlock()) && !Main.shopManager.getPurchasedGuns().get(p).contains(gun)) {
 
-					ItemStack item = gun.getGun();
+					ItemStack item = gun.getGunClone();
 
 					ItemMeta gunMeta = item.getItemMeta();
 
@@ -529,7 +529,7 @@ public class InventoryManager implements Listener {
 			if (grenade.getType() == UnlockType.BOTH || grenade.getType() == UnlockType.CREDITS) {
 				if ((grenade.getType() == UnlockType.CREDITS || Main.progressionManager.getLevel(p) >= grenade.getLevelUnlock()) && !Main.shopManager.getPurchasedWeapons().get(p).contains(grenade)) {
 
-					ItemStack item = grenade.getWeapon();
+					ItemStack item = grenade.getWeaponClone();
 
 					ItemMeta gunMeta = item.getItemMeta();
 
@@ -593,7 +593,7 @@ public class InventoryManager implements Listener {
 
 			Loadout loadout = Main.loadManager.getLoadouts(p).get(i);
 
-			ItemStack item = loadout.getPrimary().getGun().clone();
+			ItemStack item = loadout.getPrimary().getGunClone();
 
 			ItemMeta meta = item.getItemMeta();
 			meta.setDisplayName(loadout.getName());

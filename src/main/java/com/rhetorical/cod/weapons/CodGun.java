@@ -117,7 +117,11 @@ public class CodGun extends CodWeapon {
 	}
 
 	public ItemStack getGun() {
-		return this.gunItem;
+		return gunItem;
+	}
+
+	public ItemStack getGunClone() {
+		return gunItem.clone();
 	}
 
 	public int getLevelUnlock() {

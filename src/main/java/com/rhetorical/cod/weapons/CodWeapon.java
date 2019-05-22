@@ -108,6 +108,10 @@ public class CodWeapon {
 		return weaponItem;
 	}
 
+	public ItemStack getWeaponClone() {
+		return weaponItem.clone();
+	}
+
 	public int getLevelUnlock() {
 		return levelUnlock;
 	}
