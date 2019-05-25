@@ -81,8 +81,7 @@ public class GameInstance implements Listener {
 
 	private Object scoreBar;
 
-	private Scoreboard scoreboard = Bukkit.getScoreboardManager().getNewScoreboard(); //TODO: Update only on player join in-game arena or leave
-	private Objective scoreboardObjective = scoreboard.registerNewObjective("game_stats", "dummy");
+	private ScoreboardManager scoreboardManager;
 
 	public HealthManager health;
 	private HungerManager hungerManager;
@@ -105,6 +104,7 @@ public class GameInstance implements Listener {
 	private Player pinkNukeActive;
 
 	private boolean pastClassChange = true;
+
 
 	GameInstance(ArrayList<Player> pls, CodMap map) {
 
@@ -159,31 +159,11 @@ public class GameInstance implements Listener {
 			health.update(p);
 		}
 
-		scoreboardObjective.setDisplaySlot(DisplaySlot.SIDEBAR);
+		scoreboardManager = new ScoreboardManager(this);
 
 		System.gc();
 
 		Main.cs.sendMessage(Main.codPrefix + ChatColor.GRAY + "Game lobby with id " + getId() + " created with map " + getMap().getName() + " with gamemode " + getGamemode() + ".");
-	}
-
-	private void updateScoreBoard(String time) {
-
-		scoreboardObjective.setDisplayName("" + ChatColor.WHITE + ChatColor.BOLD + time);
-		if (getGamemode() != Gamemode.FFA && getGamemode() != Gamemode.OITC && getGamemode() != Gamemode.GUN) {
-			Score redScore = scoreboardObjective.getScore("" + ChatColor.RED + ChatColor.BOLD + "RED: ");
-			Score blueScore = scoreboardObjective.getScore("" + ChatColor.BLUE + ChatColor.BOLD + "BLUE: ");
-			redScore.setScore(RedTeamScore);
-			blueScore.setScore(BlueTeamScore);
-		} else {
-			Score infoScore = scoreboardObjective.getScore(Lang.SCOREBOARD_PART1.getMessage());
-			Score infoScore2 = scoreboardObjective.getScore(Lang.SCOREBOARD_PART2.getMessage());
-			infoScore.setScore(2);
-			infoScore2.setScore(1);
-		}
-	}
-
-	private void resetScoreboard() {
-		scoreboardObjective = scoreboard.registerNewObjective("game_stats", "dummy");
 	}
 
 	private void setupNextMaps() {
@@ -252,6 +232,8 @@ public class GameInstance implements Listener {
 			}catch(NoClassDefFoundError e) {
 				System.out.println();
 			} catch(Exception ignored) {}
+
+			getScoreboardManager().clearScoreboards(p);
 		}
 
 		playerScores.clear();
@@ -357,11 +339,10 @@ public class GameInstance implements Listener {
 		}catch(Exception ignored) {}
 
 		if (getState() == GameState.IN_GAME) {
+
+			getScoreboardManager().setupGameBoard(p, getFancyTime(gameTime));
+
 			assignTeams();
-
-//			if (isLegacy)
-
-			p.setScoreboard(scoreboard);
 
 			if (getGamemode() == Gamemode.OITC) {
 				ffaPlayerScores.put(p, maxScore_OITC);
@@ -396,6 +377,8 @@ public class GameInstance implements Listener {
 			setTeamArmor(p, Color.PURPLE);
 			p.getInventory().setItem(0, Main.invManager.codItem);
 			p.getInventory().setItem(8, Main.invManager.leaveItem);
+
+			getScoreboardManager().setupLobbyBoard(p, getFancyTime(lobbyTime));
 		}
 
 		if ((players.size() >= Main.minPlayers) && getState() == GameState.WAITING) {
@@ -502,6 +485,8 @@ public class GameInstance implements Listener {
 			p.setHealth(20d);
 		}
 
+		getScoreboardManager().clearScoreboards(p);
+
 		try {
 			p.getClass().getMethod("setPlayerListHeader", String.class).invoke(p, "");
 			p.getClass().getMethod("setPlayerListFooter", String.class).invoke(p, "");
@@ -522,7 +507,6 @@ public class GameInstance implements Listener {
 		playerScores.clear();
 
 		for (Player p : players) {
-			p.setScoreboard(scoreboard);
 
 			Main.loadManager.getActiveLoadouts().remove(p);
 
@@ -961,6 +945,9 @@ public class GameInstance implements Listener {
 			} catch(Exception ignored) {}
 			p.getInventory().setItem(0, Main.invManager.codItem);
 			p.getInventory().setItem(8, Main.invManager.leaveItem);
+
+			getScoreboardManager().clearScoreboards(p);
+			getScoreboardManager().setupLobbyBoard(p, getFancyTime(lobbyTime));
 		}
 
 		GameInstance game = this;
@@ -1010,6 +997,10 @@ public class GameInstance implements Listener {
 					for (Player p : game.players) {
 						Main.sendMessage(p, Main.codPrefix + Lang.MAP_VOTING_NEXT_MAP.getMessage().replace("{map}", game.currentMap.getName()), Main.lang);
 					}
+				}
+
+				for (Player p : game.getPlayers()) {
+					getScoreboardManager().updateLobbyBoard(p, getFancyTime(t));
 				}
 
 				if (t % 30 == 0 || (t % 10 == 0 && t < 30) || (t % 5 == 0 && t < 15)) {
@@ -1125,6 +1116,8 @@ public class GameInstance implements Listener {
 						ffaPlayerScores.put(p, 0);
 					}
 				}
+
+				getScoreboardManager().setupGameBoard(p, getFancyTime(gameTime));
 			}
 
 			if (getGamemode().equals(Gamemode.DOM)) {
@@ -1144,10 +1137,9 @@ public class GameInstance implements Listener {
 		}
 		GameInstance game = this;
 
-		BukkitRunnable br = new BukkitRunnable() {
+		gameRunnable = new BukkitRunnable() {
 
 			int t = time;
-
 			@Override
 			public void run() {
 
@@ -1173,7 +1165,6 @@ public class GameInstance implements Listener {
 				String counter = getFancyTime(t);
 
 //				if (isLegacy)
-				updateScoreBoard(counter);
 
 				if (currentMap.getGamemode() == Gamemode.DOM) {
 					game.checkFlags();
@@ -1250,6 +1241,10 @@ public class GameInstance implements Listener {
 					scoreBar.getClass().getMethod("setProgress", Double.class).invoke(scoreBar, progress);
 				} catch(Exception ignored) {}
 				game.updateTabList();
+
+				for (Player p : getPlayers()) {
+					getScoreboardManager().updateGameScoreBoard(p, getFancyTime(t));
+				}
 
 				if (currentMap.getGamemode() == Gamemode.TDM || currentMap.getGamemode() == Gamemode.RSB || currentMap.getGamemode() == Gamemode.DOM || currentMap.getGamemode() == Gamemode.CTF || currentMap.getGamemode() == Gamemode.KC) {
 					if ((BlueTeamScore >= maxScore_TDM || RedTeamScore >= maxScore_TDM) && getGamemode().equals(Gamemode.TDM)) {
@@ -1351,7 +1346,6 @@ public class GameInstance implements Listener {
 			}
 
 		};
-		gameRunnable = br;
 		gameRunnable.runTaskTimer(Main.getPlugin(), 0L, 20L);
 	}
 
@@ -2920,5 +2914,9 @@ public class GameInstance implements Listener {
 			else
 				gameTime = 120;
 		}
+	}
+
+	private ScoreboardManager getScoreboardManager() {
+		return scoreboardManager;
 	}
 }

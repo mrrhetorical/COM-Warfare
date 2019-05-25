@@ -87,8 +87,6 @@ public enum Lang {
 	COUNTER_UAV_NAME("&6&lCounter UAV"),
 	NUKE_NAME("&6&lNuke"),
 	DOGS_NAME("&6&lDogs"),
-	SCOREBOARD_PART1("Press 'TAB' to check"),
-	SCOREBOARD_PART2("your scores!"),
 	PLAYER_DOG_TAG_NAME("{team-color}{player}'s dog tag."),
 	ASSIGNED_TO_TEAM("{team-color}You are on the {team} team!"),
 	NOBODY_WON_GAME("&7Nobody won the match! It was a tie!"),
