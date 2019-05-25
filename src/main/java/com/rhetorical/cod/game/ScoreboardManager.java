@@ -1,6 +1,7 @@
 package com.rhetorical.cod.game;
 
 import com.rhetorical.cod.Main;
+import com.rhetorical.cod.lang.Lang;
 import com.rhetorical.cod.progression.CreditManager;
 import com.rhetorical.cod.progression.StatHandler;
 import org.bukkit.Bukkit;
@@ -33,7 +34,7 @@ class ScoreboardManager {
 		lobbyObjective.put(p, objective);
 		objective.setDisplaySlot(DisplaySlot.SIDEBAR);
 
-		objective.setDisplayName(Main.codPrefix);
+		objective.setDisplayName(Lang.LOBBY_SCOREBOARD.getMessage());
 
 		ScoreboardMapping mapping = getMapping(p);
 
@@ -49,7 +50,7 @@ class ScoreboardManager {
 				level = objective.getScore(mapping.getLevel()),
 				prestige = objective.getScore(mapping.getPrestige()),
 				tScore = objective.getScore(mapping.getTime()),
-				space1 = objective.getScore(" "),
+				space1 = objective.getScore("                    "),
 				space2 = objective.getScore("  "),
 				space3 = objective.getScore("   ");
 
@@ -101,7 +102,7 @@ class ScoreboardManager {
 
 		CodScore score = getGame().getScore(p);
 
-		objective.setDisplayName(Main.codPrefix);
+		objective.setDisplayName(Lang.GAME_SCOREBOARD.getMessage());
 
 		ScoreboardMapping mapping = getMapping(p);
 
@@ -117,7 +118,7 @@ class ScoreboardManager {
 				credits = objective.getScore(mapping.getCredits()),
 				tScore = objective.getScore(mapping.getTime()),
 				gScore = objective.getScore(mapping.getScore()),
-				space1 = objective.getScore(" "),
+				space1 = objective.getScore("                    "),
 				space2 = objective.getScore("  "),
 				space3 = objective.getScore("   ");
 

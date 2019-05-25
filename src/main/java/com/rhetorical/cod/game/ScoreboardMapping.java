@@ -53,7 +53,7 @@ class ScoreboardMapping {
 	}
 
 	void updateStreak(int amount) {
-		setStreak(String.format("Streak: %s", amount));
+		setStreak(String.format("Kill Streak: %s", amount));
 	}
 
 	private void setStreak(String streak) {
