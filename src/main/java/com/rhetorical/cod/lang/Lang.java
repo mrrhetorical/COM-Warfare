@@ -120,7 +120,7 @@ public enum Lang {
 	FLAG_A("Flag A"),
 	FLAG_B("Flag B"),
 	FLAG_C("Flag C"),
-	FLAG_CAPTURED("&eThe {team-color}{team} team has captured {flag}!"),
+	FLAG_CAPTURED("&eThe {team-color}{team}&r&e team has captured {flag}!"),
 	FLAG_NEUTRALIZED("&e{flag} has been neutralized!"),
 	INVENTORY_MAIN_MENU_TITLE("COM-Warfare - Menu"),
 	INVENTORY_SHOP_MENU_TITLE("COM-Warfare - SHOP"),
@@ -214,7 +214,15 @@ public enum Lang {
 	NUKE_LAUNCHED_TITLE("A nuke was called by {team-color}{team}!"),
 	NUKE_LAUNCHED_SUBTITLE("It will launch in {time} seconds!"),
 	LOBBY_SCOREBOARD("&4&lLobby"),
-	GAME_SCOREBOARD("&4&lYour Scores");
+	GAME_SCOREBOARD("&4&lYour Scores"),
+	SCOREBOARD_LEVEL("Level: %s"),
+	SCOREBOARD_PRESTIGE("Prestige: %s"),
+	SCOREBOARD_KILLS("Kills: %s"),
+	SCOREBOARD_DEATHS("Deaths: %s"),
+	SCOREBOARD_STREAK("Kill Streak: %s"),
+	SCOREBOARD_CREDITS("Credits: %s"),
+	SCOREBOARD_SCORE("Score: %s"),
+	SCOREBOARD_TIME("%s");
 
 
 	private String message;

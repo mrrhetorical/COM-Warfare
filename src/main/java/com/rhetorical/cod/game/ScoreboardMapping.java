@@ -1,5 +1,6 @@
 package com.rhetorical.cod.game;
 
+import com.rhetorical.cod.lang.Lang;
 import org.bukkit.entity.Player;
 
 class ScoreboardMapping {
@@ -29,7 +30,7 @@ class ScoreboardMapping {
 	}
 
 	public void updateKills(int amount) {
-		setKills(String.format("Kills: %s", amount));
+		setKills(String.format(Lang.SCOREBOARD_KILLS.getMessage(), amount));
 	}
 
 	private void setKills(String kills) {
@@ -41,7 +42,7 @@ class ScoreboardMapping {
 	}
 
 	void updateDeaths(int amount) {
-		setDeaths(String.format("Deaths: %s", amount));
+		setDeaths(String.format(Lang.SCOREBOARD_DEATHS.getMessage(), amount));
 	}
 
 	private void setDeaths(String deaths) {
@@ -53,7 +54,7 @@ class ScoreboardMapping {
 	}
 
 	void updateStreak(int amount) {
-		setStreak(String.format("Kill Streak: %s", amount));
+		setStreak(String.format(Lang.SCOREBOARD_STREAK.getMessage(), amount));
 	}
 
 	private void setStreak(String streak) {
@@ -65,7 +66,7 @@ class ScoreboardMapping {
 	}
 
 	void updateCredits(int amount) {
-		setCredits(String.format("Credits: %s", amount));
+		setCredits(String.format(Lang.SCOREBOARD_CREDITS.getMessage(), amount));
 	}
 
 	private void setCredits(String credits) {
@@ -77,7 +78,7 @@ class ScoreboardMapping {
 	}
 
 	void updateLevel(int amount) {
-		setLevel(String.format("Level: %s", amount));
+		setLevel(String.format(Lang.SCOREBOARD_LEVEL.getMessage(), amount));
 	}
 
 	private void setLevel(String level) {
@@ -89,7 +90,7 @@ class ScoreboardMapping {
 	}
 
 	void updatePrestige(int amount) {
-		setPrestige(String.format("Prestige: %s", amount));
+		setPrestige(String.format(Lang.SCOREBOARD_PRESTIGE.getMessage(), amount));
 	}
 
 	private void setPrestige(String prestige) {
@@ -101,7 +102,7 @@ class ScoreboardMapping {
 	}
 
 	void updateTime(String time) {
-		setTime(String.format("%s", time));
+		setTime(String.format(Lang.SCOREBOARD_TIME.getMessage(), time));
 	}
 
 	private void setTime(String time) {
@@ -113,7 +114,7 @@ class ScoreboardMapping {
 	}
 
 	void updateScore(int amount) {
-		setScore(String.format("Score: %s", amount));
+		setScore(String.format(Lang.SCOREBOARD_SCORE.getMessage(), amount));
 	}
 
 	private void setScore(String score) {
