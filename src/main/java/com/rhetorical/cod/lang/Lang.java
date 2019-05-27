@@ -87,8 +87,6 @@ public enum Lang {
 	COUNTER_UAV_NAME("&6&lCounter UAV"),
 	NUKE_NAME("&6&lNuke"),
 	DOGS_NAME("&6&lDogs"),
-	SCOREBOARD_PART1("Press 'TAB' to check"),
-	SCOREBOARD_PART2("your scores!"),
 	PLAYER_DOG_TAG_NAME("{team-color}{player}'s dog tag."),
 	ASSIGNED_TO_TEAM("{team-color}You are on the {team} team!"),
 	NOBODY_WON_GAME("&7Nobody won the match! It was a tie!"),
@@ -122,7 +120,7 @@ public enum Lang {
 	FLAG_A("Flag A"),
 	FLAG_B("Flag B"),
 	FLAG_C("Flag C"),
-	FLAG_CAPTURED("&eThe {team-color}{team} team has captured {flag}!"),
+	FLAG_CAPTURED("&eThe {team-color}{team}&r&e team has captured {flag}!"),
 	FLAG_NEUTRALIZED("&e{flag} has been neutralized!"),
 	INVENTORY_MAIN_MENU_TITLE("COM-Warfare - Menu"),
 	INVENTORY_SHOP_MENU_TITLE("COM-Warfare - SHOP"),
@@ -214,7 +212,17 @@ public enum Lang {
 	ASSIGNMENT_WIN_MODE("Win Match on Game Mode"),
 	KILLSTREAK_AIRSPACE_OCCUPIED("&cWait to use that! The airspace is too full!"),
 	NUKE_LAUNCHED_TITLE("A nuke was called by {team-color}{team}!"),
-	NUKE_LAUNCHED_SUBTITLE("It will launch in {time} seconds!");
+	NUKE_LAUNCHED_SUBTITLE("It will launch in {time} seconds!"),
+	LOBBY_SCOREBOARD("&4&lLobby"),
+	GAME_SCOREBOARD("&4&lYour Scores"),
+	SCOREBOARD_LEVEL("Level: %s"),
+	SCOREBOARD_PRESTIGE("Prestige: %s"),
+	SCOREBOARD_KILLS("Kills: %s"),
+	SCOREBOARD_DEATHS("Deaths: %s"),
+	SCOREBOARD_STREAK("Kill Streak: %s"),
+	SCOREBOARD_CREDITS("Credits: %s"),
+	SCOREBOARD_SCORE("Score: %s"),
+	SCOREBOARD_TIME("%s");
 
 
 	private String message;
