@@ -43,7 +43,7 @@ class DomFlag {
 		flag.setGravity(false);
 		flag.setSmall(true);
 		flag.setMarker(true);
-		flag.setHelmet(getBannerForTeam(-1));
+		flag.setHelmet(FlagUtil.getBannerForTeam(-1));
 	}
 
 	void remove() {
@@ -52,41 +52,6 @@ class DomFlag {
 
 		if (name != null)
 			name.remove();
-	}
-
-	private ItemStack getBannerForTeam(int team) {
-		ItemStack stack;
-
-		try {
-			stack = new ItemStack(Material.WHITE_BANNER);
-		} catch(NoSuchFieldError|Exception e) {
-			stack = new ItemStack(Material.valueOf("BANNER"));
-		}
-		BannerMeta banner = (BannerMeta) stack.getItemMeta();
-
-		Pattern pattern;
-
-		switch (team) {
-			case 0:
-				pattern = new Pattern(DyeColor.RED, PatternType.BASE);
-				banner.setPatterns(new ArrayList<>());
-				banner.addPattern(pattern);
-				break;
-			case 1:
-				pattern = new Pattern(DyeColor.BLUE, PatternType.BASE);
-				banner.setPatterns(new ArrayList<>());
-				banner.addPattern(pattern);
-				break;
-			default:
-				pattern = new Pattern(DyeColor.WHITE, PatternType.BASE);
-				banner.setPatterns(new ArrayList<>());
-				banner.addPattern(pattern);
-				break;
-		}
-
-		stack.setItemMeta(banner);
-
-		return stack;
 	}
 
 	Lang getFlagName() {
@@ -117,7 +82,7 @@ class DomFlag {
 	}
 
 	void updateFlag(int team) {
-		flag.setHelmet(getBannerForTeam(team));
+		flag.setHelmet(FlagUtil.getBannerForTeam(team));
 	}
 
 	void updateName(String value) {

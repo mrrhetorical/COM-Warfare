@@ -222,7 +222,9 @@ public enum Lang {
 	SCOREBOARD_STREAK("Kill Streak: %s"),
 	SCOREBOARD_CREDITS("Credits: %s"),
 	SCOREBOARD_SCORE("Score: %s"),
-	SCOREBOARD_TIME("%s");
+	SCOREBOARD_TIME("%s"),
+	FLAG_BLUE("&9Blue Flag"),
+	FLAG_RED("&cRed Flag");
 
 
 	private String message;
