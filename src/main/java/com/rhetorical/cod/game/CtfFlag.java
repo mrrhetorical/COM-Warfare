@@ -59,8 +59,7 @@ class CtfFlag {
 	}
 
 	void spawn(Location location) {
-		Location loc = location.clone();
-		name = (ArmorStand) getLocation().getWorld().spawnEntity(loc.add(0, 2, 0), EntityType.ARMOR_STAND);
+		name = (ArmorStand) getLocation().getWorld().spawnEntity(location.clone().add(0, 2, 0), EntityType.ARMOR_STAND);
 
 		name.setCustomName(getFlagName().getMessage());
 		name.setCustomNameVisible(true);
@@ -68,7 +67,7 @@ class CtfFlag {
 		name.setGravity(false);
 		name.setMarker(true);
 
-		flag = (ArmorStand) getLocation().getWorld().spawnEntity(loc, EntityType.ARMOR_STAND);
+		flag = (ArmorStand) getLocation().getWorld().spawnEntity(location, EntityType.ARMOR_STAND);
 		flag.setVisible(false);
 		flag.setGravity(false);
 		flag.setSmall(true);
