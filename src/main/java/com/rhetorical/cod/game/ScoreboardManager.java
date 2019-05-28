@@ -11,8 +11,11 @@ import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.Team;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 class ScoreboardManager {
@@ -44,54 +47,66 @@ class ScoreboardManager {
 		mapping.updatePrestige(Main.progressionManager.getPrestigeLevel(p));
 		mapping.updateTime(time);
 
-		Score kills = objective.getScore(mapping.getKills()),
-				deaths = objective.getScore(mapping.getDeaths()),
-				credits = objective.getScore(mapping.getCredits()),
-				level = objective.getScore(mapping.getLevel()),
-				prestige = objective.getScore(mapping.getPrestige()),
-				tScore = objective.getScore(mapping.getTime()),
-				space1 = objective.getScore("                    "),
+		final List<Team> registered = new ArrayList<>(scoreboards.get(p).getTeams());
+
+		for (Team t : registered) {
+			t.unregister();
+		}
+
+		Team kills = scoreboards.get(p).registerNewTeam("kills"),
+				deaths = scoreboards.get(p).registerNewTeam("deaths"),
+				credits = scoreboards.get(p).registerNewTeam("credits"),
+				level = scoreboards.get(p).registerNewTeam("level"),
+				prestige = scoreboards.get(p).registerNewTeam("prestige"),
+				tScore = scoreboards.get(p).registerNewTeam("time");
+
+		kills.addEntry(ChatColor.RED.toString());
+		deaths.addEntry(ChatColor.BLUE.toString());
+		credits.addEntry(ChatColor.GREEN.toString());
+		level.addEntry(ChatColor.BLACK.toString());
+		prestige.addEntry(ChatColor.WHITE.toString());
+		tScore.addEntry(ChatColor.GRAY.toString());
+
+		Score space1 = objective.getScore("                    "),
 				space2 = objective.getScore("  "),
 				space3 = objective.getScore("   ");
 
-		tScore.setScore(8);
+		objective.getScore(ChatColor.GRAY.toString()).setScore(8);
 		space1.setScore(7);
-		level.setScore(6);
-		prestige.setScore(5);
+		objective.getScore(ChatColor.BLACK.toString()).setScore(6);
+		objective.getScore(ChatColor.WHITE.toString()).setScore(5);
 		space2.setScore(4);
-		kills.setScore(3);
-		deaths.setScore(2);
+		objective.getScore(ChatColor.RED.toString()).setScore(3);
+		objective.getScore(ChatColor.BLUE.toString()).setScore(2);
 		space3.setScore(1);
-		credits.setScore(0);
+		objective.getScore(ChatColor.GREEN.toString()).setScore(0);
+
+
+		updateLobbyTeams(p, mapping);
+
 
 		p.setScoreboard(getScoreboard(p));
 	}
 
+	private void updateLobbyTeams(Player p, ScoreboardMapping mapping) {
+		getScoreboard(p).getTeam("time").setPrefix(mapping.getTime());
+		getScoreboard(p).getTeam("kills").setPrefix(mapping.getKills());
+		getScoreboard(p).getTeam("deaths").setPrefix(mapping.getDeaths());
+		getScoreboard(p).getTeam("credits").setPrefix(mapping.getCredits());
+		getScoreboard(p).getTeam("level").setPrefix(mapping.getLevel());
+		getScoreboard(p).getTeam("prestige").setPrefix(mapping.getPrestige());
+	}
+
 	void updateLobbyBoard(Player p, String time) {
 
-		Objective objective = getLobbyBoard(p);
-
 		ScoreboardMapping mapping = getMapping(p);
-
-		getScoreboard(p).resetScores(mapping.getCredits());
-		getScoreboard(p).resetScores(mapping.getTime());
-		getScoreboard(p).resetScores(mapping.getLevel());
-		getScoreboard(p).resetScores(mapping.getPrestige());
 
 		mapping.updateCredits(CreditManager.getCredits(p));
 		mapping.updateTime(time);
 		mapping.updateLevel(Main.progressionManager.getLevel(p));
 		mapping.updatePrestige(Main.progressionManager.getPrestigeLevel(p));
 
-		Score credits = objective.getScore(mapping.getCredits()),
-				sTime = objective.getScore(mapping.getTime()),
-				level = objective.getScore(mapping.getLevel()),
-				prestige = objective.getScore(mapping.getPrestige());
-
-		credits.setScore(0);
-		sTime.setScore(8);
-		level.setScore(6);
-		prestige.setScore(5);
+		updateLobbyTeams(p, mapping);
 	}
 
 	void setupGameBoard(Player p, String time) {
@@ -112,34 +127,59 @@ class ScoreboardManager {
 		mapping.updateTime(time);
 		mapping.updateCredits(CreditManager.getCredits(p));
 
-		Score kills = objective.getScore(mapping.getKills()),
-				deaths = objective.getScore(mapping.getDeaths()),
-				streak = objective.getScore(mapping.getStreak()),
-				credits = objective.getScore(mapping.getCredits()),
-				tScore = objective.getScore(mapping.getTime()),
-				gScore = objective.getScore(mapping.getScore()),
-				space1 = objective.getScore("                    "),
+		final List<Team> registered = new ArrayList<>(scoreboards.get(p).getTeams());
+
+		for (Team t : registered) {
+			t.unregister();
+		}
+
+
+		Team kills = scoreboards.get(p).registerNewTeam("kills"),
+				deaths = scoreboards.get(p).registerNewTeam("deaths"),
+				credits = scoreboards.get(p).registerNewTeam("credits"),
+				streak = scoreboards.get(p).registerNewTeam("streak"),
+				gScore = scoreboards.get(p).registerNewTeam("score"),
+				tScore = scoreboards.get(p).registerNewTeam("time");
+
+		Score space1 = objective.getScore("                    "),
 				space2 = objective.getScore("  "),
 				space3 = objective.getScore("   ");
 
-		tScore.setScore(8);
+
+		kills.addEntry(ChatColor.RED.toString());
+		deaths.addEntry(ChatColor.BLUE.toString());
+		credits.addEntry(ChatColor.GREEN.toString());
+		streak.addEntry(ChatColor.BLACK.toString());
+		gScore.addEntry(ChatColor.WHITE.toString());
+		tScore.addEntry(ChatColor.GRAY.toString());
+
+		objective.getScore(ChatColor.GRAY.toString()).setScore(8);
 		space1.setScore(7);
-		kills.setScore(6);
-		deaths.setScore(5);
+		objective.getScore(ChatColor.RED.toString()).setScore(6);
+		objective.getScore(ChatColor.BLUE.toString()).setScore(5);
 		space2.setScore(4);
-		gScore.setScore(3);
-		streak.setScore(2);
+		objective.getScore(ChatColor.BLACK.toString()).setScore(3);
+		objective.getScore(ChatColor.WHITE.toString()).setScore(2);
 		space3.setScore(1);
-		credits.setScore(0);
+		objective.getScore(ChatColor.GREEN.toString()).setScore(0);
+
+		updateGameTeams(p, mapping);
 
 		p.setScoreboard(getScoreboard(p));
+	}
+
+	private void updateGameTeams(Player p, ScoreboardMapping mapping) {
+		getScoreboard(p).getTeam("time").setPrefix(mapping.getTime());
+		getScoreboard(p).getTeam("kills").setPrefix(mapping.getKills());
+		getScoreboard(p).getTeam("deaths").setPrefix(mapping.getDeaths());
+		getScoreboard(p).getTeam("credits").setPrefix(mapping.getCredits());
+		getScoreboard(p).getTeam("streak").setPrefix(mapping.getStreak());
+		getScoreboard(p).getTeam("score").setPrefix(mapping.getScore());
 	}
 
 	void updateGameScoreBoard(Player p, String time) {
 
 		CodScore score = getGame().getScore(p);
-
-		Objective objective = getGameBoard(p);
 
 		ScoreboardMapping mapping = getMapping(p);
 
@@ -157,20 +197,7 @@ class ScoreboardManager {
 		mapping.updateScore((int) score.getScore());
 		mapping.updateCredits(CreditManager.getCredits(p));
 
-		Score tScore = objective.getScore(mapping.getTime()),
-				kills = objective.getScore(mapping.getKills()),
-				deaths = objective.getScore(mapping.getDeaths()),
-				gScore = objective.getScore(mapping.getScore()),
-				streak = objective.getScore(mapping.getStreak()),
-				credits = objective.getScore(mapping.getCredits());
-
-		tScore.setScore(8);
-		kills.setScore(6);
-		deaths.setScore(5);
-		gScore.setScore(3);
-		streak.setScore(2);
-		credits.setScore(0);
-
+		updateGameTeams(p, mapping);
 	}
 
 	void clearScoreboards(Player p) {
