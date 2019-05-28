@@ -73,7 +73,7 @@ class CtfFlag {
 		flag.setGravity(false);
 		flag.setSmall(true);
 		flag.setMarker(true);
-		flag.setHelmet(FlagUtil.getBannerForTeam(-1));
+		flag.setHelmet(FlagUtil.getBannerForTeam(getTeam().getCode()));
 
 		inFlagHolder = true;
 		pickedUp = false;
