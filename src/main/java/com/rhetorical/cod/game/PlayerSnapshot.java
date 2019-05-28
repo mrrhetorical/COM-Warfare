@@ -1,5 +1,6 @@
 package com.rhetorical.cod.game;
 
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
@@ -15,6 +16,7 @@ class PlayerSnapshot {
     private static List<PlayerSnapshot> snapshots = new ArrayList<>();
 
     private Player owner;
+    private Location location;
     private String listName;
     private double experience;
     private int level;
@@ -29,6 +31,7 @@ class PlayerSnapshot {
         if (hasSnapshot(p))
             return;
 
+        location = p.getLocation();
         listName = p.getPlayerListName();
         experience = p.getExp();
         level = p.getLevel();
@@ -77,6 +80,7 @@ class PlayerSnapshot {
 			p.removePotionEffect(effect.getType());
 		}
 
+		p.teleport(snapshot.location);
         p.setPlayerListName(snapshot.listName);
         p.setExp((float) snapshot.experience);
         p.setLevel(snapshot.level);

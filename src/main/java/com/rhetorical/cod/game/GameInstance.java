@@ -13,7 +13,6 @@ import com.rhetorical.cod.streaks.KillStreak;
 import com.rhetorical.cod.weapons.CodGun;
 import com.rhetorical.cod.weapons.CodWeapon;
 import org.bukkit.*;
-import org.bukkit.block.Banner;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -21,7 +20,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.FireworkMeta;
@@ -30,10 +28,6 @@ import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scoreboard.DisplaySlot;
-import org.bukkit.scoreboard.Objective;
-import org.bukkit.scoreboard.Score;
-import org.bukkit.scoreboard.Scoreboard;
 
 import java.util.*;
 
@@ -52,8 +46,8 @@ public class GameInstance implements Listener {
 	private ArrayList<Player> blueTeam = new ArrayList<>();
 	private ArrayList<Player> redTeam = new ArrayList<>();
 
-	private int BlueTeamScore;
-	private int RedTeamScore;
+	private int blueTeamScore;
+	private int redTeamScore;
 
 	private boolean forceStarted = false;
 
@@ -68,12 +62,9 @@ public class GameInstance implements Listener {
 			maxScore_DESTROY,
 			maxScore_RESCUE;
 
-	private Item redFlag;
-	private Item blueFlag;
+	private CtfFlag redFlag, blueFlag;
 
-	private ArmorStand aFlag, bFlag, cFlag;
-
-	private int aFlagCapture, bFlagCapture, cFlagCapture; // Range: -10 to 10. Lower is red, higher is blue.
+	private DomFlag aFlag, bFlag, cFlag;
 
 	// Score management and game information system for FFA (Free for all)
 	private HashMap<Player, Integer> ffaPlayerScores = new HashMap<>();
@@ -81,8 +72,7 @@ public class GameInstance implements Listener {
 
 	private Object scoreBar;
 
-	private Scoreboard scoreboard = Bukkit.getScoreboardManager().getNewScoreboard(); //TODO: Update only on player join in-game arena or leave
-	private Objective scoreboardObjective = scoreboard.registerNewObjective("game_stats", "dummy");
+	private ScoreboardManager scoreboardManager;
 
 	public HealthManager health;
 	private HungerManager hungerManager;
@@ -105,6 +95,7 @@ public class GameInstance implements Listener {
 	private Player pinkNukeActive;
 
 	private boolean pastClassChange = true;
+
 
 	GameInstance(ArrayList<Player> pls, CodMap map) {
 
@@ -159,31 +150,11 @@ public class GameInstance implements Listener {
 			health.update(p);
 		}
 
-		scoreboardObjective.setDisplaySlot(DisplaySlot.SIDEBAR);
+		scoreboardManager = new ScoreboardManager(this);
 
 		System.gc();
 
 		Main.cs.sendMessage(Main.codPrefix + ChatColor.GRAY + "Game lobby with id " + getId() + " created with map " + getMap().getName() + " with gamemode " + getGamemode() + ".");
-	}
-
-	private void updateScoreBoard(String time) {
-
-		scoreboardObjective.setDisplayName("" + ChatColor.WHITE + ChatColor.BOLD + time);
-		if (getGamemode() != Gamemode.FFA && getGamemode() != Gamemode.OITC && getGamemode() != Gamemode.GUN) {
-			Score redScore = scoreboardObjective.getScore("" + ChatColor.RED + ChatColor.BOLD + "RED: ");
-			Score blueScore = scoreboardObjective.getScore("" + ChatColor.BLUE + ChatColor.BOLD + "BLUE: ");
-			redScore.setScore(RedTeamScore);
-			blueScore.setScore(BlueTeamScore);
-		} else {
-			Score infoScore = scoreboardObjective.getScore(Lang.SCOREBOARD_PART1.getMessage());
-			Score infoScore2 = scoreboardObjective.getScore(Lang.SCOREBOARD_PART2.getMessage());
-			infoScore.setScore(2);
-			infoScore2.setScore(1);
-		}
-	}
-
-	private void resetScoreboard() {
-		scoreboardObjective = scoreboard.registerNewObjective("game_stats", "dummy");
 	}
 
 	private void setupNextMaps() {
@@ -225,8 +196,8 @@ public class GameInstance implements Listener {
 
 	private void reset() {
 
-		RedTeamScore = 0;
-		BlueTeamScore = 0;
+		redTeamScore = 0;
+		blueTeamScore = 0;
 		ffaPlayerScores.clear();
 		blueTeam.clear();
 		redTeam.clear();
@@ -243,7 +214,7 @@ public class GameInstance implements Listener {
 			p.getInventory().clear();
 			p.teleport(Main.lobbyLoc);
 
-			setTeamArmor(p, Color.PURPLE);
+			setTeamArmor(p);
 			p.getInventory().setItem(0, Main.invManager.codItem);
 			p.getInventory().setItem(8, Main.invManager.leaveItem);
 
@@ -252,6 +223,8 @@ public class GameInstance implements Listener {
 			}catch(NoClassDefFoundError e) {
 				System.out.println();
 			} catch(Exception ignored) {}
+
+			getScoreboardManager().clearScoreboards(p);
 		}
 
 		playerScores.clear();
@@ -314,7 +287,6 @@ public class GameInstance implements Listener {
 		if (players.contains(p))
 			return;
 
-
 		players.add(p);
 
 		new PlayerSnapshot(p);
@@ -357,11 +329,10 @@ public class GameInstance implements Listener {
 		}catch(Exception ignored) {}
 
 		if (getState() == GameState.IN_GAME) {
+
+			getScoreboardManager().setupGameBoard(p, getFancyTime(gameTime));
+
 			assignTeams();
-
-//			if (isLegacy)
-
-			p.setScoreboard(scoreboard);
 
 			if (getGamemode() == Gamemode.OITC) {
 				ffaPlayerScores.put(p, maxScore_OITC);
@@ -393,9 +364,11 @@ public class GameInstance implements Listener {
 				}
 			}
 		} else {
-			setTeamArmor(p, Color.PURPLE);
+			setTeamArmor(p);
 			p.getInventory().setItem(0, Main.invManager.codItem);
 			p.getInventory().setItem(8, Main.invManager.leaveItem);
+
+			getScoreboardManager().setupLobbyBoard(p, getFancyTime(lobbyTime));
 		}
 
 		if ((players.size() >= Main.minPlayers) && getState() == GameState.WAITING) {
@@ -405,11 +378,11 @@ public class GameInstance implements Listener {
 	}
 
 	private void addBluePoint() {
-		BlueTeamScore++;
+		blueTeamScore++;
 	}
 
 	private void addRedPoint() {
-		RedTeamScore++;
+		redTeamScore++;
 	}
 
 	private void addPointForPlayer(Player p) {
@@ -502,6 +475,8 @@ public class GameInstance implements Listener {
 			p.setHealth(20d);
 		}
 
+		getScoreboardManager().clearScoreboards(p);
+
 		try {
 			p.getClass().getMethod("setPlayerListHeader", String.class).invoke(p, "");
 			p.getClass().getMethod("setPlayerListFooter", String.class).invoke(p, "");
@@ -522,7 +497,6 @@ public class GameInstance implements Listener {
 		playerScores.clear();
 
 		for (Player p : players) {
-			p.setScoreboard(scoreboard);
 
 			Main.loadManager.getActiveLoadouts().remove(p);
 
@@ -554,6 +528,9 @@ public class GameInstance implements Listener {
 			}
 		}
 
+		if (getGamemode() == Gamemode.CTF)
+			spawnCtfFlags();
+
 		startGameTimer(gameTime, false);
 		setState(GameState.IN_GAME);
 	}
@@ -562,34 +539,20 @@ public class GameInstance implements Listener {
 		location.getWorld().dropItem(location, flag.getItemStack());
 	}
 
-	private void setupFlags(boolean red, boolean blue) {
-		if (red) {
-			Location spawn = currentMap.getRedFlagSpawn();
-			ItemStack flag;
-			try {
-				flag = new ItemStack(Material.RED_BANNER);
-			} catch(Exception e) {
-				flag = new ItemStack(Material.valueOf("BANNER"));
-				Banner banner = (Banner) flag.getData();
-				banner.setBaseColor(DyeColor.RED);
-				banner.update();
-			}
-			redFlag = spawn.getWorld().dropItem(spawn, flag);
-		}
+	private void spawnCtfFlags() {
+		if (getGamemode() != Gamemode.CTF)
+			return;
 
-		if (blue) {
-			Location spawn = currentMap.getBlueFlagSpawn();
-			ItemStack flag;
-			try {
-				flag = new ItemStack(Material.BLUE_BANNER);
-			} catch(Exception e) {
-				flag = new ItemStack(Material.valueOf("BANNER"));
-				Banner banner = (Banner) flag.getData();
-				banner.setBaseColor(DyeColor.BLUE);
-				banner.update();
-			}
-			blueFlag = spawn.getWorld().dropItem(spawn, flag);
-		}
+		despawnCtfFlags();
+
+		redFlag = new CtfFlag(this, Team.RED, Lang.FLAG_RED, getMap().getRedFlagSpawn());
+		blueFlag = new CtfFlag(this, Team.BLUE, Lang.FLAG_BLUE, getMap().getBlueFlagSpawn());
+
+		redFlag.setOtherFlag(blueFlag);
+		blueFlag.setOtherFlag(redFlag);
+
+		redFlag.spawn();
+		blueFlag.spawn();
 	}
 
 	private void spawnCodPlayer(Player p, Location L) {
@@ -600,17 +563,7 @@ public class GameInstance implements Listener {
 		p.setFoodLevel(20);
 		Loadout loadout = Main.loadManager.getActiveLoadout(p);
 
-		if (blueTeam.contains(p)) {
-			setTeamArmor(p, Color.BLUE);
-		} else if (redTeam.contains(p)) {
-			if (getGamemode() == Gamemode.INFECT) {
-				setTeamArmor(p, Color.GREEN);
-			} else {
-				setTeamArmor(p, Color.RED);
-			}
-		} else {
-			setTeamArmor(p, Color.PURPLE);
-		}
+		setTeamArmor(p);
 
 		if (getGamemode() == Gamemode.RSB) {
 
@@ -859,6 +812,9 @@ public class GameInstance implements Listener {
 		if (getGamemode() == Gamemode.DOM)
 			despawnDomFlags();
 
+		if (getGamemode() == Gamemode.CTF)
+			despawnCtfFlags();
+
 		GameInstance game = this;
 
 		BukkitRunnable br = new BukkitRunnable() {
@@ -961,6 +917,9 @@ public class GameInstance implements Listener {
 			} catch(Exception ignored) {}
 			p.getInventory().setItem(0, Main.invManager.codItem);
 			p.getInventory().setItem(8, Main.invManager.leaveItem);
+
+			getScoreboardManager().clearScoreboards(p);
+			getScoreboardManager().setupLobbyBoard(p, getFancyTime(lobbyTime));
 		}
 
 		GameInstance game = this;
@@ -968,7 +927,7 @@ public class GameInstance implements Listener {
 		setupNextMaps();
 
 		for (Player p : players) {
-			setTeamArmor(p, Color.PURPLE);
+			setTeamArmor(p);
 		}
 
 		changeMap(nextMaps[0], nextModes[0]);
@@ -1010,6 +969,10 @@ public class GameInstance implements Listener {
 					for (Player p : game.players) {
 						Main.sendMessage(p, Main.codPrefix + Lang.MAP_VOTING_NEXT_MAP.getMessage().replace("{map}", game.currentMap.getName()), Main.lang);
 					}
+				}
+
+				for (Player p : game.getPlayers()) {
+					getScoreboardManager().updateLobbyBoard(p, getFancyTime(t));
 				}
 
 				if (t % 30 == 0 || (t % 10 == 0 && t < 30) || (t % 5 == 0 && t < 15)) {
@@ -1125,6 +1088,8 @@ public class GameInstance implements Listener {
 						ffaPlayerScores.put(p, 0);
 					}
 				}
+
+				getScoreboardManager().setupGameBoard(p, getFancyTime(gameTime));
 			}
 
 			if (getGamemode().equals(Gamemode.DOM)) {
@@ -1144,10 +1109,9 @@ public class GameInstance implements Listener {
 		}
 		GameInstance game = this;
 
-		BukkitRunnable br = new BukkitRunnable() {
+		gameRunnable = new BukkitRunnable() {
 
 			int t = time;
-
 			@Override
 			public void run() {
 
@@ -1172,16 +1136,18 @@ public class GameInstance implements Listener {
 
 				String counter = getFancyTime(t);
 
-//				if (isLegacy)
-				updateScoreBoard(counter);
-
 				if (currentMap.getGamemode() == Gamemode.DOM) {
 					game.checkFlags();
 				}
 
+				if (getGamemode() == Gamemode.CTF) {
+					redFlag.checkNearbyPlayers();
+					blueFlag.checkNearbyPlayers();
+				}
+
 				if (currentMap.getGamemode() == Gamemode.INFECT) {
-					BlueTeamScore = blueTeam.size();
-					RedTeamScore = redTeam.size();
+					blueTeamScore = blueTeam.size();
+					redTeamScore = redTeam.size();
 
 					if (blueTeam.size() == 0) {
 						endGameByScore(this);
@@ -1191,8 +1157,8 @@ public class GameInstance implements Listener {
 
 				if (currentMap.getGamemode() != Gamemode.FFA && currentMap.getGamemode() != Gamemode.OITC && currentMap.getGamemode() != Gamemode.GUN) {
 					try {
-						//scoreBar.setTitle(ChatColor.RED + "RED: " + RedTeamScore + ChatColor.GRAY + " «" + ChatColor.WHITE + counter + ChatColor.RESET + ChatColor.GRAY + "»" + ChatColor.BLUE + " BLU: " + BlueTeamScore);
-						scoreBar.getClass().getMethod("setTitle", String.class).invoke(scoreBar, ChatColor.RED + "RED: " + RedTeamScore + ChatColor.GRAY + " «" + ChatColor.WHITE + counter + ChatColor.RESET + ChatColor.GRAY + "»" + ChatColor.BLUE + " BLU: " + BlueTeamScore);
+						//scoreBar.setTitle(ChatColor.RED + "RED: " + redTeamScore + ChatColor.GRAY + " «" + ChatColor.WHITE + counter + ChatColor.RESET + ChatColor.GRAY + "»" + ChatColor.BLUE + " BLU: " + blueTeamScore);
+						scoreBar.getClass().getMethod("setTitle", String.class).invoke(scoreBar, ChatColor.RED + "RED: " + redTeamScore + ChatColor.GRAY + " «" + ChatColor.WHITE + counter + ChatColor.RESET + ChatColor.GRAY + "»" + ChatColor.BLUE + " BLU: " + blueTeamScore);
 					} catch(NoClassDefFoundError e) {
 						System.out.println();
 					} catch(Exception ignored) {}
@@ -1251,20 +1217,24 @@ public class GameInstance implements Listener {
 				} catch(Exception ignored) {}
 				game.updateTabList();
 
+				for (Player p : getPlayers()) {
+					getScoreboardManager().updateGameScoreBoard(p, getFancyTime(t));
+				}
+
 				if (currentMap.getGamemode() == Gamemode.TDM || currentMap.getGamemode() == Gamemode.RSB || currentMap.getGamemode() == Gamemode.DOM || currentMap.getGamemode() == Gamemode.CTF || currentMap.getGamemode() == Gamemode.KC) {
-					if ((BlueTeamScore >= maxScore_TDM || RedTeamScore >= maxScore_TDM) && getGamemode().equals(Gamemode.TDM)) {
+					if ((blueTeamScore >= maxScore_TDM || redTeamScore >= maxScore_TDM) && getGamemode().equals(Gamemode.TDM)) {
 						endGameByScore(this);
 						return;
-					} else if ((BlueTeamScore >= maxScore_RSB || RedTeamScore >= maxScore_RSB) && getGamemode().equals(Gamemode.RSB)) {
+					} else if ((blueTeamScore >= maxScore_RSB || redTeamScore >= maxScore_RSB) && getGamemode().equals(Gamemode.RSB)) {
 						endGameByScore(this);
 						return;
-					} else if ((BlueTeamScore >= maxScore_DOM || RedTeamScore >= maxScore_DOM) && getGamemode().equals(Gamemode.DOM)) {
+					} else if ((blueTeamScore >= maxScore_DOM || redTeamScore >= maxScore_DOM) && getGamemode().equals(Gamemode.DOM)) {
 						endGameByScore(this);
 						return;
-					} else if ((BlueTeamScore >= maxScore_CTF || RedTeamScore >= maxScore_CTF) && getGamemode().equals(Gamemode.CTF)) {
+					} else if ((blueTeamScore >= maxScore_CTF || redTeamScore >= maxScore_CTF) && getGamemode().equals(Gamemode.CTF)) {
 						endGameByScore(this);
 						return;
-					} else if ((BlueTeamScore >= maxScore_KC || RedTeamScore >= maxScore_KC) && getGamemode().equals(Gamemode.KC)) {
+					} else if ((blueTeamScore >= maxScore_KC || redTeamScore >= maxScore_KC) && getGamemode().equals(Gamemode.KC)) {
 						endGameByScore(this);
 						return;
 					}
@@ -1274,7 +1244,7 @@ public class GameInstance implements Listener {
 					if (getAlivePlayers(redTeam) == 0) {
 						addBluePoint();
 
-						if (!(BlueTeamScore >= maxScore_DESTROY) && !(BlueTeamScore >= maxScore_RESCUE)) {
+						if (!(blueTeamScore >= maxScore_DESTROY) && !(blueTeamScore >= maxScore_RESCUE)) {
 							startNewRound(7, blueTeam);
 						}
 
@@ -1285,7 +1255,7 @@ public class GameInstance implements Listener {
 					} else if (getAlivePlayers(blueTeam) == 0) {
 						addRedPoint();
 
-						if (!(RedTeamScore >= maxScore_DESTROY) && !(RedTeamScore >= maxScore_RESCUE)) {
+						if (!(redTeamScore >= maxScore_DESTROY) && !(redTeamScore >= maxScore_RESCUE)) {
 							startNewRound(7, redTeam);
 						}
 
@@ -1295,11 +1265,11 @@ public class GameInstance implements Listener {
 						cancel();
 					}
 
-					if (BlueTeamScore >= maxScore_DESTROY || RedTeamScore >= maxScore_DESTROY && getGamemode().equals(Gamemode.DESTROY)) {
+					if (blueTeamScore >= maxScore_DESTROY || redTeamScore >= maxScore_DESTROY && getGamemode().equals(Gamemode.DESTROY)) {
 						endGameByScore(this);
 						cancel();
 						return;
-					}else if (BlueTeamScore >= maxScore_RESCUE || RedTeamScore >= maxScore_RESCUE && getGamemode().equals(Gamemode.RESCUE)) {
+					}else if (blueTeamScore >= maxScore_RESCUE || redTeamScore >= maxScore_RESCUE && getGamemode().equals(Gamemode.RESCUE)) {
 						endGameByScore(this);
 						cancel();
 						return;
@@ -1351,7 +1321,6 @@ public class GameInstance implements Listener {
 			}
 
 		};
-		gameRunnable = br;
 		gameRunnable.runTaskTimer(Main.getPlugin(), 0L, 20L);
 	}
 
@@ -1427,7 +1396,7 @@ public class GameInstance implements Listener {
 			return highestScoringPlayer.getDisplayName();
 		}
 
-		if (getGamemode() == Gamemode.INFECT && BlueTeamScore > 0) {
+		if (getGamemode() == Gamemode.INFECT && blueTeamScore > 0) {
 			return "blue";
 		}
 
@@ -1436,9 +1405,9 @@ public class GameInstance implements Listener {
 		else if (blueNukeActive)
 			return "blue";
 
-		if (RedTeamScore > BlueTeamScore) {
+		if (redTeamScore > blueTeamScore) {
 			return "red";
-		} else if (BlueTeamScore > RedTeamScore) {
+		} else if (blueTeamScore > redTeamScore) {
 			return "blue";
 		}
 
@@ -1532,8 +1501,8 @@ public class GameInstance implements Listener {
 			redTeam.add(p);
 
 			if (getGamemode().equals(Gamemode.INFECT)) {
-				BlueTeamScore = blueTeam.size();
-				RedTeamScore = redTeam.size();
+				blueTeamScore = blueTeam.size();
+				redTeamScore = redTeam.size();
 			}
 		}
 
@@ -1731,24 +1700,13 @@ public class GameInstance implements Listener {
 				updateScores(victim, killer, rank);
 			}
 
-			ChatColor tColor;
-			String team;
 
 			if (getGamemode() == Gamemode.CTF) {
-				if (victim == redFlagHolder) {
-					dropFlag(blueFlag, victim.getLocation());
-					team = "blue";
-					tColor = ChatColor.RED;
-				} else {
-					dropFlag(redFlag, victim.getLocation());
-					team = "red";
-					tColor = ChatColor.BLUE;
+				if (victim.equals(redFlag.getFlagHolder())) {
+					redFlag.drop(victim);
+				} else if (victim.equals(blueFlag.getFlagHolder())) {
+					blueFlag.drop(victim);
 				}
-
-				for (Player p : players) {
-					Main.sendMessage(p, Lang.FLAG_DROPPED.getMessage().replace("{team}", team).replace("{team-color}", tColor + ""), Main.lang);
-				}
-
 			}
 
 		} else if (getGamemode().equals(Gamemode.CTF) || getGamemode().equals(Gamemode.INFECT)) {
@@ -2074,108 +2032,6 @@ public class GameInstance implements Listener {
 		}
 	}
 
-	private Player blueFlagHolder;
-	private Player redFlagHolder;
-
-	@EventHandler
-	public void playerPutFlag(PlayerMoveEvent e) {
-
-		if (!players.contains(e.getPlayer()) && (blueFlagHolder == e.getPlayer() || redFlagHolder == e.getPlayer()))
-			return;
-
-		Player p = e.getPlayer();
-
-		if (p.getLocation() != getMap().getRedFlagSpawn() && p.getLocation() != getMap().getBlueFlagSpawn())
-			return;
-
-		String team;
-		ChatColor tColor;
-
-		if (p == redFlagHolder) {
-
-			Location l = p.getLocation();
-
-			if (l.distance(getMap().getRedFlagSpawn()) < 1) {
-				setTeamArmor(p, Color.RED);
-				addRedPoint();
-				setupFlags(false, true);
-				redFlagHolder = null;
-				tColor = ChatColor.RED;
-				team = "red";
-				for (Player player : players) {
-					Main.sendTitle(player, Lang.TEAM_SCORED.getMessage().replace("{team-color}", tColor + "").replace("{team}", team), "");
-				}
-			}
-
-		} else {
-			Location l = p.getLocation();
-
-			if (l.distance(getMap().getBlueFlagSpawn()) < 1) {
-				setTeamArmor(p, Color.BLUE);
-				addBluePoint();
-				setupFlags(true, false);
-				blueFlagHolder = null;
-				tColor = ChatColor.BLUE;
-				team = "blue";
-
-				for (Player player : players) {
-					Main.sendTitle(player, Lang.TEAM_SCORED.getMessage().replace("{team-color}", tColor + "").replace("{team}", team), "");
-				}
-			}
-		}
-
-	}
-
-	@EventHandler
-	public void onPlayerPickupFlag(PlayerPickupItemEvent e) {
-		if (!(e.getItem().equals(redFlag) || e.getItem().equals(blueFlag)))
-			return;
-
-		e.setCancelled(true);
-
-		Player p = e.getPlayer();
-		if (!players.contains(p)) {
-			return;
-		}
-
-		Item flag = e.getItem();
-
-		ChatColor tColor;
-		String team;
-
-		if (isOnRedTeam(p)) {
-			if (flag.equals(redFlag)) {
-				setupFlags(true, false);
-				flag.remove();
-				return;
-			}
-
-			redFlagHolder = p;
-			team = "blue";
-			tColor = ChatColor.BLUE;
-		} else {
-			if (flag.equals(blueFlag)) {
-				setupFlags(false, true);
-				flag.remove();
-				return;
-			}
-
-			blueFlagHolder = p;
-			team = "red";
-			tColor = ChatColor.RED;
-		}
-
-
-		for (Player pl : getPlayers()) {
-			Main.sendMessage(pl, Lang.PLAYER_PICKED_UP_FLAG.getMessage().replace("{team-color}", tColor + "")
-					.replace("{team}", team).replace("{player}", p.getName()), Main.lang);
-		}
-
-
-		updateFlagHolder();
-
-	}
-
 	@EventHandler
 	public void onPlayerPickupDogtag(PlayerPickupItemEvent e) {
 		Player p = e.getPlayer();
@@ -2235,39 +2091,6 @@ public class GameInstance implements Listener {
 
 	}
 
-	private void updateFlagHolder() {
-		if (blueFlagHolder != null) {
-
-
-			ItemStack flag;
-			try {
-				flag = new ItemStack(Material.valueOf("RED_BANNER"));
-			} catch(Exception e) {
-				flag = new ItemStack(Material.valueOf("BANNER"));
-				Banner banner = (Banner) flag.getData();
-				banner.setBaseColor(DyeColor.RED);
-				banner.update();
-			}
-
-			blueFlagHolder.getInventory().setHelmet(flag);
-		}
-
-		if(redFlagHolder != null) {
-
-			ItemStack flag;
-			try {
-				flag = new ItemStack(Material.valueOf("RED_BANNER"));
-			} catch(Exception e) {
-				flag = new ItemStack(Material.valueOf("BANNER"));
-				Banner banner = (Banner) flag.getData();
-				banner.setBaseColor(DyeColor.BLUE);
-				banner.update();
-			}
-
-			redFlagHolder.getInventory().setHelmet(flag);
-		}
-	}
-
 	private void spawnDomFlags() {
 		if(!getGamemode().equals(Gamemode.DOM))
 			return;
@@ -2281,30 +2104,13 @@ public class GameInstance implements Listener {
 			return;
 		}
 
-		Main.sendMessage(Main.cs, "Spawning flags", Main.lang);
+		aFlag = new DomFlag(Lang.FLAG_A, aLoc);
+		bFlag = new DomFlag(Lang.FLAG_B, bLoc);
+		cFlag = new DomFlag(Lang.FLAG_C, cLoc);
 
-		aFlag = (ArmorStand) aLoc.getWorld().spawnEntity(aLoc, EntityType.ARMOR_STAND);
-
-		aFlag.setCustomName(Lang.FLAG_A.getMessage());
-		aFlag.setCustomNameVisible(true);
-		aFlag.setVisible(true);
-		aFlag.setGravity(true);
-
-		bFlag = (ArmorStand) bLoc.getWorld().spawnEntity(bLoc, EntityType.ARMOR_STAND);
-
-		bFlag.setCustomName(Lang.FLAG_B.getMessage());
-		bFlag.setCustomNameVisible(true);
-		bFlag.setVisible(true);
-		bFlag.setGravity(true);
-
-		cFlag = (ArmorStand) cLoc.getWorld().spawnEntity(cLoc, EntityType.ARMOR_STAND);
-
-		cFlag.setCustomName(Lang.FLAG_C.getMessage());
-		cFlag.setCustomNameVisible(true);
-		cFlag.setVisible(true);
-		cFlag.setGravity(true);
-
-		Main.sendMessage(Main.cs, "Spawned flags", Main.lang);
+		aFlag.spawn();
+		bFlag.spawn();
+		cFlag.spawn();
 	}
 
 	private void despawnDomFlags() {
@@ -2316,59 +2122,39 @@ public class GameInstance implements Listener {
 
 		if (cFlag != null)
 			cFlag.remove();
+	}
 
-		aFlagCapture = 0;
-		bFlagCapture = 0;
-		cFlagCapture = 0;
+	private void despawnCtfFlags() {
+		if (blueFlag != null)
+			blueFlag.despawn();
+
+		if (redFlag != null)
+			redFlag.despawn();
 	}
 
 	private void checkFlags() {
 		if (!getGamemode().equals(Gamemode.DOM))
 			return;
 
-		List<Player> aPlayers = new ArrayList<>();
-		List<Player> bPlayers = new ArrayList<>();
-		List<Player> cPlayers = new ArrayList<>();
+		List<Player> aPlayers = new ArrayList<>(aFlag.getNearbyPlayers());
+		List<Player> bPlayers = new ArrayList<>(bFlag.getNearbyPlayers());
+		List<Player> cPlayers = new ArrayList<>(cFlag.getNearbyPlayers());
 
-		for(Entity e : aFlag.getNearbyEntities(10, 10, 10)) {
-			if (e instanceof Player) {
-				aPlayers.add(((Player) e));
-			}
-		}
+		int blueFlags = 0,
+				redFlags = 0;
 
-		for(Entity e : bFlag.getNearbyEntities(10, 10, 10)) {
-			if (e instanceof Player) {
-				bPlayers.add(((Player) e));
-			}
-		}
-
-		for(Entity e : cFlag.getNearbyEntities(10, 10, 10)) {
-			if (e instanceof Player) {
-				cPlayers.add(((Player) e));
-			}
-		}
-
-		for(int i = 0; i <= 2; i++) {
-			if(i == 0 && aPlayers.isEmpty())
-				continue;
-
-			if (i == 1 && bPlayers.isEmpty())
-				continue;
-
-			if (i == 2 && cPlayers.isEmpty())
-				continue;
-
+		for(int i = 0; i < 3; i++) {
 
 			int blue = 0;
 			int red = 0;
 
-			List<Player> check = new ArrayList<>();
+			List<Player> check;
 
 			if(i == 0)
 				check = aPlayers;
 			else if (i == 1)
 				check = bPlayers;
-			else if (i == 2)
+			else
 				check = cPlayers;
 
 			for(Player p : check) {
@@ -2379,31 +2165,37 @@ public class GameInstance implements Listener {
 			}
 
 			if (i == 0) {
-				if (aFlagCapture == 10 && blue >= red) {
-					BlueTeamScore++;
-					continue;
-				} else if (aFlagCapture == -10 && red >= blue) {
-					RedTeamScore++;
-					continue;
+				if (aFlag.getCaptureProgress() == 10 && blue >= red) {
+					blueFlags++;
+				} else if (aFlag.getCaptureProgress() == -10 && red >= blue) {
+					redFlags++;
 				} else {
-					aFlagCapture += blue - red;
+					aFlag.setCaptureProgress(aFlag.getCaptureProgress() + blue - red);
 
-					if (aFlagCapture > 10)
-						aFlagCapture = 10;
-					else if (aFlagCapture < -10)
-						aFlagCapture = -10;
+					if (aFlag.getCaptureProgress() > 10)
+						aFlag.setCaptureProgress(10);
+					else if (aFlag.getCaptureProgress() < -10)
+						aFlag.setCaptureProgress(-10);
 
 					String msg = Lang.FLAG_CAPTURED.getMessage();
 					String flag = Lang.FLAG_A.getMessage();
 					String team = null;
+					ChatColor color = null;
 
 
-					if (aFlagCapture == 10) {
+					if (aFlag.getCaptureProgress() == 10) {
 						team = "blue";
-					} else if (aFlagCapture == -10) {
+						color = ChatColor.BLUE;
+						aFlag.updateName(ChatColor.BLUE + Lang.FLAG_A.getMessage());
+						aFlag.updateFlag(1);
+					} else if (aFlag.getCaptureProgress() == -10) {
 						team = "red";
-					} else if (aFlagCapture == 0 && (blue > 0 || red > 0)) {
-
+						color = ChatColor.RED;
+						aFlag.updateName(ChatColor.RED + Lang.FLAG_A.getMessage());
+						aFlag.updateFlag(0);
+					} else if (aFlag.getCaptureProgress() == 0 && (blue > 0 || red > 0)) {
+						aFlag.updateName(ChatColor.WHITE + Lang.FLAG_A.getMessage());
+						aFlag.updateFlag(-1);
 						for (Player p : getPlayers()) {
 							p.sendMessage(Lang.FLAG_NEUTRALIZED.getMessage().replace("{flag}", flag));
 						}
@@ -2411,39 +2203,43 @@ public class GameInstance implements Listener {
 					}
 
 					if (team != null) {
-
-
 						for (Player p : getPlayers()) {
-							p.sendMessage(msg);
+							p.sendMessage(msg.replace("{team}", team).replace("{team-color}", "" + color).replace("{flag}", flag));
 						}
 					}
 				}
 			} else if (i == 1) {
-				if (bFlagCapture == 10 && blue >= red) {
-					BlueTeamScore++;
-					continue;
-				} else if (bFlagCapture == -10 && red >= blue) {
-					RedTeamScore++;
-					continue;
+				if (bFlag.getCaptureProgress() == 10 && blue >= red) {
+					blueFlags++;
+				} else if (bFlag.getCaptureProgress() == -10 && red >= blue) {
+					redFlags++;
 				} else {
-					bFlagCapture += blue - red;
+					bFlag.setCaptureProgress(bFlag.getCaptureProgress() + blue - red);
 
-					if (bFlagCapture > 10)
-						bFlagCapture = 10;
-					else if (bFlagCapture < -10)
-						bFlagCapture = -10;
+					if (bFlag.getCaptureProgress() > 10)
+						bFlag.setCaptureProgress(10);
+					else if (bFlag.getCaptureProgress() < -10)
+						bFlag.setCaptureProgress(-10);
 
 					String msg = Lang.FLAG_CAPTURED.getMessage();
 					String flag = Lang.FLAG_B.getMessage();
 					String team = null;
+					ChatColor color = null;
 
 
-					if (bFlagCapture == 10) {
+					if (bFlag.getCaptureProgress() == 10) {
 						team = "blue";
-					} else if (bFlagCapture == -10) {
+						color = ChatColor.BLUE;
+						bFlag.updateName(ChatColor.BLUE + Lang.FLAG_B.getMessage());
+						bFlag.updateFlag(1);
+					} else if (bFlag.getCaptureProgress() == -10) {
 						team = "red";
-					} else if (bFlagCapture == 0 && (blue > 0 || red > 0)) {
-
+						color = ChatColor.RED;
+						bFlag.updateName(ChatColor.RED + Lang.FLAG_B.getMessage());
+						bFlag.updateFlag(0);
+					} else if (bFlag.getCaptureProgress() == 0 && (blue > 0 || red > 0)) {
+						bFlag.updateName(ChatColor.WHITE + Lang.FLAG_B.getMessage());
+						bFlag.updateFlag(-1);
 						for (Player p : getPlayers()) {
 							p.sendMessage(Lang.FLAG_NEUTRALIZED.getMessage().replace("{flag}", flag));
 						}
@@ -2451,39 +2247,42 @@ public class GameInstance implements Listener {
 					}
 
 					if (team != null) {
-
-
 						for (Player p : getPlayers()) {
-							p.sendMessage(msg);
+							p.sendMessage(msg.replace("{team}", team).replace("{team-color}", "" + color).replace("{flag}", flag));
 						}
 					}
 				}
-			} else if (i == 2) {
-				if (cFlagCapture == 10 && blue >= red) {
-					BlueTeamScore++;
-					continue;
-				} else if (cFlagCapture == -10 && red >= blue) {
-					RedTeamScore++;
-					continue;
+			} else {
+				if (cFlag.getCaptureProgress() == 10 && blue >= red) {
+					blueFlags++;
+				} else if (cFlag.getCaptureProgress() == -10 && red >= blue) {
+					redFlags++;
 				} else {
-					cFlagCapture += blue - red;
+					cFlag.setCaptureProgress(cFlag.getCaptureProgress() + blue - red);
 
-					if (cFlagCapture > 10)
-						cFlagCapture = 10;
-					else if (cFlagCapture < -10)
-						cFlagCapture = -10;
+					if (cFlag.getCaptureProgress() > 10)
+						cFlag.setCaptureProgress(10);
+					else if (cFlag.getCaptureProgress() < -10)
+						cFlag.setCaptureProgress(-10);
 
 					String msg = Lang.FLAG_CAPTURED.getMessage();
 					String flag = Lang.FLAG_C.getMessage();
 					String team = null;
+					ChatColor color = null;
 
-
-					if (cFlagCapture == 10) {
+					if (cFlag.getCaptureProgress() == 10) {
 						team = "blue";
-					} else if (cFlagCapture == -10) {
+						color = ChatColor.BLUE;
+						cFlag.updateName(ChatColor.BLUE + Lang.FLAG_C.getMessage());
+						cFlag.updateFlag(1);
+					} else if (cFlag.getCaptureProgress() == -10) {
 						team = "red";
-					} else if (cFlagCapture == 0 && (blue > 0 || red > 0)) {
-
+						color = ChatColor.RED;
+						cFlag.updateName(ChatColor.RED + Lang.FLAG_C.getMessage());
+						cFlag.updateFlag(0);
+					} else if (cFlag.getCaptureProgress() == 0 && (blue > 0 || red > 0)) {
+						cFlag.updateName(ChatColor.WHITE + Lang.FLAG_C.getMessage());
+						cFlag.updateFlag(-1);
 						for (Player p : getPlayers()) {
 							p.sendMessage(Lang.FLAG_NEUTRALIZED.getMessage().replace("{flag}", flag));
 						}
@@ -2491,19 +2290,36 @@ public class GameInstance implements Listener {
 					}
 
 					if (team != null) {
-
-
 						for (Player p : getPlayers()) {
-							p.sendMessage(msg);
+							p.sendMessage(msg.replace("{team}", team).replace("{team-color}", "" + color).replace("{flag}", flag));
 						}
 					}
 				}
 			}
 		}
 
+		if (blueFlags > redFlags) {
+			blueTeamScore++;
+		} else if (redFlags > blueFlags) {
+			redTeamScore++;
+		}
 	}
 
-	public static void setTeamArmor(Player p, Color color) {
+	void setTeamArmor(Player p) {
+
+		Color color;
+
+		if (isOnBlueTeam(p)) {
+			color = Color.BLUE;
+		} else if (isOnRedTeam(p)) {
+			if (getGamemode() == Gamemode.INFECT)
+				color = Color.GREEN;
+			else
+				color = Color.RED;
+		} else {
+			color = Color.PURPLE;
+		}
+
 		ItemStack helmet = new ItemStack(Material.LEATHER_HELMET, 1);
 		ItemStack chest = new ItemStack(Material.LEATHER_CHESTPLATE, 1);
 		ItemStack legs = new ItemStack(Material.LEATHER_LEGGINGS, 1);
@@ -2920,5 +2736,22 @@ public class GameInstance implements Listener {
 			else
 				gameTime = 120;
 		}
+	}
+
+	private ScoreboardManager getScoreboardManager() {
+		return scoreboardManager;
+	}
+
+	void incrementScore(Player p) {
+		if (isOnRedTeam(p))
+			redTeamScore++;
+		else if (isOnBlueTeam(p))
+			blueTeamScore++;
+		else
+			try {
+				throw new Exception("Unexpected game logic when incrementing score!");
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
 	}
 }

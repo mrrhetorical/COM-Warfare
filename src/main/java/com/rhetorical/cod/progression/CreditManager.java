@@ -9,7 +9,16 @@ import org.bukkit.entity.Player;
 import java.util.HashMap;
 
 public class CreditManager {
-	private static HashMap<Player, Integer> creditMap = new HashMap<>();
+
+	private static CreditManager instance;
+
+	private HashMap<Player, Integer> creditMap = new HashMap<>();
+
+	private static CreditManager getInstance() {
+		if (instance == null)
+			instance = new CreditManager();
+		return instance;
+	}
 
 	public static void loadCredits(Player p) {
 		for (int k = 0; CreditsFile.getData().contains("Credits.players." + k); k++) {
@@ -17,7 +26,7 @@ public class CreditManager {
 
 				int credits = CreditsFile.getData().getInt("Credits.players." + k + ".amount");
 
-				creditMap.put(p, credits);
+				getInstance().creditMap.put(p, credits);
 				return;
 			}
 		}
@@ -42,11 +51,11 @@ public class CreditManager {
 	}
 
 	public static int getCredits(Player p) {
-		if (!creditMap.containsKey(p)) {
-			creditMap.put(p, 0);
+		if (!getInstance().creditMap.containsKey(p)) {
+			getInstance().creditMap.put(p, 0);
 			return 0;
 		} else {
-			return creditMap.get(p);
+			return getInstance().creditMap.get(p);
 		}
 	}
 	
@@ -58,17 +67,17 @@ public class CreditManager {
 		
 		Player p = Bukkit.getPlayer(name);
 
-		if (!creditMap.containsKey(p)) {
-			creditMap.put(p, 0);
+		if (!getInstance().creditMap.containsKey(p)) {
+			getInstance().creditMap.put(p, 0);
 			saveCredits(p);
 			return 0;
 		} else {
-			return creditMap.get(p);
+			return getInstance().creditMap.get(p);
 		}
 	}
 
 	public static void setCredits(Player p, int amt) {
-		creditMap.put(p, amt);
+		getInstance().creditMap.put(p, amt);
 		saveCredits(p);
 	}
 	
@@ -77,7 +86,7 @@ public class CreditManager {
 			return;
 		}
 		
-		creditMap.put(Bukkit.getPlayer(name), amt);
+		getInstance().creditMap.put(Bukkit.getPlayer(name), amt);
 		saveCredits(Bukkit.getPlayer(name));
 	}
 	

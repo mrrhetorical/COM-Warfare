@@ -67,7 +67,6 @@ public class Main extends JavaPlugin {
 	private static ArrayList<RankPerks> serverRanks = new ArrayList<>();
 
 	public static Location lobbyLoc;
-	public static HashMap<Player, Location> lastLoc = new HashMap<>();
 
 	public static String header = "[COM-Warfare]";
 
@@ -408,12 +407,11 @@ public class Main extends JavaPlugin {
 					return true;
 
 				Player p = (Player) sender;
+
 				boolean b = GameManager.findMatch(p);
 				if (b) {
 					loadManager.load(p);
-					Location l = p.getLocation();
 					Main.progressionManager.update(p);
-					Main.lastLoc.put(p, l);
 				}
 				return true;
 			} else if (args[0].equalsIgnoreCase("leave")) {
@@ -427,14 +425,6 @@ public class Main extends JavaPlugin {
 
 				Player p = (Player) sender;
 				GameManager.leaveMatch(p);
-				if (lastLoc.containsKey(p)) {
-					p.teleport(lastLoc.get(p));
-					lastLoc.remove(p);
-				} else {
-					if (lobbyLoc != null) {
-						p.teleport(lobbyLoc);
-					}
-				}
 
 				return true;
 			} else if (args[0].equalsIgnoreCase("listMaps")) {

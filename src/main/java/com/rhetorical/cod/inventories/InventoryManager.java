@@ -28,7 +28,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.*;
 
-import static com.rhetorical.cod.Main.lastLoc;
 import static com.rhetorical.cod.Main.lobbyLoc;
 
 public class InventoryManager implements Listener {
@@ -1337,14 +1336,6 @@ public class InventoryManager implements Listener {
 			if (item.equals(leaveItem) || altItem.equals(leaveItem)) {
 				if (!GameManager.isInMatch(e.getPlayer())) return;
 				GameManager.leaveMatch(e.getPlayer());
-				if (Main.lastLoc.containsKey(e.getPlayer())) {
-					e.getPlayer().teleport(lastLoc.get(e.getPlayer()));
-					lastLoc.remove(e.getPlayer());
-				} else {
-					if (lobbyLoc != null) {
-						e.getPlayer().teleport(lobbyLoc);
-					}
-				}
 				e.setCancelled(true);
 				return;
 			}
