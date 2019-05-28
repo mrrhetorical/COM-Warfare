@@ -46,6 +46,7 @@ class ScoreboardManager {
 		mapping.updateLevel(Main.progressionManager.getLevel(p));
 		mapping.updatePrestige(Main.progressionManager.getPrestigeLevel(p));
 		mapping.updateTime(time);
+		mapping.updateCredits(CreditManager.getCredits(p));
 
 		final List<Team> registered = new ArrayList<>(scoreboards.get(p).getTeams());
 
@@ -81,9 +82,7 @@ class ScoreboardManager {
 		space3.setScore(1);
 		objective.getScore(ChatColor.GREEN.toString()).setScore(0);
 
-
 		updateLobbyTeams(p, mapping);
-
 
 		p.setScoreboard(getScoreboard(p));
 	}
