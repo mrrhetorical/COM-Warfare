@@ -2,6 +2,7 @@ package com.rhetorical.cod.game;
 
 import com.rhetorical.cod.Main;
 import com.rhetorical.cod.loadouts.Loadout;
+import com.rhetorical.cod.loadouts.LoadoutManager;
 import com.rhetorical.cod.perks.Perk;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -45,7 +46,7 @@ public class HungerManager {
 					return;
 				}
 
-				Loadout loadout = Main.loadManager.getActiveLoadout(p);
+				Loadout loadout = LoadoutManager.getInstance().getActiveLoadout(p);
 
 				if (!(loadout.getPerk1().getPerk() == Perk.MARATHON
 						|| loadout.getPerk2().getPerk() == Perk.MARATHON

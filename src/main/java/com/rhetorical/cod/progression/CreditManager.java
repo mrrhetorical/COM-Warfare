@@ -98,10 +98,10 @@ public class CreditManager {
 				setCredits(p, getCredits(p) - cost);
 			}
 			saveCredits(p);
-			Main.sendMessage(p, Main.codPrefix + Lang.PURCHASE_SUCCESSFUL.getMessage(), Main.lang);
+			Main.sendMessage(p, Main.getPrefix() + Lang.PURCHASE_SUCCESSFUL.getMessage(), Main.getLang());
 			return true;
 		} else {
-			Main.sendMessage(p, Main.codPrefix + Lang.INSUFFICIENT_FUNDS.getMessage(), Main.lang);
+			Main.sendMessage(p, Main.getPrefix() + Lang.INSUFFICIENT_FUNDS.getMessage(), Main.getLang());
 			return false;
 		}
 	}

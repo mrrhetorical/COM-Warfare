@@ -9,13 +9,22 @@ import java.util.ArrayList;
 
 public class PerkManager {
 
+	private static PerkManager instance;
+
 	private ArrayList<CodPerk> availablePerks = new ArrayList<CodPerk>();
 	private CodPerk defaultOne;
 	private CodPerk defaultTwo;
 	private CodPerk defaultThree;
 
 	public PerkManager() {
+		if (instance == null)
+			instance = this;
+
 		this.loadPerks();
+	}
+
+	public static PerkManager getInstance() {
+		return instance != null ? instance : new PerkManager();
 	}
 
 	private void loadPerks() {
@@ -24,7 +33,7 @@ public class PerkManager {
 			try {
 				perk = Perk.valueOf(Main.getPlugin().getConfig().getString("Perks." + i + ".name"));
 			} catch (Exception e) {
-				Main.sendMessage(Main.cs, Main.codPrefix + Lang.ERROR_READING_PERK_DATA.getMessage(), Main.lang);
+				Main.sendMessage(Main.getConsole(), Main.getPrefix() + Lang.ERROR_READING_PERK_DATA.getMessage(), Main.getLang());
 				continue;
 			}
 
@@ -45,7 +54,7 @@ public class PerkManager {
 				perkSlot = PerkSlot.THREE;
 				break;
 			default:
-				Main.sendMessage(Main.cs, Main.codPrefix + Lang.ERROR_READING_PERK_DATA.getMessage(), Main.lang);
+				Main.sendMessage(Main.getConsole(), Main.getPrefix() + Lang.ERROR_READING_PERK_DATA.getMessage(), Main.getLang());
 				continue;
 			}
 
@@ -110,7 +119,7 @@ public class PerkManager {
 				s = 3;
 				break;
 			default:
-				Main.sendMessage(Main.cs, Main.codPrefix + Lang.ERROR_READING_PERK_DATA.getMessage(), Main.lang);
+				Main.sendMessage(Main.getConsole(), Main.getPrefix() + Lang.ERROR_READING_PERK_DATA.getMessage(), Main.getLang());
 				return null;
 		}
 

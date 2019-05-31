@@ -108,7 +108,7 @@ public class CodMap {
 		}
 
 		if (getPinkSpawns() != null) {
-			if (getPinkSpawns().size() >= Main.maxPlayers) {
+			if (getPinkSpawns().size() >= Main.getMaxPlayers()) {
 				if (!availableGamemodes.contains(Gamemode.FFA) && !blacklistedModes.contains(Gamemode.FFA))
 					availableGamemodes.add(Gamemode.FFA);
 				if(!availableGamemodes.contains(Gamemode.OITC) && !blacklistedModes.contains(Gamemode.OITC)) {

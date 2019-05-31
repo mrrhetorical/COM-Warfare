@@ -5,6 +5,7 @@ import com.rhetorical.cod.game.GameInstance;
 import com.rhetorical.cod.game.GameManager;
 import com.rhetorical.cod.lang.Lang;
 import com.rhetorical.cod.loadouts.Loadout;
+import com.rhetorical.cod.loadouts.LoadoutManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -25,10 +26,18 @@ import java.util.List;
 
 public class PerkListener implements Listener {
 
-	public List<Player> isInLastStand = new ArrayList<>();
+	private static PerkListener instance;
 
-	public PerkListener() {
+	private List<Player> isInLastStand = new ArrayList<>();
+
+	private PerkListener() {
+		if (instance == null)
+			instance = this;
 		Bukkit.getServer().getPluginManager().registerEvents(this, Main.getPlugin());
+	}
+
+	public static PerkListener getInstance() {
+		return instance != null ? instance : new PerkListener();
 	}
 
 	///// PERK ONE /////
@@ -36,7 +45,7 @@ public class PerkListener implements Listener {
 	public void marathon(FoodLevelChangeEvent e) {
 		Player p = (Player) e.getEntity();
 
-		if (GameManager.isInMatch(p) || Main.loadManager.getCurrentLoadout(p).hasPerk(Perk.MARATHON)) {
+		if (GameManager.isInMatch(p) || LoadoutManager.getInstance().getCurrentLoadout(p).hasPerk(Perk.MARATHON)) {
 			e.setCancelled(true);
 		}
 	}
@@ -54,9 +63,9 @@ public class PerkListener implements Listener {
 					time--;
 				} else {
 					if (p.getLocation().distance(l) < 1D) {
-						Loadout loadout = Main.loadManager.getCurrentLoadout(p);
+						Loadout loadout = LoadoutManager.getInstance().getCurrentLoadout(p);
 						p.getInventory().clear();
-						p.getInventory().setItem(0, Main.loadManager.knife);
+						p.getInventory().setItem(0, LoadoutManager.getInstance().knife);
 						p.getInventory().setItem(1, loadout.getPrimary().getMenuItem());
 						p.getInventory().setItem(2, loadout.getSecondary().getMenuItem());
 						p.getInventory().setItem(3, loadout.getLethal().getMenuItem());
@@ -73,7 +82,7 @@ public class PerkListener implements Listener {
 
 						p.getInventory().setItem(19, primaryAmmo);
 					} else {
-						Main.sendMessage(p, Main.codPrefix + Lang.PERK_ONE_MAN_ARMY_FAILED.getMessage(), Main.lang);
+						Main.sendMessage(p, Main.getPrefix() + Lang.PERK_ONE_MAN_ARMY_FAILED.getMessage(), Main.getLang());
 					}
 					this.cancel();
 				}
@@ -84,7 +93,7 @@ public class PerkListener implements Listener {
 	}
 
 	public void scavengerDeath(Player victim, Player killer) {
-		if (Main.loadManager.getCurrentLoadout(killer).hasPerk(Perk.SCAVENGER)) {
+		if (LoadoutManager.getInstance().getCurrentLoadout(killer).hasPerk(Perk.SCAVENGER)) {
 
 			Item i = victim.getWorld().dropItem(victim.getLocation(), new ItemStack(Material.LAPIS_BLOCK));
 
@@ -98,17 +107,21 @@ public class PerkListener implements Listener {
 		}
 	}
 
+	public List<Player> getIsInLastStand() {
+		return isInLastStand;
+	}
+
 	@EventHandler
 	public void scavengerPickup(PlayerPickupItemEvent e) {
 
 		Player p = e.getPlayer();
 		ItemStack i = e.getItem().getItemStack();
 
-		if (GameManager.isInMatch(p) && Main.loadManager.getCurrentLoadout(p).hasPerk(Perk.SCAVENGER) && i.getType().equals(Material.LAPIS_BLOCK)) {
+		if (GameManager.isInMatch(p) && LoadoutManager.getInstance().getCurrentLoadout(p).hasPerk(Perk.SCAVENGER) && i.getType().equals(Material.LAPIS_BLOCK)) {
 			e.getItem().remove();
 
-			ItemStack ammoToAdd = Main.loadManager.getCurrentLoadout(p).getPrimary().getAmmo();
-			ammoToAdd.setAmount(Main.loadManager.getCurrentLoadout(p).getPrimary().getAmmoCount() / 8);
+			ItemStack ammoToAdd = LoadoutManager.getInstance().getCurrentLoadout(p).getPrimary().getAmmo();
+			ammoToAdd.setAmount(LoadoutManager.getInstance().getCurrentLoadout(p).getPrimary().getAmmoCount() / 8);
 
 			ItemStack currentAmmo = p.getInventory().getItem(19);
 
@@ -124,7 +137,7 @@ public class PerkListener implements Listener {
 		if (e.getEntity() instanceof Player && e.getDamager() instanceof Player) {
 			if (!(GameManager.isInMatch((Player) e.getDamager()) && GameManager.isInMatch((Player) e.getEntity())))
 				return;
-			if (Main.loadManager.getCurrentLoadout((Player) e.getDamager()).hasPerk(Perk.STOPPING_POWER)) {
+			if (LoadoutManager.getInstance().getCurrentLoadout((Player) e.getDamager()).hasPerk(Perk.STOPPING_POWER)) {
 				e.setDamage(e.getDamage() * 1.2D);
 			}
 		}
@@ -135,7 +148,7 @@ public class PerkListener implements Listener {
 		if (e.getEntity() instanceof Player && e.getDamager() instanceof Player) {
 			if (!(GameManager.isInMatch((Player) e.getDamager()) && GameManager.isInMatch((Player) e.getEntity())))
 				return;
-			if (Main.loadManager.getCurrentLoadout((Player) e.getEntity()).hasPerk(Perk.JUGGERNAUT)) {
+			if (LoadoutManager.getInstance().getCurrentLoadout((Player) e.getEntity()).hasPerk(Perk.JUGGERNAUT)) {
 				e.setDamage(e.getDamage() / 1.2D);
 			}
 		}
@@ -148,7 +161,7 @@ public class PerkListener implements Listener {
 			if (!(GameManager.isInMatch((Player) e.getEntity()) && GameManager.isInMatch((Player) e.getDamager())))
 				return;
 			
-			if (Main.loadManager.getCurrentLoadout((Player) e.getDamager()).hasPerk(Perk.COMMANDO)) {
+			if (LoadoutManager.getInstance().getCurrentLoadout((Player) e.getDamager()).hasPerk(Perk.COMMANDO)) {
 				e.setDamage(200D);
 			}
 			
@@ -164,7 +177,7 @@ public class PerkListener implements Listener {
 		p.setWalkSpeed(0f);
 		p.setSneaking(true);
 		
-		Main.sendMessage(p, Lang.PERK_FINAL_STAND_NOTIFICATION.getMessage(), Main.lang);
+		Main.sendMessage(p, Lang.PERK_FINAL_STAND_NOTIFICATION.getMessage(), Main.getLang());
 		BukkitRunnable br = new BukkitRunnable() {
 			
 			private int time = 40;
@@ -181,7 +194,7 @@ public class PerkListener implements Listener {
 				else {
 					p.setWalkSpeed(0.2f);
 					i.health.reset(p);
-				Main.sendMessage(p, Lang.PERK_FINAL_STAND_FINISHED.getMessage(), Main.lang);
+				Main.sendMessage(p, Lang.PERK_FINAL_STAND_FINISHED.getMessage(), Main.getLang());
 					cancel();
 					cancelLastStand(p);
 					isInLastStand.remove(p);

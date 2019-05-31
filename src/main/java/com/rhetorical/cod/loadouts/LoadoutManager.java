@@ -3,10 +3,13 @@ package com.rhetorical.cod.loadouts;
 import com.rhetorical.cod.Main;
 import com.rhetorical.cod.files.GunsFile;
 import com.rhetorical.cod.files.LoadoutsFile;
+import com.rhetorical.cod.inventories.ShopManager;
 import com.rhetorical.cod.lang.Lang;
 import com.rhetorical.cod.perks.CodPerk;
 import com.rhetorical.cod.perks.Perk;
+import com.rhetorical.cod.perks.PerkManager;
 import com.rhetorical.cod.perks.PerkSlot;
+import com.rhetorical.cod.progression.ProgressionManager;
 import com.rhetorical.cod.weapons.*;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -17,14 +20,17 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
 
 public class LoadoutManager {
 
-	private HashMap<Player, Integer> allowedClasses = new HashMap<>();
-	private HashMap<Player, ArrayList<Loadout>> playerLoadouts = new HashMap<>();
-	private HashMap<Player, Loadout> activeLoadouts = new HashMap<>();
+	private static LoadoutManager instance;
+
+	private Map<Player, Integer> allowedClasses = new HashMap<>();
+	private Map<Player, List<Loadout>> playerLoadouts = new HashMap<>();
+	private Map<Player, Loadout> activeLoadouts = new HashMap<>();
 
 	public ItemStack knife;
 
@@ -45,7 +51,10 @@ public class LoadoutManager {
 	private ItemStack emptyLethal = new ItemStack(Material.BARRIER);
 	private ItemStack emptyTactical = new ItemStack(Material.BARRIER);
 
-	public LoadoutManager(HashMap<Player, ArrayList<Loadout>> pL) {
+	public LoadoutManager(HashMap<Player, List<Loadout>> pL) {
+
+		if (instance == null)
+			instance = this;
 
 		ItemMeta primaryMeta = emptyPrimary.getItemMeta(),
 				secondaryMeta = emptySecondary.getItemMeta(),
@@ -84,6 +93,10 @@ public class LoadoutManager {
 		knife.setItemMeta(knifeMeta);
 	}
 
+	public static LoadoutManager getInstance() {
+		return instance != null ? instance : new LoadoutManager(new HashMap<>());
+	}
+
 	// Method should return true if loadout creation is allowed and is
 	// successful, returns false if the creation of the loadout is
 	// either unsuccessful or is not allowed
@@ -93,7 +106,7 @@ public class LoadoutManager {
 		Loadout loadout = new Loadout(p, loadoutName, primaryGun, secondaryGun, LethalWeapon, tacticalWeapon, perkOne,
 				perkTwo, perkThree);
 
-		ArrayList<Loadout> currentLoadouts = this.getLoadouts(p);
+		List<Loadout> currentLoadouts = this.getLoadouts(p);
 
 		if (getAllowedClasses(p) < currentLoadouts.size()) {
 			currentLoadouts.add(loadout);
@@ -101,10 +114,11 @@ public class LoadoutManager {
 		}
 
 		while (getAllowedClasses(p) < currentLoadouts.size()) {
+			PerkManager pm = PerkManager.getInstance();
 			Loadout defaultLoadout = new Loadout(p, Lang.CLASS_PREFIX + " " + Integer.toString(currentLoadouts.size() + 1),
 					getDefaultPrimary(), getDefaultSecondary(), getDefaultLethal(), getDefaultTactical(),
-					Main.perkManager.getDefaultPerk(PerkSlot.ONE), Main.perkManager.getDefaultPerk(PerkSlot.TWO),
-					Main.perkManager.getDefaultPerk(PerkSlot.THREE));
+					pm.getDefaultPerk(PerkSlot.ONE), pm.getDefaultPerk(PerkSlot.TWO),
+					pm.getDefaultPerk(PerkSlot.THREE));
 			currentLoadouts.add(defaultLoadout);
 			int next = 0;
 			while (LoadoutsFile.getData().contains("Loadouts." + p.getUniqueId() + "." + next)) {
@@ -131,7 +145,7 @@ public class LoadoutManager {
 
 		// Primary & Ammo
 
-		if (!primary.equals(Main.loadManager.blankPrimary)) {
+		if (!primary.equals(LoadoutManager.getInstance().blankPrimary)) {
 			p.getInventory().setItem(1, primary.getGunItem());
 
 			ItemStack primaryAmmo = primary.getAmmo();
@@ -141,7 +155,7 @@ public class LoadoutManager {
 
 		// Secondary & Ammo
 
-		if (!secondary.equals(Main.loadManager.blankSecondary)) {
+		if (!secondary.equals(LoadoutManager.getInstance().blankSecondary)) {
 			p.getInventory().setItem(2, secondary.getGunItem());
 			if (!loadout.hasPerk(Perk.ONE_MAN_ARMY)) {
 				ItemStack secondaryAmmo = secondary.getAmmo();
@@ -152,11 +166,11 @@ public class LoadoutManager {
 
 		// Grenades
 
-		if (!lethal.equals(Main.loadManager.blankLethal)) {
+		if (!lethal.equals(LoadoutManager.getInstance().blankLethal)) {
 			p.getInventory().setItem(3, lethal.getWeaponItem());
 		}
 
-		if (!tactical.equals(Main.loadManager.blankTactical)) {
+		if (!tactical.equals(LoadoutManager.getInstance().blankTactical)) {
 			p.getInventory().setItem(4, tactical.getWeaponItem());
 		}
 	}
@@ -165,7 +179,7 @@ public class LoadoutManager {
 
 		int classes = 5;
 
-		for (int i = 1; i <= Main.progressionManager.getPrestigeLevel(p); i++) {
+		for (int i = 1; i <= ProgressionManager.getInstance().getPrestigeLevel(p); i++) {
 			switch (i) {
 				case 1:
 					classes++;
@@ -306,7 +320,7 @@ public class LoadoutManager {
 			String name = LoadoutsFile.getData().getString("Loadouts." + p.getName() + "." + k + ".Name");
 			CodGun primary = null;
 
-			for (CodGun gun : Main.shopManager.getPrimaryGuns()) {
+			for (CodGun gun : ShopManager.getInstance().getPrimaryGuns()) {
 				if (gun.getName().equals(LoadoutsFile.getData().getString("Loadouts." + p.getName() + "." + k + ".Primary"))) {
 					if (gun.getName().equals(
 							LoadoutsFile.getData().getString("Loadouts." + p.getName() + "." + k + ".Primary"))) {
@@ -317,7 +331,7 @@ public class LoadoutManager {
 
 			CodGun secondary = null;
 
-			for (CodGun gun : Main.shopManager.getSecondaryGuns()) {
+			for (CodGun gun : ShopManager.getInstance().getSecondaryGuns()) {
 				if (gun.getName().equals(LoadoutsFile.getData().getString("Loadouts." + p.getName() + "." + k + ".Secondary"))) {
 					if (gun.getName().equals(LoadoutsFile.getData().getString("Loadouts." + p.getName() + "." + k + ".Secondary"))) {
 						secondary = gun;
@@ -327,7 +341,7 @@ public class LoadoutManager {
 
 			CodWeapon lethal = null;
 
-			for (CodWeapon grenade : Main.shopManager.getLethalWeapons()) {
+			for (CodWeapon grenade : ShopManager.getInstance().getLethalWeapons()) {
 				if (grenade.getName().equals(LoadoutsFile.getData().getString("Loadouts." + p.getName() + "." + k + ".Lethal"))) {
 					if (grenade.getName().equals(
 							LoadoutsFile.getData().getString("Loadouts." + p.getName() + "." + k + ".Lethal"))) {
@@ -338,7 +352,7 @@ public class LoadoutManager {
 
 			CodWeapon tactical = null;
 
-			for (CodWeapon grenade : Main.shopManager.getTacticalWeapons()) {
+			for (CodWeapon grenade : ShopManager.getInstance().getTacticalWeapons()) {
 				if (grenade.getName().equals(LoadoutsFile.getData().getString("Loadouts." + p.getName() + "." + k + ".tactical"))) {
 					tactical = grenade;
 				}
@@ -348,7 +362,7 @@ public class LoadoutManager {
 			CodPerk perkTwo = null;
 			CodPerk perkThree = null;
 
-			for (CodPerk perk : Main.perkManager.getAvailablePerks()) {
+			for (CodPerk perk : PerkManager.getInstance().getAvailablePerks()) {
 				if (perk.getSlot() == PerkSlot.ONE) {
 					if (perk.getPerk().getName().equals(LoadoutsFile.getData().getString("Loadouts." + p.getName() + "." + k + ".Perk1"))) {
 						perkOne = perk;
@@ -366,31 +380,31 @@ public class LoadoutManager {
 
 
 			if (primary == null) {
-				primary = Main.loadManager.getDefaultPrimary();
+				primary = LoadoutManager.getInstance().getDefaultPrimary();
 			}
 
 			if (secondary == null) {
-				secondary = Main.loadManager.getDefaultSecondary();
+				secondary = LoadoutManager.getInstance().getDefaultSecondary();
 			}
 
 			if (lethal == null) {
-				lethal = Main.loadManager.getDefaultLethal();
+				lethal = LoadoutManager.getInstance().getDefaultLethal();
 			}
 
 			if (tactical == null) {
-				tactical = Main.loadManager.getDefaultTactical();
+				tactical = LoadoutManager.getInstance().getDefaultTactical();
 			}
 
 			if (perkOne == null) {
-				perkOne = Main.perkManager.getDefaultPerk(PerkSlot.ONE);
+				perkOne = PerkManager.getInstance().getDefaultPerk(PerkSlot.ONE);
 			}
 
 			if (perkTwo == null) {
-				perkTwo = Main.perkManager.getDefaultPerk(PerkSlot.TWO);
+				perkTwo = PerkManager.getInstance().getDefaultPerk(PerkSlot.TWO);
 			}
 
 			if (perkThree == null) {
-				perkThree = Main.perkManager.getDefaultPerk(PerkSlot.THREE);
+				perkThree = PerkManager.getInstance().getDefaultPerk(PerkSlot.THREE);
 			}
 
 			try {
@@ -398,7 +412,7 @@ public class LoadoutManager {
 				loadout = new Loadout(p, name, primary, secondary, lethal, tactical, perkOne, perkTwo, perkThree);
 				l.add(loadout);
 			} catch (Exception e) {
-				Main.sendMessage(Main.cs,  Main.codPrefix + Lang.ERROR_READING_PLAYER_LOADOUT.getMessage(), Main.lang);
+				Main.sendMessage(Main.getConsole(),  Main.getPrefix() + Lang.ERROR_READING_PLAYER_LOADOUT.getMessage(), Main.getLang());
 			}
 
 			k++;
@@ -425,8 +439,8 @@ public class LoadoutManager {
 	private Loadout getDefaultLoadout(Player p, int i) {
 		Loadout loadout = new Loadout(p, Lang.CLASS_PREFIX.getMessage() + " " + (i + 1), this.getDefaultPrimary(),
 				this.getDefaultSecondary(), this.getDefaultLethal(), this.getDefaultTactical(),
-				Main.perkManager.getDefaultPerk(PerkSlot.ONE), Main.perkManager.getDefaultPerk(PerkSlot.TWO),
-				Main.perkManager.getDefaultPerk(PerkSlot.THREE));
+				PerkManager.getInstance().getDefaultPerk(PerkSlot.ONE), PerkManager.getInstance().getDefaultPerk(PerkSlot.TWO),
+				PerkManager.getInstance().getDefaultPerk(PerkSlot.THREE));
 
 		return loadout;
 	}
@@ -455,12 +469,12 @@ public class LoadoutManager {
 
 	public Loadout getCurrentLoadout(Player p) {
 
-		ArrayList<Loadout> loadouts = getLoadouts(p);
+		List<Loadout> loadouts = getLoadouts(p);
 
 		return loadouts.get(0);
 	}
 
-	public ArrayList<Loadout> getLoadouts(Player p) {
+	public List<Loadout> getLoadouts(Player p) {
 		if (!playerLoadouts.containsKey(p)) {
 			this.load(p);
 		}
@@ -483,54 +497,54 @@ public class LoadoutManager {
 	}
 
 	public CodGun getRandomPrimary() {
-		int size = Main.shopManager.getPrimaryGuns().size() - 1;
+		int size = ShopManager.getInstance().getPrimaryGuns().size() - 1;
 		int position;
 
-		if (Main.shopManager.getPrimaryGuns().size() > 0) {
+		if (ShopManager.getInstance().getPrimaryGuns().size() > 0) {
 			position = (int) Math.round(Math.random() * size);
 		} else {
 			return blankPrimary;
 		}
 
-		return Main.shopManager.getPrimaryGuns().get(position);
+		return ShopManager.getInstance().getPrimaryGuns().get(position);
 	}
 
 	public CodGun getRandomSecondary() {
-		int size = Main.shopManager.getSecondaryGuns().size() - 1;
+		int size = ShopManager.getInstance().getSecondaryGuns().size() - 1;
 		int position;
 
-		if (Main.shopManager.getSecondaryGuns().size() > 0) {
+		if (ShopManager.getInstance().getSecondaryGuns().size() > 0) {
 			position = (int) Math.round(Math.random() * size);
 		} else {
 			return blankSecondary;
 		}
 
-		return Main.shopManager.getSecondaryGuns().get(position);
+		return ShopManager.getInstance().getSecondaryGuns().get(position);
 	}
 
 	public CodWeapon getRandomLethal() {
-		int size = Main.shopManager.getLethalWeapons().size() - 1;
+		int size = ShopManager.getInstance().getLethalWeapons().size() - 1;
 		int position;
 
-		if (Main.shopManager.getLethalWeapons().size() > 0) {
+		if (ShopManager.getInstance().getLethalWeapons().size() > 0) {
 			position = (int) Math.round(Math.random() * size);
 		} else {
 			return blankLethal;
 		}
 
-		return Main.shopManager.getLethalWeapons().get(position);
+		return ShopManager.getInstance().getLethalWeapons().get(position);
 	}
 
 	public CodWeapon getRandomTactical() {
-		int size = Main.shopManager.getTacticalWeapons().size() - 1;
+		int size = ShopManager.getInstance().getTacticalWeapons().size() - 1;
 		int position;
 
-		if (Main.shopManager.getTacticalWeapons().size() > 0) {
+		if (ShopManager.getInstance().getTacticalWeapons().size() > 0) {
 			position = (int) Math.round(Math.random() * size);
 		} else {
 			return blankTactical;
 		}
 
-		return Main.shopManager.getTacticalWeapons().get(position);
+		return ShopManager.getInstance().getTacticalWeapons().get(position);
 	}
 }

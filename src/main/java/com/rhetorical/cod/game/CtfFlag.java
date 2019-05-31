@@ -89,7 +89,7 @@ class CtfFlag {
 		flagHolder = p;
 
 		for (Player player : getOwner().getPlayers()) {
-			Main.sendMessage(player, Lang.PLAYER_PICKED_UP_FLAG.getMessage().replace("{player}", p.getName()).replace("{team}", getTeam().toString().toLowerCase()).replace("{team-color}", getTeam().getColor() + ""), Main.lang);
+			Main.sendMessage(player, Lang.PLAYER_PICKED_UP_FLAG.getMessage().replace("{player}", p.getName()).replace("{team}", getTeam().toString().toLowerCase()).replace("{team-color}", getTeam().getColor() + ""), Main.getLang());
 		}
 	}
 
@@ -102,7 +102,7 @@ class CtfFlag {
 		spawn(p.getLocation());
 
 		for (Player player : getOwner().getPlayers()) {
-			Main.sendMessage(player, Lang.FLAG_DROPPED.getMessage().replace("{team}", getTeam().toString().toLowerCase()).replace("{team-color}", getTeam().getColor() + ""), Main.lang);
+			Main.sendMessage(player, Lang.FLAG_DROPPED.getMessage().replace("{team}", getTeam().toString().toLowerCase()).replace("{team-color}", getTeam().getColor() + ""), Main.getLang());
 		}
 	}
 
@@ -132,7 +132,7 @@ class CtfFlag {
 		getOwner().setTeamArmor(p);
 
 		for (Player player : getOwner().getPlayers()) {
-			Main.sendMessage(player, Lang.TEAM_SCORED.getMessage().replace("{player}", p.getName()).replace("{team}", getTeam().toString().toLowerCase()).replace("{team-color}", getTeam().getColor() + ""), Main.lang);
+			Main.sendMessage(player, Lang.TEAM_SCORED.getMessage().replace("{player}", p.getName()).replace("{team}", getTeam().toString().toLowerCase()).replace("{team-color}", getTeam().getColor() + ""), Main.getLang());
 		}
 	}
 

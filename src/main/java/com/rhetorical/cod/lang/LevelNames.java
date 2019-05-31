@@ -1,6 +1,7 @@
 package com.rhetorical.cod.lang;
 
 import com.rhetorical.cod.Main;
+import com.rhetorical.cod.progression.ProgressionManager;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.HashMap;
@@ -23,7 +24,7 @@ public class LevelNames {
 
 	private void setup() {
 		FileConfiguration config = Main.getPlugin().getConfig();
-		for (int i = 1; i <= Main.progressionManager.maxLevel; i++) {
+		for (int i = 1; i <= ProgressionManager.getInstance().maxLevel; i++) {
 			if (config.contains("LevelNames." + i)) {
 				levelNames.put(i, config.getString("LevelNames." + i));
 			}

@@ -2,6 +2,7 @@ package com.rhetorical.cod.weapons;
 
 import com.rhetorical.cod.Main;
 import com.rhetorical.cod.files.GunsFile;
+import com.rhetorical.cod.loadouts.LoadoutManager;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -91,7 +92,7 @@ public class CodWeapon {
 	
 	protected ItemStack setupWeaponItem(ItemStack weaponItem) {
 		if (Main.hasQualityArms()) {
-			if (!this.equals(Main.loadManager.blankLethal) && !this.equals(Main.loadManager.blankTactical)) {
+			if (!this.equals(LoadoutManager.getInstance().blankLethal) && !this.equals(LoadoutManager.getInstance().blankTactical)) {
 				ItemStack gun = QualityGun.getGunForName(getName());
 
 				if (gun != null && gun.getType() != Material.AIR) {
@@ -101,7 +102,7 @@ public class CodWeapon {
 		}
 
 		if (Main.hasCrackShot()) {
-			if (!this.equals(Main.loadManager.blankLethal) && !this.equals(Main.loadManager.blankTactical)) {
+			if (!this.equals(LoadoutManager.getInstance().blankLethal) && !this.equals(LoadoutManager.getInstance().blankTactical)) {
 				ItemStack gun = CrackShotGun.generateWeapon(getName());
 
 				if (gun != null && gun.getType() != Material.AIR)
@@ -123,13 +124,13 @@ public class CodWeapon {
 	protected ItemStack setupMenuItem(ItemStack gunItem) {
 		ItemStack gun = null;
 		if (Main.hasQualityArms()) {
-			if (!this.equals(Main.loadManager.blankPrimary) && !this.equals(Main.loadManager.blankSecondary)) {
+			if (!this.equals(LoadoutManager.getInstance().blankPrimary) && !this.equals(LoadoutManager.getInstance().blankSecondary)) {
 				gun = QualityGun.getGunForName(getName());
 			}
 		}
 
 		if (Main.hasCrackShot()) {
-			if (!this.equals(Main.loadManager.blankPrimary) && !this.equals(Main.loadManager.blankSecondary)) {
+			if (!this.equals(LoadoutManager.getInstance().blankPrimary) && !this.equals(LoadoutManager.getInstance().blankSecondary)) {
 				gun = CrackShotGun.generateWeapon(getName());
 			}
 		}

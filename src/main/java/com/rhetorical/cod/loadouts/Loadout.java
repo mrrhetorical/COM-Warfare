@@ -1,6 +1,8 @@
 package com.rhetorical.cod.loadouts;
 
 import com.rhetorical.cod.Main;
+import com.rhetorical.cod.inventories.InventoryManager;
+import com.rhetorical.cod.inventories.ShopManager;
 import com.rhetorical.cod.perks.CodPerk;
 import com.rhetorical.cod.perks.Perk;
 import com.rhetorical.cod.perks.PerkSlot;
@@ -48,51 +50,51 @@ public class Loadout implements Listener {
 
 	public void setPrimary(CodGun gun) {
 		this.primary = gun;
-		Main.loadManager.save(this.getOwner());
-		Main.loadManager.load(this.getOwner());
-		Main.invManager.setupCreateClassInventory(this.getOwner());
+		LoadoutManager.getInstance().save(this.getOwner());
+		LoadoutManager.getInstance().load(this.getOwner());
+		InventoryManager.getInstance().setupCreateClassInventory(this.getOwner());
 	}
 
 	public void setSecondary(CodGun gun) {
 		this.secondary = gun;
-		Main.loadManager.save(this.getOwner());
-		Main.loadManager.load(this.getOwner());
-		Main.invManager.setupCreateClassInventory(this.getOwner());
+		LoadoutManager.getInstance().save(this.getOwner());
+		LoadoutManager.getInstance().load(this.getOwner());
+		InventoryManager.getInstance().setupCreateClassInventory(this.getOwner());
 	}
 
 	public void setLethal(CodWeapon grenade) {
 		this.lethal = grenade;
-		Main.loadManager.save(this.getOwner());
-		Main.loadManager.load(this.getOwner());
-		Main.invManager.setupCreateClassInventory(this.getOwner());
+		LoadoutManager.getInstance().save(this.getOwner());
+		LoadoutManager.getInstance().load(this.getOwner());
+		InventoryManager.getInstance().setupCreateClassInventory(this.getOwner());
 	}
 
 	public void setTactical(CodWeapon grenade) {
 		this.tactical = grenade;
-		Main.loadManager.save(this.getOwner());
-		Main.loadManager.load(this.getOwner());
-		Main.invManager.setupCreateClassInventory(this.getOwner());
+		LoadoutManager.getInstance().save(this.getOwner());
+		LoadoutManager.getInstance().load(this.getOwner());
+		InventoryManager.getInstance().setupCreateClassInventory(this.getOwner());
 	}
 
 	public void setPerk(PerkSlot slot, CodPerk perk) {
 		switch (slot) {
 			case ONE:
 				this.perk1 = perk;
-				Main.loadManager.save(this.getOwner());
-				Main.loadManager.load(this.getOwner());
-				Main.invManager.setupCreateClassInventory(this.getOwner());
+				LoadoutManager.getInstance().save(this.getOwner());
+				LoadoutManager.getInstance().load(this.getOwner());
+				InventoryManager.getInstance().setupCreateClassInventory(this.getOwner());
 				break;
 			case TWO:
 				this.perk2 = perk;
-				Main.loadManager.save(this.getOwner());
-				Main.loadManager.load(this.getOwner());
-				Main.invManager.setupCreateClassInventory(this.getOwner());
+				LoadoutManager.getInstance().save(this.getOwner());
+				LoadoutManager.getInstance().load(this.getOwner());
+				InventoryManager.getInstance().setupCreateClassInventory(this.getOwner());
 				break;
 			case THREE:
 				this.perk3 = perk;
-				Main.loadManager.save(this.getOwner());
-				Main.loadManager.load(this.getOwner());
-				Main.invManager.setupCreateClassInventory(this.getOwner());
+				LoadoutManager.getInstance().save(this.getOwner());
+				LoadoutManager.getInstance().load(this.getOwner());
+				InventoryManager.getInstance().setupCreateClassInventory(this.getOwner());
 				break;
 			default:
 				break;
@@ -143,7 +145,7 @@ public class Loadout implements Listener {
 	public Inventory getPrimaryInventory() {
 
 		if (this.primaryInventory == null) {
-			Main.invManager.setupPlayerSelectionInventories(this.getOwner());
+			InventoryManager.getInstance().setupPlayerSelectionInventories(this.getOwner());
 		}
 
 		return this.primaryInventory;
@@ -152,7 +154,7 @@ public class Loadout implements Listener {
 	public Inventory getSecondaryInventory() {
 
 		if (this.secondaryInventory == null) {
-			Main.invManager.setupPlayerSelectionInventories(this.getOwner());
+			InventoryManager.getInstance().setupPlayerSelectionInventories(this.getOwner());
 		}
 
 		return this.secondaryInventory;
@@ -161,7 +163,7 @@ public class Loadout implements Listener {
 	public Inventory getLethalInventory() {
 
 		if (this.lethalInventory == null) {
-			Main.invManager.setupPlayerSelectionInventories(this.getOwner());
+			InventoryManager.getInstance().setupPlayerSelectionInventories(this.getOwner());
 		}
 		return this.lethalInventory;
 	}
@@ -169,7 +171,7 @@ public class Loadout implements Listener {
 	public Inventory getTacticalInventory() {
 
 		if (this.tacticalInventory == null) {
-			Main.invManager.setupPlayerSelectionInventories(this.getOwner());
+			InventoryManager.getInstance().setupPlayerSelectionInventories(this.getOwner());
 		}
 
 		return this.tacticalInventory;
@@ -178,7 +180,7 @@ public class Loadout implements Listener {
 	public Inventory getPerk1Inventory() {
 
 		if (this.perk1Inventory == null) {
-			Main.invManager.setupPlayerSelectionInventories(this.getOwner());
+			InventoryManager.getInstance().setupPlayerSelectionInventories(this.getOwner());
 		}
 
 		return this.perk1Inventory;
@@ -187,7 +189,7 @@ public class Loadout implements Listener {
 	public Inventory getPerk2Inventory() {
 
 		if (this.perk2Inventory == null) {
-			Main.invManager.setupPlayerSelectionInventories(this.getOwner());
+			InventoryManager.getInstance().setupPlayerSelectionInventories(this.getOwner());
 		}
 
 		return this.perk2Inventory;
@@ -196,7 +198,7 @@ public class Loadout implements Listener {
 	public Inventory getPerk3Inventory() {
 
 		if (this.perk3Inventory == null) {
-			Main.invManager.setupPlayerSelectionInventories(this.getOwner());
+			InventoryManager.getInstance().setupPlayerSelectionInventories(this.getOwner());
 		}
 
 		return this.perk3Inventory;
@@ -241,7 +243,7 @@ public class Loadout implements Listener {
 
 		Player p = (Player) e.getWhoClicked();
 
-		if (Main.invManager.shouldCancelClick(e.getInventory(), p)) {
+		if (InventoryManager.getInstance().shouldCancelClick(e.getInventory(), p)) {
 			e.setCancelled(true);
 		} else {
 			return;
@@ -254,17 +256,17 @@ public class Loadout implements Listener {
 			return;
 		}
 
-		if (e.getCurrentItem().equals(Main.invManager.backInv)) {
+		if (e.getCurrentItem().equals(InventoryManager.getInstance().backInv)) {
 			p.closeInventory();
 			return;
 		}
 
 		if (e.getInventory().equals(this.getPrimaryInventory())) {
-			for (CodGun gun : Main.shopManager.getPrimaryGuns()) {
+			for (CodGun gun : ShopManager.getInstance().getPrimaryGuns()) {
 				if (gun.getMenuItem().equals(e.getCurrentItem())) {
 					this.setPrimary(gun);
 					p.closeInventory();
-					p.openInventory(Main.invManager.createClassInventory.get(p));
+					p.openInventory(InventoryManager.getInstance().createClassInventory.get(p));
 				}
 			}
 		}

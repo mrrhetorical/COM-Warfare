@@ -11,10 +11,18 @@ import java.util.*;
 
 public class AssignmentManager {
 
+	private static AssignmentManager instance;
+
 	private Map<Player, List<Assignment>> playerAssignments = new HashMap<>();
 
-	public AssignmentManager() {
+	private AssignmentManager() {
+		if (instance == null)
+			instance = this;
 		AssignmentType.loadBaseRewards();
+	}
+
+	public static AssignmentManager getInstance() {
+		return instance != null ? instance : new AssignmentManager();
 	}
 
 	public void load(Player p) {
@@ -142,7 +150,7 @@ public class AssignmentManager {
 		CreditManager.setCredits(p, CreditManager.getCredits(p) + assignment.getReward());
 
 
-		Main.sendMessage(p, Lang.ASSIGNMENT_COMPLETED.getMessage().replace("{amount}", assignment.getReward() + ""), Main.lang);
+		Main.sendMessage(p, Lang.ASSIGNMENT_COMPLETED.getMessage().replace("{amount}", assignment.getReward() + ""), Main.getLang());
 	}
 
 	public List<Assignment> getAssignments(Player p) {

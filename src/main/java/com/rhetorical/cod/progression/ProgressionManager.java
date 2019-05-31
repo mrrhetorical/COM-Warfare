@@ -3,6 +3,7 @@ package com.rhetorical.cod.progression;
 import com.rhetorical.cod.ComVersion;
 import com.rhetorical.cod.Main;
 import com.rhetorical.cod.files.ProgressionFile;
+import com.rhetorical.cod.inventories.ShopManager;
 import com.rhetorical.cod.lang.Lang;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -11,6 +12,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class ProgressionManager {
+
+	private static ProgressionManager instance;
 
 	private HashMap<Player, Integer> prestigeLevel = new HashMap<>();
 	// Start from 0
@@ -25,6 +28,9 @@ public class ProgressionManager {
 	private final int maxPrestigeLevel;
 
 	public ProgressionManager() {
+
+		if (instance != null)
+			instance = this;
 
 		for (Player p : Bukkit.getOnlinePlayers()) {
 			this.loadData(p);
@@ -47,17 +53,22 @@ public class ProgressionManager {
 
 	}
 
+	public static ProgressionManager getInstance() {
+		return instance != null ? instance : new ProgressionManager();
+	}
+
+
 	public void setLevel(Player p, int level, boolean showMessage) {
 		if (level > getLevel(p)) {
 			for (int i = getLevel(p) + 1; i <= level; i++) {
 				this.level.put(p, i);
-				Main.shopManager.checkForNewGuns(p);
+				ShopManager.getInstance().checkForNewGuns(p);
 			}
 		} else {
 			this.level.put(p, level);
 		}
 		if (showMessage) {
-			p.sendMessage(Main.codPrefix + Lang.RANK_UP_MESSAGE.getMessage().replace("{level}", getLevel(p) + ""));
+			p.sendMessage(Main.getPrefix() + Lang.RANK_UP_MESSAGE.getMessage().replace("{level}", getLevel(p) + ""));
 		}
 
 	}
@@ -69,13 +80,13 @@ public class ProgressionManager {
 		}
 
 		this.level.put(p, this.level.get(p) + 1);
-		p.sendMessage(Main.codPrefix + Lang.RANK_UP_MESSAGE.getMessage().replace("{level}", getLevel(p) + ""));
+		p.sendMessage(Main.getPrefix() + Lang.RANK_UP_MESSAGE.getMessage().replace("{level}", getLevel(p) + ""));
 
 		if (this.getLevel(p) == this.maxLevel) {
-			p.sendMessage(Main.codPrefix + Lang.RANK_UP_READY_TO_PRESTIGE.getMessage());
+			p.sendMessage(Main.getPrefix() + Lang.RANK_UP_READY_TO_PRESTIGE.getMessage());
 		}
 
-		Main.shopManager.checkForNewGuns(p);
+		ShopManager.getInstance().checkForNewGuns(p);
 	}
 
 	public int getLevel(Player p) {
@@ -90,7 +101,7 @@ public class ProgressionManager {
 		this.prestigeLevel.put(p, level);
 
 		if (showMessage) {
-			p.sendMessage(Main.codPrefix + Lang.RANK_UP_PRESTIGE_MESSAGE.getMessage().replace("{level}", getPrestigeLevel(p) + ""));
+			p.sendMessage(Main.getPrefix() + Lang.RANK_UP_PRESTIGE_MESSAGE.getMessage().replace("{level}", getPrestigeLevel(p) + ""));
 		}
 
 	}
@@ -101,7 +112,7 @@ public class ProgressionManager {
 		}
 
 		if (getPrestigeLevel(p) >= maxPrestigeLevel) {
-			Main.sendMessage(p, Lang.ALREADY_HIGHEST_PRESTIGE.getMessage(), Main.lang);
+			Main.sendMessage(p, Lang.ALREADY_HIGHEST_PRESTIGE.getMessage(), Main.getPrefix());
 			return false;
 		}
 
@@ -109,11 +120,11 @@ public class ProgressionManager {
 		setExperience(p, 0d);
 		setLevel(p, 1, false);
 
-		Main.shopManager.prestigePlayer(p);
+		ShopManager.getInstance().prestigePlayer(p);
 
 
-		p.sendMessage(Main.codPrefix + Lang.RANK_UP_PRESTIGE_MESSAGE.getMessage().replace("{level}", getPrestigeLevel(p) + ""));
-		p.sendMessage(Main.codPrefix + Lang.RANK_RESET_MESSAGE.getMessage());
+		p.sendMessage(Main.getPrefix() + Lang.RANK_UP_PRESTIGE_MESSAGE.getMessage().replace("{level}", getPrestigeLevel(p) + ""));
+		p.sendMessage(Main.getPrefix() + Lang.RANK_RESET_MESSAGE.getMessage());
 		return true;
 	}
 
@@ -174,7 +185,7 @@ public class ProgressionManager {
 		try {
 			p.setExp((float) (getExperience(p) / getExperienceForLevel(getLevel(p))));
 		} catch (Exception e) {
-			Main.sendMessage(Main.cs, Lang.ERROR_SETTING_PLAYER_EXPERIENCE_LEVEL.getMessage(), Main.lang);
+			Main.sendMessage(Main.getConsole(), Lang.ERROR_SETTING_PLAYER_EXPERIENCE_LEVEL.getMessage(), Main.getLang());
 		}
 	}
 

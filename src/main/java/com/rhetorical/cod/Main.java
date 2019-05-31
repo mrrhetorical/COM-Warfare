@@ -36,48 +36,44 @@ import java.util.Objects;
 
 public class Main extends JavaPlugin {
 
+	private static Main instance;
+
 	public static Plugin getPlugin() {
-		return Bukkit.getServer().getPluginManager().getPlugin("COM-Warfare");
+		return getInstance();
+	}
+	public static Main getInstance() {
+		return instance;
 	}
 
-	public static String codPrefix = "[COM] ";
-	public static ConsoleCommandSender cs = Bukkit.getConsoleSender();
+	private String codPrefix = "[COM] ";
+	private ConsoleCommandSender cs = Bukkit.getConsoleSender();
 
 	private static String translate_api_key;
 
-	public static ProgressionManager progressionManager;
-	public static LoadoutManager loadManager;
-	public static PerkManager perkManager;
-	public static InventoryManager invManager;
-	public static ShopManager shopManager;
-	public static PerkListener perkListener;
-	public static KillStreakManager killstreakManager;
-	public static AssignmentManager assignmentManager;
-
-	public static Object lang;
-	private static Object translate;
+	private Object lang;
+	private Object translate;
 	
-	public static int minPlayers = 6;
-	public static int maxPlayers = 12;
+	private int minPlayers = 6;
+	private int maxPlayers = 12;
 
-	public static boolean serverMode = false;
+	private boolean serverMode = false;
 
-	public static double defaultHealth = 20D;
+	private double defaultHealth = 20D;
 
-	private static ArrayList<RankPerks> serverRanks = new ArrayList<>();
+	private ArrayList<RankPerks> serverRanks = new ArrayList<>();
 
-	public static Location lobbyLoc;
+	private Location lobbyLoc;
 
-	public static String header = "[COM-Warfare]";
+	private String header = "[COM-Warfare]";
 
-	public static boolean hasQA = false;
-	public static boolean hasCS = false;
+	private boolean hasQA = false;
+	private boolean hasCS = false;
 
-	public static String reward_highestKD;
-	public static String reward_highestScore;
-	public static String reward_maxLevel;
-	public static String reward_maxPrestige;
-	public static String reward_maxPrestigeMaxLevel;
+	private String reward_highestKD;
+	private String reward_highestScore;
+	public String reward_maxLevel;
+	public String reward_maxPrestige;
+	public String reward_maxPrestigeMaxLevel;
 
 	private static boolean disabling = false;
 
@@ -91,6 +87,11 @@ public class Main extends JavaPlugin {
 
 	@Override
 	public void onEnable() {
+
+		if (instance != null)
+			return;
+
+		instance = this;
 
 		ComVersion.setup(true);
 
@@ -116,27 +117,27 @@ public class Main extends JavaPlugin {
 		} catch(Exception ignored) {}
 
 		if (bukkitVersion.startsWith("1.8") || v < 8 ) {
-			Main.cs.sendMessage(Main.codPrefix + "You are not on the most recent version of Spigot/Bukkit, so COM-Warfare might not work as advertised. To ensure it will work properly, please use version 1.9 - 1.14!");
+			Main.getConsole().sendMessage(Main.getPrefix() + "You are not on the most recent version of Spigot/Bukkit, so COM-Warfare might not work as advertised. To ensure it will work properly, please use version 1.9 - 1.14!");
 		}
 
-		Main.cs.sendMessage(Main.codPrefix + "Checking dependencies...");
+		Main.getConsole().sendMessage(Main.getPrefix() + "Checking dependencies...");
 
 		DependencyManager dm = new DependencyManager();
 		if (!dm.checkDependencies()) {
 			if (getPlugin().getConfig().getBoolean("auto-download-dependency")) {
-				Main.cs.sendMessage(Main.codPrefix + "One or more dependencies were not found, will attempt to download them.");
+				Main.getConsole().sendMessage(Main.getPrefix() + "One or more dependencies were not found, will attempt to download them.");
 				try {
 					dm.downloadDependencies();
 				} catch (Exception e) {
-					Main.cs.sendMessage(Main.codPrefix + "Could not download dependencies! Make sure that the plugins folder can be written to!");
-					Main.cs.sendMessage(Main.codPrefix + "Not all dependencies for COM-Warfare are installed! The plugin may not work as intended and may throw errors!");
+					Main.getConsole().sendMessage(Main.getPrefix() + "Could not download dependencies! Make sure that the plugins folder can be written to!");
+					Main.getConsole().sendMessage(Main.getPrefix() + "Not all dependencies for COM-Warfare are installed! The plugin may not work as intended and may throw errors!");
 				}
 			} else {
-				Main.cs.sendMessage(Main.codPrefix + "Could not download dependencies! You must set the value for \"auto-download-dependency\" to 'true' in the config to automatically download them!");
-				Main.cs.sendMessage("Not all dependencies for COM-Warfare are installed! The plugin likely will not work as intended!");
+				Main.getConsole().sendMessage(Main.getPrefix() + "Could not download dependencies! You must set the value for \"auto-download-dependency\" to 'true' in the config to automatically download them!");
+				Main.getConsole().sendMessage("Not all dependencies for COM-Warfare are installed! The plugin likely will not work as intended!");
 			}
 		} else {
-			Main.cs.sendMessage(Main.codPrefix + "All dependencies are installed!");
+			Main.getConsole().sendMessage(Main.getPrefix() + "All dependencies are installed!");
 		}
 
 		try {
@@ -155,7 +156,7 @@ public class Main extends JavaPlugin {
 					lang = McLang.EN;
 			}
 		} catch(Exception classException) {
-			Main.cs.sendMessage(codPrefix + ChatColor.RED + "McTranslate++ Doesn't seem to be installed? If you have 'auto-download-dependencies' turned on, it will automatically install, and after installing, you should restart the server!");
+			Main.getConsole().sendMessage(codPrefix + ChatColor.RED + "McTranslate++ Doesn't seem to be installed? If you have 'auto-download-dependencies' turned on, it will automatically install, and after installing, you should restart the server!");
 		}
 
 		String version = getPlugin().getDescription().getVersion();
@@ -177,14 +178,14 @@ public class Main extends JavaPlugin {
 		QualityGun.setup();
 		CrackShotGun.setup();
 
-		progressionManager = new ProgressionManager();
-		perkManager = new PerkManager();
-		loadManager = new LoadoutManager(new HashMap<>());
-		shopManager = new ShopManager();
-		perkListener = new PerkListener();
-		killstreakManager = new KillStreakManager();
-		invManager = new InventoryManager();
-		assignmentManager = new AssignmentManager();
+		ProgressionManager.getInstance();
+		PerkManager.getInstance();
+		LoadoutManager.getInstance();
+		ShopManager.getInstance();
+		PerkListener.getInstance();
+		KillStreakManager.getInstance();
+		InventoryManager.getInstance();
+		AssignmentManager.getInstance();
 
 		GameManager.setupOITC();
 		GameManager.setupGunGame();
@@ -194,7 +195,7 @@ public class Main extends JavaPlugin {
 		GameManager.loadMaps();
 
 		for (Player p : Bukkit.getOnlinePlayers()) {
-			loadManager.load(p);
+			LoadoutManager.getInstance().load(p);
 			CreditManager.loadCredits(p);
 		}
 
@@ -225,7 +226,7 @@ public class Main extends JavaPlugin {
 
 				RankPerks rank = new RankPerks(name, killCredits, killExperience, levelCredits);
 
-				Main.serverRanks.add(rank);
+				Main.getServerRanks().add(rank);
 
 				i++;
 			}
@@ -240,10 +241,10 @@ public class Main extends JavaPlugin {
 			}
 		} else {
 			RankPerks rank = new RankPerks("default", 1, 100, 0);
-			Main.serverRanks.add(rank);
+			Main.getServerRanks().add(rank);
 		}
 
-		Main.cs.sendMessage(Main.codPrefix + ChatColor.GREEN + ChatColor.BOLD + "COM-Warfare version " + ChatColor.RESET + ChatColor.WHITE + version + ChatColor.RESET + ChatColor.GREEN + ChatColor.BOLD + " is now up and running!");
+		Main.getConsole().sendMessage(Main.getPrefix() + ChatColor.GREEN + ChatColor.BOLD + "COM-Warfare version " + ChatColor.RESET + ChatColor.WHITE + version + ChatColor.RESET + ChatColor.GREEN + ChatColor.BOLD + " is now up and running!");
 
 		if (serverMode) {
 			for (Player p : Bukkit.getOnlinePlayers()) {
@@ -277,14 +278,14 @@ public class Main extends JavaPlugin {
 			if (p instanceof Player) {
 				if (GameManager.isInMatch((Player) p)) {
 					if (!canUseInGame){
-						sendMessage(p, Main.codPrefix + Lang.NOT_ALLOWED_IN_GAME.getMessage(), lang);
+						sendMessage(p, Main.getPrefix() + Lang.NOT_ALLOWED_IN_GAME.getMessage(), getLang());
 						return false;
 					}
 				}
 			}
 			return true;
 		} else {
-			sendMessage(p, Main.codPrefix + Lang.NO_PERMISSION.getMessage(), lang);
+			sendMessage(p, Main.getPrefix() + Lang.NO_PERMISSION.getMessage(), getLang());
 			return false;
 		}
 	}
@@ -332,12 +333,12 @@ public class Main extends JavaPlugin {
 					try {
 						page = Integer.parseInt(args[1]);
 					} catch (Exception e) {
-						sendMessage(sender, Main.codPrefix + Lang.NOT_PROPER_PAGE.getMessage(), lang);
+						sendMessage(sender, Main.getPrefix() + Lang.NOT_PROPER_PAGE.getMessage(), lang);
 						return true;
 					}
 
 					if (!(page > 0 && page <= 5)) {
-						sendMessage(sender, Main.codPrefix + Lang.NOT_PROPER_PAGE.getMessage(), lang);
+						sendMessage(sender, Main.getPrefix() + Lang.NOT_PROPER_PAGE.getMessage(), lang);
 						return true;
 					}
 
@@ -378,7 +379,6 @@ public class Main extends JavaPlugin {
 							break;
 						case 5:
 							sendMessage(sender, cColor + "/cod blacklist (map) (mode) | " + dColor + "Prevents a mode from being played on the map.");
-							sendMessage(sender, cColor + "/cod notes | " + dColor + "Lists the patch notes for the current version of the plugin.");
 							break;
 						default:
 							break;
@@ -410,8 +410,8 @@ public class Main extends JavaPlugin {
 
 				boolean b = GameManager.findMatch(p);
 				if (b) {
-					loadManager.load(p);
-					Main.progressionManager.update(p);
+					LoadoutManager.getInstance().load(p);
+					ProgressionManager.getInstance().update(p);
 				}
 				return true;
 			} else if (args[0].equalsIgnoreCase("leave")) {
@@ -432,7 +432,7 @@ public class Main extends JavaPlugin {
 				if (!hasPerm(sender, "com.map.list", true))
 					return true;
 
-				sendMessage(sender, Main.codPrefix + Lang.MAP_LIST_HEADER.getMessage(), lang);
+				sendMessage(sender, Main.getPrefix() + Lang.MAP_LIST_HEADER.getMessage(), lang);
 				int k = 0;
 				for (CodMap m : GameManager.getAddedMaps()) {
 					k++;
@@ -479,7 +479,7 @@ public class Main extends JavaPlugin {
 
 					for (CodMap m : GameManager.getAddedMaps()) {
 						if (m.getName().equalsIgnoreCase(mapName)) {
-							sendMessage(sender, Main.codPrefix + Lang.CREATE_MAP_ALREADY_EXISTS.getMessage(), lang);
+							sendMessage(sender, Main.getPrefix() + Lang.CREATE_MAP_ALREADY_EXISTS.getMessage(), lang);
 							return true;
 						}
 					}
@@ -489,12 +489,12 @@ public class Main extends JavaPlugin {
 					GameManager.getAddedMaps().add(newMap);
 					String msg = Lang.CREATE_MAP_SUCCESS.getMessage();
 					msg = msg.replace("{map-name}", mapName);
-					sendMessage(sender, Main.codPrefix + msg, lang);
+					sendMessage(sender, Main.getPrefix() + msg, lang);
 					newMap.setEnable();
 					return true;
 				} else {
 					String msg = Lang.INCORRECT_USAGE.getMessage().replace("{command}", "/cod createMap (name)");
-					sendMessage(sender, Main.codPrefix + msg);
+					sendMessage(sender, Main.getPrefix() + msg);
 					return true;
 				}
 			} else if (args[0].equalsIgnoreCase("removeMap")) {
@@ -523,17 +523,17 @@ public class Main extends JavaPlugin {
 								notChanged.save();
 							}
 
-							sendMessage(sender, Main.codPrefix + Lang.REMOVE_MAP_SUCCESS.getMessage(), lang);
+							sendMessage(sender, Main.getPrefix() + Lang.REMOVE_MAP_SUCCESS.getMessage(), lang);
 							return true;
 						}
 					}
 
-					sendMessage(sender, Main.codPrefix + Lang.MAP_NOT_EXISTS_WITH_NAME.getMessage(), lang);
+					sendMessage(sender, Main.getPrefix() + Lang.MAP_NOT_EXISTS_WITH_NAME.getMessage(), lang);
 					return true;
 
 				} else {
 					String msg = Lang.INCORRECT_USAGE.getMessage().replace("{command}", "/cod removeMap (name)");
-					sendMessage(sender, Main.codPrefix + msg);
+					sendMessage(sender, Main.getPrefix() + msg);
 					return true;
 				}
 
@@ -550,7 +550,7 @@ public class Main extends JavaPlugin {
 
 				if (!(args.length > 1)) {
 					String msg = Lang.INCORRECT_USAGE.getMessage().replace("{command}", "/cod set (lobby/spawn/flag) [args]");
-					sendMessage(p, Main.codPrefix + msg);
+					sendMessage(p, Main.getPrefix() + msg);
 					return true;
 				}
 
@@ -558,10 +558,10 @@ public class Main extends JavaPlugin {
 
 					Location lobby = p.getLocation();
 					getPlugin().getConfig().set("com.lobby", lobby);
-					Main.lobbyLoc = (Location) getPlugin().getConfig().get("com.lobby");
+					lobbyLoc = (Location) getPlugin().getConfig().get("com.lobby");
 					getPlugin().saveConfig();
 					getPlugin().reloadConfig();
-					sendMessage(p, Main.codPrefix + Lang.SET_LOBBY_SUCCESS.getMessage(), lang);
+					sendMessage(p, Main.getPrefix() + Lang.SET_LOBBY_SUCCESS.getMessage(), lang);
 					return true;
 				} else if (args[1].equalsIgnoreCase("spawn")) {
 
@@ -570,7 +570,7 @@ public class Main extends JavaPlugin {
 
 					if (args.length < 4) {
 						String msg = Lang.INCORRECT_USAGE.getMessage().replace("{command}", "/cod set spawn (map name) (team)");
-						sendMessage(p, Main.codPrefix + msg);
+						sendMessage(p, Main.getPrefix() + msg);
 						return true;
 					}
 					CodMap map = null;
@@ -582,7 +582,7 @@ public class Main extends JavaPlugin {
 					}
 
 					if (map == null) {
-						sendMessage(p, Main.codPrefix + Lang.MAP_NOT_EXISTS_WITH_NAME, lang);
+						sendMessage(p, Main.getPrefix() + Lang.MAP_NOT_EXISTS_WITH_NAME, lang);
 						return true;
 					}
 
@@ -605,12 +605,12 @@ public class Main extends JavaPlugin {
 						map.setEnable();
 						break;
 					default:
-						sendMessage(p, Main.codPrefix + Lang.TEAM_NOT_EXISTS_WITH_NAME.getMessage(), lang);
+						sendMessage(p, Main.getPrefix() + Lang.TEAM_NOT_EXISTS_WITH_NAME.getMessage(), lang);
 						return true;
 					}
 
 					String msg = Lang.SET_SPAWN_SUCCESS.getMessage().replace("{team}", team).replace("{map-name}", map.getName());
-					sendMessage(p, Main.codPrefix + msg);
+					sendMessage(p, Main.getPrefix() + msg);
 
 				} else if (args[1].equalsIgnoreCase("flag")) {
 
@@ -619,7 +619,7 @@ public class Main extends JavaPlugin {
 
 					if (args.length < 4) {
 						String msg = Lang.INCORRECT_USAGE.getMessage().replace("{command}", "/cod set flag (map name) (red/blue/a/b/c)");
-						sendMessage(p, Main.codPrefix + msg);
+						sendMessage(p, Main.getPrefix() + msg);
 						return true;
 					}
 
@@ -634,7 +634,7 @@ public class Main extends JavaPlugin {
 					}
 
 					if (map == null) {
-						sendMessage(p, Main.codPrefix + Lang.MAP_NOT_EXISTS_WITH_NAME.getMessage(), lang);
+						sendMessage(p, Main.getPrefix() + Lang.MAP_NOT_EXISTS_WITH_NAME.getMessage(), lang);
 						return true;
 					}
 
@@ -666,14 +666,14 @@ public class Main extends JavaPlugin {
 							break;
 						default:
 							String msg = Lang.INCORRECT_USAGE.getMessage().replace("{command}", "/cod set flag (map name) (red/blue/a/b/c)");
-							sendMessage(p, Main.codPrefix + msg);
+							sendMessage(p, Main.getPrefix() + msg);
 							return true;
 					}
 
 					if (team == null) {
-						sendMessage(p, Main.codPrefix + Lang.SET_FLAG_DOM_SUCCESS.getMessage().replace("{flag}", flag));
+						sendMessage(p, Main.getPrefix() + Lang.SET_FLAG_DOM_SUCCESS.getMessage().replace("{flag}", flag));
 					} else {
-						sendMessage(p, Main.codPrefix + Lang.SET_FLAG_CTF_SUCCESS.getMessage().replace("{team}", team));
+						sendMessage(p, Main.getPrefix() + Lang.SET_FLAG_CTF_SUCCESS.getMessage().replace("{team}", team));
 					}
 
 					return true;
@@ -700,7 +700,7 @@ public class Main extends JavaPlugin {
 				if (lobbyLoc != null) {
 					p.teleport(lobbyLoc);
 				} else {
-					sendMessage(p, Main.codPrefix + Lang.LOBBY_NOT_EXISTS.getMessage(), lang);
+					sendMessage(p, Main.getPrefix() + Lang.LOBBY_NOT_EXISTS.getMessage(), lang);
 				}
 			} else if (args[0].equalsIgnoreCase("balance")) {
 				if (!(sender instanceof Player)) {
@@ -718,7 +718,7 @@ public class Main extends JavaPlugin {
 			} else if (args[0].equalsIgnoreCase("credits")) {
 				if (args.length < 3) {
 					if (hasPerm(sender, "com.credits.give"))
-						sendMessage(sender, Main.codPrefix + Lang.INCORRECT_USAGE.getMessage().replace("{command}", "/cod credits [give/set] {player} (amount)"));
+						sendMessage(sender, Main.getPrefix() + Lang.INCORRECT_USAGE.getMessage().replace("{command}", "/cod credits [give/set] {player} (amount)"));
 					return true;
 				}
 
@@ -732,13 +732,13 @@ public class Main extends JavaPlugin {
 					try {
 						amount = Integer.parseInt(args[3]);
 					} catch (Exception e) {
-						sendMessage(sender, Main.codPrefix + Lang.INCORRECT_USAGE.getMessage().replace("{command}", "/cod credits give {player} (amount)"));
+						sendMessage(sender, Main.getPrefix() + Lang.INCORRECT_USAGE.getMessage().replace("{command}", "/cod credits give {player} (amount)"));
 						return true;
 
 					}
 
 					CreditManager.setCredits(playerName, CreditManager.getCredits(playerName) + amount);
-					sendMessage(sender, Main.codPrefix + Lang.GIVE_BALANCE_COMMAND.getMessage().replace("{player}", playerName).replace("{amount}", amount + "").replace("{total}", CreditManager.getCredits(playerName) + ""), lang);
+					sendMessage(sender, Main.getPrefix() + Lang.GIVE_BALANCE_COMMAND.getMessage().replace("{player}", playerName).replace("{amount}", amount + "").replace("{total}", CreditManager.getCredits(playerName) + ""), lang);
 					return true;
 				} else if (args[1].equalsIgnoreCase("set")) {
 
@@ -750,12 +750,12 @@ public class Main extends JavaPlugin {
 					try {
 						amount = Integer.parseInt(args[3]);
 					} catch (Exception e) {
-						sendMessage(sender, Main.codPrefix + Lang.INCORRECT_USAGE.getMessage().replace("{command}", "/cod credits set {name} [amount]"));
+						sendMessage(sender, Main.getPrefix() + Lang.INCORRECT_USAGE.getMessage().replace("{command}", "/cod credits set {name} [amount]"));
 						return true;
 					}
 
 					CreditManager.setCredits(playerName, amount);
-					sendMessage(sender, Main.codPrefix + Lang.SET_BALANCE_COMMAND.getMessage().replace("{player}", playerName).replace("{amount}", amount + ""), lang);
+					sendMessage(sender, Main.getPrefix() + Lang.SET_BALANCE_COMMAND.getMessage().replace("{player}", playerName).replace("{amount}", amount + ""), lang);
 					return true;
 				}
 			} else if (args[0].equalsIgnoreCase("createGun")) {
@@ -767,7 +767,7 @@ public class Main extends JavaPlugin {
 					createGun(sender, args);
 					return true;
 				} else {
-					sendMessage(sender, Main.codPrefix + Lang.INCORRECT_USAGE.getMessage().replace("{command}", "/cod createGun (Gun name) (Primary/Secondary) (Unlock type: level/credits/both) (Ammo Amount) (Gun Material) (Ammo Material) (Level Unlock) (Cost)"));
+					sendMessage(sender, Main.getPrefix() + Lang.INCORRECT_USAGE.getMessage().replace("{command}", "/cod createGun (Gun name) (Primary/Secondary) (Unlock type: level/credits/both) (Ammo Amount) (Gun Material) (Ammo Material) (Level Unlock) (Cost)"));
 					return true;
 				}
 			} else if ((args[0].equalsIgnoreCase("createWeapon") || args[0].equalsIgnoreCase("createGrenade"))) {
@@ -779,7 +779,7 @@ public class Main extends JavaPlugin {
 					createWeapon(sender, args);
 					return true;
 				} else {
-					sendMessage(sender, Main.codPrefix + Lang.INCORRECT_USAGE.getMessage().replace("{command}", "/cod createWeapon (name) (Lethal/Tactical) (Unlock Type: level/credits/both) (Grenade Material) (Level Unlock) (Cost)"));
+					sendMessage(sender, Main.getPrefix() + Lang.INCORRECT_USAGE.getMessage().replace("{command}", "/cod createWeapon (name) (Lethal/Tactical) (Unlock Type: level/credits/both) (Grenade Material) (Level Unlock) (Cost)"));
 					return true;
 				}
 			} else if (args[0].equalsIgnoreCase("start")) {
@@ -803,11 +803,11 @@ public class Main extends JavaPlugin {
 							}
 						}
 					} catch(Exception e) {
-						sendMessage(Main.cs, Main.codPrefix + Lang.COULD_NOT_FIND_GAME_PLAYER_IN, Main.lang	);
+						sendMessage(Main.getConsole(), Main.getPrefix() + Lang.COULD_NOT_FIND_GAME_PLAYER_IN, Main.getLang());
 					}
 					return true;
 				} else {
-					sendMessage(p, Main.codPrefix + Lang.MUST_BE_IN_GAME.getMessage(), lang);
+					sendMessage(p, Main.getPrefix() + Lang.MUST_BE_IN_GAME.getMessage(), lang);
 				}
 
 				return true;
@@ -821,7 +821,7 @@ public class Main extends JavaPlugin {
 					return true;
 
 				Player p = (Player) sender;
-				Main.invManager.openSelectClassInventory(p);
+				InventoryManager.getInstance().openSelectClassInventory(p);
 				return true;
 			} else if (args[0].equalsIgnoreCase("shop")) {
 				if (!(sender instanceof Player)) {
@@ -834,7 +834,7 @@ public class Main extends JavaPlugin {
 
 				Player p = (Player) sender;
 				p.closeInventory();
-				p.openInventory(invManager.mainShopInventory);
+				p.openInventory(InventoryManager.getInstance().mainShopInventory);
 				return true;
 			} else if (args[0].equalsIgnoreCase("boot")) {
 
@@ -843,9 +843,9 @@ public class Main extends JavaPlugin {
 
 				boolean result = bootPlayers();
 				if (result) {
-					sender.sendMessage(Main.codPrefix + Lang.PLAYERS_BOOTED_SUCCESS.getMessage());
+					sender.sendMessage(Main.getPrefix() + Lang.PLAYERS_BOOTED_SUCCESS.getMessage());
 				} else {
-					sender.sendMessage(Main.codPrefix + Lang.PLAYER_BOOTED_FAILURE.getMessage());
+					sender.sendMessage(Main.getPrefix() + Lang.PLAYER_BOOTED_FAILURE.getMessage());
 				}
 			} else if (args[0].equalsIgnoreCase("add")) {
 
@@ -859,7 +859,7 @@ public class Main extends JavaPlugin {
 
 				String type = args[1];
 				String gunName = args[2];
-				CodWeapon weapon = shopManager.getWeaponForName(gunName);
+				CodWeapon weapon = ShopManager.getInstance().getWeaponForName(gunName);
 
 				if (!(weapon instanceof CodGun)) {
 					sendMessage(sender, Lang.WEAPON_NOT_FOUND_WITH_NAME.getMessage().replace("{gun-name}", gunName));
@@ -871,7 +871,7 @@ public class Main extends JavaPlugin {
 					saveConfig();
 					reloadConfig();
 					GameManager.setupOITC();
-					sendMessage(sender, Main.codPrefix + Lang.OITC_GUN_SET_SUCCESS.getMessage().replace("{gun-name}", gunName));
+					sendMessage(sender, Main.getPrefix() + Lang.OITC_GUN_SET_SUCCESS.getMessage().replace("{gun-name}", gunName));
 					return true;
 				} else if (type.equalsIgnoreCase("gun")) {
 					GameManager.gunGameGuns.add((CodGun) weapon);
@@ -882,14 +882,14 @@ public class Main extends JavaPlugin {
 					getConfig().set("GunProgression", gunList);
 					saveConfig();
 					reloadConfig();
-					sendMessage(sender, Main.codPrefix + Lang.GUN_PROGRESSION_ADDED_SUCCESS.getMessage());
+					sendMessage(sender, Main.getPrefix() + Lang.GUN_PROGRESSION_ADDED_SUCCESS.getMessage());
 					return true;
 				}
-				sendMessage(sender, Main.codPrefix + Lang.INCORRECT_USAGE.getMessage().replace("{command}", "/cod add [oitc/gun] (gun name)"));
+				sendMessage(sender, Main.getPrefix() + Lang.INCORRECT_USAGE.getMessage().replace("{command}", "/cod add [oitc/gun] (gun name)"));
 				return true;
 			} else if (args[0].equalsIgnoreCase("changeMap")) {
 				if (!(sender instanceof Player)) {
-					sendMessage(cs, Main.codPrefix + Lang.MUST_BE_PLAYER.getMessage(), lang);
+					sendMessage(cs, Main.getPrefix() + Lang.MUST_BE_PLAYER.getMessage(), lang);
 					return true;
 				}
 
@@ -930,7 +930,7 @@ public class Main extends JavaPlugin {
 				return true;
 			} else if (args[0].equalsIgnoreCase("changeMode")) {
 				if (!(sender instanceof Player)) {
-					sendMessage(cs, Main.codPrefix + Lang.MUST_BE_PLAYER.getMessage(), lang);
+					sendMessage(cs, Main.getPrefix() + Lang.MUST_BE_PLAYER.getMessage(), lang);
 					return true;
 				}
 
@@ -1002,7 +1002,7 @@ public class Main extends JavaPlugin {
 
 				map.addToBlacklist(mode);
 
-				sendMessage(sender, Main.codPrefix + Lang.BLACKLIST_SUCCESS.getMessage().replace("{mode}", mode.toString()).replace("{map-name}", map.getName()));
+				sendMessage(sender, Main.getPrefix() + Lang.BLACKLIST_SUCCESS.getMessage().replace("{mode}", mode.toString()).replace("{map-name}", map.getName()));
 				return true;
 			} else if (args[0].equalsIgnoreCase("setLevel")) {
 
@@ -1024,19 +1024,19 @@ public class Main extends JavaPlugin {
 
 				try {
 					level = Integer.parseInt(args[2]);
-					if (level > progressionManager.maxLevel)
+					if (level > ProgressionManager.getInstance().maxLevel)
 						throw new NumberFormatException();
 				} catch(NumberFormatException e) {
 					sendMessage(sender, codPrefix + Lang.INCORRECT_USAGE.getMessage().replace("{command}", "/cod setLevel (player) (level)"));
 					return true;
 				}
 
-				Main.progressionManager.setLevel(player, level, true);
-				Main.progressionManager.saveData(player);
+				ProgressionManager.getInstance().setLevel(player, level, true);
+				ProgressionManager.getInstance().saveData(player);
 				sendMessage(sender, Lang.SET_LEVEL_SUCCESS.getMessage().replace("{player}", player.getDisplayName()).replace("{level}", level + ""));
 				return true;
 			} else {
-				sender.sendMessage(Main.codPrefix + Lang.UNKNOWN_COMMAND.getMessage());
+				sender.sendMessage(Main.getPrefix() + Lang.UNKNOWN_COMMAND.getMessage());
 				return true;
 			}
 		}
@@ -1048,7 +1048,7 @@ public class Main extends JavaPlugin {
 		try {
 			translate = new McTranslate(Main.getPlugin(), Main.translate_api_key);
 		} catch(Exception e) {
-			Main.sendMessage(Main.cs, Main.codPrefix + ChatColor.RED + "Could not start McTranslate++ API!");
+			Main.sendMessage(Main.getConsole(), Main.getPrefix() + ChatColor.RED + "Could not start McTranslate++ API!");
 		}
 	}
 
@@ -1068,7 +1068,7 @@ public class Main extends JavaPlugin {
 
 				for (Player p : pls) {
 					i.removePlayer(p);
-					Main.sendMessage(p, Main.codPrefix + Lang.PLAYER_LEAVE_GAME.getMessage(), Main.lang);
+					Main.sendMessage(p, Main.getPrefix() + Lang.PLAYER_LEAVE_GAME.getMessage(), Main.getLang());
 				}
 			}
 		}
@@ -1086,13 +1086,13 @@ public class Main extends JavaPlugin {
 			try {
 				grenadeType = WeaponType.valueOf(args[2].toUpperCase());
 			} catch (Exception e) {
-				sendMessage(p, Main.codPrefix + Lang.WEAPON_TYPE_NOT_EXISTS.getMessage(), lang);
+				sendMessage(p, Main.getPrefix() + Lang.WEAPON_TYPE_NOT_EXISTS.getMessage(), lang);
 				return;
 			}
 			try {
 				unlockType = UnlockType.valueOf(args[3].toUpperCase());
 			} catch (Exception e) {
-				sendMessage(p, Main.codPrefix + Lang.UNLOCK_TYPE_NOT_EXISTS.getMessage(), lang);
+				sendMessage(p, Main.getPrefix() + Lang.UNLOCK_TYPE_NOT_EXISTS.getMessage(), lang);
 				return;
 			}
 			ItemStack grenade;
@@ -1107,7 +1107,7 @@ public class Main extends JavaPlugin {
 					grenade = new ItemStack(Material.valueOf(wa[4]), 1, data);
 				}
 			} catch (Exception e) {
-				sendMessage(p, Main.codPrefix + Lang.MATERIAL_NOT_EXISTS.getMessage().replace("{name}", args[4].toUpperCase()), lang);
+				sendMessage(p, Main.getPrefix() + Lang.MATERIAL_NOT_EXISTS.getMessage().replace("{name}", args[4].toUpperCase()), lang);
 				return;
 			}
 
@@ -1116,7 +1116,7 @@ public class Main extends JavaPlugin {
 			try {
 				levelUnlock = Integer.parseInt(args[5]);
 			} catch (Exception e) {
-				sendMessage(p, Main.codPrefix + Lang.INCORRECT_USAGE.getMessage().replace("{command}", command), lang);
+				sendMessage(p, Main.getPrefix() + Lang.INCORRECT_USAGE.getMessage().replace("{command}", command), lang);
 				return;
 			}
 
@@ -1125,7 +1125,7 @@ public class Main extends JavaPlugin {
 			try {
 				cost = Integer.parseInt(args[6]);
 			} catch (Exception e) {
-				sendMessage(p, Main.codPrefix + Lang.INCORRECT_USAGE.getMessage().replace("{command}", command), lang);
+				sendMessage(p, Main.getPrefix() + Lang.INCORRECT_USAGE.getMessage().replace("{command}", command), lang);
 				return;
 			}
 
@@ -1137,23 +1137,25 @@ public class Main extends JavaPlugin {
 
 			sendMessage(p, codPrefix + Lang.WEAPON_CREATED_SUCCESS.getMessage().replace("{weapon-name}", name).replace("{weapon-type}", grenadeType.toString()), lang);
 
+			ShopManager sm = ShopManager.getInstance();
+
 			switch (grenadeType) {
-			case LETHAL:
-				ArrayList<CodWeapon> lethalList = Main.shopManager.getLethalWeapons();
-				lethalList.add(grenadeWeapon);
-				Main.shopManager.setLethalWeapons(lethalList);
-				break;
-			case TACTICAL:
-				ArrayList<CodWeapon> tacList = Main.shopManager.getTacticalWeapons();
-				tacList.add(grenadeWeapon);
-				Main.shopManager.setTacticalWeapons(tacList);
-				break;
-			default:
-				break;
+				case LETHAL:
+					ArrayList<CodWeapon> lethalList = sm.getLethalWeapons();
+					lethalList.add(grenadeWeapon);
+					sm.setLethalWeapons(lethalList);
+					break;
+				case TACTICAL:
+					ArrayList<CodWeapon> tacList = sm.getTacticalWeapons();
+					tacList.add(grenadeWeapon);
+					sm.setTacticalWeapons(tacList);
+					break;
+				default:
+					break;
 			}
 
 		} else {
-			sendMessage(p, Main.codPrefix + Lang.INCORRECT_USAGE.getMessage().replace("{command}", command), lang);
+			sendMessage(p, Main.getPrefix() + Lang.INCORRECT_USAGE.getMessage().replace("{command}", command), lang);
 		}
 	}
 
@@ -1171,7 +1173,7 @@ public class Main extends JavaPlugin {
 				gt = first.toUpperCase() + gt.toLowerCase();
 				gunType = GunType.valueOf(gt);
 			} catch (Exception e) {
-				sendMessage(p, Main.codPrefix + Lang.GUN_TYPE_NOT_EXISTS.getMessage(), lang);
+				sendMessage(p, Main.getPrefix() + Lang.GUN_TYPE_NOT_EXISTS.getMessage(), lang);
 				return;
 			}
 
@@ -1180,7 +1182,7 @@ public class Main extends JavaPlugin {
 			try {
 				unlockType = UnlockType.valueOf(args[3].toUpperCase());
 			} catch (Exception e) {
-				sendMessage(p, Main.codPrefix + Lang.UNLOCK_TYPE_NOT_EXISTS.getMessage(), lang);
+				sendMessage(p, Main.getPrefix() + Lang.UNLOCK_TYPE_NOT_EXISTS.getMessage(), lang);
 				return;
 			}
 
@@ -1189,7 +1191,7 @@ public class Main extends JavaPlugin {
 			try {
 				ammoAmount = Integer.parseInt(args[4]);
 			} catch (Exception e) {
-				sendMessage(p, Main.codPrefix + Lang.INCORRECT_USAGE.getMessage().replace("{command}", command) , lang);
+				sendMessage(p, Main.getPrefix() + Lang.INCORRECT_USAGE.getMessage().replace("{command}", command) , lang);
 				return;
 			}
 
@@ -1205,7 +1207,7 @@ public class Main extends JavaPlugin {
 					gunItem = new ItemStack(Material.valueOf(ga[0]), 1, data);
 				}
 			} catch (Exception e) {
-				sendMessage(p, Main.codPrefix + Lang.MATERIAL_NOT_EXISTS.getMessage().replace("{name}", args[5].toUpperCase()), lang);
+				sendMessage(p, Main.getPrefix() + Lang.MATERIAL_NOT_EXISTS.getMessage().replace("{name}", args[5].toUpperCase()), lang);
 				return;
 			}
 
@@ -1219,7 +1221,7 @@ public class Main extends JavaPlugin {
 					ammoItem = new ItemStack(Material.valueOf(aa[0]), 1, data);
 				}
 			} catch (Exception e) {
-				sendMessage(p, Main.codPrefix + Lang.MATERIAL_NOT_EXISTS.getMessage().replace("{name}", args[6].toUpperCase()), lang);
+				sendMessage(p, Main.getPrefix() + Lang.MATERIAL_NOT_EXISTS.getMessage().replace("{name}", args[6].toUpperCase()), lang);
 				return;
 			}
 
@@ -1228,7 +1230,7 @@ public class Main extends JavaPlugin {
 			try {
 				levelUnlock = Integer.parseInt(args[7]);
 			} catch (Exception e) {
-				sendMessage(p, Main.codPrefix + Lang.INCORRECT_USAGE.getMessage().replace("{command}", command) , lang);
+				sendMessage(p, Main.getPrefix() + Lang.INCORRECT_USAGE.getMessage().replace("{command}", command) , lang);
 				return;
 			}
 
@@ -1237,7 +1239,7 @@ public class Main extends JavaPlugin {
 			try {
 				cost = Integer.parseInt(args[8]);
 			} catch (Exception e) {
-				sendMessage(p, Main.codPrefix + Lang.INCORRECT_USAGE.getMessage().replace("{command}", command) , lang);
+				sendMessage(p, Main.getPrefix() + Lang.INCORRECT_USAGE.getMessage().replace("{command}", command) , lang);
 				return;
 			}
 
@@ -1249,34 +1251,36 @@ public class Main extends JavaPlugin {
 
 			sendMessage(p, codPrefix + Lang.GUN_CREATED_SUCCESS.getMessage().replace("{gun-name}", name).replace("{gun-type}", gunType.toString()), lang);
 
+			ShopManager sm = ShopManager.getInstance();
+
 			switch (gunType) {
 				case Primary:
-					ArrayList<CodGun> pList = Main.shopManager.getPrimaryGuns();
+					ArrayList<CodGun> pList = sm.getPrimaryGuns();
 					pList.add(gun);
-					Main.shopManager.setPrimaryGuns(pList);
+					sm.setPrimaryGuns(pList);
 					break;
 				case Secondary:
-					ArrayList<CodGun> sList = Main.shopManager.getSecondaryGuns();
+					ArrayList<CodGun> sList = sm.getSecondaryGuns();
 					sList.add(gun);
-					Main.shopManager.setSecondaryGuns(sList);
+					sm.setSecondaryGuns(sList);
 					break;
 				default:
 					break;
 			}
 		} else {
-			sendMessage(p, Main.codPrefix + Lang.INCORRECT_USAGE.getMessage().replace("{command}", command) , lang);
+			sendMessage(p, Main.getPrefix() + Lang.INCORRECT_USAGE.getMessage().replace("{command}", command) , lang);
 		}
 
 	}
 
 	public static RankPerks getRank(Player p) {
-		for (RankPerks perk : Main.serverRanks) {
+		for (RankPerks perk : Main.getServerRanks()) {
 			if (p.hasPermission("com." + perk.getName())) {
 				return perk;
 			}
 		}
 
-		for (RankPerks perk : Main.serverRanks) {
+		for (RankPerks perk : Main.getServerRanks()) {
 			if (perk.getName().equals("default")) {
 				return perk;
 			}
@@ -1299,7 +1303,7 @@ public class Main extends JavaPlugin {
 		String translatedMessage;
 
 		try {
-			translatedMessage = ((McTranslate)translate).translateRuntime(message, McLang.EN, (McLang) targetLang);
+			translatedMessage = ((McTranslate)getInstance().getTranslate()).translateRuntime(message, McLang.EN, (McLang) targetLang);
 		} catch (Exception e) {
 			sendMessage(target, message);
 			return;
@@ -1338,7 +1342,7 @@ public class Main extends JavaPlugin {
 	}
 
 	public static void openMainMenu(Player p) {
-		p.openInventory(invManager.mainInventory);
+		p.openInventory(InventoryManager.getInstance().mainInventory);
 		try {
 			p.playSound(p.getLocation(), Sound.valueOf("BLOCK_CHEST_OPEN"), 4f, 1f);
 		}catch(Exception e) {
@@ -1348,15 +1352,78 @@ public class Main extends JavaPlugin {
 	}
 
 	public static boolean hasQualityArms() {
-		return hasQA;
+		return getInstance().hasQA;
 	}
 
 	public static boolean hasCrackShot() {
-		return hasCS;
+		return getInstance().hasCS;
 	}
 
 	public static boolean isDisabling() {
 		return disabling;
 	}
 
+	public static String getPrefix() {
+		return getInstance().codPrefix;
+	}
+
+	public static Object getLang() {
+		return getInstance().lang;
+	}
+
+	public static ConsoleCommandSender getConsole() {
+		return getInstance().cs;
+	}
+
+	private Object getTranslate() {
+		return getInstance().translate;
+	}
+
+	private static List<RankPerks> getServerRanks() {
+		return getInstance().serverRanks;
+	}
+
+	public static double getDefaultHealth() {
+		return getInstance().defaultHealth;
+	}
+
+	public static Location getLobbyLocation() {
+		return getInstance().lobbyLoc;
+	}
+
+	public static int getMinPlayers() {
+		return getInstance().minPlayers;
+	}
+
+	public static int getMaxPlayers() {
+		return getInstance().maxPlayers;
+	}
+
+	public static String getRewardHighestScore() {
+		return getInstance().reward_highestScore;
+	}
+
+	public static String getRewardHighestKD() {
+		return getInstance().reward_highestKD;
+	}
+
+	public static String getRewardMaxLevel() {
+		return getInstance().reward_maxLevel;
+	}
+
+	public static String getRewardMaxPrestige() {
+		return getInstance().reward_maxPrestige;
+	}
+
+	public static String getRewardMaxLevelMaxPrestige() {
+		return getInstance().reward_maxPrestigeMaxLevel;
+	}
+
+	public static String getHeader() {
+		return getInstance().header;
+	}
+
+	public static boolean isServerMode() {
+		return getInstance().serverMode;
+	}
 }

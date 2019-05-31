@@ -3,6 +3,7 @@ package com.rhetorical.cod.game;
 import com.rhetorical.cod.Main;
 import com.rhetorical.cod.lang.Lang;
 import com.rhetorical.cod.progression.CreditManager;
+import com.rhetorical.cod.progression.ProgressionManager;
 import com.rhetorical.cod.progression.StatHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -41,10 +42,12 @@ class ScoreboardManager {
 
 		ScoreboardMapping mapping = getMapping(p);
 
+		ProgressionManager pm = ProgressionManager.getInstance();
+
 		mapping.updateKills(StatHandler.getKills(p.getName()));
 		mapping.updateDeaths(StatHandler.getDeaths(p.getName()));
-		mapping.updateLevel(Main.progressionManager.getLevel(p));
-		mapping.updatePrestige(Main.progressionManager.getPrestigeLevel(p));
+		mapping.updateLevel(pm.getLevel(p));
+		mapping.updatePrestige(pm.getPrestigeLevel(p));
 		mapping.updateTime(time);
 		mapping.updateCredits(CreditManager.getCredits(p));
 
@@ -100,10 +103,12 @@ class ScoreboardManager {
 
 		ScoreboardMapping mapping = getMapping(p);
 
+		ProgressionManager pm = ProgressionManager.getInstance();
+
 		mapping.updateCredits(CreditManager.getCredits(p));
 		mapping.updateTime(time);
-		mapping.updateLevel(Main.progressionManager.getLevel(p));
-		mapping.updatePrestige(Main.progressionManager.getPrestigeLevel(p));
+		mapping.updateLevel(pm.getLevel(p));
+		mapping.updatePrestige(pm.getPrestigeLevel(p));
 
 		updateLobbyTeams(p, mapping);
 	}

@@ -54,7 +54,7 @@ public class Assignment {
 	void checkProgress() {
 		if (progress >= getRequirement().getRequired()) {
 			completed = true;
-			Main.assignmentManager.completeAssignment(assignee, this);
+			AssignmentManager.getInstance().completeAssignment(assignee, this);
 		}
 	}
 

@@ -1,8 +1,13 @@
 package com.rhetorical.cod.game;
 
 import com.rhetorical.cod.Main;
+import com.rhetorical.cod.assignments.AssignmentManager;
 import com.rhetorical.cod.files.ArenasFile;
+import com.rhetorical.cod.inventories.InventoryManager;
+import com.rhetorical.cod.inventories.ShopManager;
 import com.rhetorical.cod.lang.Lang;
+import com.rhetorical.cod.loadouts.LoadoutManager;
+import com.rhetorical.cod.progression.ProgressionManager;
 import com.rhetorical.cod.weapons.CodGun;
 import com.rhetorical.cod.weapons.CodWeapon;
 import org.bukkit.ChatColor;
@@ -25,7 +30,7 @@ public class GameManager {
 		if (oitcGunName == null)
 			return;
 
-		CodWeapon weapon = Main.shopManager.getWeaponForName(oitcGunName);
+		CodWeapon weapon = ShopManager.getInstance().getWeaponForName(oitcGunName);
 
 		if (!(weapon instanceof CodGun))
 			return;
@@ -38,8 +43,8 @@ public class GameManager {
 	public static void setupGunGame() {
 		List<String> guns = Main.getPlugin().getConfig().getStringList("GunProgression");
 		for(String g : guns) {
-			if (Main.shopManager.getWeaponForName(g) instanceof CodGun) {
-				CodGun gun = (CodGun) Main.shopManager.getWeaponForName(g);
+			if (ShopManager.getInstance().getWeaponForName(g) instanceof CodGun) {
+				CodGun gun = (CodGun) ShopManager.getInstance().getWeaponForName(g);
 				if (!gunGameGuns.contains(gun))
 					gunGameGuns.add(gun);
 			}
@@ -96,30 +101,30 @@ public class GameManager {
 
 	public static boolean findMatch(Player p) {
 
-		Main.shopManager.checkForNewGuns(p);
+		ShopManager.getInstance().checkForNewGuns(p);
 		
 		try  {
-			Main.loadManager.load(p);
-			Main.invManager.setupPlayerSelectionInventories(p);
+			LoadoutManager.getInstance().load(p);
+			InventoryManager.getInstance().setupPlayerSelectionInventories(p);
 		} catch(Exception e) {
-			Main.sendMessage(Main.cs, Main.codPrefix + Lang.ERROR_READING_PLAYER_LOADOUT.getMessage(), Main.lang);
+			Main.sendMessage(Main.getConsole(), Main.getPrefix() + Lang.ERROR_READING_PLAYER_LOADOUT.getMessage(), Main.getLang());
 		}
 
-		Main.assignmentManager.load(p);
+		AssignmentManager.getInstance().load(p);
 		
-		Main.progressionManager.loadData(p);
-		Main.progressionManager.saveData(p);
+		ProgressionManager.getInstance().loadData(p);
+		ProgressionManager.getInstance().saveData(p);
 		
-		if (Main.lobbyLoc == null) {
-			Main.sendMessage(p, Main.codPrefix + Lang.NO_LOBBY_SET.getMessage(), Main.lang);
-			Main.sendMessage(p, Main.codPrefix + Lang.COULD_NOT_CREATE_MATCH_BECAUSE_NO_LOBBY.getMessage(), Main.lang);
+		if (Main.getLobbyLocation() == null) {
+			Main.sendMessage(p, Main.getPrefix() + Lang.NO_LOBBY_SET.getMessage(), Main.getLang());
+			Main.sendMessage(p, Main.getPrefix() + Lang.COULD_NOT_CREATE_MATCH_BECAUSE_NO_LOBBY.getMessage(), Main.getLang());
 			return false;
 		}
 		
 
 		for (GameInstance i : runningGames) {
 			if (i.getPlayers().contains(p)) {
-				Main.sendMessage(p, Main.codPrefix + Lang.ALREADY_IN_GAME.getMessage(), Main.lang);
+				Main.sendMessage(p, Main.getPrefix() + Lang.ALREADY_IN_GAME.getMessage(), Main.getLang());
 				return false;
 			}
 		}
@@ -128,7 +133,7 @@ public class GameManager {
 
 		GameInstance newGame;
 
-		Main.sendMessage(p, Main.codPrefix + Lang.SEARCHING_FOR_MATCH.getMessage(), Main.lang);
+		Main.sendMessage(p, Main.getPrefix() + Lang.SEARCHING_FOR_MATCH.getMessage(), Main.getLang());
 		for (GameInstance i : runningGames) {
 			if (i.getPlayers().size() < 12) {
 				if (i.getPlayers().size() == 0) {
@@ -143,12 +148,12 @@ public class GameManager {
 
 		if (possibleMatches.size() == 0) {
 
-			Main.sendMessage(p, Main.codPrefix + Lang.COULD_NOT_FIND_MATCH.getMessage(), Main.lang);
-			Main.sendMessage(p, Main.codPrefix + Lang.CREATING_MATCH.getMessage(), Main.lang);
+			Main.sendMessage(p, Main.getPrefix() + Lang.COULD_NOT_FIND_MATCH.getMessage(), Main.getLang());
+			Main.sendMessage(p, Main.getPrefix() + Lang.CREATING_MATCH.getMessage(), Main.getLang());
 
 			CodMap map = pickRandomMap();
 			if (map == null) {
-				Main.sendMessage(p, Main.codPrefix + Lang.COULD_NOT_CREATE_MATCH_BECAUSE_NO_MAPS.getMessage(), Main.lang);
+				Main.sendMessage(p, Main.getPrefix() + Lang.COULD_NOT_CREATE_MATCH_BECAUSE_NO_MAPS.getMessage(), Main.getLang());
 				return false;
 			}
 
@@ -160,15 +165,15 @@ public class GameManager {
 
 			newGame.addPlayer(p);
 
-			Main.sendMessage(p, Main.codPrefix + Lang.CREATED_LOBBY.getMessage(), Main.lang);
+			Main.sendMessage(p, Main.getPrefix() + Lang.CREATED_LOBBY.getMessage(), Main.getLang());
 			return true;
 
 		}
 
 		possibleMatches.lastEntry().getValue().addPlayer(p);
-		Main.sendMessage(p, Main.codPrefix + Lang.FOUND_MATCH.getMessage(), Main.lang);
+		Main.sendMessage(p, Main.getPrefix() + Lang.FOUND_MATCH.getMessage(), Main.getLang());
 		for (Player inGame : possibleMatches.lastEntry().getValue().getPlayers()) {
-			Main.sendMessage(inGame, Main.codPrefix + Lang.PLAYER_JOINED_LOBBY.getMessage().replace("{player}", p.getDisplayName()), Main.lang);
+			Main.sendMessage(inGame, Main.getPrefix() + Lang.PLAYER_JOINED_LOBBY.getMessage().replace("{player}", p.getDisplayName()), Main.getLang());
 		}
 
 		return true;
@@ -178,14 +183,14 @@ public class GameManager {
 
 	public static void leaveMatch(Player p) {
 		if (!isInMatch(p) || getMatchWhichContains(p) == null) {
-			Main.sendMessage(p, Main.codPrefix + Lang.PLAYER_NOT_IN_GAME.getMessage(), Main.lang);
+			Main.sendMessage(p, Main.getPrefix() + Lang.PLAYER_NOT_IN_GAME.getMessage(), Main.getLang());
 			return;
 		}
 
 		Objects.requireNonNull(getMatchWhichContains(p)).removePlayer(p);
 
-		Main.sendMessage(p, Main.codPrefix + Lang.PLAYER_LEAVE_GAME.getMessage(), Main.lang);
-		if (Main.serverMode) {
+		Main.sendMessage(p, Main.getPrefix() + Lang.PLAYER_LEAVE_GAME.getMessage(), Main.getLang());
+		if (Main.isServerMode()) {
 			p.kickPlayer("");
 		}
 	}
@@ -235,7 +240,7 @@ public class GameManager {
 			}
 		}
 
-		Main.sendMessage(Main.cs, Lang.RAN_OUT_OF_MAPS.getMessage(), Main.lang);
+		Main.sendMessage(Main.getConsole(), Lang.RAN_OUT_OF_MAPS.getMessage(), Main.getLang());
 
 		return null;
 	}
@@ -261,10 +266,10 @@ public class GameManager {
 	public static void removeInstance(GameInstance i) {
 
 		for (Player p : i.getPlayers()) {
-			Main.sendMessage(p, Lang.CURRENT_GAME_REMOVED.getMessage(), Main.lang);
+			Main.sendMessage(p, Lang.CURRENT_GAME_REMOVED.getMessage(), Main.getLang());
 		}
 		
-		Main.sendMessage(Main.cs, Main.codPrefix + ChatColor.GRAY + "Game instance id " + i.getId() + " has been removed!", Main.lang);
+		Main.sendMessage(Main.getConsole(), Main.getPrefix() + ChatColor.GRAY + "Game instance id " + i.getId() + " has been removed!", Main.getLang());
 
 		usedMaps.remove(i.getMap());
 

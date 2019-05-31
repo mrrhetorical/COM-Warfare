@@ -16,8 +16,19 @@ public class KillStreakManager {
 
 	///// END KILLSTREAK ITEMS /////
 
+	private static KillStreakManager instance;
+
 	private HashMap<Player, KillStreak[]> playerKillstreaks = new HashMap<>();
 	private HashMap<Player, ArrayList<KillStreak>> availableKillstreaks = new HashMap<>();
+
+	private KillStreakManager() {
+		if (instance == null)
+			instance = this;
+	}
+
+	public static KillStreakManager getInstance() {
+		return instance != null ? instance : new KillStreakManager();
+	}
 
 	public void checkStreaks(Player p) {
 		KillStreak[] streaks = playerKillstreaks.get(p);
@@ -94,7 +105,7 @@ public class KillStreakManager {
 			try {
 				ks = KillStreak.valueOf(s);
 			} catch (Exception e) {
-				Main.cs.sendMessage(Main.codPrefix + Lang.ERROR_COULD_NOT_LOAD_KILL_STREAKS.getMessage().replace("{player}", p.getName()));
+				Main.getConsole().sendMessage(Main.getPrefix() + Lang.ERROR_COULD_NOT_LOAD_KILL_STREAKS.getMessage().replace("{player}", p.getName()));
 				continue;
 			}
 

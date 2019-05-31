@@ -6,6 +6,7 @@ import com.rhetorical.cod.game.GameState;
 import com.rhetorical.cod.lang.Lang;
 import com.rhetorical.cod.lang.LevelNames;
 import com.rhetorical.cod.progression.CreditManager;
+import com.rhetorical.cod.progression.ProgressionManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -41,7 +42,7 @@ public class Listeners implements Listener {
 		// remove from cod
 		for (GameInstance i : GameManager.getRunningGames()) {
 			if (i.getPlayers().contains(p)) {
-				p.teleport(Main.lobbyLoc);
+				p.teleport(Main.getLobbyLocation());
 				i.removePlayer(p);
 				break;
 			}
@@ -53,7 +54,7 @@ public class Listeners implements Listener {
 		Player p = e.getPlayer();
 		CreditManager.loadCredits(p);
 
-		if (Main.serverMode) {
+		if (Main.isServerMode()) {
 			GameManager.findMatch(p);
 		}
 	}
@@ -105,8 +106,8 @@ public class Listeners implements Listener {
 						continue;
 					}
 
-					int level = Main.progressionManager.getLevel(sender);
-					int pLevel = Main.progressionManager.getPrestigeLevel(sender);
+					int level = ProgressionManager.getInstance().getLevel(sender);
+					int pLevel = ProgressionManager.getInstance().getPrestigeLevel(sender);
 					String prestige = pLevel > 0 ? ChatColor.WHITE + "[" + ChatColor.GREEN + pLevel + ChatColor.WHITE + "]-" : "";
 					String levelName = LevelNames.getInstance().getLevelName(level);
 					levelName = !levelName.equals("") ? "[" + levelName + "] " : "";
@@ -152,7 +153,7 @@ public class Listeners implements Listener {
 			return;
 		}
 
-		double damage = Main.defaultHealth;
+		double damage = Main.getDefaultHealth();
 		for (Player pp : Objects.requireNonNull(GameManager.getMatchWhichContains(p)).dogsScoreStreak.keySet()) {
 			for (Wolf w : Objects.requireNonNull(GameManager.getMatchWhichContains(p)).dogsScoreStreak.get(pp)) {
 				if (w.getCustomName().equals(e.getDamager().getCustomName())) {
@@ -182,7 +183,7 @@ public class Listeners implements Listener {
 				return;
 			}
 
-			scalar = (Main.defaultHealth / 20D);
+			scalar = (Main.getDefaultHealth() / 20D);
 			
 			damage = e.getDamage() * scalar;
 			

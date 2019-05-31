@@ -4,7 +4,10 @@ import com.rhetorical.cod.Main;
 import com.rhetorical.cod.files.GunsFile;
 import com.rhetorical.cod.files.ShopFile;
 import com.rhetorical.cod.lang.Lang;
+import com.rhetorical.cod.loadouts.LoadoutManager;
 import com.rhetorical.cod.perks.CodPerk;
+import com.rhetorical.cod.perks.PerkManager;
+import com.rhetorical.cod.progression.ProgressionManager;
 import com.rhetorical.cod.weapons.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -17,6 +20,8 @@ import java.util.HashMap;
 import java.util.List;
 
 public class ShopManager {
+
+	private static ShopManager instance;
 
 	private ArrayList<CodGun> primaryGuns = new ArrayList<>();
 	private ArrayList<CodGun> secondaryGuns = new ArrayList<>();
@@ -32,12 +37,18 @@ public class ShopManager {
 	public HashMap<Player, Inventory> perkShop = new HashMap<>();
 
 	public ShopManager() {
+		if (instance == null)
+			instance = this;
 
 		loadGuns();
 		loadWeapons();
 		for (Player p : Bukkit.getOnlinePlayers()) {
 			this.loadPurchaseData(p);
 		}
+	}
+
+	public static ShopManager getInstance() {
+		return instance != null ? instance : new ShopManager();
 	}
 
 	public void prestigePlayer(Player p) {
@@ -55,11 +66,11 @@ public class ShopManager {
 
 	private void loadGuns() {
 
-		if (Main.loadManager.getDefaultPrimary() == null) {
+		if (LoadoutManager.getInstance().getDefaultPrimary() == null) {
 			return;
 		}
 
-		primaryGuns.add(Main.loadManager.getDefaultPrimary());
+		primaryGuns.add(LoadoutManager.getInstance().getDefaultPrimary());
 		for (int i = 0; GunsFile.getData().contains("Guns.Primary." + i); i++) {
 			String name = GunsFile.getData().getString("Guns.Primary." + i + ".name");
 
@@ -81,10 +92,10 @@ public class ShopManager {
 			primaryGuns.add(gun);
 		}
 
-		secondaryGuns.add(Main.loadManager.getDefaultSecondary());
+		secondaryGuns.add(LoadoutManager.getInstance().getDefaultSecondary());
 		for (int i = 0; GunsFile.getData().contains("Guns.Secondary." + i); i++) {
 
-			if (Main.loadManager.getDefaultPrimary() == null) {
+			if (LoadoutManager.getInstance().getDefaultPrimary() == null) {
 				return;
 			}
 			String name = GunsFile.getData().getString("Guns.Secondary." + i + ".name");
@@ -108,8 +119,8 @@ public class ShopManager {
 	}
 
 	private void loadWeapons() {
-		lethalWeapons.add(Main.loadManager.getDefaultLethal());
-		tacticalWeapons.add(Main.loadManager.getDefaultTactical());
+		lethalWeapons.add(LoadoutManager.getInstance().getDefaultLethal());
+		tacticalWeapons.add(LoadoutManager.getInstance().getDefaultTactical());
 
 		for (int i = 0; GunsFile.getData().contains("Weapons.LETHAL." + i); i++) {
 			String weaponName = GunsFile.getData().getString("Weapons.LETHAL." + i + ".name");
@@ -182,9 +193,9 @@ public class ShopManager {
 		}
 		
 		if (perks.size() == 0) {
-			perks.add(Main.perkManager.getDefaultOne().getPerk().getName());
-			perks.add(Main.perkManager.getDefaultTwo().getPerk().getName());
-			perks.add(Main.perkManager.getDefaultThree().getPerk().getName());
+			perks.add(PerkManager.getInstance().getDefaultOne().getPerk().getName());
+			perks.add(PerkManager.getInstance().getDefaultTwo().getPerk().getName());
+			perks.add(PerkManager.getInstance().getDefaultThree().getPerk().getName());
 		}
 		
 		ShopFile.getData().set("Purchased.Perks." + p.getName(), perks);
@@ -221,13 +232,13 @@ public class ShopManager {
 				}
 
 				if (!found) {
-					guns.add(Main.loadManager.getDefaultPrimary());
-					guns.add(Main.loadManager.getDefaultSecondary());
+					guns.add(LoadoutManager.getInstance().getDefaultPrimary());
+					guns.add(LoadoutManager.getInstance().getDefaultSecondary());
 				}
 			}
 		} else {
-			guns.add(Main.loadManager.getDefaultPrimary());
-			guns.add(Main.loadManager.getDefaultSecondary());
+			guns.add(LoadoutManager.getInstance().getDefaultPrimary());
+			guns.add(LoadoutManager.getInstance().getDefaultSecondary());
 		}
 
 		ArrayList<String> weaponList = (ArrayList<String>) ShopFile.getData().get("Purchased.Weapons." + p.getName());
@@ -249,32 +260,32 @@ public class ShopManager {
 				}
 
 				if (!found) {
-					grenades.add(Main.loadManager.getDefaultLethal());
-					grenades.add(Main.loadManager.getDefaultTactical());
+					grenades.add(LoadoutManager.getInstance().getDefaultLethal());
+					grenades.add(LoadoutManager.getInstance().getDefaultTactical());
 				}
 			}
 		} else {
-			grenades.add(Main.loadManager.getDefaultLethal());
-			grenades.add(Main.loadManager.getDefaultTactical());
+			grenades.add(LoadoutManager.getInstance().getDefaultLethal());
+			grenades.add(LoadoutManager.getInstance().getDefaultTactical());
 		}
 
 		ArrayList<String> perkList = (ArrayList<String>) ShopFile.getData().get("Purchased.Perks." + p.getName());
 		if (perkList != null) {
 			outsidePerks: for (String s : perkList) {
-				for (CodPerk perk : Main.perkManager.getAvailablePerks()) {
+				for (CodPerk perk : PerkManager.getInstance().getAvailablePerks()) {
 					if (perk.getPerk().getName().equals(s)) {
 						perks.add(perk);
 						continue outsidePerks;
 					}
 				}
-				perks.add(Main.perkManager.getDefaultOne());
-				perks.add(Main.perkManager.getDefaultTwo());
-				perks.add(Main.perkManager.getDefaultThree());
+				perks.add(PerkManager.getInstance().getDefaultOne());
+				perks.add(PerkManager.getInstance().getDefaultTwo());
+				perks.add(PerkManager.getInstance().getDefaultThree());
 			}
 		} else {
-			perks.add(Main.perkManager.getDefaultOne());
-			perks.add(Main.perkManager.getDefaultTwo());
-			perks.add(Main.perkManager.getDefaultThree());
+			perks.add(PerkManager.getInstance().getDefaultOne());
+			perks.add(PerkManager.getInstance().getDefaultTwo());
+			perks.add(PerkManager.getInstance().getDefaultThree());
 		}
 
 
@@ -347,7 +358,7 @@ public class ShopManager {
 
 		if (gun.getType() == UnlockType.LEVEL || gun.getType() == UnlockType.BOTH) {
 
-			if (Main.progressionManager.getLevel(p) >= gun.getLevelUnlock()) {
+			if (ProgressionManager.getInstance().getLevel(p) >= gun.getLevelUnlock()) {
 				return true;
 			}
 
@@ -365,19 +376,19 @@ public class ShopManager {
 
 		purchased.put(p, guns);
 
-		Main.shopManager.setPurchasedGuns(purchased);
+		ShopManager.getInstance().setPurchasedGuns(purchased);
 
-		Main.sendMessage(p, Main.codPrefix + Lang.WEAPON_UNLOCKED.getMessage().replace("{gun-name}", gun.getName()), Main.lang);
+		Main.sendMessage(p, Main.getPrefix() + Lang.WEAPON_UNLOCKED.getMessage().replace("{gun-name}", gun.getName()), Main.getLang());
 	}
 
 	private void unlockGrenade(Player p, CodWeapon grenade) {
 		if (grenade.getType() == UnlockType.LEVEL) {
 
-			HashMap<Player, ArrayList<CodWeapon>> purchased = Main.shopManager.getPurchasedWeapons();
+			HashMap<Player, ArrayList<CodWeapon>> purchased = ShopManager.getInstance().getPurchasedWeapons();
 
 			if (!purchased.get(p).contains(grenade)) {
 
-				if (Main.progressionManager.getLevel(p) >= grenade.getLevelUnlock()) {
+				if (ProgressionManager.getInstance().getLevel(p) >= grenade.getLevelUnlock()) {
 
 					ArrayList<CodWeapon> grenades = purchased.get(p);
 
@@ -385,40 +396,40 @@ public class ShopManager {
 
 					purchased.put(p, grenades);
 
-					Main.shopManager.setPurchasedWeapons(purchased);
+					ShopManager.getInstance().setPurchasedWeapons(purchased);
 
-					Main.sendMessage(p, Main.codPrefix + Lang.WEAPON_UNLOCKED.getMessage().replace("{gun-name}", grenade.getName()), Main.lang);
+					Main.sendMessage(p, Main.getPrefix() + Lang.WEAPON_UNLOCKED.getMessage().replace("{gun-name}", grenade.getName()), Main.getLang());
 
 				}
 			}
 		} else if (grenade.getType() == UnlockType.BOTH) {
-			if (Main.progressionManager.getLevel(p) == grenade.getLevelUnlock()) {
+			if (ProgressionManager.getInstance().getLevel(p) == grenade.getLevelUnlock()) {
 				Main.sendMessage(p,
-						Main.codPrefix + Lang.WEAPON_PURCHASE_UNLOCKED.getMessage().replace("{gun-name}", grenade.getName()), Main.lang);
+						Main.getPrefix() + Lang.WEAPON_PURCHASE_UNLOCKED.getMessage().replace("{gun-name}", grenade.getName()), Main.getLang());
 			}
 		}
 	}
 
 	public void checkForNewGuns(Player p) {
 
-		Main.shopManager.loadPurchaseData(p);
+		ShopManager.getInstance().loadPurchaseData(p);
 
 		List<CodGun> primaryGuns = new ArrayList<>(getPrimaryGuns());
 		for (CodGun gun : primaryGuns) {
 			if (gun.getType() == UnlockType.LEVEL) {
 
-				HashMap<Player, ArrayList<CodGun>> purchased = Main.shopManager.getPurchasedGuns();
+				HashMap<Player, ArrayList<CodGun>> purchased = ShopManager.getInstance().getPurchasedGuns();
 
 				if (!purchased.get(p).contains(gun)) {
 
-					if (Main.progressionManager.getLevel(p) >= gun.getLevelUnlock()) {
+					if (ProgressionManager.getInstance().getLevel(p) >= gun.getLevelUnlock()) {
 
 						unlockGun(purchased, p, gun);
 					}
 				}
 			} else if (gun.getType() == UnlockType.BOTH) {
-				if (Main.progressionManager.getLevel(p) == gun.getLevelUnlock()) {
-					Main.sendMessage(p, Main.codPrefix + Lang.WEAPON_PURCHASE_UNLOCKED.getMessage().replace("{gun-name}", gun.getName()), Main.lang);
+				if (ProgressionManager.getInstance().getLevel(p) == gun.getLevelUnlock()) {
+					Main.sendMessage(p, Main.getPrefix() + Lang.WEAPON_PURCHASE_UNLOCKED.getMessage().replace("{gun-name}", gun.getName()), Main.getLang());
 				}
 			}
 
@@ -428,17 +439,17 @@ public class ShopManager {
 		for (CodGun gun : secondaryGuns) {
 			if (gun.getType() == UnlockType.LEVEL) {
 
-				HashMap<Player, ArrayList<CodGun>> purchased = Main.shopManager.getPurchasedGuns();
+				HashMap<Player, ArrayList<CodGun>> purchased = ShopManager.getInstance().getPurchasedGuns();
 
 				if (!purchased.get(p).contains(gun)) {
 
-					if (Main.progressionManager.getLevel(p) >= gun.getLevelUnlock()) {
+					if (ProgressionManager.getInstance().getLevel(p) >= gun.getLevelUnlock()) {
 						unlockGun(purchased, p, gun);
 					}
 				}
 			} else if (gun.getType() == UnlockType.BOTH) {
-				if (Main.progressionManager.getLevel(p) >= gun.getLevelUnlock()) {
-					Main.sendMessage(p, Main.codPrefix + Lang.WEAPON_PURCHASE_UNLOCKED.getMessage().replace("{gun-name}", gun.getName()), Main.lang);
+				if (ProgressionManager.getInstance().getLevel(p) >= gun.getLevelUnlock()) {
+					Main.sendMessage(p, Main.getPrefix() + Lang.WEAPON_PURCHASE_UNLOCKED.getMessage().replace("{gun-name}", gun.getName()), Main.getLang());
 				}
 			}
 
