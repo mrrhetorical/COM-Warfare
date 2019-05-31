@@ -1,6 +1,5 @@
 package com.rhetorical.cod.loadouts;
 
-import com.rhetorical.cod.Main;
 import com.rhetorical.cod.inventories.InventoryManager;
 import com.rhetorical.cod.inventories.ShopManager;
 import com.rhetorical.cod.perks.CodPerk;
