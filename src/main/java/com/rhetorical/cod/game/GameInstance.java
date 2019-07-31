@@ -619,7 +619,8 @@ public class GameInstance implements Listener {
 				|| getGamemode() == Gamemode.FFA
 				|| getGamemode() == Gamemode.INFECT
 				|| getGamemode() == Gamemode.DESTROY
-				|| getGamemode() == Gamemode.RESCUE) {
+				|| getGamemode() == Gamemode.RESCUE
+				|| getGamemode() == Gamemode.HARDPOINT) {
 
 			p.getInventory().setItem(0, LoadoutManager.getInstance().knife);
 
