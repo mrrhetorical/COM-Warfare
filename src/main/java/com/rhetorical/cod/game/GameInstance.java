@@ -826,6 +826,9 @@ public class GameInstance implements Listener {
 		if (getGamemode() == Gamemode.DOM)
 			despawnDomFlags();
 
+		if (getGamemode() == Gamemode.HARDPOINT)
+			despawnHardpointFlag();
+
 		if (getGamemode() == Gamemode.CTF)
 			despawnCtfFlags();
 
@@ -2155,6 +2158,10 @@ public class GameInstance implements Listener {
 			cFlag.remove();
 	}
 
+	private void despawnHardpointFlag() {
+		hardpointFlag.remove();
+	}
+
 	private void despawnCtfFlags() {
 		if (blueFlag != null)
 			blueFlag.despawn();
@@ -2193,7 +2200,7 @@ public class GameInstance implements Listener {
 
 	private void updateHardpointFlagLocation() {
 		if (hardpointFlag != null)
-			hardpointFlag.remove();
+			despawnHardpointFlag();
 
 		final List<Location> locs = new ArrayList<>(getMap().getHardpointFlags());
 		Collections.shuffle(locs);
