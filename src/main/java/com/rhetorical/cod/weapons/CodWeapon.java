@@ -20,7 +20,7 @@ public class CodWeapon {
 	
 	private int levelUnlock;
 	private int creditUnlock;
-	
+
 	public CodWeapon(String n, WeaponType wt, UnlockType t, ItemStack weaponI, int levelUnlock) {
 		this.levelUnlock = levelUnlock;
 		weaponType = wt;
@@ -119,7 +119,7 @@ public class CodWeapon {
 		}
 		
 		weaponItem.setItemMeta(meta);
-		
+
 		return weaponItem;
 	}
 

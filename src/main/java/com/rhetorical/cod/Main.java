@@ -1078,8 +1078,8 @@ public class Main extends JavaPlugin {
 
 	private void createWeapon(CommandSender p, String[] args) {
 
-		String command = "/cod createWeapon (name) (Lethal/Tactical) (Unlock Type: level/credits/both) (Grenade Material) (Level Unlock) (Cost)";
-		if (args.length == 7) {
+		String command = "/cod createWeapon (name) (Lethal/Tactical) (Unlock Type: level/credits/both) (Grenade Material) (Level Unlock) (amount) (Cost)";
+		if (args.length == 8) {
 			String name = args[1];
 			WeaponType grenadeType;
 			UnlockType unlockType;
@@ -1121,10 +1121,26 @@ public class Main extends JavaPlugin {
 				return;
 			}
 
+			int amount;
+
+			try {
+				amount = Integer.parseInt(args[6]);
+			} catch (Exception e) {
+				sendMessage(p, Main.getPrefix() + Lang.INCORRECT_USAGE.getMessage().replace("{command}", command), lang);
+				return;
+			}
+
+			if (amount < 1) {
+				sendMessage(p, Main.getPrefix() + Lang.INCORRECT_USAGE.getMessage().replace("{command}", command), lang);
+				return;
+			}
+
+			grenade.setAmount(amount);
+
 			int cost;
 
 			try {
-				cost = Integer.parseInt(args[6]);
+				cost = Integer.parseInt(args[7]);
 			} catch (Exception e) {
 				sendMessage(p, Main.getPrefix() + Lang.INCORRECT_USAGE.getMessage().replace("{command}", command), lang);
 				return;
