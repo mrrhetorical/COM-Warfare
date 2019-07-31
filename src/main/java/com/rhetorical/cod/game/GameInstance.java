@@ -2200,26 +2200,43 @@ public class GameInstance implements Listener {
 	}
 
 	private void updateHardpointFlagLocation() {
-		if (hardpointFlag != null)
+
+		Location lastLoc = null;
+		if (hardpointFlag != null) {
+			lastLoc = hardpointFlag.getLocation();
 			despawnHardpointFlag();
+		}
 
 		final List<Location> locs = new ArrayList<>(getMap().getHardpointFlags());
-		Collections.shuffle(locs);
+
+		Location spawnLocation = null;
 
 		if (locs.size() == 0) {
 			Main.sendMessage(Main.getConsole(), Main.getPrefix() + ChatColor.RED + "No hardpoint locations set up, could not move hardpoint location!", Main.getLang());
 			for (Player p : getPlayers()) {
 				removePlayer(p);
 			}
+			return;
+		} else if (locs.size() == 1) {
+			spawnLocation = locs.get(0);
+		} else {
+			if (lastLoc != null) {
+				for (Location possibleLoc : locs) {
+					if (possibleLoc.equals(lastLoc))
+						continue;
+					spawnLocation = possibleLoc;
+					break;
+				}
+			} else {
+				spawnLocation = locs.get(0);
+			}
 		}
-
-		Location location = locs.get(0);
 
 		for (Player p : getPlayers()) {
 			p.sendMessage(Lang.HARDPOINT_FLAG_SPAWNED.getMessage());
 		}
 
-		hardpointFlag = new DomFlag(Lang.FLAG_HARDPOINT, location);
+		hardpointFlag = new DomFlag(Lang.FLAG_HARDPOINT, spawnLocation);
 
 		hardpointFlag.spawn();
 	}

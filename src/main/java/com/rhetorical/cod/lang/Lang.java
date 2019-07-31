@@ -24,6 +24,7 @@ public enum Lang {
 	SET_FLAG_CTF_SUCCESS("&aSuccessfully set {team} flag spawn!"),
 	SET_FLAG_DOM_SUCCESS("&aSuccessfully set {flag} flag spawn!"),
 	CAPTURING_FLAG("&aYou are capturing the flag!"),
+	DEFENDING_FLAG("&cYou are defending the flag!"),
 	LOBBY_NOT_EXISTS("&cThere is no lobby to send you to!"),
 	BALANCE_COMMAND("&aYou have {credits} credits!"),
 	GIVE_BALANCE_COMMAND("&aSuccessfully gave {player} {amount} credits! They now have {total} credits!"),

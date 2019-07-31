@@ -27,6 +27,8 @@ class DomFlag {
 
 	private int capture; // Range: -10 to 10. Lower is red, higher is blue.
 
+	private List<Player> lastCapping = new ArrayList<>();
+
 	DomFlag(Lang flagName, Location flagLoc) {
 		this.flagName = flagName;
 		this.flagLoc = flagLoc.clone();
@@ -79,7 +81,6 @@ class DomFlag {
 		for (Entity e : name.getNearbyEntities(10, 5, 10)) {
 			if (e instanceof Player) {
 				pls.add((Player) e);
-				Main.sendActionBar((Player) e, Lang.CAPTURING_FLAG.getMessage());
 			}
 		}
 
@@ -91,19 +92,28 @@ class DomFlag {
 		int blue = 0;
 		int red = 0;
 
-		final List<Player> check = new ArrayList<>(getNearbyPlayers());
+		final List<Player> playersOnPoint = new ArrayList<>(getNearbyPlayers());
 
-		for (Player p : check) {
+		for (Player p : lastCapping) {
+			if (!playersOnPoint.contains(p))
+				Main.sendActionBar(p, ""); //clear out the "you are in the cap zone" messages
+		}
+
+		for (Player p : playersOnPoint) {
 			if (game.isOnBlueTeam(p))
 				blue++;
 			else if (game.isOnRedTeam(p))
 				red++;
 		}
 
+		lastCapping = new ArrayList<>(playersOnPoint);
+
+		int flagOwner = -1;
+
 		if (getCaptureProgress() == 10 && blue >= red) {
-			return 0; // blue
+			flagOwner = 0; // blue
 		} else if (getCaptureProgress() == -10 && red >= blue) {
-			return 1; // red
+			flagOwner = 1; // red
 		} else {
 			int progress = blue - red;
 			if (getFlagName().equals(Lang.FLAG_HARDPOINT))
@@ -113,9 +123,10 @@ class DomFlag {
 
 			if (getCaptureProgress() > 10) {
 				setCaptureProgress(10);
-			}
-			else if (getCaptureProgress() < -10) {
+				flagOwner = 0;
+			} else if (getCaptureProgress() < -10) {
 				setCaptureProgress(-10);
+				flagOwner = 1;
 			}
 
 			String msg = Lang.FLAG_CAPTURED.getMessage();
@@ -150,7 +161,23 @@ class DomFlag {
 			}
 		}
 
-		return getCaptureProgress() == 10 ? 0 : getCaptureProgress() == -10 ? 1 : -1;
+		for (Player p : playersOnPoint) {
+			if (flagOwner == 0) {
+				if (game.isOnRedTeam(p))
+					Main.sendActionBar(p, Lang.CAPTURING_FLAG.getMessage());
+				else if (game.isOnBlueTeam(p))
+					Main.sendActionBar(p, Lang.DEFENDING_FLAG.getMessage());
+			} else if (flagOwner == 1) {
+				if (game.isOnRedTeam(p))
+					Main.sendActionBar(p, Lang.DEFENDING_FLAG.getMessage());
+				else if (game.isOnBlueTeam(p))
+					Main.sendActionBar(p, Lang.CAPTURING_FLAG.getMessage());
+			} else {
+				Main.sendActionBar(p, Lang.CAPTURING_FLAG.getMessage());
+			}
+		}
+
+		return flagOwner;
 	}
 
 	void updateFlag(int team) {
