@@ -1,6 +1,7 @@
 package com.rhetorical.cod.game;
 
 import com.rhetorical.cod.lang.Lang;
+import org.bukkit.ChatColor;
 import org.bukkit.DyeColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -80,6 +81,68 @@ class DomFlag {
 		}
 
 		return pls;
+	}
+
+	int checkFlag(GameInstance game) {
+
+		int blue = 0;
+		int red = 0;
+
+		final List<Player> check = new ArrayList<>(getNearbyPlayers());
+
+		for (Player p : check) {
+			if (game.isOnBlueTeam(p))
+				blue++;
+			else if (game.isOnRedTeam(p))
+				red++;
+		}
+
+		if (getCaptureProgress() == 10 && blue >= red) {
+			return 0; // blue
+		} else if (getCaptureProgress() == -10 && red >= blue) {
+			return 1; // red
+		} else {
+			setCaptureProgress(getCaptureProgress() + blue - red);
+
+			if (getCaptureProgress() > 10) {
+				setCaptureProgress(10);
+			}
+			else if (getCaptureProgress() < -10) {
+				setCaptureProgress(-10);
+			}
+
+			String msg = Lang.FLAG_CAPTURED.getMessage();
+			String flag = Lang.FLAG_A.getMessage();
+			String team = null;
+			ChatColor color = null;
+
+
+			if (getCaptureProgress() == 10) {
+				team = "blue";
+				color = ChatColor.BLUE;
+				updateName(ChatColor.BLUE + Lang.FLAG_A.getMessage());
+				updateFlag(1);
+			} else if (getCaptureProgress() == -10) {
+				team = "red";
+				color = ChatColor.RED;
+				updateName(ChatColor.RED + Lang.FLAG_A.getMessage());
+				updateFlag(0);
+			} else if (getCaptureProgress() == 0 && (blue > 0 || red > 0)) {
+				updateName(ChatColor.WHITE + Lang.FLAG_A.getMessage());
+				updateFlag(-1);
+				for (Player p : game.getPlayers()) {
+					p.sendMessage(Lang.FLAG_NEUTRALIZED.getMessage().replace("{flag}", flag));
+				}
+			}
+
+			if (team != null) {
+				for (Player p : game.getPlayers()) {
+					p.sendMessage(msg.replace("{team}", team).replace("{team-color}", "" + color).replace("{flag}", flag));
+				}
+			}
+		}
+
+		return getCaptureProgress() == 10 ? 0 : getCaptureProgress() == -10 ? 1 : -1;
 	}
 
 	void updateFlag(int team) {

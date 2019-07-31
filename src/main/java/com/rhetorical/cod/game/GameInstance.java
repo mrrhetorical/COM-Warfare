@@ -56,6 +56,8 @@ public class GameInstance implements Listener {
 	private int blueTeamScore;
 	private int redTeamScore;
 
+	private int hardpointController;
+
 	private boolean forceStarted = false;
 
 	private final int maxScore_TDM,
@@ -1152,6 +1154,10 @@ public class GameInstance implements Listener {
 					game.checkDomFlags();
 				}
 
+				if (currentMap.getGamemode() == Gamemode.HARDPOINT) {
+					game.checkHardpointFlag();
+				}
+
 				if (getGamemode() == Gamemode.CTF) {
 					redFlag.checkNearbyPlayers();
 					blueFlag.checkNearbyPlayers();
@@ -1211,8 +1217,6 @@ public class GameInstance implements Listener {
 
 						double progress = (((double) t) / ((double) gameTime));
 						try {
-//							freeForAllBar.get(p).setTitle(ChatColor.GREEN + p.getDisplayName() + ": " + ffaPlayerScores.get(p) + ChatColor.GRAY + " «" + ChatColor.WHITE + counter + ChatColor.RESET + ChatColor.GRAY + "»" + " " + ChatColor.GOLD + highestScorer.getDisplayName() + ": " + ffaPlayerScores.get(highestScorer));
-//							freeForAllBar.get(p).setProgress(progress);
 							freeForAllBar.get(p).getClass().getMethod("setTitle", String.class).invoke(freeForAllBar.get(p), ChatColor.GREEN + p.getDisplayName() + ": " + ffaPlayerScores.get(p) + ChatColor.GRAY + " «" + ChatColor.WHITE + counter + ChatColor.RESET + ChatColor.GRAY + "»" + " " + ChatColor.GOLD + highestScorer.getDisplayName() + ": " + ffaPlayerScores.get(highestScorer));
 							freeForAllBar.get(p).getClass().getMethod("setProgress", Double.class).invoke(freeForAllBar.get(p), progress);
 						} catch(NoClassDefFoundError e) {
@@ -1224,7 +1228,6 @@ public class GameInstance implements Listener {
 				double progress = (((double) t) / ((double) gameTime));
 
 				try {
-//					scoreBar.setProgress(progress);
 					scoreBar.getClass().getMethod("setProgress", Double.class).invoke(scoreBar, progress);
 				} catch(Exception ignored) {}
 				game.updateTabList();
@@ -2148,165 +2151,20 @@ public class GameInstance implements Listener {
 		if (!getGamemode().equals(Gamemode.DOM))
 			return;
 
-		List<Player> aPlayers = new ArrayList<>(aFlag.getNearbyPlayers());
-		List<Player> bPlayers = new ArrayList<>(bFlag.getNearbyPlayers());
-		List<Player> cPlayers = new ArrayList<>(cFlag.getNearbyPlayers());
+
+		int flags[] = { aFlag.checkFlag(this), bFlag.checkFlag(this), cFlag.checkFlag(this) };
 
 		int blueFlags = 0,
 				redFlags = 0;
 
-		for(int i = 0; i < 3; i++) {
-
-			int blue = 0;
-			int red = 0;
-
-			List<Player> check;
-
-			if(i == 0)
-				check = aPlayers;
-			else if (i == 1)
-				check = bPlayers;
-			else
-				check = cPlayers;
-
-			for(Player p : check) {
-				if (isOnBlueTeam(p))
-					blue++;
-				else if(isOnRedTeam(p))
-					red++;
-			}
-
-			if (i == 0) {
-				if (aFlag.getCaptureProgress() == 10 && blue >= red) {
+		for (int flag : flags) {
+			switch (flag) {
+				case 0:
 					blueFlags++;
-				} else if (aFlag.getCaptureProgress() == -10 && red >= blue) {
+					break;
+				case 1:
 					redFlags++;
-				} else {
-					aFlag.setCaptureProgress(aFlag.getCaptureProgress() + blue - red);
-
-					if (aFlag.getCaptureProgress() > 10)
-						aFlag.setCaptureProgress(10);
-					else if (aFlag.getCaptureProgress() < -10)
-						aFlag.setCaptureProgress(-10);
-
-					String msg = Lang.FLAG_CAPTURED.getMessage();
-					String flag = Lang.FLAG_A.getMessage();
-					String team = null;
-					ChatColor color = null;
-
-
-					if (aFlag.getCaptureProgress() == 10) {
-						team = "blue";
-						color = ChatColor.BLUE;
-						aFlag.updateName(ChatColor.BLUE + Lang.FLAG_A.getMessage());
-						aFlag.updateFlag(1);
-					} else if (aFlag.getCaptureProgress() == -10) {
-						team = "red";
-						color = ChatColor.RED;
-						aFlag.updateName(ChatColor.RED + Lang.FLAG_A.getMessage());
-						aFlag.updateFlag(0);
-					} else if (aFlag.getCaptureProgress() == 0 && (blue > 0 || red > 0)) {
-						aFlag.updateName(ChatColor.WHITE + Lang.FLAG_A.getMessage());
-						aFlag.updateFlag(-1);
-						for (Player p : getPlayers()) {
-							p.sendMessage(Lang.FLAG_NEUTRALIZED.getMessage().replace("{flag}", flag));
-						}
-						continue;
-					}
-
-					if (team != null) {
-						for (Player p : getPlayers()) {
-							p.sendMessage(msg.replace("{team}", team).replace("{team-color}", "" + color).replace("{flag}", flag));
-						}
-					}
-				}
-			} else if (i == 1) {
-				if (bFlag.getCaptureProgress() == 10 && blue >= red) {
-					blueFlags++;
-				} else if (bFlag.getCaptureProgress() == -10 && red >= blue) {
-					redFlags++;
-				} else {
-					bFlag.setCaptureProgress(bFlag.getCaptureProgress() + blue - red);
-
-					if (bFlag.getCaptureProgress() > 10)
-						bFlag.setCaptureProgress(10);
-					else if (bFlag.getCaptureProgress() < -10)
-						bFlag.setCaptureProgress(-10);
-
-					String msg = Lang.FLAG_CAPTURED.getMessage();
-					String flag = Lang.FLAG_B.getMessage();
-					String team = null;
-					ChatColor color = null;
-
-
-					if (bFlag.getCaptureProgress() == 10) {
-						team = "blue";
-						color = ChatColor.BLUE;
-						bFlag.updateName(ChatColor.BLUE + Lang.FLAG_B.getMessage());
-						bFlag.updateFlag(1);
-					} else if (bFlag.getCaptureProgress() == -10) {
-						team = "red";
-						color = ChatColor.RED;
-						bFlag.updateName(ChatColor.RED + Lang.FLAG_B.getMessage());
-						bFlag.updateFlag(0);
-					} else if (bFlag.getCaptureProgress() == 0 && (blue > 0 || red > 0)) {
-						bFlag.updateName(ChatColor.WHITE + Lang.FLAG_B.getMessage());
-						bFlag.updateFlag(-1);
-						for (Player p : getPlayers()) {
-							p.sendMessage(Lang.FLAG_NEUTRALIZED.getMessage().replace("{flag}", flag));
-						}
-						continue;
-					}
-
-					if (team != null) {
-						for (Player p : getPlayers()) {
-							p.sendMessage(msg.replace("{team}", team).replace("{team-color}", "" + color).replace("{flag}", flag));
-						}
-					}
-				}
-			} else {
-				if (cFlag.getCaptureProgress() == 10 && blue >= red) {
-					blueFlags++;
-				} else if (cFlag.getCaptureProgress() == -10 && red >= blue) {
-					redFlags++;
-				} else {
-					cFlag.setCaptureProgress(cFlag.getCaptureProgress() + blue - red);
-
-					if (cFlag.getCaptureProgress() > 10)
-						cFlag.setCaptureProgress(10);
-					else if (cFlag.getCaptureProgress() < -10)
-						cFlag.setCaptureProgress(-10);
-
-					String msg = Lang.FLAG_CAPTURED.getMessage();
-					String flag = Lang.FLAG_C.getMessage();
-					String team = null;
-					ChatColor color = null;
-
-					if (cFlag.getCaptureProgress() == 10) {
-						team = "blue";
-						color = ChatColor.BLUE;
-						cFlag.updateName(ChatColor.BLUE + Lang.FLAG_C.getMessage());
-						cFlag.updateFlag(1);
-					} else if (cFlag.getCaptureProgress() == -10) {
-						team = "red";
-						color = ChatColor.RED;
-						cFlag.updateName(ChatColor.RED + Lang.FLAG_C.getMessage());
-						cFlag.updateFlag(0);
-					} else if (cFlag.getCaptureProgress() == 0 && (blue > 0 || red > 0)) {
-						cFlag.updateName(ChatColor.WHITE + Lang.FLAG_C.getMessage());
-						cFlag.updateFlag(-1);
-						for (Player p : getPlayers()) {
-							p.sendMessage(Lang.FLAG_NEUTRALIZED.getMessage().replace("{flag}", flag));
-						}
-						continue;
-					}
-
-					if (team != null) {
-						for (Player p : getPlayers()) {
-							p.sendMessage(msg.replace("{team}", team).replace("{team-color}", "" + color).replace("{flag}", flag));
-						}
-					}
-				}
+					break;
 			}
 		}
 
@@ -2321,12 +2179,25 @@ public class GameInstance implements Listener {
 		if (hardpointFlag != null)
 			hardpointFlag.remove();
 
+		final List<Location> locs = new ArrayList<>(getMap().getHardpointFlags());
+		Collections.shuffle(locs);
 
+		if (locs.size() == 0) {
+			Main.sendMessage(Main.getConsole(), Main.getPrefix() + ChatColor.RED + "No hardpoint locations set up, could not move hardpoint location!", Main.getLang());
+			for (Player p : getPlayers()) {
+				removePlayer(p);
+			}
+		}
 
+		Location location = locs.get(0);
+
+		hardpointFlag = new DomFlag(Lang.FLAG_HARDPOINT, location);
+
+		hardpointFlag.spawn();
 	}
 
 	private void checkHardpointFlag() {
-
+		hardpointController = hardpointFlag.checkFlag(this);
 	}
 
 	void setTeamArmor(Player p) {
