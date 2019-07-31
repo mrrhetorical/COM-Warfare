@@ -2236,6 +2236,8 @@ public class GameInstance implements Listener {
 			p.sendMessage(Lang.HARDPOINT_FLAG_SPAWNED.getMessage());
 		}
 
+		hardpointController = -1;
+
 		hardpointFlag = new DomFlag(Lang.FLAG_HARDPOINT, spawnLocation);
 
 		hardpointFlag.spawn();

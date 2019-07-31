@@ -96,7 +96,7 @@ class DomFlag {
 
 		for (Player p : lastCapping) {
 			if (!playersOnPoint.contains(p))
-				Main.sendActionBar(p, ""); //clear out the "you are in the cap zone" messages
+				Main.sendActionBar(p, " "); //clear out the "you are in the cap zone" messages
 		}
 
 		for (Player p : playersOnPoint) {
