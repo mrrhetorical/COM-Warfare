@@ -29,8 +29,13 @@ public class ProgressionManager {
 
 	public ProgressionManager() {
 
-		if (instance != null)
-			instance = this;
+		if (instance != null) {
+			maxLevel = -1;
+			maxPrestigeLevel = -1;
+			return;
+		}
+
+		instance = this;
 
 		for (Player p : Bukkit.getOnlinePlayers()) {
 			this.loadData(p);

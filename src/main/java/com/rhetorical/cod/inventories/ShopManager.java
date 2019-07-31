@@ -4,6 +4,7 @@ import com.rhetorical.cod.Main;
 import com.rhetorical.cod.files.GunsFile;
 import com.rhetorical.cod.files.ShopFile;
 import com.rhetorical.cod.lang.Lang;
+import com.rhetorical.cod.loadouts.Loadout;
 import com.rhetorical.cod.loadouts.LoadoutManager;
 import com.rhetorical.cod.perks.CodPerk;
 import com.rhetorical.cod.perks.PerkManager;
@@ -38,8 +39,10 @@ public class ShopManager {
 	public HashMap<Player, Inventory> perkShop = new HashMap<>();
 
 	public ShopManager() {
-		if (instance == null)
-			instance = this;
+		if (instance != null)
+			return;
+
+		instance = this;
 
 		loadGuns();
 		loadWeapons();
@@ -411,7 +414,7 @@ public class ShopManager {
 
 			HashMap<Player, ArrayList<CodWeapon>> purchased = ShopManager.getInstance().getPurchasedWeapons();
 
-			if (!purchased.get(p).contains(grenade)) {
+			if (!purchased.get(p).contains(grenade) && !grenade.equals(LoadoutManager.getInstance().blankLethal) && !grenade.equals(LoadoutManager.getInstance().blankTactical)) {
 
 				if (ProgressionManager.getInstance().getLevel(p) >= grenade.getLevelUnlock()) {
 
