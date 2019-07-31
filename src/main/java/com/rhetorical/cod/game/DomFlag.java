@@ -1,5 +1,6 @@
 package com.rhetorical.cod.game;
 
+import com.rhetorical.cod.Main;
 import com.rhetorical.cod.lang.Lang;
 import org.bukkit.ChatColor;
 import org.bukkit.DyeColor;
@@ -76,8 +77,10 @@ class DomFlag {
 		List<Player> pls = new ArrayList<>();
 
 		for (Entity e : name.getNearbyEntities(10, 5, 10)) {
-			if (e instanceof Player)
+			if (e instanceof Player) {
 				pls.add((Player) e);
+				Main.sendActionBar((Player) e, Lang.CAPTURING_FLAG.getMessage());
+			}
 		}
 
 		return pls;
@@ -102,7 +105,11 @@ class DomFlag {
 		} else if (getCaptureProgress() == -10 && red >= blue) {
 			return 1; // red
 		} else {
-			setCaptureProgress(getCaptureProgress() + blue - red);
+			int progress = blue - red;
+			if (getFlagName().equals(Lang.FLAG_HARDPOINT))
+				progress *= 2;
+
+			setCaptureProgress(getCaptureProgress() + progress);
 
 			if (getCaptureProgress() > 10) {
 				setCaptureProgress(10);
@@ -112,7 +119,8 @@ class DomFlag {
 			}
 
 			String msg = Lang.FLAG_CAPTURED.getMessage();
-			String flag = Lang.FLAG_A.getMessage();
+			String flag = getFlagName().getMessage();
+
 			String team = null;
 			ChatColor color = null;
 

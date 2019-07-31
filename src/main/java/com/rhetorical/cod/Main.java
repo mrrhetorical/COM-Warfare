@@ -672,9 +672,9 @@ public class Main extends JavaPlugin {
 					}
 
 					if (team == null) {
-						sendMessage(p, Main.getPrefix() + Lang.SET_FLAG_DOM_SUCCESS.getMessage().replace("{flag}", flag));
+						sendMessage(p, Main.getPrefix() + Lang.SET_FLAG_DOM_SUCCESS.getMessage().replace("{flag}" + ChatColor.RESET, flag));
 					} else {
-						sendMessage(p, Main.getPrefix() + Lang.SET_FLAG_CTF_SUCCESS.getMessage().replace("{team}", team));
+						sendMessage(p, Main.getPrefix() + Lang.SET_FLAG_CTF_SUCCESS.getMessage().replace("{team}" + ChatColor.RESET, team));
 					}
 
 					return true;
