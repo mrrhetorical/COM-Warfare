@@ -468,12 +468,9 @@ public class GameInstance implements Listener {
 		AssignmentManager.getInstance().save(p);
 
 		if (players.size() == 0) {
-			if (getGamemode() == Gamemode.CTF)
-				despawnCtfFlags();
-			if (getGamemode() == Gamemode.DOM)
-				despawnDomFlags();
-			if (getGamemode() == Gamemode.HARDPOINT)
-				despawnHardpointFlag();
+			despawnCtfFlags();
+			despawnDomFlags();
+			despawnHardpointFlag();
 			GameManager.removeInstance(this);
 		} else if ((redTeam.size() > 0 && blueTeam.size() == 0)
 				|| (blueTeam.size() > 0 && redTeam.size() == 0)
@@ -2166,7 +2163,8 @@ public class GameInstance implements Listener {
 	}
 
 	private void despawnHardpointFlag() {
-		hardpointFlag.remove();
+		if (hardpointFlag != null)
+			hardpointFlag.remove();
 	}
 
 	private void despawnCtfFlags() {
