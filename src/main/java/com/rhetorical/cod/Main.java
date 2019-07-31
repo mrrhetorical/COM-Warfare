@@ -587,22 +587,19 @@ public class Main extends JavaPlugin {
 					}
 
 					String spawnTeam = args[3];
-					String team = "";
+					String team;
 					switch (spawnTeam.toUpperCase()) {
 					case "RED":
 						map.addRedSpawn(p.getLocation());
 						team = ChatColor.RED + "RED";
-						map.setEnable();
 						break;
 					case "BLUE":
 						map.addblueSpawn(p.getLocation());
 						team = ChatColor.BLUE + "BLUE";
-						map.setEnable();
 						break;
 					case "PINK":
 						map.addPinkSpawn(p.getLocation());
 						team = ChatColor.LIGHT_PURPLE + "PINK";
-						map.setEnable();
 						break;
 					default:
 						sendMessage(p, Main.getPrefix() + Lang.TEAM_NOT_EXISTS_WITH_NAME.getMessage(), lang);
@@ -618,7 +615,7 @@ public class Main extends JavaPlugin {
 						return true;
 
 					if (args.length < 4) {
-						String msg = Lang.INCORRECT_USAGE.getMessage().replace("{command}", "/cod set flag (map name) (red/blue/a/b/c)");
+						String msg = Lang.INCORRECT_USAGE.getMessage().replace("{command}", "/cod set flag (map name) (hardpoint/red/blue/a/b/c)");
 						sendMessage(p, Main.getPrefix() + msg);
 						return true;
 					}
@@ -644,6 +641,10 @@ public class Main extends JavaPlugin {
 					String flag = null;
 
 					switch(arg.toLowerCase()) {
+						case "hardpoint":
+							map.addHardPointFlag(p.getLocation());
+							flag = ChatColor.YELLOW + "Hardpoint";
+							break;
 						case "red":
 							map.addRedFlagSpawn(p.getLocation());
 							team = ChatColor.RED + "RED";
@@ -665,7 +666,7 @@ public class Main extends JavaPlugin {
 							flag = ChatColor.YELLOW + "C";
 							break;
 						default:
-							String msg = Lang.INCORRECT_USAGE.getMessage().replace("{command}", "/cod set flag (map name) (red/blue/a/b/c)");
+							String msg = Lang.INCORRECT_USAGE.getMessage().replace("{command}", "/cod set flag (map name) (hardpoint/red/blue/a/b/c)");
 							sendMessage(p, Main.getPrefix() + msg);
 							return true;
 					}

@@ -63,6 +63,7 @@ public class GameManager {
 			m.setAFlagSpawn((Location) ArenasFile.getData().get("Maps." + k + ".AFlag"));
 			m.setBFlagSpawn((Location) ArenasFile.getData().get("Maps." + k + ".BFlag"));
 			m.setCFlagSpawn((Location) ArenasFile.getData().get("Maps." + k + ".CFlag"));
+			m.setHardpointFlags((List<Location>) ArenasFile.getData().get("Maps." + k + ".hardpointFlags"));
 			m.setBlueFlagSpawn((Location) ArenasFile.getData().get("Maps." + k + ".blueFlagSpawn"));
 			m.setBlueSpawns((ArrayList<Location>) ArenasFile.getData().get("Maps." + k + ".blueSpawns"));
 			m.setEnabled(ArenasFile.getData().getBoolean("Maps." + k + ".enabled"));

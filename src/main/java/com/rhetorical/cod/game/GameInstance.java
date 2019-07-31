@@ -67,11 +67,12 @@ public class GameInstance implements Listener {
 			maxScore_GUN,
 			maxScore_OITC,
 			maxScore_DESTROY,
-			maxScore_RESCUE;
+			maxScore_RESCUE,
+			maxScore_HARDPOINT;
 
 	private CtfFlag redFlag, blueFlag;
 
-	private DomFlag aFlag, bFlag, cFlag;
+	private DomFlag aFlag, bFlag, cFlag, hardpointFlag;
 
 	// Score management and game information system for FFA (Free for all)
 	private HashMap<Player, Integer> ffaPlayerScores = new HashMap<>();
@@ -133,6 +134,7 @@ public class GameInstance implements Listener {
 			maxScore_OITC = Main.getPlugin().getConfig().getInt("maxScore.OITC");
 			maxScore_DESTROY = Main.getPlugin().getConfig().getInt("maxScore.DESTROY");
 			maxScore_RESCUE = Main.getPlugin().getConfig().getInt("maxScore.RESCUE");
+			maxScore_HARDPOINT = Main.getPlugin().getConfig().getInt("maxScore.HARDPOINT");
 		} else {
 			maxScore_TDM = 75;
 			maxScore_RSB = 75;
@@ -144,6 +146,7 @@ public class GameInstance implements Listener {
 			maxScore_DESTROY = 4;
 			maxScore_RESCUE = 4;
 			maxScore_GUN = GameManager.gunGameGuns.size();
+			maxScore_HARDPOINT = 75;
 		}
 
 		setState(GameState.WAITING);
@@ -1146,7 +1149,7 @@ public class GameInstance implements Listener {
 				String counter = getFancyTime(t);
 
 				if (currentMap.getGamemode() == Gamemode.DOM) {
-					game.checkFlags();
+					game.checkDomFlags();
 				}
 
 				if (getGamemode() == Gamemode.CTF) {
@@ -2141,7 +2144,7 @@ public class GameInstance implements Listener {
 			redFlag.despawn();
 	}
 
-	private void checkFlags() {
+	private void checkDomFlags() {
 		if (!getGamemode().equals(Gamemode.DOM))
 			return;
 
@@ -2312,6 +2315,18 @@ public class GameInstance implements Listener {
 		} else if (redFlags > blueFlags) {
 			redTeamScore++;
 		}
+	}
+
+	private void updateHardpointFlagLocation() {
+		if (hardpointFlag != null)
+			hardpointFlag.remove();
+
+
+
+	}
+
+	private void checkHardpointFlag() {
+
 	}
 
 	void setTeamArmor(Player p) {

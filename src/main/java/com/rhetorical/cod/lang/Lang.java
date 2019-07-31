@@ -22,7 +22,7 @@ public enum Lang {
 	SET_SPAWN_SUCCESS("&aSuccessfully created {team} spawn for map {map-name}!"),
 	TEAM_NOT_EXISTS_WITH_NAME("&cNo team exists with that name!"),
 	SET_FLAG_CTF_SUCCESS("&aSuccessfully set {team} flag spawn!"),
-	SET_FLAG_DOM_SUCCESS("&aSuccessfully set {flag} DOM flag spawn!"),
+	SET_FLAG_DOM_SUCCESS("&aSuccessfully set {flag} flag spawn!"),
 	LOBBY_NOT_EXISTS("&cThere is no lobby to send you to!"),
 	BALANCE_COMMAND("&aYou have {credits} credits!"),
 	GIVE_BALANCE_COMMAND("&aSuccessfully gave {player} {amount} credits! They now have {total} credits!"),

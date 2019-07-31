@@ -16,6 +16,7 @@ import org.bukkit.inventory.meta.BannerMeta;
 import java.util.ArrayList;
 import java.util.List;
 
+//Used for domination as well as hardpoint
 class DomFlag {
 	private ArmorStand flag, name;
 
