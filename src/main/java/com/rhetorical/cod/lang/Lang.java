@@ -121,6 +121,7 @@ public enum Lang {
 	FLAG_B("Flag B"),
 	FLAG_C("Flag C"),
 	FLAG_HARDPOINT("Hardpoint"),
+	HARDPOINT_FLAG_SPAWNED("&eThe hardpoint flag has been spawned!"),
 	FLAG_CAPTURED("&eThe {team-color}{team}&r&e team has captured {flag}!"),
 	FLAG_NEUTRALIZED("&e{flag} has been neutralized!"),
 	INVENTORY_MAIN_MENU_TITLE("COM-Warfare - Menu"),

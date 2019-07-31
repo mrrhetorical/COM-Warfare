@@ -1121,6 +1121,7 @@ public class GameInstance implements Listener {
 
 			}
 		}
+
 		GameInstance game = this;
 
 		gameRunnable = new BukkitRunnable() {
@@ -1135,6 +1136,10 @@ public class GameInstance implements Listener {
 
 					cancel();
 					return;
+				}
+
+				if (t % 60 == 0) {
+					updateHardpointFlagLocation();
 				}
 
 				if (getState() != GameState.IN_GAME) {
@@ -1236,7 +1241,7 @@ public class GameInstance implements Listener {
 					getScoreboardManager().updateGameScoreBoard(p, getFancyTime(t));
 				}
 
-				if (currentMap.getGamemode() == Gamemode.TDM || currentMap.getGamemode() == Gamemode.RSB || currentMap.getGamemode() == Gamemode.DOM || currentMap.getGamemode() == Gamemode.CTF || currentMap.getGamemode() == Gamemode.KC) {
+				if (currentMap.getGamemode() == Gamemode.TDM || currentMap.getGamemode() == Gamemode.RSB || currentMap.getGamemode() == Gamemode.DOM || currentMap.getGamemode() == Gamemode.CTF || currentMap.getGamemode() == Gamemode.KC || currentMap.getGamemode() == Gamemode.HARDPOINT) {
 					if ((blueTeamScore >= maxScore_TDM || redTeamScore >= maxScore_TDM) && getGamemode().equals(Gamemode.TDM)) {
 						endGameByScore(this);
 						return;
@@ -1250,6 +1255,9 @@ public class GameInstance implements Listener {
 						endGameByScore(this);
 						return;
 					} else if ((blueTeamScore >= maxScore_KC || redTeamScore >= maxScore_KC) && getGamemode().equals(Gamemode.KC)) {
+						endGameByScore(this);
+						return;
+					} else if ((blueTeamScore >= maxScore_HARDPOINT || redTeamScore >= maxScore_HARDPOINT) && getGamemode().equals(Gamemode.HARDPOINT)) {
 						endGameByScore(this);
 						return;
 					}
@@ -1677,7 +1685,7 @@ public class GameInstance implements Listener {
 
 		RankPerks rank = Main.getRank(killer);
 
-		if (getGamemode().equals(Gamemode.TDM) || getGamemode().equals(Gamemode.KC) || getGamemode().equals(Gamemode.RSB) || getGamemode().equals(Gamemode.DOM) || getGamemode().equals(Gamemode.RESCUE) || getGamemode().equals(Gamemode.DESTROY)) {
+		if (getGamemode().equals(Gamemode.TDM) || getGamemode().equals(Gamemode.KC) || getGamemode().equals(Gamemode.RSB) || getGamemode().equals(Gamemode.DOM) || getGamemode().equals(Gamemode.RESCUE) || getGamemode().equals(Gamemode.DESTROY) || getGamemode().equals(Gamemode.HARDPOINT)) {
 			if (isOnRedTeam(killer)) {
 
 				double xp = rank.getKillExperience();
@@ -1693,7 +1701,11 @@ public class GameInstance implements Listener {
 				CreditManager.setCredits(killer, CreditManager.getCredits(killer) + rank.getKillCredits());
 				kill(victim, killer);
 				if (getGamemode() != Gamemode.RESCUE && getGamemode() != Gamemode.DESTROY && getGamemode() != Gamemode.KC) {
-					addRedPoint();
+					if (getGamemode() != Gamemode.HARDPOINT) {
+						addRedPoint();
+					} else if (hardpointController == 1) {
+						addRedPoint();
+					}
 				}
 				updateScores(victim, killer, rank);
 			} else if (isOnBlueTeam(killer)) {
@@ -1710,7 +1722,11 @@ public class GameInstance implements Listener {
 				CreditManager.setCredits(killer, CreditManager.getCredits(killer) + rank.getKillCredits());
 				kill(victim, killer);
 				if (getGamemode() != Gamemode.RESCUE && getGamemode() != Gamemode.DESTROY && getGamemode() != Gamemode.KC) {
-					addBluePoint();
+					if (getGamemode() != Gamemode.HARDPOINT) {
+						addBluePoint();
+					} else if (hardpointController == 0) {
+						addBluePoint();
+					}
 				}
 				updateScores(victim, killer, rank);
 			}
@@ -2190,6 +2206,10 @@ public class GameInstance implements Listener {
 		}
 
 		Location location = locs.get(0);
+
+		for (Player p : getPlayers()) {
+			p.sendMessage(Lang.HARDPOINT_FLAG_SPAWNED.getMessage());
+		}
 
 		hardpointFlag = new DomFlag(Lang.FLAG_HARDPOINT, location);
 
