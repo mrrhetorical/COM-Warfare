@@ -53,7 +53,8 @@ public class CodWeapon {
 		
 		if (levelUnlock <= 1 & creditUnlock <= 0 && !GunsFile.getData().contains("Weapons." + weaponType.toString() + ".default.name")) {
 			GunsFile.getData().set("Weapons." + weaponType.toString() + ".default.name", name);
-			GunsFile.getData().set("Weapons." + weaponType.toString() + ".default.item", weaponItem);
+			GunsFile.getData().set("Weapons." + weaponType.toString() + ".default.item", weaponItem.getType().toString());
+			GunsFile.getData().set("Weapons." + weaponType.toString() + ".default.amount", weaponItem.getAmount());
 			GunsFile.getData().set("Weapons." + weaponType.toString() + ".default.data", weaponItem.getDurability());
 			GunsFile.getData().set("Weapons." + weaponType.toString() + ".default.unlockType", unlockType.toString());
 			GunsFile.getData().set("Weapons." + weaponType.toString() + ".default.levelUnlock", levelUnlock);
@@ -73,7 +74,8 @@ public class CodWeapon {
 		}
 		
 		GunsFile.getData().set("Weapons." + weaponType.toString() + "." + k + ".name", name);
-		GunsFile.getData().set("Weapons." + weaponType.toString() + "." + k + ".item", weaponItem);
+		GunsFile.getData().set("Weapons." + weaponType.toString() + "." + k + ".item", weaponItem.getType().toString());
+		GunsFile.getData().set("Weapons." + weaponType.toString() + "." + k + ".amount", weaponItem.getAmount());
 		GunsFile.getData().set("Weapons." + weaponType.toString() + "." + k + ".data", weaponItem.getDurability());
 		GunsFile.getData().set("Weapons." + weaponType.toString() + "." + k + ".unlockType", unlockType.toString());
 		GunsFile.getData().set("Weapons." + weaponType.toString() + "." + k + ".levelUnlock", levelUnlock);

@@ -10,6 +10,7 @@ import com.rhetorical.cod.perks.PerkManager;
 import com.rhetorical.cod.progression.ProgressionManager;
 import com.rhetorical.cod.weapons.*;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -125,9 +126,20 @@ public class ShopManager {
 		for (int i = 0; GunsFile.getData().contains("Weapons.LETHAL." + i); i++) {
 			String weaponName = GunsFile.getData().getString("Weapons.LETHAL." + i + ".name");
 			UnlockType type = UnlockType.valueOf(GunsFile.getData().getString("Weapons.LETHAL." + i + ".unlockType"));
-			ItemStack weapon = GunsFile.getData().getItemStack("Weapons.LETHAL." + i + ".item");
+			int amount = GunsFile.getData().getInt("Weapons.LETHAL." + i + ".amount");
+			Material weaponMaterial;
+			String weaponMat = GunsFile.getData().getString("Weapons.LETHAL." + i + ".item");
+			try {
+				weaponMaterial = Material.valueOf(weaponMat);
+			} catch (Exception e) {
+				Main.sendMessage(Main.getConsole(), Main.getPrefix() + ChatColor.RED + "Could not load lethal " + weaponName + " because no material exits with name " + weaponMat + "!", Main.getLang());
+				continue;
+			}
 			int levelUnlock = GunsFile.getData().getInt("Weapons.LETHAL." + i + ".levelUnlock");
 			int creditUnlock = GunsFile.getData().getInt("Weapons.LETHAL." + i + ".creditUnlock");
+			short weaponData = (short) GunsFile.getData().getInt("Weapons.LETHAL." + i + ".data");
+
+			ItemStack weapon = new ItemStack(weaponMaterial, amount, weaponData);
 
 			CodWeapon grenade = new CodWeapon(weaponName, WeaponType.LETHAL, type, weapon, levelUnlock);
 			grenade.setCreditUnlock(creditUnlock);
@@ -137,9 +149,20 @@ public class ShopManager {
 		for (int i = 0; GunsFile.getData().contains("Weapons.TACTICAL." + i); i++) {
 			String weaponName = GunsFile.getData().getString("Weapons.TACTICAL." + i + ".name");
 			UnlockType type = UnlockType.valueOf(GunsFile.getData().getString("Weapons.TACTICAL." + i + ".unlockType"));
-			ItemStack weapon = GunsFile.getData().getItemStack("Weapons.TACTICAL." + i + ".item");
+			int amount = GunsFile.getData().getInt("Weapons.TACTICAL." + i + ".amount");
+			Material weaponMaterial;
+			String weaponMat = GunsFile.getData().getString("Weapons.TACTICAL." + i + ".item");
+			try {
+				weaponMaterial = Material.valueOf(weaponMat);
+			} catch (Exception e) {
+				Main.sendMessage(Main.getConsole(), Main.getPrefix() + ChatColor.RED + "Could not load tactical " + weaponName + " because no material exits with name " + weaponMat + "!", Main.getLang());
+				continue;
+			}
 			int levelUnlock = GunsFile.getData().getInt("Weapons.TACTICAL." + i + ".levelUnlock");
 			int creditUnlock = GunsFile.getData().getInt("Weapons.TACTICAL." + i + ".creditUnlock");
+			short weaponData = (short) GunsFile.getData().getInt("Weapons.TACTICAL." + i + ".data");
+
+			ItemStack weapon = new ItemStack(weaponMaterial, amount, weaponData);
 
 			CodWeapon grenade = new CodWeapon(weaponName, WeaponType.TACTICAL, type, weapon, levelUnlock);
 			grenade.setCreditUnlock(creditUnlock);
@@ -157,7 +180,8 @@ public class ShopManager {
 		if (purchasedGuns.get(p) != null) {
 			for (CodGun gun : this.purchasedGuns.get(p)) {
 				if (!guns.contains(gun.getName())) {
-					guns.add(gun.getName());
+					if (gun != LoadoutManager.getInstance().blankPrimary && gun != LoadoutManager.getInstance().blankSecondary)
+						guns.add(gun.getName());
 				}
 			}
 		}
@@ -174,7 +198,8 @@ public class ShopManager {
 		if (purchasedWeapons.get(p) != null) {
 			for (CodWeapon grenade : this.purchasedWeapons.get(p)) {
 				if (!weapons.contains(grenade.getName())) {
-					weapons.add(grenade.getName());
+					if (grenade != LoadoutManager.getInstance().blankLethal && grenade != LoadoutManager.getInstance().blankTactical)
+						weapons.add(grenade.getName());
 				}
 			}
 		}
