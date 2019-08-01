@@ -61,22 +61,25 @@ public class MatchBrowser implements Listener {
 				}
 
 				browser.clear();
+
+				browser.setItem(44, InventoryManager.getInstance().closeInv);
+
 				for (ItemStack item : toAdd) {
 					browser.addItem(item);
 				}
 			}
 		};
 
-		br.runTaskTimer(Main.getPlugin(), 0L, 100L);
+		br.runTaskTimer(Main.getPlugin(), 0L, 50L);
 	}
 
 	private ItemStack generateItem(GameInstance game) {
 		ItemStack item = new ItemStack(Material.EMERALD);
 		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName(String.format("Join game - %s/%s", game.getPlayers(), Main.getMaxPlayers()));
+		meta.setDisplayName(String.format("Join game - %s/%s", game.getPlayers().size(), Main.getMaxPlayers()));
 		List<String> lore = new ArrayList<>();
 		lore.add(String.format("%s", game.getId()));
-		lore.add(String.format("Map: %s%s", ChatColor.GOLD, game.getMap()));
+		lore.add(String.format("Map: %s%s", ChatColor.GOLD, game.getMap().getName()));
 		lore.add(String.format("Mode: %s%s", ChatColor.GOLD, game.getGamemode()));
 		lore.add(String.format("Status: %s%s", game.getState().getColor(), game.getState()));
 		lore.add("================");
@@ -103,12 +106,12 @@ public class MatchBrowser implements Listener {
 
 		e.setCancelled(true);
 
-		if (e.getCursor() == null || e.getCursor().getType() == Material.AIR)
+		if (e.getCurrentItem() == null || e.getCurrentItem().getType() == Material.AIR)
 			return;
 
 		Player p = (Player) e.getWhoClicked();
 
-		ItemStack clicked = e.getCursor();
+		ItemStack clicked = e.getCurrentItem();
 
 		if (clicked.getItemMeta() == null || clicked.equals(InventoryManager.getInstance().closeInv)) {
 			p.closeInventory();
@@ -146,5 +149,6 @@ public class MatchBrowser implements Listener {
 		}
 
 		GameManager.joinGame(p, found);
+		p.closeInventory();
 	}
 }
