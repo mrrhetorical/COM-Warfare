@@ -305,8 +305,8 @@ public class Main extends JavaPlugin {
 		if (!label.equalsIgnoreCase("cod") && !label.equalsIgnoreCase("comr") && !label.equalsIgnoreCase("war") && !label.equalsIgnoreCase("com"))
 			return false;
 
-		String cColor = "" + ChatColor.GREEN + ChatColor.BOLD;
-		String dColor = "" + ChatColor.WHITE + ChatColor.BOLD;
+		String cColor = "" + ChatColor.YELLOW;
+		String dColor = "" + ChatColor.WHITE;
 
 		if (args.length == 0) {
 
@@ -316,12 +316,11 @@ public class Main extends JavaPlugin {
 			sendMessage(sender, "-===\u00A76\u00A7lCOM-Warfare Help\u00A7r===-");
 			sendMessage(sender, "\u00A7f[\u00A7lPage 1 of 5\u00A7r\u00A7l]");
 
-			sendMessage(sender, "\u00A7f\u00A7lType the command to see specifics.", lang);
 			sendMessage(sender, cColor + "/cod help [page number] | " + dColor + "Opens a help page.");
-			sendMessage(sender, cColor + "/cod | " + dColor + "Opens the main menu.");
+			sendMessage(sender, cColor + "/cod | " + dColor + "Opens the main menu once in game.");
 			sendMessage(sender, cColor + "/cod join | " + dColor + "Joins a game through the matchmaker.");
 			sendMessage(sender, cColor + "/cod leave | " + dColor + "Leaves the current game.");
-			sendMessage(sender, cColor + "/cod shop | " + dColor + "Opens the shop.");
+			sendMessage(sender, cColor + "/cod lobby | " + dColor + "Teleports you to the lobby.");
 			return true;
 		} else {
 			if (args[0].equalsIgnoreCase("help")) {
@@ -344,38 +343,38 @@ public class Main extends JavaPlugin {
 
 					//FIXME: Left off here converting to ChatColor!
 
-					sendMessage(sender, "-===\u00A76\u00A7lCOM-Warfare Help\u00A7r===-", lang);
-					sendMessage(sender, "\u00A7f[\u00A7lPage " + page + " of 5\u00A7r\u00A7l]", lang);
+					sendMessage(sender, "-===" + ChatColor.GOLD + "COM-Warfare Help" + ChatColor.RESET + "===-", lang);
+					sendMessage(sender, ChatColor.WHITE + "[Page " + ChatColor.GREEN	+ page + ChatColor.WHITE + " of 5]", lang);
 
 					switch (page) {
 						case 1:
-							sendMessage(sender, "\u00A7f\u00A7lType the command to see specifics.", lang);
 							sendMessage(sender, cColor + "/cod help [page number] | " + dColor + "Opens a help page.");
-							sendMessage(sender, cColor + "/cod | " + dColor + "Opens the main menu.");
-							sendMessage(sender, cColor + "/cod join | " + dColor + "Joins a game through the matchmaker.");
+							sendMessage(sender, cColor + "/cod | " + dColor + "Opens the main menu once in game.");
+							sendMessage(sender, cColor + "/cod join | " + dColor + "Joins a match via matchmaker.");
+							sendMessage(sender, cColor + "/cod browser | " + dColor + "Opens the match browser.");
 							sendMessage(sender, cColor + "/cod leave | " + dColor + "Leaves the current game.");
-							sendMessage(sender, cColor + "/cod shop | " + dColor + "Opens the shop.");
-							break;
-						case 2:
-							sendMessage(sender, cColor + "/cod createMap [name] | " + dColor + "Create a map.");
-							sendMessage(sender, cColor + "/cod removeMap [name] | " + dColor + "Command to remove a map.");
-							sendMessage(sender, cColor + "/cod listMaps | " + dColor + "Lists the available maps.");
-							sendMessage(sender, cColor + "/cod set [lobby/spawn/flag] | " + dColor + "Command to set spawns, flags, and lobby location.");
 							sendMessage(sender, cColor + "/cod lobby | " + dColor + "Teleports you to the lobby.");
 							break;
-						case 3:
+						case 2:
 							sendMessage(sender, cColor + "/cod shop | " + dColor + "Opens the shop.");
-							sendMessage(sender, cColor + "/cod createGun | " + dColor + "Creates a gun. Type command to see a full list of arguments.");
-							sendMessage(sender, cColor + "/cod credits give [player] (amt) | " + dColor + "Gives credits to a person.");
-							sendMessage(sender, cColor + "/cod credits set [player] (amt) | " + dColor + "Sets amount of credits for a player.");
-							sendMessage(sender, cColor + "/cod balance | " + dColor + "Shows your credit balance.");
+							sendMessage(sender, cColor + "/cod balance | " + dColor + "Shows player's credit balance.");
+							sendMessage(sender, cColor + "/cod class | " + dColor + "Opens class selection menu.");
+							sendMessage(sender, cColor + "/cod listMaps | " + dColor + "Lists all available maps.");
+							sendMessage(sender, cColor + "/cod start | " + dColor + "Auto-starts the match if the lobby timer has started.");
+							break;
+						case 3:
+							sendMessage(sender, cColor + "/cod boot | " + dColor + "Forces all players in all matches to leave.");
+							sendMessage(sender, cColor + "/cod changeMap/changeMode [map name/game mode] | " + dColor + "Changes the current map/mode.");
+							sendMessage(sender, cColor + "/cod setLevel [player] (level) | " + dColor + "Sets the player's level.");
+							sendMessage(sender, cColor + "/cod credits [give/set] [player] (amt) | " + dColor + "Gives credits.");
+							sendMessage(sender, cColor + "/cod createGun (args) | " + dColor + "Creates a gun. Type command to see a full list of arguments.");
 							break;
 						case 4:
-							sendMessage(sender, cColor + "/cod add [oitc/gun] (gun name) | " + dColor + "Sets the gun for OITC or adds a gun to Gun Game.");
-							sendMessage(sender, cColor + "/cod changeMap/changeMode [map name/gamemode] | " + dColor + "Changes the current map/mode.");
-							sendMessage(sender, cColor + "/cod class | " + dColor + "Opens the class selection menu.");
-							sendMessage(sender, cColor + "/cod start | " + dColor + "Auto-starts the match if the lobby timer is started.");
-							sendMessage(sender, cColor + "/cod boot | " + dColor + "Forces all players in all matches to leave.");
+							sendMessage(sender, cColor + "/cod createWeapon (args) | " + dColor + "Creates a grenade. Type to see a full list of arguments.");
+							sendMessage(sender, cColor + "/cod createMap [name] | " + dColor + "Creates a map.");
+							sendMessage(sender, cColor + "/cod removeMap [name] | " + dColor + "Removes a map.");
+							sendMessage(sender, cColor + "/cod set [lobby/spawn/flag] | " + dColor + "Set spawns, flags, and lobby location.");
+							sendMessage(sender, cColor + "/cod add [oitc/gun] (gun name) | " + dColor + "Sets gun for OITC or adds gun to Gun Game.");
 							break;
 						case 5:
 							sendMessage(sender, cColor + "/cod blacklist (map) (mode) | " + dColor + "Prevents a mode from being played on the map.");
