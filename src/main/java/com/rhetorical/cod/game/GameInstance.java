@@ -1145,7 +1145,7 @@ public class GameInstance implements Listener {
 					return;
 				}
 
-				if (t % 60 == 0) {
+				if (t % 60 == 0 && getGamemode() == Gamemode.HARDPOINT) {
 					updateHardpointFlagLocation();
 				}
 
