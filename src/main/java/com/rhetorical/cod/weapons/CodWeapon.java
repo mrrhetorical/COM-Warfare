@@ -124,21 +124,7 @@ public class CodWeapon {
 	}
 
 	protected ItemStack setupMenuItem(ItemStack gunItem) {
-		ItemStack gun = null;
-		if (Main.hasQualityArms()) {
-			if (!this.equals(LoadoutManager.getInstance().blankPrimary) && !this.equals(LoadoutManager.getInstance().blankSecondary)) {
-				gun = QualityGun.getGunForName(getName());
-			}
-		}
-
-		if (Main.hasCrackShot()) {
-			if (!this.equals(LoadoutManager.getInstance().blankPrimary) && !this.equals(LoadoutManager.getInstance().blankSecondary)) {
-				gun = CrackShotGun.generateWeapon(getName());
-			}
-		}
-
-		if (gun == null || gun.getType() == Material.AIR)
-			gun = gunItem;
+		ItemStack gun = getWeaponItem();
 
 		ItemMeta meta = gun.getItemMeta();
 		if (meta != null) {
