@@ -1747,15 +1747,6 @@ public class GameInstance implements Listener {
 				updateScores(victim, killer, rank);
 			}
 
-
-			if (getGamemode() == Gamemode.CTF) {
-				if (victim.equals(redFlag.getFlagHolder())) {
-					redFlag.drop(victim);
-				} else if (victim.equals(blueFlag.getFlagHolder())) {
-					blueFlag.drop(victim);
-				}
-			}
-
 		} else if (getGamemode().equals(Gamemode.CTF) || getGamemode().equals(Gamemode.INFECT)) {
 			if (redTeam.contains(killer)) {
 				Main.sendMessage(killer, "" + ChatColor.RED + ChatColor.BOLD + "YOU " + ChatColor.RESET + "" + ChatColor.WHITE + "[" + Lang.KILLED_TEXT.getMessage() + "] " + ChatColor.RESET + ChatColor.BLUE + ChatColor.BOLD + victim.getDisplayName(), Main.getLang());
@@ -1772,6 +1763,14 @@ public class GameInstance implements Listener {
 				ProgressionManager.getInstance().addExperience(killer, rank.getKillExperience());
 				kill(victim, killer);
 				updateScores(victim, killer, rank);
+			}
+
+			if (getGamemode() == Gamemode.CTF) {
+				if (victim.equals(redFlag.getFlagHolder())) {
+					redFlag.drop(victim);
+				} else if (victim.equals(blueFlag.getFlagHolder())) {
+					blueFlag.drop(victim);
+				}
 			}
 
 		} else if (getGamemode().equals(Gamemode.FFA) || getGamemode().equals(Gamemode.GUN) || getGamemode().equals(Gamemode.OITC)) {
