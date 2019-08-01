@@ -81,6 +81,7 @@ class CtfFlag {
 	void pickup(Player p) {
 
 		pickedUp = true;
+		inFlagHolder = false;
 
 		despawn();
 
@@ -203,8 +204,9 @@ class CtfFlag {
 			if (nearest.equals(getOtherFlag().getFlagHolder())) {
 				getOtherFlag().scorePoint(nearest);
 				getOwner().incrementScore(nearest);
-			} else if (!isInFlagHolder())
+			} else if (!isInFlagHolder()) {
 				resetFlag();
+			}
 		} else {
 			pickup(nearest);
 		}
