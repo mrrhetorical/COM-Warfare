@@ -22,6 +22,7 @@ public class CodMap {
 	private Location Flag_A;
 	private Location Flag_B;
 	private Location Flag_C;
+	private List<Location> hardpointFlags = new ArrayList<>();
 	private List<Gamemode> blacklistedModes = new ArrayList<>();
 
 	private List<Gamemode> availableGamemodes = new ArrayList<>();
@@ -48,6 +49,7 @@ public class CodMap {
 		ArenasFile.getData().set("Maps." + k + ".AFlag", getAFlagSpawn());
 		ArenasFile.getData().set("Maps." + k + ".BFlag", getBFlagSpawn());
 		ArenasFile.getData().set("Maps." + k + ".CFlag", getCFlagSpawn());
+		ArenasFile.getData().set("Maps." + k + ".hardpointFlags", getHardpointFlags());
 		ArenasFile.getData().set("Maps." + k + ".blueFlagSpawn", getBlueFlagSpawn());
 		ArenasFile.getData().set("Maps." + k + ".blueSpawns", getBlueSpawns());
 		ArenasFile.getData().set("Maps." + k + ".enabled", isEnabled());
@@ -81,6 +83,13 @@ public class CodMap {
 		setEnable();
 	}
 
+	public void addHardPointFlag(Location l) {
+		if (l == null) return;
+
+		getHardpointFlags().add(l);
+		setEnable();
+	}
+
 	public boolean setEnable() {
 		if (getBlueSpawns() != null && getRedSpawns() != null) {
 			if (getBlueSpawns().size() >= 1 && getRedSpawns().size() >= 1) {
@@ -103,6 +112,11 @@ public class CodMap {
 				if (getAFlagSpawn() != null && getBFlagSpawn() != null && getCFlagSpawn() != null) {
 					if (!availableGamemodes.contains(Gamemode.DOM) && !blacklistedModes.contains(Gamemode.DOM))
 						availableGamemodes.add(Gamemode.DOM);
+				}
+
+				if (getHardpointFlags().size() >= 1) {
+					if (!getAvailableGamemodes().contains(Gamemode.HARDPOINT) && !blacklistedModes.contains(Gamemode.HARDPOINT))
+						getAvailableGamemodes().add(Gamemode.HARDPOINT);
 				}
 			}
 		}
@@ -209,6 +223,10 @@ public class CodMap {
 		this.pinkSpawns = pinkSpawns;
 	}
 
+	public List<Location> getHardpointFlags() {
+		return hardpointFlags;
+	}
+
 	public Location getRedFlagSpawn() {
 		return redFlagSpawn;
 	}
@@ -295,6 +313,10 @@ public class CodMap {
 
 	public void setCFlagSpawn(Location loc) {
 		this.Flag_C =  loc;
+	}
+
+	public void setHardpointFlags(List<Location> locations) {
+		this.hardpointFlags = locations;
 	}
 
 	public List<Gamemode> getAvailableGamemodes() {

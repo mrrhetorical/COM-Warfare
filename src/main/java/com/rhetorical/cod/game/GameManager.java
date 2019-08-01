@@ -14,6 +14,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
+import java.lang.reflect.Array;
 import java.util.*;
 
 public class GameManager {
@@ -60,15 +61,45 @@ public class GameManager {
 
 			m = new CodMap(name);
 
-			m.setAFlagSpawn((Location) ArenasFile.getData().get("Maps." + k + ".AFlag"));
-			m.setBFlagSpawn((Location) ArenasFile.getData().get("Maps." + k + ".BFlag"));
-			m.setCFlagSpawn((Location) ArenasFile.getData().get("Maps." + k + ".CFlag"));
-			m.setBlueFlagSpawn((Location) ArenasFile.getData().get("Maps." + k + ".blueFlagSpawn"));
-			m.setBlueSpawns((ArrayList<Location>) ArenasFile.getData().get("Maps." + k + ".blueSpawns"));
-			m.setEnabled(ArenasFile.getData().getBoolean("Maps." + k + ".enabled"));
-			m.setPinkSpawns((ArrayList<Location>) ArenasFile.getData().get("Maps." + k + ".pinkSpawns"));
-			m.setRedFlagSpawn((Location) ArenasFile.getData().get("Maps." + k + ".redFlagSpawn"));
-			m.setRedSpawns((ArrayList<Location>) ArenasFile.getData().get("Maps." + k + ".redSpawns"));
+
+			Location aFlagSpawn = (Location) ArenasFile.getData().get("Maps." + k + ".AFlag");
+			if (aFlagSpawn != null)
+				m.setAFlagSpawn(aFlagSpawn);
+
+			Location bFlagSpawn = (Location) ArenasFile.getData().get("Maps." + k + ".BFlag");
+			if (bFlagSpawn != null)
+				m.setBFlagSpawn(bFlagSpawn);
+
+			Location cFlagSpawn = (Location) ArenasFile.getData().get("Maps." + k + ".CFlag");
+			if (cFlagSpawn != null)
+				m.setCFlagSpawn(cFlagSpawn);
+
+			List<Location> hardpointSpawns = (List<Location>) ArenasFile.getData().get("Maps." + k + ".hardpointFlags");
+			if (hardpointSpawns != null)
+				m.setHardpointFlags(hardpointSpawns);
+
+			Location blueFlagSpawn = (Location) ArenasFile.getData().get("Maps." + k + ".blueFlagSpawn");
+			if (blueFlagSpawn != null)
+				m.setBlueFlagSpawn(blueFlagSpawn);
+
+			ArrayList<Location> blueSpawns = (ArrayList<Location>) ArenasFile.getData().get("Maps." + k + ".blueSpawns");
+			if (blueSpawns != null)
+				m.setBlueSpawns(blueSpawns);
+
+			boolean enabled = ArenasFile.getData().getBoolean("Maps." + k + ".enabled");
+			m.setEnabled(enabled);
+
+			ArrayList<Location> pinkSpawns = (ArrayList<Location>) ArenasFile.getData().get("Maps." + k + ".pinkSpawns");
+			if (pinkSpawns != null)
+				m.setPinkSpawns(pinkSpawns);
+
+			Location redFlagSpawn = (Location) ArenasFile.getData().get("Maps." + k + ".redFlagSpawn");
+			if (redFlagSpawn != null)
+				m.setRedFlagSpawn(redFlagSpawn);
+
+			ArrayList<Location> redSpawns = (ArrayList<Location>) ArenasFile.getData().get("Maps." + k + ".redSpawns");
+			if (redSpawns != null)
+				m.setRedSpawns(redSpawns);
 
 			List<String> gamemodes = ArenasFile.getData().getStringList("Maps." + k + ".blacklist");
 
