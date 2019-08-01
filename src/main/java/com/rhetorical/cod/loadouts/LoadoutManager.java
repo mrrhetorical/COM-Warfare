@@ -53,8 +53,10 @@ public class LoadoutManager {
 
 	public LoadoutManager(HashMap<Player, List<Loadout>> pL) {
 
-		if (instance == null)
-			instance = this;
+		if (instance != null)
+			return;
+
+		instance = this;
 
 		ItemMeta primaryMeta = emptyPrimary.getItemMeta(),
 				secondaryMeta = emptySecondary.getItemMeta(),
@@ -322,10 +324,7 @@ public class LoadoutManager {
 
 			for (CodGun gun : ShopManager.getInstance().getPrimaryGuns()) {
 				if (gun.getName().equals(LoadoutsFile.getData().getString("Loadouts." + p.getName() + "." + k + ".Primary"))) {
-					if (gun.getName().equals(
-							LoadoutsFile.getData().getString("Loadouts." + p.getName() + "." + k + ".Primary"))) {
-						primary = gun;
-					}
+					primary = gun;
 				}
 			}
 
@@ -333,9 +332,7 @@ public class LoadoutManager {
 
 			for (CodGun gun : ShopManager.getInstance().getSecondaryGuns()) {
 				if (gun.getName().equals(LoadoutsFile.getData().getString("Loadouts." + p.getName() + "." + k + ".Secondary"))) {
-					if (gun.getName().equals(LoadoutsFile.getData().getString("Loadouts." + p.getName() + "." + k + ".Secondary"))) {
-						secondary = gun;
-					}
+					secondary = gun;
 				}
 			}
 
@@ -343,17 +340,14 @@ public class LoadoutManager {
 
 			for (CodWeapon grenade : ShopManager.getInstance().getLethalWeapons()) {
 				if (grenade.getName().equals(LoadoutsFile.getData().getString("Loadouts." + p.getName() + "." + k + ".Lethal"))) {
-					if (grenade.getName().equals(
-							LoadoutsFile.getData().getString("Loadouts." + p.getName() + "." + k + ".Lethal"))) {
-						lethal = grenade;
-					}
+					lethal = grenade;
 				}
 			}
 
 			CodWeapon tactical = null;
 
 			for (CodWeapon grenade : ShopManager.getInstance().getTacticalWeapons()) {
-				if (grenade.getName().equals(LoadoutsFile.getData().getString("Loadouts." + p.getName() + "." + k + ".tactical"))) {
+				if (grenade.getName().equals(LoadoutsFile.getData().getString("Loadouts." + p.getName() + "." + k + ".Tactical"))) {
 					tactical = grenade;
 				}
 			}

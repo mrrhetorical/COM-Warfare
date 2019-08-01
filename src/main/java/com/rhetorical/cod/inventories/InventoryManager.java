@@ -97,8 +97,10 @@ public class InventoryManager implements Listener {
 
 	public InventoryManager() {
 
-		if (instance == null)
-			instance = this;
+		if (instance != null)
+			return;
+
+		instance = this;
 
 		mainInventory = Bukkit.createInventory(null, 27, Lang.INVENTORY_MAIN_MENU_TITLE.getMessage());
 		mainShopInventory = Bukkit.createInventory(null, 9, Lang.INVENTORY_SHOP_MENU_TITLE.getMessage());
@@ -550,7 +552,6 @@ public class InventoryManager implements Listener {
 		for (CodWeapon grenade : grenades) {
 			if (grenade.getType() == UnlockType.BOTH || grenade.getType() == UnlockType.CREDITS) {
 				if (((grenade.getType() == UnlockType.CREDITS || ProgressionManager.getInstance().getLevel(p) >= grenade.getLevelUnlock()) && !ShopManager.getInstance().getPurchasedWeapons().get(p).contains(grenade))) {
-
 					ItemStack item = grenade.getMenuItem();
 
 					ItemMeta gunMeta = item.getItemMeta();
