@@ -4,6 +4,7 @@ import com.rhetorical.cod.assignments.AssignmentManager;
 import com.rhetorical.cod.files.*;
 import com.rhetorical.cod.game.*;
 import com.rhetorical.cod.inventories.InventoryManager;
+import com.rhetorical.cod.inventories.MatchBrowser;
 import com.rhetorical.cod.inventories.ShopManager;
 import com.rhetorical.cod.lang.Lang;
 import com.rhetorical.cod.loadouts.LoadoutManager;
@@ -426,6 +427,19 @@ public class Main extends JavaPlugin {
 				GameManager.leaveMatch(p);
 
 				return true;
+			} else if (args[0].equalsIgnoreCase("browser")) {
+				if (!(sender instanceof Player)) {
+					sendMessage(cs, Lang.MUST_BE_PLAYER.getMessage(), lang);
+					return true;
+				}
+
+				if (!hasPerm(sender, "com.join", false))
+					return true;
+
+				Player p = (Player) sender;
+
+				p.openInventory(MatchBrowser.getInstance().getBrowser());
+
 			} else if (args[0].equalsIgnoreCase("listMaps")) {
 
 				if (!hasPerm(sender, "com.map.list", true))
