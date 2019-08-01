@@ -72,6 +72,8 @@ public enum Lang {
 	COULD_NOT_CREATE_MATCH_BECAUSE_NO_MAPS("&cCould not create match because there are not enough maps!"),
 	CREATED_LOBBY("&7Created game lobby!"),
 	FOUND_MATCH("&7Found match!"),
+	JOINING_GAME("&7Joining game. . ."),
+	COULD_NOT_JOIN_GAME("&cCould not join the match!"),
 	PLAYER_JOINED_LOBBY("&7{player} has joined your lobby!"),
 	PLAYER_LEAVE_GAME("&7You have left the lobby!"),
 	PLAYER_NOT_IN_GAME("&7You are not in a match!"),

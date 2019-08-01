@@ -201,15 +201,28 @@ public class GameManager {
 
 		}
 
-		possibleMatches.lastEntry().getValue().addPlayer(p);
 		Main.sendMessage(p, Main.getPrefix() + Lang.FOUND_MATCH.getMessage(), Main.getLang());
-		for (Player inGame : possibleMatches.lastEntry().getValue().getPlayers()) {
-			Main.sendMessage(inGame, Main.getPrefix() + Lang.PLAYER_JOINED_LOBBY.getMessage().replace("{player}", p.getDisplayName()), Main.getLang());
+		Main.sendMessage(p, Main.getPrefix() + Lang.JOINING_GAME.getMessage(), Main.getLang());
+
+		if (!possibleMatches.lastEntry().getValue().addPlayer(p)) {
+			Main.sendMessage(p, Main.getPrefix() + Lang.COULD_NOT_JOIN_GAME.getMessage(), Main.getLang());
 		}
+
 
 		return true;
 
 		// Found match!
+	}
+
+	public static boolean joinGame(Player p, GameInstance match) {
+		Main.sendMessage(p, Main.getPrefix() + Lang.JOINING_GAME.getMessage(), Main.getLang());
+
+		boolean success = match.addPlayer(p);
+
+		if (!success)
+			Main.sendMessage(p, Main.getPrefix() + Lang.COULD_NOT_JOIN_GAME.getMessage(), Main.getLang());
+
+		return success;
 	}
 
 	public static void leaveMatch(Player p) {

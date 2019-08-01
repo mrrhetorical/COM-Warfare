@@ -248,7 +248,7 @@ public class GameInstance implements Listener {
 		}
 	}
 
-	long getId() {
+	public long getId() {
 		return id;
 	}
 
@@ -290,16 +290,19 @@ public class GameInstance implements Listener {
 		updateTimeLeft();
 	}
 
-	void addPlayer(Player p) {
+	boolean addPlayer(Player p) {
 
 		if (p == null)
-			return;
+			return false;
 
-		if (players.size() > Main.getMaxPlayers())
-			return;
+		if (players.size() >= Main.getMaxPlayers())
+			return false;
 
 		if (players.contains(p))
-			return;
+			return false;
+
+		if (getState() == GameState.STOPPING)
+			return false;
 
 		players.add(p);
 
@@ -389,6 +392,12 @@ public class GameInstance implements Listener {
 			startLobbyTimer(lobbyTime);
 			setState(GameState.STARTING);
 		}
+
+		for (Player pp : players) {
+			Main.sendMessage(pp, Main.getPrefix() + Lang.PLAYER_JOINED_LOBBY.getMessage().replace("{player}", p.getDisplayName()), Main.getLang());
+		}
+
+		return true;
 	}
 
 	private void addBluePoint() {
@@ -1669,7 +1678,7 @@ public class GameInstance implements Listener {
 		this.state = state;
 	}
 
-	private Gamemode getGamemode() {
+	public Gamemode getGamemode() {
 		return getMap().getGamemode();
 	}
 
