@@ -248,7 +248,7 @@ public class GameInstance implements Listener {
 		}
 	}
 
-	long getId() {
+	public long getId() {
 		return id;
 	}
 
@@ -290,16 +290,19 @@ public class GameInstance implements Listener {
 		updateTimeLeft();
 	}
 
-	void addPlayer(Player p) {
+	boolean addPlayer(Player p) {
 
 		if (p == null)
-			return;
+			return false;
 
-		if (players.size() > Main.getMaxPlayers())
-			return;
+		if (players.size() >= Main.getMaxPlayers())
+			return false;
 
 		if (players.contains(p))
-			return;
+			return false;
+
+		if (getState() == GameState.STOPPING)
+			return false;
 
 		players.add(p);
 
@@ -389,6 +392,12 @@ public class GameInstance implements Listener {
 			startLobbyTimer(lobbyTime);
 			setState(GameState.STARTING);
 		}
+
+		for (Player pp : players) {
+			Main.sendMessage(pp, Main.getPrefix() + Lang.PLAYER_JOINED_LOBBY.getMessage().replace("{player}", p.getDisplayName()), Main.getLang());
+		}
+
+		return true;
 	}
 
 	private void addBluePoint() {
@@ -1145,7 +1154,7 @@ public class GameInstance implements Listener {
 					return;
 				}
 
-				if (t % 60 == 0) {
+				if (t % 60 == 0 && getGamemode() == Gamemode.HARDPOINT) {
 					updateHardpointFlagLocation();
 				}
 
@@ -1162,17 +1171,19 @@ public class GameInstance implements Listener {
 
 				String counter = getFancyTime(t);
 
-				if (currentMap.getGamemode() == Gamemode.DOM) {
+				if (getGamemode() == Gamemode.DOM) {
 					game.checkDomFlags();
 				}
 
-				if (currentMap.getGamemode() == Gamemode.HARDPOINT) {
+				if (getGamemode() == Gamemode.HARDPOINT) {
 					game.checkHardpointFlag();
 				}
 
 				if (getGamemode() == Gamemode.CTF) {
-					redFlag.checkNearbyPlayers();
-					blueFlag.checkNearbyPlayers();
+					if (redFlag != null)
+						redFlag.checkNearbyPlayers();
+					if (blueFlag != null)
+						blueFlag.checkNearbyPlayers();
 				}
 
 				if (currentMap.getGamemode() == Gamemode.INFECT) {
@@ -1669,7 +1680,7 @@ public class GameInstance implements Listener {
 		this.state = state;
 	}
 
-	private Gamemode getGamemode() {
+	public Gamemode getGamemode() {
 		return getMap().getGamemode();
 	}
 
@@ -1738,15 +1749,6 @@ public class GameInstance implements Listener {
 				updateScores(victim, killer, rank);
 			}
 
-
-			if (getGamemode() == Gamemode.CTF) {
-				if (victim.equals(redFlag.getFlagHolder())) {
-					redFlag.drop(victim);
-				} else if (victim.equals(blueFlag.getFlagHolder())) {
-					blueFlag.drop(victim);
-				}
-			}
-
 		} else if (getGamemode().equals(Gamemode.CTF) || getGamemode().equals(Gamemode.INFECT)) {
 			if (redTeam.contains(killer)) {
 				Main.sendMessage(killer, "" + ChatColor.RED + ChatColor.BOLD + "YOU " + ChatColor.RESET + "" + ChatColor.WHITE + "[" + Lang.KILLED_TEXT.getMessage() + "] " + ChatColor.RESET + ChatColor.BLUE + ChatColor.BOLD + victim.getDisplayName(), Main.getLang());
@@ -1763,6 +1765,14 @@ public class GameInstance implements Listener {
 				ProgressionManager.getInstance().addExperience(killer, rank.getKillExperience());
 				kill(victim, killer);
 				updateScores(victim, killer, rank);
+			}
+
+			if (getGamemode() == Gamemode.CTF) {
+				if (victim.equals(redFlag.getFlagHolder())) {
+					redFlag.drop(victim);
+				} else if (victim.equals(blueFlag.getFlagHolder())) {
+					blueFlag.drop(victim);
+				}
 			}
 
 		} else if (getGamemode().equals(Gamemode.FFA) || getGamemode().equals(Gamemode.GUN) || getGamemode().equals(Gamemode.OITC)) {
@@ -1803,11 +1813,16 @@ public class GameInstance implements Listener {
 				}
 
 				killer.getInventory().clear();
+				setTeamArmor(killer);
+				killer.getInventory().setItem(32, InventoryManager.getInstance().selectClass);
+				killer.getInventory().setItem(35, InventoryManager.getInstance().leaveItem);
+
+				KillStreakManager.getInstance().streaksAfterDeath(killer);
 				killer.getInventory().setItem(0, LoadoutManager.getInstance().knife);
 				CodGun gun;
 				try {
 					gun = GameManager.gunGameGuns.get(ffaPlayerScores.get(killer));
-					ItemStack gunItem = gun.getMenuItem();
+					ItemStack gunItem = gun.getGunItem();
 					ItemStack ammo = gun.getAmmo();
 					ammo.setAmount(gun.getAmmoCount());
 
@@ -2180,7 +2195,7 @@ public class GameInstance implements Listener {
 			return;
 
 
-		int flags[] = { aFlag.checkFlag(this), bFlag.checkFlag(this), cFlag.checkFlag(this) };
+		int[] flags = {aFlag.checkFlag(this), bFlag.checkFlag(this), cFlag.checkFlag(this)};
 
 		int blueFlags = 0,
 				redFlags = 0;
@@ -2527,9 +2542,14 @@ public class GameInstance implements Listener {
 				do {
 					int index = (new Random()).nextInt(players.size());
 					target = players.get(index);
-				} while (target != owner);
+					if (players.size() == 1) {
+						target = null;
+						break;
+					}
+				} while (!target.equals(owner));
 
-				wolf.setTarget(target);
+				if (target != null)
+					wolf.setTarget(target);
 			}
 		}
 
@@ -2608,9 +2628,14 @@ public class GameInstance implements Listener {
 							do {
 								int index = (new Random()).nextInt(players.size());
 								target = players.get(index);
-							} while (target != owner);
+								if (players.size() == 1) {
+									target = null;
+									break;
+								}
+							} while (!target.equals(owner));
 
-							w.setTarget(target);
+							if (target != null)
+								w.setTarget(target);
 						}
 					}
 				}

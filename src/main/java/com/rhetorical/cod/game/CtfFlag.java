@@ -81,6 +81,7 @@ class CtfFlag {
 	void pickup(Player p) {
 
 		pickedUp = true;
+		inFlagHolder = false;
 
 		despawn();
 
@@ -95,11 +96,12 @@ class CtfFlag {
 
 	void drop(Player p) {
 
-		pickedUp = false;
-
 		flagHolder = null;
 
 		spawn(p.getLocation());
+
+		inFlagHolder = false;
+		pickedUp = false;
 
 		for (Player player : getOwner().getPlayers()) {
 			Main.sendMessage(player, Lang.FLAG_DROPPED.getMessage().replace("{team}", getTeam().toString().toLowerCase()).replace("{team-color}", getTeam().getColor() + ""), Main.getLang());
@@ -132,7 +134,7 @@ class CtfFlag {
 		getOwner().setTeamArmor(p);
 
 		for (Player player : getOwner().getPlayers()) {
-			Main.sendMessage(player, Lang.TEAM_SCORED.getMessage().replace("{player}", p.getName()).replace("{team}", getTeam().toString().toLowerCase()).replace("{team-color}", getTeam().getColor() + ""), Main.getLang());
+			Main.sendMessage(player, Lang.TEAM_SCORED.getMessage().replace("{player}", p.getName()).replace("{team}", getOtherFlag().getTeam().toString().toLowerCase()).replace("{team-color}", getOtherFlag().getTeam().getColor() + ""), Main.getLang());
 		}
 	}
 
@@ -203,8 +205,9 @@ class CtfFlag {
 			if (nearest.equals(getOtherFlag().getFlagHolder())) {
 				getOtherFlag().scorePoint(nearest);
 				getOwner().incrementScore(nearest);
-			} else if (!isInFlagHolder())
+			} else if (!isInFlagHolder()) {
 				resetFlag();
+			}
 		} else {
 			pickup(nearest);
 		}

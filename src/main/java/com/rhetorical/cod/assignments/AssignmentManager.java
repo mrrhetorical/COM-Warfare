@@ -16,8 +16,10 @@ public class AssignmentManager {
 	private Map<Player, List<Assignment>> playerAssignments = new HashMap<>();
 
 	private AssignmentManager() {
-		if (instance == null)
-			instance = this;
+		if (instance != null)
+			return;
+
+		instance = this;
 		AssignmentType.loadBaseRewards();
 	}
 

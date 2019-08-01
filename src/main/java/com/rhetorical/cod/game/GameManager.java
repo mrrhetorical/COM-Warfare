@@ -132,19 +132,7 @@ public class GameManager {
 
 	public static boolean findMatch(Player p) {
 
-		ShopManager.getInstance().checkForNewGuns(p);
-		
-		try  {
-			LoadoutManager.getInstance().load(p);
-			InventoryManager.getInstance().setupPlayerSelectionInventories(p);
-		} catch(Exception e) {
-			Main.sendMessage(Main.getConsole(), Main.getPrefix() + Lang.ERROR_READING_PLAYER_LOADOUT.getMessage(), Main.getLang());
-		}
-
-		AssignmentManager.getInstance().load(p);
-		
-		ProgressionManager.getInstance().loadData(p);
-		ProgressionManager.getInstance().saveData(p);
+		loadPlayerData(p);
 		
 		if (Main.getLobbyLocation() == null) {
 			Main.sendMessage(p, Main.getPrefix() + Lang.NO_LOBBY_SET.getMessage(), Main.getLang());
@@ -201,15 +189,48 @@ public class GameManager {
 
 		}
 
-		possibleMatches.lastEntry().getValue().addPlayer(p);
 		Main.sendMessage(p, Main.getPrefix() + Lang.FOUND_MATCH.getMessage(), Main.getLang());
-		for (Player inGame : possibleMatches.lastEntry().getValue().getPlayers()) {
-			Main.sendMessage(inGame, Main.getPrefix() + Lang.PLAYER_JOINED_LOBBY.getMessage().replace("{player}", p.getDisplayName()), Main.getLang());
+		Main.sendMessage(p, Main.getPrefix() + Lang.JOINING_GAME.getMessage(), Main.getLang());
+
+		if (!possibleMatches.lastEntry().getValue().addPlayer(p)) {
+			Main.sendMessage(p, Main.getPrefix() + Lang.COULD_NOT_JOIN_GAME.getMessage(), Main.getLang());
 		}
+
 
 		return true;
 
 		// Found match!
+	}
+
+	public static boolean joinGame(Player p, GameInstance match) {
+
+		loadPlayerData(p);
+
+		Main.sendMessage(p, Main.getPrefix() + Lang.JOINING_GAME.getMessage(), Main.getLang());
+
+		boolean success = match.addPlayer(p);
+
+		if (!success)
+			Main.sendMessage(p, Main.getPrefix() + Lang.COULD_NOT_JOIN_GAME.getMessage(), Main.getLang());
+
+		return success;
+	}
+
+	private static void loadPlayerData(Player p) {
+		ShopManager.getInstance().checkForNewGuns(p);
+
+		try  {
+			LoadoutManager.getInstance().load(p);
+			InventoryManager.getInstance().setupPlayerSelectionInventories(p);
+		} catch(Exception e) {
+			Main.sendMessage(Main.getConsole(), Main.getPrefix() + Lang.ERROR_READING_PLAYER_LOADOUT.getMessage(), Main.getLang());
+		}
+
+		AssignmentManager.getInstance().load(p);
+
+		ProgressionManager.getInstance().loadData(p);
+		ProgressionManager.getInstance().saveData(p);
+
 	}
 
 	public static void leaveMatch(Player p) {
