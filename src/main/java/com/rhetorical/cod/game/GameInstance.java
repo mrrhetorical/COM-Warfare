@@ -1813,11 +1813,16 @@ public class GameInstance implements Listener {
 				}
 
 				killer.getInventory().clear();
+				setTeamArmor(killer);
+				killer.getInventory().setItem(32, InventoryManager.getInstance().selectClass);
+				killer.getInventory().setItem(35, InventoryManager.getInstance().leaveItem);
+
+				KillStreakManager.getInstance().streaksAfterDeath(killer);
 				killer.getInventory().setItem(0, LoadoutManager.getInstance().knife);
 				CodGun gun;
 				try {
 					gun = GameManager.gunGameGuns.get(ffaPlayerScores.get(killer));
-					ItemStack gunItem = gun.getMenuItem();
+					ItemStack gunItem = gun.getGunItem();
 					ItemStack ammo = gun.getAmmo();
 					ammo.setAmount(gun.getAmmoCount());
 
@@ -2537,9 +2542,14 @@ public class GameInstance implements Listener {
 				do {
 					int index = (new Random()).nextInt(players.size());
 					target = players.get(index);
-				} while (target != owner);
+					if (players.size() == 1) {
+						target = null;
+						break;
+					}
+				} while (!target.equals(owner));
 
-				wolf.setTarget(target);
+				if (target != null)
+					wolf.setTarget(target);
 			}
 		}
 
@@ -2618,9 +2628,14 @@ public class GameInstance implements Listener {
 							do {
 								int index = (new Random()).nextInt(players.size());
 								target = players.get(index);
-							} while (target != owner);
+								if (players.size() == 1) {
+									target = null;
+									break;
+								}
+							} while (!target.equals(owner));
 
-							w.setTarget(target);
+							if (target != null)
+								w.setTarget(target);
 						}
 					}
 				}
