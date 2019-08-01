@@ -1171,17 +1171,19 @@ public class GameInstance implements Listener {
 
 				String counter = getFancyTime(t);
 
-				if (currentMap.getGamemode() == Gamemode.DOM) {
+				if (getGamemode() == Gamemode.DOM) {
 					game.checkDomFlags();
 				}
 
-				if (currentMap.getGamemode() == Gamemode.HARDPOINT) {
+				if (getGamemode() == Gamemode.HARDPOINT) {
 					game.checkHardpointFlag();
 				}
 
 				if (getGamemode() == Gamemode.CTF) {
-					redFlag.checkNearbyPlayers();
-					blueFlag.checkNearbyPlayers();
+					if (redFlag != null)
+						redFlag.checkNearbyPlayers();
+					if (blueFlag != null)
+						blueFlag.checkNearbyPlayers();
 				}
 
 				if (currentMap.getGamemode() == Gamemode.INFECT) {
@@ -2188,7 +2190,7 @@ public class GameInstance implements Listener {
 			return;
 
 
-		int flags[] = { aFlag.checkFlag(this), bFlag.checkFlag(this), cFlag.checkFlag(this) };
+		int[] flags = {aFlag.checkFlag(this), bFlag.checkFlag(this), cFlag.checkFlag(this)};
 
 		int blueFlags = 0,
 				redFlags = 0;

@@ -134,7 +134,7 @@ class CtfFlag {
 		getOwner().setTeamArmor(p);
 
 		for (Player player : getOwner().getPlayers()) {
-			Main.sendMessage(player, Lang.TEAM_SCORED.getMessage().replace("{player}", p.getName()).replace("{team}", getOtherFlag().getTeam().toString().toLowerCase()).replace("{team-color}", getTeam().getColor() + ""), Main.getLang());
+			Main.sendMessage(player, Lang.TEAM_SCORED.getMessage().replace("{player}", p.getName()).replace("{team}", getOtherFlag().getTeam().toString().toLowerCase()).replace("{team-color}", getOtherFlag().getTeam().getColor() + ""), Main.getLang());
 		}
 	}
 
