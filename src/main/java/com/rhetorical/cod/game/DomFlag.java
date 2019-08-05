@@ -139,15 +139,15 @@ class DomFlag {
 			if (getCaptureProgress() == 10) {
 				team = "blue";
 				color = ChatColor.BLUE;
-				updateName(ChatColor.BLUE + Lang.FLAG_A.getMessage());
+				updateName(ChatColor.BLUE + getFlagName().getMessage());
 				updateFlag(1);
 			} else if (getCaptureProgress() == -10) {
 				team = "red";
 				color = ChatColor.RED;
-				updateName(ChatColor.RED + Lang.FLAG_A.getMessage());
+				updateName(ChatColor.RED + getFlagName().getMessage());
 				updateFlag(0);
 			} else if (getCaptureProgress() == 0 && (blue > 0 || red > 0)) {
-				updateName(ChatColor.WHITE + Lang.FLAG_A.getMessage());
+				updateName(ChatColor.WHITE + getFlagName().getMessage());
 				updateFlag(-1);
 				for (Player p : game.getPlayers()) {
 					p.sendMessage(Lang.FLAG_NEUTRALIZED.getMessage().replace("{flag}", flag));

@@ -1122,7 +1122,7 @@ public class GameInstance implements Listener {
 				getScoreboardManager().setupGameBoard(p, getFancyTime(gameTime));
 			}
 
-			if (getGamemode().equals(Gamemode.DOM)) {
+			if (getGamemode() == Gamemode.DOM) {
 				spawnDomFlags();
 			}
 		} else {
