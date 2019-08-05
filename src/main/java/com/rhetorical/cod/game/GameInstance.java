@@ -1379,7 +1379,7 @@ public class GameInstance implements Listener {
 					team = "red";
                 }
 
-				Main.sendTitle(p, Lang.TEAM_WON_ROUND.getMessage().replace("{team-color}", tColor + "").replace("{team}", team), Lang.NEXT_ROUND_STARTING.getMessage().replace("{time}", delay + ""));
+				Main.sendTitle(p, Lang.TEAM_WON_ROUND.getMessage().replace("{team-color}", tColor + "").replace("{team}", team), Lang.NEXT_ROUND_STARTING.getMessage().replace("{time}", delay + ""), tColor);
 			}
 		}
 
@@ -2687,9 +2687,10 @@ public class GameInstance implements Listener {
 					}
 
 					for (Player p : players) {
-						Main.sendTitle(p, Lang.NUKE_LAUNCHED_TITLE.getMessage()
-								.replace("{team-color}", tColor + "")
-								.replace("{team}", launcher), Lang.NUKE_LAUNCHED_SUBTITLE.getMessage().replace("{time}", Integer.toString(t)), 1, 20, 1);
+						String title = Lang.NUKE_LAUNCHED_TITLE.getMessage().replace("{team-color}", tColor + "").replace("{team}", launcher),
+								subtitle = Lang.NUKE_LAUNCHED_SUBTITLE.getMessage().replace("{time}", Integer.toString(t));
+
+						Main.sendTitle(p, title, subtitle, tColor, 1, 20, 1);
 					}
 				}
 			};

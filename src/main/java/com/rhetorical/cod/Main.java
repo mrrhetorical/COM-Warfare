@@ -14,6 +14,8 @@ import com.rhetorical.cod.progression.CreditManager;
 import com.rhetorical.cod.progression.ProgressionManager;
 import com.rhetorical.cod.progression.RankPerks;
 import com.rhetorical.cod.streaks.KillStreakManager;
+import com.rhetorical.cod.util.LegacyActionBar;
+import com.rhetorical.cod.util.LegacyTitle;
 import com.rhetorical.cod.weapons.*;
 import com.rhetorical.tpp.McLang;
 import com.rhetorical.tpp.api.McTranslate;
@@ -69,6 +71,7 @@ public class Main extends JavaPlugin {
 
 	private boolean hasQA = false;
 	private boolean hasCS = false;
+	private boolean hasProtocol = false;
 
 	private String reward_highestKD;
 	private String reward_highestScore;
@@ -84,6 +87,7 @@ public class Main extends JavaPlugin {
 	public void onLoad() {
 		hasQA = Bukkit.getServer().getPluginManager().getPlugin("QualityArmory") != null;
 		hasCS = Bukkit.getServer().getPluginManager().getPlugin("CrackShot") != null;
+		hasProtocol = Bukkit.getServer().getPluginManager().getPlugin("ProtocolLib") != null;
 	}
 
 	@Override
@@ -1343,6 +1347,10 @@ public class Main extends JavaPlugin {
 	}
 
 	public static void sendTitle(Player p, String title, String subtitle, int... timings) {
+		sendTitle(p, title, subtitle, ChatColor.YELLOW, timings);
+	}
+
+	public static void sendTitle(Player p, String title, String subtitle, ChatColor legacyColor, int... timings) {
 
 		int start;
 		int linger;
@@ -1359,16 +1367,25 @@ public class Main extends JavaPlugin {
 		}
 		try {
 			Class.forName("org.bukkit.entity.Player").getMethod("sendTitle", String.class, String.class, int.class, int.class, int.class).invoke(p, title, subtitle, start, linger, stop);
-		} catch(Exception e) {
-			e.printStackTrace();
-//			p.sendMessage(title);
-//			p.sendMessage(subtitle);
+		} catch(NoSuchMethodError|Exception e) {
+			LegacyTitle.sendTitle(p, title, start, stop, linger, legacyColor);
+			LegacyTitle.sendSubTitle(p, title, start, stop, linger, legacyColor);
 		}
 //		p.sendTitle(title, subtitle, 10, 0, 10);
 	}
 
 	public static void sendActionBar(Player p, String message) {
-		p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
+		try {
+			p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
+		} catch (NoSuchMethodError|Exception e) {
+			if (e instanceof NoSuchMethodError) {
+				LegacyActionBar.sendActionBarMessage(p, message);
+//				p.sendMessage(message);
+			} else {
+				Bukkit.getLogger().severe("Error when attempting to send action bar in COM-Warfare:");
+				e.printStackTrace();
+			}
+		}
 	}
 
 	public static void openMainMenu(Player p) {
@@ -1387,6 +1404,10 @@ public class Main extends JavaPlugin {
 
 	public static boolean hasCrackShot() {
 		return getInstance().hasCS;
+	}
+
+	public static boolean hasProtocolLib() {
+		return getInstance().hasProtocol;
 	}
 
 	public static boolean isDisabling() {

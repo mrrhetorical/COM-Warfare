@@ -197,10 +197,20 @@ public class Listeners implements Listener {
 			return;
 		}
 
-		if (cause != DamageCause.ENTITY_ATTACK && cause != DamageCause.ENTITY_EXPLOSION && cause != DamageCause.ENTITY_SWEEP_ATTACK && cause != DamageCause.PROJECTILE) {
-			if (!Objects.requireNonNull(GameManager.getMatchWhichContains(p)).health.isDead(p) && Objects.requireNonNull(GameManager.getMatchWhichContains(p)).getState() == GameState.IN_GAME) {
-				e.setCancelled(true);
-				Objects.requireNonNull(GameManager.getMatchWhichContains(p)).damagePlayer(p, damage);
+		if (cause != DamageCause.ENTITY_ATTACK && cause != DamageCause.ENTITY_EXPLOSION && cause != DamageCause.PROJECTILE) {
+			boolean exists = true;
+			DamageCause damageCause = null;
+			try {
+				damageCause = DamageCause.valueOf("ENTITY_SWEEP_ATTACK");
+			} catch (Exception ex) {
+				exists = false;
+			}
+
+			if (exists && cause != damageCause) {
+				if (!Objects.requireNonNull(GameManager.getMatchWhichContains(p)).health.isDead(p) && Objects.requireNonNull(GameManager.getMatchWhichContains(p)).getState() == GameState.IN_GAME) {
+					e.setCancelled(true);
+					Objects.requireNonNull(GameManager.getMatchWhichContains(p)).damagePlayer(p, damage);
+				}
 			}
 		}
 		
