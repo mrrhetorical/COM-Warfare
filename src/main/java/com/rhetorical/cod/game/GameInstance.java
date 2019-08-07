@@ -655,13 +655,15 @@ public class GameInstance implements Listener {
 				ffaPlayerScores.put(p, 0);
 			}
 			p.getInventory().setItem(0, LoadoutManager.getInstance().knife);
-			CodGun gun = GameManager.gunGameGuns.get(ffaPlayerScores.get(p));
-			ItemStack gunItem = gun.getGunItem();
-			ItemStack ammo = gun.getAmmo();
-			ammo.setAmount(gun.getAmmoCount());
+			if (getState() != GameState.STOPPING) {
+				CodGun gun = GameManager.gunGameGuns.get(ffaPlayerScores.get(p));
+				ItemStack gunItem = gun.getGunItem();
+				ItemStack ammo = gun.getAmmo();
+				ammo.setAmount(gun.getAmmoCount());
 
-			p.getInventory().setItem(1, gunItem);
-			p.getInventory().setItem(28, ammo);
+				p.getInventory().setItem(1, gunItem);
+				p.getInventory().setItem(28, ammo);
+			}
 		}
 
 		p.getInventory().setItem(32, InventoryManager.getInstance().selectClass);
