@@ -1,5 +1,6 @@
 package com.rhetorical.cod.game;
 
+import com.rhetorical.cod.Main;
 import org.bukkit.Effect;
 import org.bukkit.EntityEffect;
 import org.bukkit.GameMode;
@@ -73,17 +74,18 @@ public class HealthManager {
 	}
 	
 	public boolean isDead(Player p) {
-		
-		if (getHealth(p) <= 0) {
-			reset(p);
-			return true;
-		}
-		
-		return false;
+		return getHealth(p) <= 0;
 	}
 	
 	public void update(Player p) {
-		p.setLevel((int) Math.round(getHealth(p)));
+		double health = getHealth(p);
+		p.setLevel((int) health);
+
+		int desired = (int) Math.ceil((20d * health) / Main.getDefaultHealth());
+		if (desired < 1)
+			desired = 1;
+
+		p.setHealth((double) desired);
 	}
 	
 	public void reset(Player p) {

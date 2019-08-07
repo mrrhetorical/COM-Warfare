@@ -587,6 +587,7 @@ public class GameInstance implements Listener {
 		p.setGameMode(GameMode.ADVENTURE);
 		p.setHealth(20d);
 		p.setFoodLevel(20);
+		health.reset(p);
 		Loadout loadout = LoadoutManager.getInstance().getActiveLoadout(p);
 
 		setTeamArmor(p);
@@ -1931,7 +1932,9 @@ public class GameInstance implements Listener {
 			damage = Math.round(Main.getDefaultHealth() / 4);
 		}
 
-		health.damage(victim, damage);
+		if(!health.isDead(attacker))
+			health.damage(victim, damage);
+
 
 		if (health.isDead(victim)) {
 			if (!LoadoutManager.getInstance().getCurrentLoadout(victim).hasPerk(Perk.LAST_STAND)) {
