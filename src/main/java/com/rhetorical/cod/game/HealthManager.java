@@ -52,7 +52,10 @@ public class HealthManager {
 		if (p.getGameMode() != GameMode.SURVIVAL && p.getGameMode() != GameMode.ADVENTURE) return;
 		
 		if (p.hasPotionEffect(PotionEffectType.DAMAGE_RESISTANCE)) return;
-		
+
+		if (inJuggernaut.contains(p))
+			damage /= 3;
+
 		double health = getHealth(p) - damage;
 		
 		healthMap.put(p, health);
@@ -66,7 +69,7 @@ public class HealthManager {
 		if (p.getGameMode() != GameMode.SURVIVAL && p.getGameMode() != GameMode.ADVENTURE) return;
 
 		if (health > defaultHealth) {
-			if (!inJuggernaut.contains(p)) {
+			if (inJuggernaut.contains(p)) {
 				if (health > defaultHealth * 5) {
 					health = defaultHealth * 5;
 				}
@@ -81,6 +84,9 @@ public class HealthManager {
 	void heal(Player p, double healing) {
 		if (p.getGameMode() != GameMode.SURVIVAL && p.getGameMode() != GameMode.ADVENTURE) return;
 
+		if (inJuggernaut.contains(p))
+			healing *= 2;
+
 		double health = getHealth(p) + healing;
 
 		setHealth(p, health);
@@ -92,12 +98,14 @@ public class HealthManager {
 	
 	void update(Player p) {
 		double health = getHealth(p);
-		p.setLevel((int) health);
 
 		int desired = (int) Math.ceil((20d * health) / Main.getDefaultHealth());
 		if (desired < 1)
 			desired = 1;
+		else if (desired > 20)
+			desired = 20;
 
+		p.setLevel((int) health);
 		p.setHealth((double) desired);
 	}
 	
