@@ -89,6 +89,9 @@ public class HungerManager {
 
 				timeSinceLastDamage += 5L;
 
+				if (p.isSprinting())
+					timeSinceLastDamage = 0;
+
 				if (game.health.getHealth(p) < lastHealth) {
 					lastHealth = game.health.getHealth(p);
 					timeSinceLastDamage = 0;
