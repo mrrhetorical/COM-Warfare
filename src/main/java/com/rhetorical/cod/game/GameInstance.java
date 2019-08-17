@@ -1997,12 +1997,17 @@ public class GameInstance implements Listener {
 			}
 		}
 
+		if (!players.contains(damager))
+			return;
+
+		e.setCancelled(true);
+
 		double scalar = (20d / Main.getDefaultHealth()) * 0.4d;
 		double damage = e.getDamage() * scalar;
+		damage /= 2;
 
 		for (Player p : dogsScoreStreak.keySet()) {
 			if (p.equals(damager)) {
-				e.setCancelled(true);
 				continue;
 			}
 			for (Wolf w : dogsScoreStreak.get(p)) {
