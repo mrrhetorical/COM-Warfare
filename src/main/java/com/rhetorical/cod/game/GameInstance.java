@@ -2575,7 +2575,7 @@ public class GameInstance implements Listener {
 		dogsScoreStreak.put(owner, wolves);
 
 		BukkitRunnable br = new BukkitRunnable() {
-			int t = 45;
+			int t = 30;
 
 			@Override
 			public void run() {
