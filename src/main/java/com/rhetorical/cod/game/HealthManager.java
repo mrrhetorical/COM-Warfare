@@ -10,11 +10,13 @@ import org.bukkit.potion.PotionEffectType;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class HealthManager {
 	private HashMap<Player, Double> healthMap = new HashMap<Player, Double>();
 	
 	public double defaultHealth;
+	List<Player> inJuggernaut = new ArrayList<>();
 
 	public HealthManager(ArrayList<Player> pls, double health) {
 		
@@ -60,24 +62,35 @@ public class HealthManager {
 		update(p);
 	}
 
-	public void heal(Player p, double healing) {
+	void setHealth(Player p, double health) {
 		if (p.getGameMode() != GameMode.SURVIVAL && p.getGameMode() != GameMode.ADVENTURE) return;
 
-		double health = getHealth(p) + healing;
-
 		if (health > defaultHealth) {
-			health = defaultHealth;
+			if (!inJuggernaut.contains(p)) {
+				if (health > defaultHealth * 5) {
+					health = defaultHealth * 5;
+				}
+			} else
+				health = defaultHealth;
 		}
 
 		healthMap.put(p, health);
 		update(p);
+	}
+
+	void heal(Player p, double healing) {
+		if (p.getGameMode() != GameMode.SURVIVAL && p.getGameMode() != GameMode.ADVENTURE) return;
+
+		double health = getHealth(p) + healing;
+
+		setHealth(p, health);
 	}
 	
 	public boolean isDead(Player p) {
 		return getHealth(p) <= 0;
 	}
 	
-	public void update(Player p) {
+	void update(Player p) {
 		double health = getHealth(p);
 		p.setLevel((int) health);
 
@@ -89,6 +102,7 @@ public class HealthManager {
 	}
 	
 	public void reset(Player p) {
+		inJuggernaut.remove(p);
 		healthMap.put(p, this.defaultHealth);
 		update(p);
 	}

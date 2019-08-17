@@ -2,15 +2,11 @@ package com.rhetorical.cod.util;
 
 import com.rhetorical.cod.Main;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitTask;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
-import java.util.Map;
 
 ///This class is used to send action bars to users running Minecraft 1.8.8
 public class LegacyActionBar {
-	private static final Map<Player, BukkitTask> PENDING_MESSAGES = new HashMap<>();
 
 	public static void sendActionBarMessage(Player bukkitPlayer, String message) {
 		if (!Main.hasProtocolLib())

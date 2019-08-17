@@ -2352,6 +2352,8 @@ public class GameInstance implements Listener {
 			startDogs(p);
 		} else if (p.getItemInHand().equals(KillStreak.NUKE.getKillStreakItem())) {
 			startNuke(p);
+		} else if (p.getItemInHand().equals(KillStreak.JUGGERNAUT.getKillStreakItem())) {
+			startJuggernaut(p);
 		}
 
 	}
@@ -2702,6 +2704,20 @@ public class GameInstance implements Listener {
 
 			br.runTaskTimer(Main.getPlugin(), 0L, 20L);
 		}
+	}
+
+	private void startJuggernaut(Player owner) {
+		if (!players.contains(owner))
+			return;
+
+		KillStreakManager.getInstance().useStreak(owner, KillStreak.JUGGERNAUT);
+		owner.getInventory().remove(KillStreak.JUGGERNAUT.getKillStreakItem());
+
+		health.inJuggernaut.add(owner);
+
+		health.setHealth(owner, health.defaultHealth * 5);
+
+		Main.sendTitle(owner, Lang.JUGGERNAUT_STARTED.getMessage(), "");
 	}
 
 	private void updateTimeLeft() {
