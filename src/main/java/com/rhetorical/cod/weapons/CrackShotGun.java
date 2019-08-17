@@ -6,7 +6,6 @@ import com.rhetorical.cod.game.GameManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.TNTPrimed;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
@@ -38,8 +37,8 @@ public class CrackShotGun implements Listener {
 
 	@EventHandler
 	public void onCrackShotExplode(com.shampaggon.crackshot.events.WeaponDamageEntityEvent e) {
-		if (!(e.getDamager() instanceof TNTPrimed))
-			return;
+//		if (!(e.getDamager() instanceof TNTPrimed))
+//			return;
 
 		Player victim;
 		if (!(e.getVictim() instanceof Player))

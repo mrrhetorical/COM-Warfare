@@ -91,6 +91,8 @@ public enum Lang {
 	COUNTER_UAV_NAME("&6&lCounter UAV"),
 	NUKE_NAME("&6&lNuke"),
 	DOGS_NAME("&6&lDogs"),
+	JUGGERNAUT_NAME("&6&lJuggernaut Suit"),
+	JUGGERNAUT_STARTED("&eYou are now in a Juggernaut Suit! You have 5x health!"),
 	PLAYER_DOG_TAG_NAME("{team-color}{player}'s dog tag."),
 	ASSIGNED_TO_TEAM("{team-color}You are on the {team} team!"),
 	NOBODY_WON_GAME("&7Nobody won the match! It was a tie!"),

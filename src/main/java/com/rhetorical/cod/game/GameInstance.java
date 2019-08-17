@@ -587,6 +587,7 @@ public class GameInstance implements Listener {
 		p.setGameMode(GameMode.ADVENTURE);
 		p.setHealth(20d);
 		p.setFoodLevel(20);
+		health.reset(p);
 		Loadout loadout = LoadoutManager.getInstance().getActiveLoadout(p);
 
 		setTeamArmor(p);
@@ -655,13 +656,15 @@ public class GameInstance implements Listener {
 				ffaPlayerScores.put(p, 0);
 			}
 			p.getInventory().setItem(0, LoadoutManager.getInstance().knife);
-			CodGun gun = GameManager.gunGameGuns.get(ffaPlayerScores.get(p));
-			ItemStack gunItem = gun.getGunItem();
-			ItemStack ammo = gun.getAmmo();
-			ammo.setAmount(gun.getAmmoCount());
+			if (getState() != GameState.STOPPING) {
+				CodGun gun = GameManager.gunGameGuns.get(ffaPlayerScores.get(p));
+				ItemStack gunItem = gun.getGunItem();
+				ItemStack ammo = gun.getAmmo();
+				ammo.setAmount(gun.getAmmoCount());
 
-			p.getInventory().setItem(1, gunItem);
-			p.getInventory().setItem(28, ammo);
+				p.getInventory().setItem(1, gunItem);
+				p.getInventory().setItem(28, ammo);
+			}
 		}
 
 		p.getInventory().setItem(32, InventoryManager.getInstance().selectClass);
@@ -1122,7 +1125,7 @@ public class GameInstance implements Listener {
 				getScoreboardManager().setupGameBoard(p, getFancyTime(gameTime));
 			}
 
-			if (getGamemode().equals(Gamemode.DOM)) {
+			if (getGamemode() == Gamemode.DOM) {
 				spawnDomFlags();
 			}
 		} else {
@@ -1929,7 +1932,9 @@ public class GameInstance implements Listener {
 			damage = Math.round(Main.getDefaultHealth() / 4);
 		}
 
-		health.damage(victim, damage);
+		if(!health.isDead(attacker))
+			health.damage(victim, damage);
+
 
 		if (health.isDead(victim)) {
 			if (!LoadoutManager.getInstance().getCurrentLoadout(victim).hasPerk(Perk.LAST_STAND)) {
@@ -1992,12 +1997,17 @@ public class GameInstance implements Listener {
 			}
 		}
 
+		if (!players.contains(damager))
+			return;
+
+		e.setCancelled(true);
+
 		double scalar = (20d / Main.getDefaultHealth()) * 0.4d;
 		double damage = e.getDamage() * scalar;
+		damage /= 2;
 
 		for (Player p : dogsScoreStreak.keySet()) {
 			if (p.equals(damager)) {
-				e.setCancelled(true);
 				continue;
 			}
 			for (Wolf w : dogsScoreStreak.get(p)) {
@@ -2347,6 +2357,8 @@ public class GameInstance implements Listener {
 			startDogs(p);
 		} else if (p.getItemInHand().equals(KillStreak.NUKE.getKillStreakItem())) {
 			startNuke(p);
+		} else if (p.getItemInHand().equals(KillStreak.JUGGERNAUT.getKillStreakItem())) {
+			startJuggernaut(p);
 		}
 
 	}
@@ -2563,7 +2575,7 @@ public class GameInstance implements Listener {
 		dogsScoreStreak.put(owner, wolves);
 
 		BukkitRunnable br = new BukkitRunnable() {
-			int t = 45;
+			int t = 30;
 
 			@Override
 			public void run() {
@@ -2697,6 +2709,20 @@ public class GameInstance implements Listener {
 
 			br.runTaskTimer(Main.getPlugin(), 0L, 20L);
 		}
+	}
+
+	private void startJuggernaut(Player owner) {
+		if (!players.contains(owner))
+			return;
+
+		KillStreakManager.getInstance().useStreak(owner, KillStreak.JUGGERNAUT);
+		owner.getInventory().remove(KillStreak.JUGGERNAUT.getKillStreakItem());
+
+		health.inJuggernaut.add(owner);
+
+		health.setHealth(owner, health.defaultHealth * 5);
+
+		Main.sendTitle(owner, Lang.JUGGERNAUT_STARTED.getMessage(), "");
 	}
 
 	private void updateTimeLeft() {

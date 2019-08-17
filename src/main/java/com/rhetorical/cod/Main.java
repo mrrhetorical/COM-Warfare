@@ -1194,7 +1194,7 @@ public class Main extends JavaPlugin {
 	}
 
 	private void createGun(CommandSender p, String[] args) {
-		String command = "/cod createGun (Gun name) (Primary/Secondary) (Unlock type: level/credits/both) (Ammo Amount) (Gun Material) (Ammo Material) (Level Unlock) (Cost)";
+		String command = "/cod createGun (Gun name) (Primary/Secondary) (Unlock type: level/credits/both) (Ammo Amount) (Gun Material[:data]) (Ammo Material[:data]) (Level Unlock) (Cost)";
 		if (args.length == 9) {
 			String name = args[1];
 

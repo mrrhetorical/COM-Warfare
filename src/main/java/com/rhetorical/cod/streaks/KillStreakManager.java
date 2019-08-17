@@ -89,7 +89,7 @@ public class KillStreakManager {
 			KillStreak[] killStreaks = new KillStreak[3];
 			killStreaks[0] = (KillStreak.UAV);
 			killStreaks[1] = (KillStreak.COUNTER_UAV);
-			killStreaks[2] = (KillStreak.NUKE);
+			killStreaks[2] = (KillStreak.DOGS);
 			playerKillstreaks.put(p, killStreaks);
 			saveStreaks(p);
 			return;
@@ -117,7 +117,7 @@ public class KillStreakManager {
 
 	private void saveStreaks(Player p) {
 		if (!playerKillstreaks.containsKey(p)) {
-			String[] streaks = { "UAV", "COUNTER_UAV", "NUKE" };
+			String[] streaks = { "UAV", "COUNTER_UAV", "DOGS" };
 			KillstreaksFile.getData().set("Killstreaks." + p.getName() + ".streaks", streaks);
 			KillstreaksFile.saveData();
 			KillstreaksFile.reloadData();
