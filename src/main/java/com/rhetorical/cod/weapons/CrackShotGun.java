@@ -37,7 +37,7 @@ public class CrackShotGun implements Listener {
 	}
 
 	//ba-dum-tss
-	@EventHandler(priority = EventPriority.HIGHEST)
+	@EventHandler(priority = EventPriority.HIGH)
 	public void onCrackShot(com.shampaggon.crackshot.events.WeaponDamageEntityEvent e) {
 
 		Player victim;
@@ -55,6 +55,5 @@ public class CrackShotGun implements Listener {
 		if (match != null)
 			match.damagePlayer(victim, e.getDamage(), e.getPlayer());
 	}
-
 
 }

@@ -148,7 +148,6 @@ public class Listeners implements Listener {
 
 
 		if (Objects.requireNonNull(GameManager.getMatchWhichContains(p)).getState() != GameState.IN_GAME) {
-			e.setDamage(0d);
 			e.setCancelled(true);
 			return;
 		}
@@ -178,7 +177,6 @@ public class Listeners implements Listener {
 		if (GameManager.isInMatch(p)) {
 
 			if(Objects.requireNonNull(GameManager.getMatchWhichContains(p)).getState() != GameState.IN_GAME) {
-				e.setDamage(0d);
 				e.setCancelled(true);
 				return;
 			}

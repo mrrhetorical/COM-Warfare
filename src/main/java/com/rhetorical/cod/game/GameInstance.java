@@ -2028,7 +2028,7 @@ public class GameInstance implements Listener {
 		}
 	}
 
-	@EventHandler(priority = EventPriority.HIGH)
+	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerHitByWeapon(EntityDamageByEntityEvent e) {
 
 		Projectile bullet;
@@ -2088,7 +2088,25 @@ public class GameInstance implements Listener {
 	}
 
 	public void damagePlayer(Player p, double damage, Player... damagers) {
-		health.damage(p, damage);
+		if (health.isDead(p))
+			return;
+
+
+		if (getState() != GameState.IN_GAME) {
+			return;
+		}
+
+		if (damagers.length < 1) {
+			health.damage(p, damage);
+		} else {
+			if (areEnemies(p, damagers[0])) {
+				if (getGamemode() == Gamemode.OITC) {
+					damage = health.defaultHealth * 2;
+				}
+
+				health.damage(p, damage);
+			}
+		}
 		if (health.isDead(p)) {
 			if (!LoadoutManager.getInstance().getCurrentLoadout(p).hasPerk(Perk.LAST_STAND)) {
 				if (damagers.length < 1) {
