@@ -1872,7 +1872,7 @@ public class GameInstance implements Listener {
 
 	/* Gamemode Listeners */
 
-	@EventHandler(priority = EventPriority.HIGHEST)
+	@EventHandler(priority = EventPriority.HIGH)
 	public void onPlayerHit(EntityDamageByEntityEvent e) {
 
 		if (!(e.getEntity() instanceof Player && e.getDamager() instanceof Player))
@@ -1880,6 +1880,9 @@ public class GameInstance implements Listener {
 
 		Player victim = (Player) e.getEntity();
 		Player attacker = (Player) e.getDamager();
+
+		if (e.isCancelled())
+			return;
 
 		if (GameManager.isInMatch(victim) || GameManager.isInMatch(attacker)) {
 			e.setCancelled(true);
@@ -1933,7 +1936,7 @@ public class GameInstance implements Listener {
 		}
 
 		if(!health.isDead(attacker))
-			health.damage(victim, damage);
+			damagePlayer(victim, damage, attacker);
 
 
 		if (health.isDead(victim)) {
@@ -2025,7 +2028,7 @@ public class GameInstance implements Listener {
 		}
 	}
 
-	@EventHandler(priority = EventPriority.HIGHEST)
+	@EventHandler(priority = EventPriority.HIGH)
 	public void onPlayerHitByWeapon(EntityDamageByEntityEvent e) {
 
 		Projectile bullet;
@@ -2040,6 +2043,9 @@ public class GameInstance implements Listener {
 		}
 
 		if (!(e.getEntity() instanceof Player))
+			return;
+
+		if (e.isCancelled())
 			return;
 
 		Player victim = (Player) e.getEntity();
@@ -2069,7 +2075,7 @@ public class GameInstance implements Listener {
 				damage = health.defaultHealth * 2;
 			}
 
-			health.damage(victim, damage);
+			damagePlayer(victim, damage, shooter);
 
 			if (health.isDead(victim)) {
 				if (!LoadoutManager.getInstance().getCurrentLoadout(victim).hasPerk(Perk.LAST_STAND)) {
@@ -2087,8 +2093,10 @@ public class GameInstance implements Listener {
 			if (!LoadoutManager.getInstance().getCurrentLoadout(p).hasPerk(Perk.LAST_STAND)) {
 				if (damagers.length < 1) {
 					Main.sendMessage(p, "" + ChatColor.GREEN + ChatColor.BOLD + "YOU " + ChatColor.RESET + "" + ChatColor.WHITE + "[" + Lang.KILLED_TEXT.getMessage() + "] " + ChatColor.RESET + ChatColor.GREEN + ChatColor.BOLD + "YOURSELF", Main.getLang());
+					kill(p, p);
+				} else {
+					handleDeath(damagers[0], p);
 				}
-				kill(p, p);
 			} else {
 				PerkListener.getInstance().lastStand(p, this);
 			}

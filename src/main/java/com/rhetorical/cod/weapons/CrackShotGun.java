@@ -7,6 +7,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 
@@ -35,8 +36,9 @@ public class CrackShotGun implements Listener {
 		return item == null ? new ItemStack(Material.AIR) : item;
 	}
 
-	@EventHandler
-	public void onCrackShotExplode(com.shampaggon.crackshot.events.WeaponDamageEntityEvent e) {
+	//ba-dum-tss
+	@EventHandler(priority = EventPriority.HIGHEST)
+	public void onCrackShot(com.shampaggon.crackshot.events.WeaponDamageEntityEvent e) {
 
 		Player victim;
 		if (!(e.getVictim() instanceof Player))
