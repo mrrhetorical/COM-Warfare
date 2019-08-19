@@ -37,8 +37,6 @@ public class CrackShotGun implements Listener {
 
 	@EventHandler
 	public void onCrackShotExplode(com.shampaggon.crackshot.events.WeaponDamageEntityEvent e) {
-//		if (!(e.getDamager() instanceof TNTPrimed))
-//			return;
 
 		Player victim;
 		if (!(e.getVictim() instanceof Player))
@@ -46,12 +44,10 @@ public class CrackShotGun implements Listener {
 
 		victim = (Player) e.getVictim();
 
-		if (GameManager.isInMatch(victim) || GameManager.isInMatch(e.getPlayer())) {
-			e.setCancelled(true);
-		}
-
 		if (!(GameManager.isInMatch(victim) && GameManager.isInMatch(e.getPlayer())))
 			return;
+
+		e.setCancelled(true);
 
 		GameInstance match = GameManager.getMatchWhichContains(victim);
 		if (match != null)
