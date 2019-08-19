@@ -1,47 +1,38 @@
 package com.rhetorical.cod.weapons;
 
+import com.rhetorical.cod.Main;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 public class QualityGun {
 
-    private static Class<?> apiClass;
-
-    public static void setup() {
-        try {
-            apiClass = Class.forName("me.zombie_striker.qg.api.QualityArmory");
-        } catch(Exception ignored) {}
+	public static void setup() {
+		//does nothing
 	}
 
-    public static ItemStack getGunForName(String name) {
-        ItemStack gun = null;
-        try {
-            gun = (ItemStack) apiClass
-					.getMethod("getGunItemStack", String.class)
-					.invoke(null, name);
-
-        } catch(Exception ignored) {
-		}
-
-		return gun != null ? gun : new ItemStack(Material.AIR);
+    static ItemStack getGunForName(String name) {
+        return getCustomItemForName(name);
     }
 
-    public static ItemStack getAmmoForName(String name) {
-        ItemStack ammo = null;
+    static ItemStack getAmmoForName(String name) {
+        return getCustomItemForName(name);
+    }
 
-        try {
-            ammo = (ItemStack) apiClass
-					.getMethod("getAmmoItemStack", String.class)
-					.invoke(null, name);
-        } catch(NoSuchMethodException ignored) {
-//        	ignored.printStackTrace();
-		} catch(Exception ignored) {
-//        	ignored.printStackTrace();
+    private static ItemStack getCustomItemForName(String name) {
+		ItemStack stack = null;
+
+		try {
+			stack = me.zombie_striker.qg.api.QualityArmory.getCustomItem(me.zombie_striker.qg.api.QualityArmory.getCustomItemByName(name));
+
+		} catch(Error|Exception e) {
+			if (Main.hasQualityArms()) {
+				Bukkit.getLogger().severe(String.format("Could not get QA item with name %s!", name));
+				e.printStackTrace();
+			}
 		}
 
-//		ammo = me.zombie_striker.qg.api.QualityArmory.getAmmoItemStack(name);
-
-        return ammo != null ? ammo : new ItemStack(Material.AIR);
-    }
+		return stack != null ? stack : new ItemStack(Material.AIR);
+	}
 
 }
