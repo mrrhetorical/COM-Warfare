@@ -96,7 +96,8 @@ public class ShopManager {
 			primaryGuns.add(gun);
 		}
 
-		secondaryGuns.add(LoadoutManager.getInstance().getDefaultSecondary());
+		if (LoadoutManager.getInstance().getDefaultSecondary() != null)
+			secondaryGuns.add(LoadoutManager.getInstance().getDefaultSecondary());
 		for (int i = 0; GunsFile.getData().contains("Guns.Secondary." + i); i++) {
 
 			if (LoadoutManager.getInstance().getDefaultPrimary() == null) {
@@ -123,8 +124,10 @@ public class ShopManager {
 	}
 
 	private void loadWeapons() {
-		lethalWeapons.add(LoadoutManager.getInstance().getDefaultLethal());
-		tacticalWeapons.add(LoadoutManager.getInstance().getDefaultTactical());
+		if (LoadoutManager.getInstance().getDefaultLethal() != null)
+				lethalWeapons.add(LoadoutManager.getInstance().getDefaultLethal());
+		if (LoadoutManager.getInstance().getDefaultTactical() != null)
+			tacticalWeapons.add(LoadoutManager.getInstance().getDefaultTactical());
 
 		for (int i = 0; GunsFile.getData().contains("Weapons.LETHAL." + i); i++) {
 			String weaponName = GunsFile.getData().getString("Weapons.LETHAL." + i + ".name");
