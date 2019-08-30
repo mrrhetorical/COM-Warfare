@@ -35,11 +35,7 @@ public class QualityGun implements Listener {
 		try {
 			stack = me.zombie_striker.qg.api.QualityArmory.getCustomItem(me.zombie_striker.qg.api.QualityArmory.getCustomItemByName(name));
 
-		} catch(Error|Exception e) {
-			if (Main.hasQualityArms()) {
-				Bukkit.getLogger().severe(String.format("Could not get QA item with name %s!", name));
-				e.printStackTrace();
-			}
+		} catch(Error|Exception ignored) {
 		}
 
 		return stack != null ? stack : new ItemStack(Material.AIR);

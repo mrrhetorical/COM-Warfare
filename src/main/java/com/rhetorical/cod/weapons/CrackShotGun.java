@@ -19,7 +19,7 @@ public class CrackShotGun implements Listener {
 		boolean installed = true;
 		try {
 			instance = new com.shampaggon.crackshot.CSUtility();
-		} catch(NoClassDefFoundError|Exception ignored) {
+		} catch(Error|Exception ignored) {
 			installed = false;
 		}
 
@@ -31,7 +31,7 @@ public class CrackShotGun implements Listener {
 		ItemStack item = null;
 		try {
 			item = ((com.shampaggon.crackshot.CSUtility) instance).generateWeapon(name);
-		} catch(NoClassDefFoundError|Exception ignored) {}
+		} catch(Error|Exception ignored) {}
 
 		return item == null ? new ItemStack(Material.AIR) : item;
 	}
