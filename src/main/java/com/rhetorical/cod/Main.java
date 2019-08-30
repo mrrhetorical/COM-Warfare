@@ -83,6 +83,10 @@ public class Main extends JavaPlugin {
 
 	private Metrics bMetrics;
 
+	final String uid = "%%__USER__%%";
+	final String rid = "%%__RESOURCE__%%";
+	final String nonce = "%%__NONCE__%%";
+
 	@Override
 	public void onLoad() {
 		hasQA = Bukkit.getServer().getPluginManager().getPlugin("QualityArmory") != null;
