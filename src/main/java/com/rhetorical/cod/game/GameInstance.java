@@ -1938,30 +1938,6 @@ public class GameInstance implements Listener {
 		if(!health.isDead(attacker))
 			damagePlayer(victim, damage, attacker);
 
-
-		if (health.isDead(victim)) {
-			if (!LoadoutManager.getInstance().getCurrentLoadout(victim).hasPerk(Perk.LAST_STAND)) {
-				handleDeath(attacker, victim);
-			} else {
-				if (!PerkListener.getInstance().getIsInLastStand().contains(victim)) {
-					PerkListener.getInstance().getIsInLastStand().add(victim);
-					PerkListener.getInstance().lastStand(victim, this);
-					double xp = Main.getRank(attacker).getKillExperience() / 2f;
-					ChatColor t1 = redTeam.contains(attacker) ? ChatColor.RED : blueTeam.contains(attacker) ? ChatColor.BLUE : ChatColor.LIGHT_PURPLE;
-					ChatColor t2 = t1 == ChatColor.RED ? ChatColor.BLUE : t1 == ChatColor.BLUE ? ChatColor.RED : ChatColor.LIGHT_PURPLE;
-					Main.sendMessage(attacker,  "" + t1 + ChatColor.BOLD + "YOU " + ChatColor.RESET + ChatColor.WHITE + "[" + Lang.DOWNED_TEXT.getMessage() + "] " + ChatColor.RESET + t2 + ChatColor.BOLD + victim.getDisplayName(), Main.getLang());
-					Main.sendActionBar(attacker, ChatColor.YELLOW + "+" + xp + "xp");
-					ProgressionManager.getInstance().addExperience(attacker, xp);
-					CreditManager.setCredits(attacker, CreditManager.getCredits(attacker) + Main.getRank(attacker).getKillCredits());
-				} else {
-					PerkListener.getInstance().getIsInLastStand().remove(victim);
-					victim.setSneaking(false);
-					victim.setWalkSpeed(0.2f);
-					handleDeath(attacker, victim);
-				}
-			}
-		}
-
 	}
 
 	@EventHandler
@@ -2116,7 +2092,25 @@ public class GameInstance implements Listener {
 					handleDeath(damagers[0], p);
 				}
 			} else {
-				PerkListener.getInstance().lastStand(p, this);
+				if (!PerkListener.getInstance().getIsInLastStand().contains(p)) {
+					PerkListener.getInstance().getIsInLastStand().add(p);
+					PerkListener.getInstance().lastStand(p, this);
+					if (damagers.length > 0) {
+						Player attacker = damagers[0];
+						double xp = Main.getRank(attacker).getKillExperience() / 2f;
+						ChatColor t1 = redTeam.contains(attacker) ? ChatColor.RED : blueTeam.contains(attacker) ? ChatColor.BLUE : ChatColor.LIGHT_PURPLE;
+						ChatColor t2 = t1 == ChatColor.RED ? ChatColor.BLUE : t1 == ChatColor.BLUE ? ChatColor.RED : ChatColor.LIGHT_PURPLE;
+						Main.sendMessage(attacker, "" + t1 + ChatColor.BOLD + "YOU " + ChatColor.RESET + ChatColor.WHITE + "[" + Lang.DOWNED_TEXT.getMessage() + "] " + ChatColor.RESET + t2 + ChatColor.BOLD + p.getDisplayName(), Main.getLang());
+						Main.sendActionBar(attacker, ChatColor.YELLOW + "+" + xp + "xp");
+						ProgressionManager.getInstance().addExperience(attacker, xp);
+						CreditManager.setCredits(attacker, CreditManager.getCredits(attacker) + Main.getRank(attacker).getKillCredits());
+					}
+				} else {
+					PerkListener.getInstance().getIsInLastStand().remove(p);
+					p.setSneaking(false);
+					p.setWalkSpeed(0.2f);
+					handleDeath(damagers[0], p);
+				}
 			}
 		}
 	}
