@@ -62,7 +62,7 @@
 		</dependency>
 
 		<dependency>
-			<groupId>me.zombie_striker</groupId>
+			<groupId>com.github.ZombieStriker</groupId>
 			<artifactId>QualityArmory</artifactId>
 			<version>1.1.145</version>
 			<scope>provided</scope>

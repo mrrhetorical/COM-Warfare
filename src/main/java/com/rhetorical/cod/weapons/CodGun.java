@@ -10,6 +10,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 public class CodGun extends CodWeapon {
 
 	private String name;
+	private String ammoName; //for the purposes of qualityarmory
 
 	private UnlockType unlockType;
 	private int ammo;
@@ -27,6 +28,24 @@ public class CodGun extends CodWeapon {
 		super(name, null, t, gunI, levelUnlock);
 
 		this.name = name;
+		this.ammoName = "";
+		this.setGunType(gunT);
+		this.levelUnlock = levelUnlock;
+		this.creditUnlock = 0;
+		this.unlockType = UnlockType.LEVEL;
+		this.ammo = a;
+		this.ammoItem = ammoI;
+
+		gunItem = setupWeaponItem(gunI);
+		menuItem = setupMenuItem(gunI);
+	}
+
+	public CodGun(String name, String ammoName, GunType gunT, UnlockType t, int a, ItemStack ammoI, ItemStack gunI, int levelUnlock) {
+
+		super(name, null, t, gunI, levelUnlock);
+
+		this.name = name;
+		this.ammoName = ammoName;
 		this.setGunType(gunT);
 		this.levelUnlock = levelUnlock;
 		this.creditUnlock = 0;
@@ -65,6 +84,7 @@ public class CodGun extends CodWeapon {
 		
 		if (this.levelUnlock <= 1 & creditUnlock <= 0 && !GunsFile.getData().contains("Guns." + gunType.toString() + ".default.name")) {
 			GunsFile.getData().set("Guns." + gunType.toString() + ".default.name", name);
+			GunsFile.getData().set("Guns." + gunType.toString() + ".default.ammoName", ammoName);
 			GunsFile.getData().set("Guns." + gunType.toString() + ".default.ammoCount", ammo);
 			GunsFile.getData().set("Guns." + gunType.toString() + ".default.ammoItem", ammoItem.getType().toString());
 			GunsFile.getData().set("Guns." + gunType.toString() + ".default.ammoData", ammoItem.getDurability());
@@ -89,6 +109,7 @@ public class CodGun extends CodWeapon {
 		
 		GunsFile.getData().set("Guns." + gunType.toString() + "." + k + ".name", name);
 		GunsFile.getData().set("Guns." + gunType.toString() + "." + k + ".ammoCount", ammo);
+		GunsFile.getData().set("Guns." + gunType.toString() + "." + k + ".ammoName", ammoName);
 		GunsFile.getData().set("Guns." + gunType.toString() + "." + k + ".ammoItem", ammoItem.getType().toString());
 		GunsFile.getData().set("Guns." + gunType.toString() + "." + k + ".ammoData", ammoItem.getDurability());
 		GunsFile.getData().set("Guns." + gunType.toString() + "." + k + ".gunItem", gunItem.getType().toString());
@@ -102,6 +123,10 @@ public class CodGun extends CodWeapon {
 
 	public String getName() {
 		return this.name;
+	}
+
+	public String getAmmoName() {
+		return this.ammoName;
 	}
 
 	public UnlockType getType() {
@@ -171,7 +196,7 @@ public class CodGun extends CodWeapon {
 
 	public ItemStack getAmmo() {
 		if (Main.hasQualityArms()) {
-			ItemStack ammo = QualityGun.getAmmoForName(getName());
+			ItemStack ammo = QualityGun.getAmmoForName(getAmmoName());
 
 			if (ammo.getType() != Material.AIR) {
 				return ammo;

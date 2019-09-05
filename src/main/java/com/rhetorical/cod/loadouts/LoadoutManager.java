@@ -222,8 +222,13 @@ public class LoadoutManager {
 			short gunData = (short) GunsFile.getData().getInt("Guns.Primary.default.gunData");
 			ItemStack gunItem = new ItemStack(gunMat, 1, gunData);
 
-			CodGun gun = new CodGun(gunName, GunType.Primary, null, ammoAmount, ammoItem, gunItem, 0);
-
+			String ammoName = GunsFile.getData().getString("Guns.Primary.default.ammoName");
+			CodGun gun;
+			if (ammoName == null) {
+				gun = new CodGun(gunName, GunType.Primary, null, ammoAmount, ammoItem, gunItem, 0);
+			} else {
+				gun = new CodGun(gunName, ammoName, GunType.Primary, null, ammoAmount, ammoItem, gunItem, 0);
+			}
 			gun.setCreditUnlock(0);
 
 			defaultPrimary = gun;
@@ -252,7 +257,13 @@ public class LoadoutManager {
 			short gunData = (short) GunsFile.getData().getInt("Guns.Secondary.default.gunData");
 			ItemStack gunItem = new ItemStack(gunMat, 1, gunData);
 
-			CodGun gun = new CodGun(gunName, GunType.Secondary, null, ammoAmount, ammoItem, gunItem, 0);
+			String ammoName = GunsFile.getData().getString("Guns.Secondary.default.ammoName");
+			CodGun gun;
+			if (ammoName == null) {
+				gun = new CodGun(gunName, GunType.Secondary, null, ammoAmount, ammoItem, gunItem, 0);
+			} else {
+				gun = new CodGun(gunName, ammoName, GunType.Secondary, null, ammoAmount, ammoItem, gunItem, 0);
+			}
 
 			gun.setCreditUnlock(0);
 
