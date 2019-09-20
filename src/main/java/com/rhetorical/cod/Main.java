@@ -16,6 +16,7 @@ import com.rhetorical.cod.progression.RankPerks;
 import com.rhetorical.cod.streaks.KillStreakManager;
 import com.rhetorical.cod.util.LegacyActionBar;
 import com.rhetorical.cod.util.LegacyTitle;
+import com.rhetorical.cod.util.UpdateChecker;
 import com.rhetorical.cod.weapons.*;
 import com.rhetorical.tpp.McLang;
 import com.rhetorical.tpp.api.McTranslate;
@@ -79,6 +80,8 @@ public class Main extends JavaPlugin {
 	public String reward_maxPrestige;
 	public String reward_maxPrestigeMaxLevel;
 
+	public double knifeDamage = 100d;
+
 	private static boolean disabling = false;
 
 	private Metrics bMetrics;
@@ -122,7 +125,7 @@ public class Main extends JavaPlugin {
 		int v = 8;
 
 		try {
-			v = Integer.parseInt(bukkitVersion.split(".")[1].charAt(0) + "");
+			v = Integer.parseInt(bukkitVersion.split("\\.")[1].charAt(0) + "");
 		} catch(Exception ignored) {}
 
 		if (bukkitVersion.startsWith("1.8") || v < 8 ) {
@@ -147,6 +150,11 @@ public class Main extends JavaPlugin {
 			}
 		} else {
 			Main.getConsole().sendMessage(Main.getPrefix() + "All dependencies are installed!");
+		}
+
+		if (getPlugin().getConfig().getBoolean("check-for-updates")) {
+			Main.getConsole().sendMessage(Main.getPrefix() + "Check for updates is enabled, checking for updates...");
+			UpdateChecker updateChecker = new UpdateChecker();
 		}
 
 		try {
@@ -222,6 +230,11 @@ public class Main extends JavaPlugin {
 			reward_maxLevel = getPlugin().getConfig().getString("Rewards.Max_Level");
 			reward_maxPrestige = getPlugin().getConfig().getString("Rewards.Max_Prestige");
 			reward_maxPrestigeMaxLevel = getPlugin().getConfig().getString("Rewards.Max_Prestige_Max_Level");
+			knifeDamage = getPlugin().getConfig().getDouble("knifeDamage");
+			if (knifeDamage < 1)
+				knifeDamage = 1;
+			else if (knifeDamage > 100)
+				knifeDamage = 100;
 		}
 
 		if (ComVersion.getPurchased()) {

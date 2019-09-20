@@ -1930,7 +1930,7 @@ public class GameInstance implements Listener {
 		}
 
 		if (heldWeapon.getType() == Material.DIAMOND_SWORD || heldWeapon.getType() == gSwordMat || heldWeapon.getType() == Material.IRON_SWORD || heldWeapon.getType() == Material.STONE_SWORD || heldWeapon.getType() == wSwordMat) {
-			damage = Main.getDefaultHealth();
+			damage = Main.getDefaultHealth() * Main.getInstance().knifeDamage;
 		} else {
 			damage = Math.round(Main.getDefaultHealth() / 4);
 		}
