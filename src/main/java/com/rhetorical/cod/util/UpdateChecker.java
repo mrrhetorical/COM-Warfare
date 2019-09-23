@@ -11,14 +11,14 @@ import java.util.Scanner;
 public class UpdateChecker {
 
 	public class UpdateResponse {
-		public boolean newVersion = false;
-		public String versionNumber = "";
+		boolean newVersion = false;
+		String versionNumber = "";
 	}
 
 	private static final String updateURL = "https://api.github.com/repos/mrrhetorical/COM-Warfare/releases/latest";
 
 	public UpdateChecker() {
-		final UpdateResponse result[] = {null};
+		final UpdateResponse[] result = {null};
 		new Thread(() -> {
 
 			result[0] = checkForUpdates();

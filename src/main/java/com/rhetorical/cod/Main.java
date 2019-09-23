@@ -494,7 +494,7 @@ public class Main extends JavaPlugin {
 						if (m.isEnabled()) {
 							entry = entry.replace("{map-status}", ChatColor.GREEN + "WAITING");
 						} else {
-							entry = entry.replace("{map-status]", ChatColor.RED + "UNFINISHED");
+							entry = entry.replace("{map-status}", ChatColor.RED + "UNFINISHED");
 						}
 					}
 

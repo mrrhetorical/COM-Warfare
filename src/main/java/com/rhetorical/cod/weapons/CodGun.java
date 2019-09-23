@@ -3,9 +3,7 @@ package com.rhetorical.cod.weapons;
 import com.rhetorical.cod.Main;
 import com.rhetorical.cod.files.GunsFile;
 import org.bukkit.Material;
-import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 public class CodGun extends CodWeapon {
 
