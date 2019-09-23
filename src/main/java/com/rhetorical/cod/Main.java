@@ -125,10 +125,10 @@ public class Main extends JavaPlugin {
 		int v = 8;
 
 		try {
-			v = Integer.parseInt(bukkitVersion.split("\\.")[1].charAt(0) + "");
+			v = Integer.parseInt(bukkitVersion.split("\\.")[1]);
 		} catch(Exception ignored) {}
 
-		if (bukkitVersion.startsWith("1.8") || v < 8 ) {
+		if (v <= 8 ) {
 			Main.getConsole().sendMessage(Main.getPrefix() + "You are not on the most recent version of Spigot/Bukkit, so COM-Warfare might not work as advertised. To ensure it will work properly, please use version 1.9 - 1.14!");
 		}
 
