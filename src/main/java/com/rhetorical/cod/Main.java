@@ -312,15 +312,11 @@ public class Main extends JavaPlugin {
 		}
 	}
 
-	public static boolean isLegacy() {
-		//returns true if server is using 1.8
-		return Bukkit.getBukkitVersion().toUpperCase().startsWith("1.8");
-	}
-
 	public static boolean isUsingQA() {
 		return Bukkit.getServer().getPluginManager().getPlugin("QualityArmory") != null;
 	}
 
+	@SuppressWarnings("Duplicates")
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 
@@ -335,11 +331,11 @@ public class Main extends JavaPlugin {
 			if (!hasPerm(sender, "com.help"))
 				return true;
 
-			sendMessage(sender, "-===\u00A76\u00A7lCOM-Warfare Help\u00A7r===-");
-			sendMessage(sender, "\u00A7f[\u00A7lPage 1 of 5\u00A7r\u00A7l]");
+			sendMessage(sender, "-===" + ChatColor.GOLD + "COM-Warfare Help" + ChatColor.RESET + "===-");
+			sendMessage(sender, ChatColor.WHITE + "[Page " + ChatColor.GREEN	+ "1" + ChatColor.WHITE + " of 5]");
 
 			sendMessage(sender, cColor + "/cod help [page number] | " + dColor + "Opens a help page.");
-			sendMessage(sender, cColor + "/cod | " + dColor + "Opens the main menu once in game.");
+			sendMessage(sender, cColor + "/cod | " + dColor + "Shows you the first help page.");
 			sendMessage(sender, cColor + "/cod join | " + dColor + "Joins a game through the matchmaker.");
 			sendMessage(sender, cColor + "/cod leave | " + dColor + "Leaves the current game.");
 			sendMessage(sender, cColor + "/cod lobby | " + dColor + "Teleports you to the lobby.");
@@ -371,7 +367,7 @@ public class Main extends JavaPlugin {
 					switch (page) {
 						case 1:
 							sendMessage(sender, cColor + "/cod help [page number] | " + dColor + "Opens a help page.");
-							sendMessage(sender, cColor + "/cod | " + dColor + "Opens the main menu once in game.");
+							sendMessage(sender, cColor + "/cod | " + dColor + "Shows you the first help page.");
 							sendMessage(sender, cColor + "/cod join | " + dColor + "Joins a match via matchmaker.");
 							sendMessage(sender, cColor + "/cod browser | " + dColor + "Opens the match browser.");
 							sendMessage(sender, cColor + "/cod leave | " + dColor + "Leaves the current game.");
@@ -405,15 +401,14 @@ public class Main extends JavaPlugin {
 							break;
 					}
 				} else {
-					sendMessage(sender, "-===\u00A76\u00A7lCOM-Warfare Help\u00A7r===-");
-					sendMessage(sender, "\u00A7f[\u00A7lPage 1 of 5\u00A7r\u00A7l]");
+					sendMessage(sender, "-===" + ChatColor.GOLD + "COM-Warfare Help" + ChatColor.RESET + "===-");
+					sendMessage(sender, ChatColor.WHITE + "[Page " + ChatColor.GREEN	+ "1" + ChatColor.WHITE + " of 5]");
 
-					sendMessage(sender, "\u00A7f\u00A7lType the command to see specifics.", lang);
 					sendMessage(sender, cColor + "/cod help [page number] | " + dColor + "Opens a help page.");
-					sendMessage(sender, cColor + "/cod | " + dColor + "Opens the main menu.");
+					sendMessage(sender, cColor + "/cod | " + dColor + "Shows you the first help page.");
 					sendMessage(sender, cColor + "/cod join | " + dColor + "Joins a game through the matchmaker.");
 					sendMessage(sender, cColor + "/cod leave | " + dColor + "Leaves the current game.");
-					sendMessage(sender, cColor + "/cod shop | " + dColor + "Opens the shop.");
+					sendMessage(sender, cColor + "/cod lobby | " + dColor + "Teleports you to the lobby.");
 
 				}
 
@@ -454,7 +449,7 @@ public class Main extends JavaPlugin {
 					return true;
 				}
 
-				if (!hasPerm(sender, "com.join", false))
+				if (!hasPerm(sender, "com.join", true))
 					return true;
 
 				Player p = (Player) sender;

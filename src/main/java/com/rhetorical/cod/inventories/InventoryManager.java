@@ -18,6 +18,7 @@ import com.rhetorical.cod.streaks.KillStreakManager;
 import com.rhetorical.cod.weapons.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -50,7 +51,7 @@ public class InventoryManager implements Listener {
 	private HashMap<Player, Inventory> killStreakInventory3 = new HashMap<>();
 
 
-	private ItemStack joinGame = new ItemStack(Material.EMERALD);
+	private ItemStack matchBrowser = new ItemStack(Material.EMERALD);
 	private ItemStack createClass = new ItemStack(Material.CHEST);
 	private ItemStack scoreStreaks = new ItemStack(Material.DIAMOND);
 	private ItemStack combatRecord = new ItemStack(Material.PAPER);
@@ -165,15 +166,15 @@ public class InventoryManager implements Listener {
 	// Main Inventory
 
 	private void setupMainInventories() {
-		joinGame = new ItemStack(Material.EMERALD);
-		ItemMeta joinGameMeta = joinGame.getItemMeta();
+		matchBrowser = new ItemStack(Material.EMERALD);
+		ItemMeta joinGameMeta = matchBrowser.getItemMeta();
 		joinGameMeta.setDisplayName(Lang.INVENTORY_JOIN_GAME_NAME.getMessage());
 		ArrayList<String> joinGameLore = new ArrayList<>();
 		joinGameLore.add(Lang.INVENTORY_JOIN_GAME_LORE.getMessage());
 		joinGameMeta.setLore(joinGameLore);
-		joinGame.setItemMeta(joinGameMeta);
+		matchBrowser.setItemMeta(joinGameMeta);
 
-		mainInventory.setItem(13, joinGame);
+		mainInventory.setItem(13, matchBrowser);
 
 		createClass = new ItemStack(Material.CHEST);
 		ItemMeta createClassMeta = createClass.getItemMeta();
@@ -923,16 +924,17 @@ public class InventoryManager implements Listener {
 
 		if (e.getClickedInventory().equals(mainInventory)) {
 
-			if (e.getCurrentItem().equals(joinGame)) {
-				Main.sendMessage(p,Main.getPrefix() + Lang.PUT_IN_QUEUE.getMessage(), Main.getLang());
-				GameManager.findMatch(p);
-				p.closeInventory();
+			if (e.getCurrentItem().equals(matchBrowser)) {
+				p.openInventory(MatchBrowser.getInstance().getBrowser());
+				p.playSound(p.getLocation(), Sound.ENTITY_VILLAGER_HURT, 1f, 1.5f);
 			} else if (e.getCurrentItem().equals(createClass)) {
 				this.setupCreateClassInventory(p);
 				p.openInventory(createClassInventory.get(p));
+				p.playSound(p.getLocation(), Sound.ENTITY_BAT_TAKEOFF, 1f, 1.5f);
 			} else if (e.getCurrentItem().equals(shopItem)) {
 				setupShopInventories(p);
 				p.openInventory(mainShopInventory);
+				p.playSound(p.getLocation(), Sound.ENTITY_ARROW_HIT_PLAYER, 1f, 1f);
 			} else if (e.getCurrentItem().equals(combatRecord)) {
 				openPersonalStatsMenu(p);
 			} else if (e.getCurrentItem().equals(leaderboard)) {
