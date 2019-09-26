@@ -28,6 +28,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -335,8 +336,9 @@ public class Main extends JavaPlugin {
 			sendMessage(sender, ChatColor.WHITE + "[Page " + ChatColor.GREEN	+ "1" + ChatColor.WHITE + " of 5]");
 
 			sendMessage(sender, cColor + "/cod help [page number] | " + dColor + "Opens a help page.");
-			sendMessage(sender, cColor + "/cod | " + dColor + "Shows you the first help page.");
-			sendMessage(sender, cColor + "/cod join | " + dColor + "Joins a game through the matchmaker.");
+			sendMessage(sender, cColor + "/cod menu | " + dColor + "Opens the cod menu.");
+			sendMessage(sender, cColor + "/cod join | " + dColor + "Joins a match via matchmaker.");
+			sendMessage(sender, cColor + "/cod browser | " + dColor + "Opens the match browser.");
 			sendMessage(sender, cColor + "/cod leave | " + dColor + "Leaves the current game.");
 			sendMessage(sender, cColor + "/cod lobby | " + dColor + "Teleports you to the lobby.");
 			return true;
@@ -367,7 +369,7 @@ public class Main extends JavaPlugin {
 					switch (page) {
 						case 1:
 							sendMessage(sender, cColor + "/cod help [page number] | " + dColor + "Opens a help page.");
-							sendMessage(sender, cColor + "/cod | " + dColor + "Shows you the first help page.");
+							sendMessage(sender, cColor + "/cod menu | " + dColor + "Opens the cod menu.");
 							sendMessage(sender, cColor + "/cod join | " + dColor + "Joins a match via matchmaker.");
 							sendMessage(sender, cColor + "/cod browser | " + dColor + "Opens the match browser.");
 							sendMessage(sender, cColor + "/cod leave | " + dColor + "Leaves the current game.");
@@ -396,6 +398,7 @@ public class Main extends JavaPlugin {
 							break;
 						case 5:
 							sendMessage(sender, cColor + "/cod blacklist (map) (mode) | " + dColor + "Prevents a mode from being played on the map.");
+							sendMessage(sender, cColor + "/cod version | " + dColor + "Displays the running version of COM-Warfare.");
 							break;
 						default:
 							break;
@@ -405,8 +408,9 @@ public class Main extends JavaPlugin {
 					sendMessage(sender, ChatColor.WHITE + "[Page " + ChatColor.GREEN	+ "1" + ChatColor.WHITE + " of 5]");
 
 					sendMessage(sender, cColor + "/cod help [page number] | " + dColor + "Opens a help page.");
-					sendMessage(sender, cColor + "/cod | " + dColor + "Shows you the first help page.");
-					sendMessage(sender, cColor + "/cod join | " + dColor + "Joins a game through the matchmaker.");
+					sendMessage(sender, cColor + "/cod menu | " + dColor + "Opens the cod menu.");
+					sendMessage(sender, cColor + "/cod join | " + dColor + "Joins a match via matchmaker.");
+					sendMessage(sender, cColor + "/cod browser | " + dColor + "Opens the match browser.");
 					sendMessage(sender, cColor + "/cod leave | " + dColor + "Leaves the current game.");
 					sendMessage(sender, cColor + "/cod lobby | " + dColor + "Teleports you to the lobby.");
 
@@ -443,6 +447,12 @@ public class Main extends JavaPlugin {
 				GameManager.leaveMatch(p);
 
 				return true;
+			} else if (args[0].equalsIgnoreCase("version")) {
+				if (!hasPerm(sender, "com.version", true))
+					return true;
+
+				sendMessage(sender, String.format("%sYou are running COM-Warfare version: %s%s", ChatColor.GREEN, ChatColor.YELLOW, getPlugin().getDescription().getVersion()));
+
 			} else if (args[0].equalsIgnoreCase("browser")) {
 				if (!(sender instanceof Player)) {
 					sendMessage(cs, Lang.MUST_BE_PLAYER.getMessage(), lang);
@@ -456,6 +466,18 @@ public class Main extends JavaPlugin {
 
 				p.openInventory(MatchBrowser.getInstance().getBrowser());
 
+			} else if (args[0].equalsIgnoreCase("menu")) {
+				if (!(sender instanceof Player)) {
+					sendMessage(cs, Lang.MUST_BE_PLAYER.getMessage(), lang);
+					return true;
+				}
+
+				if (!hasPerm(sender, "com.join", false))
+					return true;
+
+				Player p = (Player) sender;
+				p.openInventory(InventoryManager.getInstance().mainInventory);
+				p.playSound(p.getLocation(), Sound.BLOCK_CHEST_OPEN, 1f, 1f);
 			} else if (args[0].equalsIgnoreCase("listMaps")) {
 
 				if (!hasPerm(sender, "com.map.list", true))
