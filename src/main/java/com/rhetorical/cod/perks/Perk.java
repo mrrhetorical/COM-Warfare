@@ -1,15 +1,23 @@
 package com.rhetorical.cod.perks;
 
 public enum Perk {
-	
+
+	//completed 1: marathon, scavenger, one man army, hardline
+
+	//completed 2: stopping power, juggernaut
+
+	//completed 3: commando, last stand
+
+	//todo: implement cold blooded, danger close, scrambler, and ninja
+
 	///// PERK SLOT ONE /////
-	MARATHON("Marathon", PerkSlot.ONE), SLEIGHT_OF_HAND("Sleight of Hand", PerkSlot.ONE), SCAVENGER("Scavenger", PerkSlot.ONE), BLING("Bling", PerkSlot.ONE), ONE_MAN_ARMY("One Man Army", PerkSlot.ONE),
+	MARATHON("Marathon", PerkSlot.ONE), SCAVENGER("Scavenger", PerkSlot.ONE), ONE_MAN_ARMY("One Man Army", PerkSlot.ONE), HARDLINE("Hardline", PerkSlot.ONE),
 	
 	///// PERK SLOT TWO /////
-	STOPPING_POWER("Stopping Power", PerkSlot.TWO), LIGHTWEIGHT("Lightweight", PerkSlot.TWO), HARDLINE("Hardline", PerkSlot.TWO), COLD_BLOODED("Cold Blooded", PerkSlot.TWO), DANGER_CLOSE("Danger Close", PerkSlot.TWO), JUGGERNAUT("Juggernaut", PerkSlot.TWO),
+	STOPPING_POWER("Stopping Power", PerkSlot.TWO), COLD_BLOODED("Cold Blooded", PerkSlot.TWO), DANGER_CLOSE("Danger Close", PerkSlot.TWO), JUGGERNAUT("Juggernaut", PerkSlot.TWO),
 	
 	///// PERK SLOT THREE /////
-	COMMANDO("Commando", PerkSlot.THREE), STEADY_AIM("Steady Aim", PerkSlot.THREE), SCRAMBLER("Scrambler", PerkSlot.THREE), NINJA("Ninja", PerkSlot.THREE), SITREP("Sitrep", PerkSlot.THREE), LAST_STAND("Last Stand", PerkSlot.THREE);
+	COMMANDO("Commando", PerkSlot.THREE), SCRAMBLER("Scrambler", PerkSlot.THREE), NINJA("Ninja", PerkSlot.THREE), LAST_STAND("Last Stand", PerkSlot.THREE);
 	
 	private String name;
 	private PerkSlot slot;

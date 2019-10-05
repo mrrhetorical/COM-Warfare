@@ -2068,6 +2068,9 @@ public class GameInstance implements Listener {
 				} else {
 					PerkListener.getInstance().lastStand(victim, this);
 				}
+				Entity bag = PerkListener.getInstance().scavengerDeath(victim, shooter);
+				if (bag != null)
+					entityManager.registerEntity(bag);
 			}
 		}
 	}

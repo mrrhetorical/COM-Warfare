@@ -9,6 +9,7 @@ import com.rhetorical.cod.loadouts.LoadoutManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -92,7 +93,7 @@ public class PerkListener implements Listener {
 		br.runTaskLater(Main.getPlugin(), 200L);
 	}
 
-	public void scavengerDeath(Player victim, Player killer) {
+	public Entity scavengerDeath(Player victim, Player killer) {
 		if (LoadoutManager.getInstance().getCurrentLoadout(killer).hasPerk(Perk.SCAVENGER)) {
 
 			Item i = victim.getWorld().dropItem(victim.getLocation(), new ItemStack(Material.LAPIS_BLOCK));
@@ -104,7 +105,10 @@ public class PerkListener implements Listener {
 			};
 
 			br.runTaskLater(Main.getPlugin(), 600L);
+			return i;
 		}
+
+		return null;
 	}
 
 	public List<Player> getIsInLastStand() {
