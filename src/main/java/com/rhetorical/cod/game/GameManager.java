@@ -143,7 +143,7 @@ public class GameManager {
 
 		for (GameInstance i : runningGames) {
 			if (i.getPlayers().contains(p)) {
-				Main.sendMessage(p, Main.getPrefix() + Lang.ALREADY_IN_GAME.getMessage(), Main.getLang());
+				Main.sendMessage(p, Lang.ALREADY_IN_GAME.getMessage(), Main.getLang());
 				return false;
 			}
 		}
@@ -152,7 +152,7 @@ public class GameManager {
 
 		GameInstance newGame;
 
-		Main.sendMessage(p, Main.getPrefix() + Lang.SEARCHING_FOR_MATCH.getMessage(), Main.getLang());
+		Main.sendMessage(p, Lang.SEARCHING_FOR_MATCH.getMessage(), Main.getLang());
 		for (GameInstance i : runningGames) {
 			if (i.getPlayers().size() < 12) {
 				if (i.getPlayers().size() == 0) {
@@ -167,12 +167,12 @@ public class GameManager {
 
 		if (possibleMatches.size() == 0) {
 
-			Main.sendMessage(p, Main.getPrefix() + Lang.COULD_NOT_FIND_MATCH.getMessage(), Main.getLang());
-			Main.sendMessage(p, Main.getPrefix() + Lang.CREATING_MATCH.getMessage(), Main.getLang());
+			Main.sendMessage(p, Lang.COULD_NOT_FIND_MATCH.getMessage(), Main.getLang());
+			Main.sendMessage(p, Lang.CREATING_MATCH.getMessage(), Main.getLang());
 
 			CodMap map = pickRandomMap();
 			if (map == null) {
-				Main.sendMessage(p, Main.getPrefix() + Lang.COULD_NOT_CREATE_MATCH_BECAUSE_NO_MAPS.getMessage(), Main.getLang());
+				Main.sendMessage(p, Lang.COULD_NOT_CREATE_MATCH_BECAUSE_NO_MAPS.getMessage(), Main.getLang());
 				return false;
 			}
 
@@ -184,16 +184,16 @@ public class GameManager {
 
 			newGame.addPlayer(p);
 
-			Main.sendMessage(p, Main.getPrefix() + Lang.CREATED_LOBBY.getMessage(), Main.getLang());
+			Main.sendMessage(p, Lang.CREATED_LOBBY.getMessage(), Main.getLang());
 			return true;
 
 		}
 
-		Main.sendMessage(p, Main.getPrefix() + Lang.FOUND_MATCH.getMessage(), Main.getLang());
-		Main.sendMessage(p, Main.getPrefix() + Lang.JOINING_GAME.getMessage(), Main.getLang());
+		Main.sendMessage(p, Lang.FOUND_MATCH.getMessage(), Main.getLang());
+		Main.sendMessage(p, Lang.JOINING_GAME.getMessage(), Main.getLang());
 
 		if (!possibleMatches.lastEntry().getValue().addPlayer(p)) {
-			Main.sendMessage(p, Main.getPrefix() + Lang.COULD_NOT_JOIN_GAME.getMessage(), Main.getLang());
+			Main.sendMessage(p, Lang.COULD_NOT_JOIN_GAME.getMessage(), Main.getLang());
 		}
 
 
@@ -206,12 +206,12 @@ public class GameManager {
 
 		loadPlayerData(p);
 
-		Main.sendMessage(p, Main.getPrefix() + Lang.JOINING_GAME.getMessage(), Main.getLang());
+		Main.sendMessage(p,  Lang.JOINING_GAME.getMessage(), Main.getLang());
 
 		boolean success = match.addPlayer(p);
 
 		if (!success)
-			Main.sendMessage(p, Main.getPrefix() + Lang.COULD_NOT_JOIN_GAME.getMessage(), Main.getLang());
+			Main.sendMessage(p, Lang.COULD_NOT_JOIN_GAME.getMessage(), Main.getLang());
 
 		return success;
 	}
@@ -235,13 +235,13 @@ public class GameManager {
 
 	public static void leaveMatch(Player p) {
 		if (!isInMatch(p) || getMatchWhichContains(p) == null) {
-			Main.sendMessage(p, Main.getPrefix() + Lang.PLAYER_NOT_IN_GAME.getMessage(), Main.getLang());
+			Main.sendMessage(p, Lang.PLAYER_NOT_IN_GAME.getMessage(), Main.getLang());
 			return;
 		}
 
 		Objects.requireNonNull(getMatchWhichContains(p)).removePlayer(p);
 
-		Main.sendMessage(p, Main.getPrefix() + Lang.PLAYER_LEAVE_GAME.getMessage(), Main.getLang());
+		Main.sendMessage(p, Lang.PLAYER_LEAVE_GAME.getMessage(), Main.getLang());
 		if (Main.isServerMode()) {
 			p.kickPlayer("");
 		}
