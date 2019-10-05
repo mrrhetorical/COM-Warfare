@@ -860,22 +860,35 @@ public class GameInstance implements Listener {
 			int t = 10;
 
 			public void run() {
-				for (Player p : game.players) {
-					for (int i = 0; i < 100; i++) {
-						Main.sendMessage(p, "", Main.getLang());
-					}
+				if (t == 10) {
+					for (Player p : game.players) {
+						String teamFormat = "";
 
-					String teamFormat = "";
+						if (currentMap.getGamemode() != Gamemode.FFA && currentMap.getGamemode() != Gamemode.GUN && currentMap.getGamemode() != Gamemode.OITC) {
+							if (getWinningTeam().equalsIgnoreCase("red")) {
+								teamFormat = ChatColor.RED + "RED";
+							} else if (getWinningTeam().equalsIgnoreCase("blue")) {
+								teamFormat = ChatColor.BLUE + "BLUE";
+							} else if (getWinningTeam().equalsIgnoreCase("nobody") || getWinningTeam().equalsIgnoreCase("tie")) {
+								Main.sendMessage(p,  ChatColor.GRAY + Lang.NOBODY_WON_GAME.getMessage(), Main.getLang());
+								playerScores.computeIfAbsent(p, k -> new CodScore(p));
+								CodScore score = playerScores.get(p);
 
-					if (currentMap.getGamemode() != Gamemode.FFA && currentMap.getGamemode() != Gamemode.GUN && currentMap.getGamemode() != Gamemode.OITC) {
-						if (getWinningTeam().equalsIgnoreCase("red")) {
-							teamFormat = ChatColor.RED + "RED";
-						} else if (getWinningTeam().equalsIgnoreCase("blue")) {
-							teamFormat = ChatColor.BLUE + "BLUE";
-						} else if (getWinningTeam().equalsIgnoreCase("nobody") || getWinningTeam().equalsIgnoreCase("tie")) {
-							Main.sendMessage(p, Main.getPrefix() + ChatColor.GRAY + Lang.NOBODY_WON_GAME.getMessage(), Main.getLang());
-							Main.sendMessage(p, Main.getPrefix() + Lang.RETURNING_TO_LOBBY.getMessage().replace("{time}", t + ""), Main.getLang());
-							playerScores.computeIfAbsent(p, k -> new CodScore(p));
+								float kd = ((float) score.getKills() / (float) score.getDeaths());
+
+								if (Float.isNaN(kd) || Float.isInfinite(kd)) {
+									kd = score.getKills();
+								}
+
+								String msg = Lang.END_GAME_KILLS_DEATHS.getMessage();
+								msg = msg.replace("{kills}", score.getKills() + "");
+								msg = msg.replace("{deaths}", score.getDeaths() + "");
+								msg = msg.replace("{kd}", kd + "");
+								Main.sendMessage(p, msg, Main.getLang());
+								continue;
+							}
+
+							Main.sendMessage(p, Lang.SOMEBODY_WON_GAME.getMessage().replace("{team}", teamFormat), Main.getLang());
 							CodScore score = playerScores.get(p);
 
 							float kd = ((float) score.getKills() / (float) score.getDeaths());
@@ -889,40 +902,26 @@ public class GameInstance implements Listener {
 							msg = msg.replace("{deaths}", score.getDeaths() + "");
 							msg = msg.replace("{kd}", kd + "");
 							Main.sendMessage(p, msg, Main.getLang());
-							continue;
+						} else {
+							Main.sendMessage(p, Lang.SOMEONE_WON_GAME.getMessage().replace("{player}", getWinningTeam()), Main.getLang());
+							CodScore score = playerScores.get(p);
+							float kd = ((float) score.getKills() / (float) score.getDeaths());
+
+							if (Float.isNaN(kd) || Float.isInfinite(kd)) {
+								kd = score.getKills();
+							}
+
+							String msg = Lang.END_GAME_KILLS_DEATHS.getMessage();
+							msg = msg.replace("{kills}", score.getKills() + "");
+							msg = msg.replace("{deaths}", score.getDeaths() + "");
+							msg = msg.replace("{kd}", kd + "");
+							Main.sendMessage(p, msg, Main.getLang());
 						}
-
-						Main.sendMessage(p, Main.getPrefix() + Lang.SOMEBODY_WON_GAME.getMessage().replace("{team}", teamFormat), Main.getLang());
-						Main.sendMessage(p, Main.getPrefix() + Lang.RETURNING_TO_LOBBY.getMessage().replace("{time}", t + ""), Main.getLang());
-						CodScore score = playerScores.get(p);
-
-						float kd = ((float) score.getKills() / (float) score.getDeaths());
-
-						if (Float.isNaN(kd) || Float.isInfinite(kd)) {
-							kd = score.getKills();
-						}
-
-						String msg = Lang.END_GAME_KILLS_DEATHS.getMessage();
-						msg = msg.replace("{kills}", score.getKills() + "");
-						msg = msg.replace("{deaths}", score.getDeaths() + "");
-						msg = msg.replace("{kd}", kd + "");
-						Main.sendMessage(p, msg, Main.getLang());
-					} else {
-						Main.sendMessage(p, Main.getPrefix() + Lang.SOMEONE_WON_GAME.getMessage().replace("{player}", getWinningTeam()), Main.getLang());
-						Main.sendMessage(p, Main.getPrefix() + Lang.RETURNING_TO_LOBBY.getMessage().replace("{time}", t + ""), Main.getLang());
-						CodScore score = playerScores.get(p);
-						float kd = ((float) score.getKills() / (float) score.getDeaths());
-
-						if (Float.isNaN(kd) || Float.isInfinite(kd)) {
-							kd = score.getKills();
-						}
-
-						String msg = Lang.END_GAME_KILLS_DEATHS.getMessage();
-						msg = msg.replace("{kills}", score.getKills() + "");
-						msg = msg.replace("{deaths}", score.getDeaths() + "");
-						msg = msg.replace("{kd}", kd + "");
-						Main.sendMessage(p, msg, Main.getLang());
 					}
+				}
+
+				for (Player p : getPlayers()) {
+					Main.sendActionBar(p, Lang.RETURNING_TO_LOBBY.getMessage().replace("{time}", t + ""));
 				}
 
 				t--;
@@ -1081,7 +1080,10 @@ public class GameInstance implements Listener {
 					cancel();
 				}
 
-				t--;
+				if (getPlayers().size() == 1) {
+					t = lobbyTime;
+				} else
+					t--;
 			}
 		};
 
