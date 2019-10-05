@@ -168,7 +168,7 @@ public class GameInstance implements Listener {
 
 		System.gc();
 
-		Main.getConsole().sendMessage(Main.getPrefix() + ChatColor.GRAY + "Game lobby with id " + getId() + " created with map " + getMap().getName() + " with gamemode " + getGamemode() + ".");
+		Main.getConsole().sendMessage(ChatColor.GRAY + "Game lobby with id " + getId() + " created with map " + getMap().getName() + " with gamemode " + getGamemode() + ".");
 	}
 
 	private void setupNextMaps() {
@@ -390,13 +390,13 @@ public class GameInstance implements Listener {
 			getScoreboardManager().setupLobbyBoard(p, getFancyTime(lobbyTime));
 		}
 
-		if ((players.size() >= Main.getMinPlayers()) && getState() == GameState.WAITING) {
+		if (getState() == GameState.WAITING) {
 			startLobbyTimer(lobbyTime);
 			setState(GameState.STARTING);
 		}
 
 		for (Player pp : players) {
-			Main.sendMessage(pp, Main.getPrefix() + Lang.PLAYER_JOINED_LOBBY.getMessage().replace("{player}", p.getDisplayName()), Main.getLang());
+			Main.sendMessage(pp, Lang.PLAYER_JOINED_LOBBY.getMessage().replace("{player}", p.getDisplayName()), Main.getLang());
 		}
 
 		return true;
@@ -740,7 +740,7 @@ public class GameInstance implements Listener {
 					team = "red";
 				}
 
-				Main.sendMessage(p, Main.getPrefix() + Lang.ASSIGNED_TO_TEAM.getMessage().replace("{team-color}", tColor + "").replace("{team}", team), Main.getLang());
+				Main.sendMessage(p, Lang.ASSIGNED_TO_TEAM.getMessage().replace("{team-color}", tColor + "").replace("{team}", team), Main.getLang());
 			}
 		} else if (getGamemode() == Gamemode.INFECT) {
 			Collections.shuffle(players);
@@ -757,7 +757,7 @@ public class GameInstance implements Listener {
 				if (ffaPlayerScores.containsKey(p))
 					continue;
 
-				Main.sendMessage(p, Main.getPrefix() + Lang.ASSIGNED_TO_TEAM.getMessage().replace("{team-color}", ChatColor.LIGHT_PURPLE + "").replace("{team}", "pink"), Main.getLang());
+				Main.sendMessage(p, Lang.ASSIGNED_TO_TEAM.getMessage().replace("{team-color}", ChatColor.LIGHT_PURPLE + "").replace("{team}", "pink"), Main.getLang());
 			}
 		}
 
@@ -1004,7 +1004,7 @@ public class GameInstance implements Listener {
 					clearNextMaps();
 
 					for (Player p : game.players) {
-						Main.sendMessage(p, Main.getPrefix() + Lang.MAP_VOTING_NEXT_MAP.getMessage().replace("{map}", game.currentMap.getName()), Main.getLang());
+						Main.sendMessage(p, Lang.MAP_VOTING_NEXT_MAP.getMessage().replace("{map}", game.currentMap.getName()), Main.getLang());
 					}
 				}
 
@@ -1014,13 +1014,13 @@ public class GameInstance implements Listener {
 
 				if (t % 30 == 0 || (t % 10 == 0 && t < 30) || (t % 5 == 0 && t < 15)) {
 					for (Player p : game.players) {
-						Main.sendMessage(p, Main.getPrefix() + Lang.GAME_STARTING_MESSAGE.getMessage().replace("{time}", getFancyTime(t)), Main.getLang());
-						Main.sendMessage(p, Main.getPrefix() + Lang.GAME_STARTING_MAP_MESSAGE.getMessage().replace("{map}", getMap().getName()).replace("{mode}", getMap().getGamemode().toString()) ,Main.getLang());
+						Main.sendMessage(p, Lang.GAME_STARTING_MESSAGE.getMessage().replace("{time}", getFancyTime(t)), Main.getLang());
+						Main.sendMessage(p, Lang.GAME_STARTING_MAP_MESSAGE.getMessage().replace("{map}", getMap().getName()).replace("{mode}", getMap().getGamemode().toString()) ,Main.getLang());
 						if (t > 20) {
-							Main.sendMessage(p, Main.getPrefix() + Lang.MAP_VOTING_HEADER.getMessage(), Main.getLang());
-							Main.sendMessage(p, Main.getPrefix() + ChatColor.GRAY + "===============", Main.getLang());
-							Main.sendMessage(p, Main.getPrefix() + Lang.MAP_VOTING_NAMES.getMessage().replace("{1}", nextMaps[0].getName() + " - " + nextModes[0].toString()).replace("{2}", nextMaps[1].getName() + " - " + nextModes	[1].toString()), Main.getLang());
-							Main.sendMessage(p, Main.getPrefix() + Lang.MAP_VOTING_VOTES.getMessage().replace("{1}", mapVotes[0].size() + "").replace("{2}", mapVotes[1].size() + ""), Main.getLang());
+							Main.sendMessage(p, Lang.MAP_VOTING_HEADER.getMessage(), Main.getLang());
+							Main.sendMessage(p, ChatColor.GRAY + "===============", Main.getLang());
+							Main.sendMessage(p, Lang.MAP_VOTING_NAMES.getMessage().replace("{1}", nextMaps[0].getName() + " - " + nextModes[0].toString()).replace("{2}", nextMaps[1].getName() + " - " + nextModes	[1].toString()), Main.getLang());
+							Main.sendMessage(p, Lang.MAP_VOTING_VOTES.getMessage().replace("{1}", mapVotes[0].size() + "").replace("{2}", mapVotes[1].size() + ""), Main.getLang());
 						}
 					}
 				}
@@ -1069,7 +1069,7 @@ public class GameInstance implements Listener {
 
 					for (Player p : getPlayers()) {
 						if (t == 0) {
-							Main.sendMessage(p, Main.getPrefix() + Lang.GAME_STARTING.getMessage(), Main.getLang());
+							Main.sendMessage(p, Lang.GAME_STARTING.getMessage(), Main.getLang());
 						}
 					}
 
@@ -1532,12 +1532,12 @@ public class GameInstance implements Listener {
 			if (getGamemode() == Gamemode.RESCUE) {
 				dropDogTag(p);
 				if (isOnBlueTeam(p) && getAlivePlayers(blueTeam) > 0) {
-					Main.sendTitle(p, Main.getPrefix() + Lang.RESPAWN_IF_DOG_TAG_PICKED_UP.getMessage(), "");
+					Main.sendTitle(p, Lang.RESPAWN_IF_DOG_TAG_PICKED_UP.getMessage(), "");
 				} else if (isOnRedTeam(p) && getAlivePlayers(redTeam) > 0) {
-					Main.sendTitle(p, Main.getPrefix() + Lang.RESPAWN_IF_DOG_TAG_PICKED_UP.getMessage(), "");
+					Main.sendTitle(p, Lang.RESPAWN_IF_DOG_TAG_PICKED_UP.getMessage(), "");
 				}
 			} else {
-				Main.sendTitle(p, Main.getPrefix() + Lang.RESPAWN_NEXT_ROUND.getMessage(), "");
+				Main.sendTitle(p, Lang.RESPAWN_NEXT_ROUND.getMessage(), "");
 			}
 
 			return;
@@ -1561,7 +1561,7 @@ public class GameInstance implements Listener {
 
 		if (getGamemode() == Gamemode.OITC) {
 			if (ffaPlayerScores.get(p) == 0) {
-				p.sendMessage(Main.getPrefix() + Lang.OITC_RAN_OUT_OF_LIVES.getMessage());
+				p.sendMessage(Lang.OITC_RAN_OUT_OF_LIVES.getMessage());
 				p.setGameMode(GameMode.SPECTATOR);
 				p.getInventory().clear();
 				return;
@@ -1584,7 +1584,7 @@ public class GameInstance implements Listener {
 					p.setSpectatorTarget(killer);
 
 					if (t == 3)
-						Main.sendTitle(p, Main.getPrefix() + Lang.YOU_WILL_RESPAWN.getMessage().replace("{time}", t + ""), "");
+						Main.sendTitle(p, Lang.YOU_WILL_RESPAWN.getMessage().replace("{time}", t + ""), "");
 				} else {
 					if (getState() == GameState.IN_GAME) {
 						if (getGamemode() != Gamemode.FFA && getGamemode() != Gamemode.OITC && getGamemode() != Gamemode.GUN) {
@@ -2164,7 +2164,7 @@ public class GameInstance implements Listener {
 			}
 		} else {
 			if (getGamemode() == Gamemode.RESCUE) {
-				p.sendMessage(Main.getPrefix() + Lang.SPAWN_DENIED.getMessage().replace("{player}", tagOwner.getName()));
+				p.sendMessage(Lang.SPAWN_DENIED.getMessage().replace("{player}", tagOwner.getName()));
 			} else if (getGamemode() == Gamemode.KC) {
 				p.sendMessage(Lang.KILL_CONFIRMED.getMessage());
 				Main.sendActionBar(p,ChatColor.YELLOW + "+" + Main.getRank(p).getKillExperience() + "xp!");
@@ -2302,7 +2302,10 @@ public class GameInstance implements Listener {
 	}
 
 	private void checkHardpointFlag() {
-		hardpointController = hardpointFlag.checkFlag(this);
+		if(hardpointFlag == null)
+			hardpointController = 0;
+		else
+			hardpointController = hardpointFlag.checkFlag(this);
 	}
 
 	void setTeamArmor(Player p) {
