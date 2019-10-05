@@ -93,6 +93,8 @@ public class GameInstance implements Listener {
 	private Gamemode[] nextModes = new Gamemode[2];
 	private ArrayList[] mapVotes = new ArrayList[2];
 
+	private final EntityManager entityManager = new EntityManager();
+
 	private boolean blueUavActive;
 	private boolean redUavActive;
 
@@ -712,8 +714,9 @@ public class GameInstance implements Listener {
 			dogtag.setItemMeta(meta);
 
 
-
-			p.getWorld().dropItem(p.getLocation(), dogtag).setCustomNameVisible(true);
+			Entity e = p.getWorld().dropItem(p.getLocation(), dogtag);
+			e.setCustomNameVisible(true);
+			entityManager.registerEntity(e);
 		}
 	}
 
@@ -763,6 +766,8 @@ public class GameInstance implements Listener {
 	private void stopGame() {
 
 		setState(GameState.STOPPING);
+
+		entityManager.clearEntities();
 
 		CodScore highestScore = null;
 		CodScore highestKD = null;
@@ -1086,6 +1091,8 @@ public class GameInstance implements Listener {
 	private void startGameTimer(int time, boolean newRound) {
 
 		pastClassChange = false;
+
+		entityManager.clearEntities();
 
 		if (!newRound) {
 			setState(GameState.IN_GAME);
