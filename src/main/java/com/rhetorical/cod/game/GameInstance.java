@@ -2236,6 +2236,9 @@ public class GameInstance implements Listener {
 		if (!getGamemode().equals(Gamemode.DOM))
 			return;
 
+		if (aFlag == null || bFlag == null || cFlag == null)
+			return;
+
 
 		int[] flags = {aFlag.checkFlag(this), bFlag.checkFlag(this), cFlag.checkFlag(this)};
 
