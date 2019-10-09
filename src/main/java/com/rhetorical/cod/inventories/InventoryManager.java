@@ -17,6 +17,7 @@ import com.rhetorical.cod.streaks.KillStreak;
 import com.rhetorical.cod.streaks.KillStreakManager;
 import com.rhetorical.cod.weapons.*;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -613,7 +614,29 @@ public class InventoryManager implements Listener {
 
 		for (int i = 0; i < LoadoutManager.getInstance().getAllowedClasses(p); i++) {
 
-			Loadout loadout = LoadoutManager.getInstance().getLoadouts(p).get(i);
+			Loadout loadout;
+			try {
+				loadout = LoadoutManager.getInstance().getLoadouts(p).get(i);
+			} catch (IndexOutOfBoundsException e) {
+				List<Loadout> loadouts = LoadoutManager.getInstance().getLoadouts(p);
+				if (loadouts.size() < LoadoutManager.getInstance().getAllowedClasses(p)) {
+
+					LoadoutManager lm = LoadoutManager.getInstance();
+					PerkManager pm = PerkManager.getInstance();
+					loadouts.add(new Loadout(p, Lang.CLASS_PREFIX + " " + (loadouts.size() + 1),
+							lm.getDefaultPrimary(), lm.getDefaultSecondary(), lm.getDefaultLethal(), lm.getDefaultTactical(),
+							pm.getDefaultPerk(PerkSlot.ONE), pm.getDefaultPerk(PerkSlot.TWO),
+							pm.getDefaultPerk(PerkSlot.THREE)));
+				}
+
+				try {
+					loadout = loadouts.get(i);
+				} catch(IndexOutOfBoundsException e1) {
+					Main.getConsole().sendMessage(ChatColor.RED + String.format("Could not create new loadout that should exist for player %s!", p.getName()));
+					e1.printStackTrace();
+					return;
+				}
+			}
 
 			ItemStack item = loadout.getPrimary().getMenuItem();
 
@@ -638,7 +661,7 @@ public class InventoryManager implements Listener {
 		selectClassInventory.put(p, inventory);
 	}
 
-	public boolean setupKillStreakInventories(Player p) {
+	private boolean setupKillStreakInventories(Player p) {
 
 		Inventory one,
 				two,
