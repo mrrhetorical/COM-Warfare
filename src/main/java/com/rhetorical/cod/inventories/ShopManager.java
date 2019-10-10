@@ -94,9 +94,9 @@ public class ShopManager {
 			String ammoName = GunsFile.getData().getString("Guns.Primary." + i + ".ammoName");
 			CodGun gun;
 			if (ammoName == null) {
-				gun = new CodGun(name, GunType.Primary, null, ammoCount, ammoItem, gunItem, 0);
+				gun = new CodGun(name, GunType.Primary, unlockType, ammoCount, ammoItem, gunItem,  levelUnlock);
 			} else {
-				gun = new CodGun(name, ammoName, GunType.Primary, null, ammoCount, ammoItem, gunItem, 0);
+				gun = new CodGun(name, ammoName, GunType.Primary, unlockType, ammoCount, ammoItem, gunItem, levelUnlock);
 			}
 
 			gun.setCreditUnlock(creditsUnlock);
@@ -127,9 +127,9 @@ public class ShopManager {
 			String ammoName = GunsFile.getData().getString("Guns.Secondary." + i + ".ammoName");
 			CodGun gun;
 			if (ammoName == null) {
-				gun = new CodGun(name, GunType.Secondary, null, ammoCount, ammoItem, gunItem, 0);
+				gun = new CodGun(name, GunType.Secondary, unlockType, ammoCount, ammoItem, gunItem, levelUnlock);
 			} else {
-				gun = new CodGun(name, ammoName, GunType.Secondary, null, ammoCount, ammoItem, gunItem, 0);
+				gun = new CodGun(name, ammoName, GunType.Secondary, unlockType, ammoCount, ammoItem, gunItem, levelUnlock);
 			}
 			gun.setCreditUnlock(creditsUnlock);
 			secondaryGuns.add(gun);
