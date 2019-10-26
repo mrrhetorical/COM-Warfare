@@ -245,7 +245,7 @@ public class GameManager {
 		Objects.requireNonNull(getMatchWhichContains(p)).removePlayer(p);
 
 		Main.sendMessage(p, Lang.PLAYER_LEAVE_GAME.getMessage(), Main.getLang());
-		if (Main.isServerMode()) {
+		if (Main.isServerMode() && !Main.getInstance().getLobbyServer().equalsIgnoreCase("none")) {
 			try {
 				ByteArrayDataOutput out = ByteStreams.newDataOutput();
 				out.writeUTF("Connect");
