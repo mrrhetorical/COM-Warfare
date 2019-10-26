@@ -46,7 +46,7 @@ public class PerkListener implements Listener {
 	public void marathon(FoodLevelChangeEvent e) {
 		Player p = (Player) e.getEntity();
 
-		if (GameManager.isInMatch(p) || LoadoutManager.getInstance().getCurrentLoadout(p).hasPerk(Perk.MARATHON)) {
+		if (GameManager.isInMatch(p) && LoadoutManager.getInstance().getCurrentLoadout(p).hasPerk(Perk.MARATHON)) {
 			e.setCancelled(true);
 		}
 	}
