@@ -1,5 +1,7 @@
 package com.rhetorical.cod.game;
 
+import com.google.common.io.ByteArrayDataOutput;
+import com.google.common.io.ByteStreams;
 import com.rhetorical.cod.Main;
 import com.rhetorical.cod.assignments.AssignmentManager;
 import com.rhetorical.cod.files.ArenasFile;
@@ -233,6 +235,7 @@ public class GameManager {
 
 	}
 
+	@SuppressWarnings("UnstableApiUsage")
 	public static void leaveMatch(Player p) {
 		if (!isInMatch(p) || getMatchWhichContains(p) == null) {
 			Main.sendMessage(p, Lang.PLAYER_NOT_IN_GAME.getMessage(), Main.getLang());
@@ -243,7 +246,14 @@ public class GameManager {
 
 		Main.sendMessage(p, Lang.PLAYER_LEAVE_GAME.getMessage(), Main.getLang());
 		if (Main.isServerMode()) {
-			p.kickPlayer("");
+			try {
+				ByteArrayDataOutput out = ByteStreams.newDataOutput();
+				out.writeUTF("Connect");
+				out.writeUTF(Main.getInstance().getLobbyServer());
+				p.sendPluginMessage(Main.getInstance(), "BungeeCord", out.toByteArray());
+			} catch (Exception e) {
+				p.kickPlayer("");
+			}
 		}
 	}
 

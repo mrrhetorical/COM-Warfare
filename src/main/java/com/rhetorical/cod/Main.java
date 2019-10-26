@@ -81,6 +81,8 @@ public class Main extends JavaPlugin {
 	public String reward_maxPrestige;
 	public String reward_maxPrestigeMaxLevel;
 
+	private String lobbyServer;
+
 	public double knifeDamage = 100d;
 
 	private static boolean disabling = false;
@@ -232,6 +234,7 @@ public class Main extends JavaPlugin {
 			reward_maxPrestige = getPlugin().getConfig().getString("Rewards.Max_Prestige");
 			reward_maxPrestigeMaxLevel = getPlugin().getConfig().getString("Rewards.Max_Prestige_Max_Level");
 			knifeDamage = getPlugin().getConfig().getDouble("knifeDamage");
+			lobbyServer = getPlugin().getConfig().getString("lobbyServer");
 			if (knifeDamage < 1)
 				knifeDamage = 1;
 			else if (knifeDamage > 100)
@@ -1446,6 +1449,10 @@ public class Main extends JavaPlugin {
 
 	public static boolean isDisabling() {
 		return disabling;
+	}
+
+	public String getLobbyServer() {
+		return lobbyServer;
 	}
 
 	public static String getPrefix() {
