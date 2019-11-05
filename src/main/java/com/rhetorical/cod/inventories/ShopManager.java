@@ -138,7 +138,7 @@ public class ShopManager {
 
 	private void loadWeapons() {
 		if (LoadoutManager.getInstance().getDefaultLethal() != null)
-				lethalWeapons.add(LoadoutManager.getInstance().getDefaultLethal());
+			lethalWeapons.add(LoadoutManager.getInstance().getDefaultLethal());
 		if (LoadoutManager.getInstance().getDefaultTactical() != null)
 			tacticalWeapons.add(LoadoutManager.getInstance().getDefaultTactical());
 
