@@ -13,7 +13,7 @@ public class CodGun extends CodWeapon {
 	private UnlockType unlockType;
 	private int ammo;
 	private final ItemStack gunItem;
-	private ItemStack menuItem;
+	private final ItemStack menuItem;
 	private ItemStack ammoItem;
 	
 	private GunType gunType;
@@ -136,7 +136,7 @@ public class CodGun extends CodWeapon {
 	}
 
 	public ItemStack getMenuItem() {
-		return menuItem.clone();
+		return gunItem.clone();
 	}
 
 	public int getLevelUnlock() {
