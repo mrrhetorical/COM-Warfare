@@ -76,7 +76,7 @@ public class Listeners implements Listener {
 		if (GameManager.isInMatch(sender))
 			e.setCancelled(true);
 
-		if (sender.hasPermission("com.chat"))
+		if (sender.hasPermission("com.chat") && !sender.isOp())
 			return;
 
 		GameInstance match = GameManager.getMatchWhichContains(sender);
