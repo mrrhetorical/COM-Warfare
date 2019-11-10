@@ -194,7 +194,7 @@ class CtfFlag {
 		if (isPickedUp())
 			return;
 
-		if (getOwner().getMap().getGamemode() != Gamemode.CTF)
+		if (getOwner().getGamemode() != Gamemode.CTF)
 			return;
 
 		Player nearest = getNearestPlayer();

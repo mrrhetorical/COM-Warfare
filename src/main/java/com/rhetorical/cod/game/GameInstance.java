@@ -767,6 +767,10 @@ public class GameInstance implements Listener {
 
 		setState(GameState.STOPPING);
 
+		despawnDomFlags();
+		despawnCtfFlags();
+		despawnHardpointFlag();
+
 		entityManager.clearEntities();
 
 		CodScore highestScore = null;
@@ -843,10 +847,6 @@ public class GameInstance implements Listener {
 
 			StatHandler.saveStatData();
 		}
-
-		despawnDomFlags();
-		despawnCtfFlags();
-		despawnHardpointFlag();
 
 		GameInstance game = this;
 
@@ -2209,11 +2209,17 @@ public class GameInstance implements Listener {
 
 		if (cFlag != null)
 			cFlag.remove();
+
+		aFlag = null;
+		bFlag = null;
+		cFlag = null;
 	}
 
 	private void despawnHardpointFlag() {
 		if (hardpointFlag != null)
 			hardpointFlag.remove();
+
+		hardpointFlag = null;
 	}
 
 	private void despawnCtfFlags() {
@@ -2222,6 +2228,9 @@ public class GameInstance implements Listener {
 
 		if (redFlag != null)
 			redFlag.despawn();
+
+		blueFlag = null;
+		redFlag = null;
 	}
 
 	private void checkDomFlags() {
