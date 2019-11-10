@@ -672,6 +672,8 @@ public class GameInstance implements Listener {
 		p.getInventory().setItem(32, InventoryManager.getInstance().selectClass);
 		p.getInventory().setItem(35, InventoryManager.getInstance().leaveItem);
 
+		p.updateInventory();
+
 		KillStreakManager.getInstance().streaksAfterDeath(p);
 	}
 
@@ -1835,6 +1837,7 @@ public class GameInstance implements Listener {
 
 					killer.getInventory().setItem(1, gunItem);
 					killer.getInventory().setItem(19, ammo);
+					killer.updateInventory();
 				} catch(Exception ignored) {
 					killer.getInventory().clear();
 				}
@@ -2439,18 +2442,23 @@ public class GameInstance implements Listener {
 					for (Player p : redTeam) {
 						if (health.isDead(p))
 							continue;
-						Firework fw = p.getLocation().getWorld().spawn(p.getLocation(), Firework.class);
-						FireworkMeta fwm = fw.getFireworkMeta();
-						fwm.addEffect(FireworkEffect.builder()
-								.flicker(false)
-								.trail(true)
-								.with(FireworkEffect.Type.BALL)
-								.withColor(Color.RED)
-								.build());
 
-						fwm.setPower(3);
+						if (Main.isLegacy()) {
+							Firework fw = p.getLocation().getWorld().spawn(p.getLocation(), Firework.class);
+							FireworkMeta fwm = fw.getFireworkMeta();
+							fwm.addEffect(FireworkEffect.builder()
+									.flicker(false)
+									.trail(true)
+									.with(FireworkEffect.Type.BALL)
+									.withColor(Color.RED)
+									.build());
 
-						fw.setFireworkMeta(fwm);
+							fwm.setPower(3);
+
+							fw.setFireworkMeta(fwm);
+						} else {
+							p.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, 20, 1));
+						}
 					}
 				} else if(isOnRedTeam(owner)) {
 					//red launched
@@ -2460,18 +2468,22 @@ public class GameInstance implements Listener {
 					for (Player p : blueTeam) {
 						if (health.isDead(p))
 							continue;
-						Firework fw = p.getLocation().getWorld().spawn(p.getLocation(), Firework.class);
-						FireworkMeta fwm = fw.getFireworkMeta();
-						fwm.addEffect(FireworkEffect.builder()
-								.flicker(false)
-								.trail(true)
-								.with(FireworkEffect.Type.BALL)
-								.withColor(Color.BLUE)
-								.build());
+						if (Main.isLegacy()) {
+							Firework fw = p.getLocation().getWorld().spawn(p.getLocation(), Firework.class);
+							FireworkMeta fwm = fw.getFireworkMeta();
+							fwm.addEffect(FireworkEffect.builder()
+									.flicker(false)
+									.trail(true)
+									.with(FireworkEffect.Type.BALL)
+									.withColor(Color.BLUE)
+									.build());
 
-						fwm.setPower(3);
+							fwm.setPower(3);
 
-						fw.setFireworkMeta(fwm);
+							fw.setFireworkMeta(fwm);
+						} else {
+							p.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, 20, 1));
+						}
 					}
 				} else {
 					//pink
@@ -2485,18 +2497,22 @@ public class GameInstance implements Listener {
 						if (health.isDead(p))
 							continue;
 
-						Firework fw = p.getLocation().getWorld().spawn(p.getLocation(), Firework.class);
-						FireworkMeta fwm = fw.getFireworkMeta();
-						fwm.addEffect(FireworkEffect.builder()
-								.flicker(false)
-								.trail(true)
-								.with(FireworkEffect.Type.BALL)
-								.withColor(Color.PURPLE)
-								.build());
+						if (Main.isLegacy()) {
+							Firework fw = p.getLocation().getWorld().spawn(p.getLocation(), Firework.class);
+							FireworkMeta fwm = fw.getFireworkMeta();
+							fwm.addEffect(FireworkEffect.builder()
+									.flicker(false)
+									.trail(true)
+									.with(FireworkEffect.Type.BALL)
+									.withColor(Color.PURPLE)
+									.build());
 
-						fwm.setPower(3);
+							fwm.setPower(3);
 
-						fw.setFireworkMeta(fwm);
+							fw.setFireworkMeta(fwm);
+						} else {
+							p.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, 20, 1));
+						}
 					}
 				}
 			}
