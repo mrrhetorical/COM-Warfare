@@ -73,58 +73,44 @@ public class Listeners implements Listener {
 		Player sender = e.getPlayer();
 		String message = e.getMessage();
 
-		if (GameManager.isInMatch(sender)) {
+		if (GameManager.isInMatch(sender))
 			e.setCancelled(true);
-		}
 
-		if (!Main.hasPerm(sender, "com.chat", true))
+		if (Main.hasPerm(sender, "com.chat", true))
 			return;
 
-		for (Player receiver : Bukkit.getOnlinePlayers()) {
-			if (GameManager.isInMatch(receiver)) {
-				if (GameManager.getMatchWhichContains(sender) == GameManager.getMatchWhichContains(receiver)) {
-//					if (receiver == sender) {
-//						receiver.sendMessage(ChatColor.GREEN + sender.getDisplayName() + ChatColor.RESET + ChatColor.WHITE + "»" + ChatColor.RESET + ChatColor.GRAY + message);
-//						continue;
-//					}
+		GameInstance match = GameManager.getMatchWhichContains(sender);
+		if (match == null)
+			return;
+		for (Player receiver : match.getPlayers()) {
 
-					GameInstance i = GameManager.getMatchWhichContains(sender);
+				ChatColor tColor = ChatColor.GRAY;
 
-					ChatColor tColor = ChatColor.GRAY;
-
-					if (i != null) {
-						if (receiver.equals(sender)) {
-							tColor = ChatColor.GREEN;
-						} else if (i.isOnBlueTeam(sender)) {
-							tColor = ChatColor.BLUE;
-						} else if (i.isOnRedTeam(sender)) {
-							tColor = ChatColor.RED;
-						} else if (i.isOnPinkTeam(sender)) {
-							tColor = ChatColor.LIGHT_PURPLE;
-						}
-					} else {
-						continue;
-					}
-
-					int level = ProgressionManager.getInstance().getLevel(sender);
-					int pLevel = ProgressionManager.getInstance().getPrestigeLevel(sender);
-					String prestige = pLevel > 0 ? ChatColor.WHITE + "[" + ChatColor.GREEN + pLevel + ChatColor.WHITE + "]-" : "";
-					String levelName = LevelNames.getInstance().getLevelName(level);
-					levelName = !levelName.equals("") ? "[" + levelName + "] " : "";
-
-					String name = ChatColor.WHITE + levelName + prestige + "[" + level + "] "
-							+ tColor + sender.getDisplayName();
-
-					String msg = Lang.CHAT_FORMAT.getMessage();
-					msg = msg.replace("{team-color}", tColor + "");
-					msg = msg.replace("{player}", name);
-					msg = msg.replace("{message}", message);
-
-					receiver.sendMessage(msg);
+				if (receiver.equals(sender)) {
+					tColor = ChatColor.GREEN;
+				} else if (match.isOnBlueTeam(sender)) {
+					tColor = ChatColor.BLUE;
+				} else if (match.isOnRedTeam(sender)) {
+					tColor = ChatColor.RED;
+				} else if (match.isOnPinkTeam(sender)) {
+					tColor = ChatColor.LIGHT_PURPLE;
 				}
-			} else {
-				return;
-			}
+
+				int level = ProgressionManager.getInstance().getLevel(sender);
+				int pLevel = ProgressionManager.getInstance().getPrestigeLevel(sender);
+				String prestige = pLevel > 0 ? ChatColor.WHITE + "[" + ChatColor.GREEN + pLevel + ChatColor.WHITE + "]-" : "";
+				String levelName = LevelNames.getInstance().getLevelName(level);
+				levelName = !levelName.equals("") ? "[" + levelName + "] " : "";
+
+				String name = ChatColor.WHITE + levelName + prestige + "[" + level + "] "
+						+ tColor + sender.getDisplayName();
+
+				String msg = Lang.CHAT_FORMAT.getMessage();
+				msg = msg.replace("{team-color}", tColor + "");
+				msg = msg.replace("{player}", name);
+				msg = msg.replace("{message}", message);
+
+				receiver.sendMessage(msg);
 		}
 
 	}
@@ -166,7 +152,10 @@ public class Listeners implements Listener {
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onPlayerHit(EntityDamageEvent e) {
 		if (!(e.getEntity() instanceof Player)) return;
-		
+
+		if (e.isCancelled())
+			return;
+
 		Player p = (Player) e.getEntity();
 		
 		DamageCause cause = e.getCause();

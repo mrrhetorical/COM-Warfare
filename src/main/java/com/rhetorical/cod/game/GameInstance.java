@@ -844,14 +844,9 @@ public class GameInstance implements Listener {
 			StatHandler.saveStatData();
 		}
 
-		if (getGamemode() == Gamemode.DOM)
-			despawnDomFlags();
-
-		if (getGamemode() == Gamemode.HARDPOINT)
-			despawnHardpointFlag();
-
-		if (getGamemode() == Gamemode.CTF)
-			despawnCtfFlags();
+		despawnDomFlags();
+		despawnCtfFlags();
+		despawnHardpointFlag();
 
 		GameInstance game = this;
 
@@ -1889,9 +1884,6 @@ public class GameInstance implements Listener {
 
 		Player victim = (Player) e.getEntity();
 		Player attacker = (Player) e.getDamager();
-
-		if (e.isCancelled())
-			return;
 
 		if (GameManager.isInMatch(victim) || GameManager.isInMatch(attacker)) {
 			e.setCancelled(true);

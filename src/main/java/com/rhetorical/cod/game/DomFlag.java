@@ -100,6 +100,8 @@ class DomFlag {
 		}
 
 		for (Player p : playersOnPoint) {
+			if (Math.abs(p.getLocation().getY() - getLocation().getY()) > 2f)
+				continue;
 			if (game.isOnBlueTeam(p))
 				blue++;
 			else if (game.isOnRedTeam(p))
