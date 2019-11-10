@@ -85,7 +85,7 @@ public class HealthManager {
 		if (p.getGameMode() != GameMode.SURVIVAL && p.getGameMode() != GameMode.ADVENTURE) return;
 
 		if (inJuggernaut.contains(p))
-			healing *= 2;
+			healing /= 5;
 
 		double health = getHealth(p) + healing;
 

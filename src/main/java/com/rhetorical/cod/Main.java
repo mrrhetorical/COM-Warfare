@@ -133,6 +133,7 @@ public class Main extends JavaPlugin {
 
 		if (v <= 8 ) {
 			Main.getConsole().sendMessage(Main.getPrefix() + "You are not on the most recent version of Spigot/Bukkit, so COM-Warfare might not work as advertised. To ensure it will work properly, please use version 1.9 - 1.14!");
+			legacy = true;
 		}
 
 		Main.getConsole().sendMessage(Main.getPrefix() + "Checking dependencies...");
@@ -1434,6 +1435,8 @@ public class Main extends JavaPlugin {
 			p.playSound(p.getLocation(), Sound.valueOf("CHEST_OPEN"), 4f, 1f);
 		}
 	}
+
+	public static boolean isLegacy() { return legacy; }
 
 	public static boolean hasQualityArms() {
 		return getInstance().hasQA;
