@@ -87,6 +87,8 @@ public class Main extends JavaPlugin {
 
 	private static boolean disabling = false;
 
+	private static boolean legacy = false;
+
 	private Metrics bMetrics;
 
 	final String uid = "%%__USER__%%";
