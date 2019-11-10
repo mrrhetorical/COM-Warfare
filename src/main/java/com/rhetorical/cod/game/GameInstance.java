@@ -169,6 +169,8 @@ public class GameInstance implements Listener {
 		System.gc();
 
 		Main.getConsole().sendMessage(ChatColor.GRAY + "Game lobby with id " + getId() + " created with map " + getMap().getName() + " with gamemode " + getGamemode() + ".");
+
+		startLobbyTimer(lobbyTime);
 	}
 
 	private void setupNextMaps() {
@@ -245,9 +247,7 @@ public class GameInstance implements Listener {
 
 		playerScores.clear();
 
-		if (players.size() >= Main.getMinPlayers()) {
-			startLobbyTimer(lobbyTime);
-		}
+		startLobbyTimer(lobbyTime);
 	}
 
 	public long getId() {
@@ -340,7 +340,6 @@ public class GameInstance implements Listener {
 		playerScores.put(p, new CodScore(p));
 
 		try {
-//			scoreBar.addPlayer(p);
 			scoreBar.getClass().getMethod("addPlayer", Player.class).invoke(scoreBar, p);
 
 		} catch(NoClassDefFoundError e) {
@@ -388,11 +387,6 @@ public class GameInstance implements Listener {
 			p.getInventory().setItem(8, InventoryManager.getInstance().leaveItem);
 
 			getScoreboardManager().setupLobbyBoard(p, getFancyTime(lobbyTime));
-		}
-
-		if (getState() == GameState.WAITING) {
-			startLobbyTimer(lobbyTime);
-			setState(GameState.STARTING);
 		}
 
 		for (Player pp : players) {
@@ -936,9 +930,10 @@ public class GameInstance implements Listener {
 
 	private void startLobbyTimer(int time) {
 
+		setState(GameState.STARTING);
+
 		forceStarted = false;
 
-		setState(GameState.STARTING);
 
 		try {
 			scoreBar.getClass().getMethod("removeAll").invoke(scoreBar);
