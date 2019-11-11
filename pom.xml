@@ -62,6 +62,13 @@
 		</dependency>
 
 		<dependency>
+			<groupId>com.deecaad</groupId>
+			<artifactId>CrackShotPlus</artifactId>
+			<version>1.83</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
 			<groupId>me.zombie_striker</groupId>
 			<artifactId>QualityArmory</artifactId>
 			<version>1.1.145</version>

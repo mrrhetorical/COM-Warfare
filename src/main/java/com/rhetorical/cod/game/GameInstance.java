@@ -356,7 +356,7 @@ public class GameInstance implements Listener {
 				ffaPlayerScores.put(p, maxScore_OITC);
 			}
 
-			if (getGamemode() != Gamemode.DESTROY && getGamemode() != Gamemode.RESCUE) {
+			if (getGamemode() != Gamemode.RESCUE) {
 
 				Location spawn;
 				if (isOnRedTeam(p)) {
@@ -544,7 +544,7 @@ public class GameInstance implements Listener {
 			}
 		}
 
-		if (getGamemode() == Gamemode.DESTROY || getGamemode() == Gamemode.RESCUE) {
+		if (getGamemode() == Gamemode.RESCUE) {
 			for (Player p : players) {
 				isAlive.put(p, true);
 			}
@@ -627,7 +627,6 @@ public class GameInstance implements Listener {
 				|| getGamemode() == Gamemode.TDM
 				|| getGamemode() == Gamemode.FFA
 				|| getGamemode() == Gamemode.INFECT
-				|| getGamemode() == Gamemode.DESTROY
 				|| getGamemode() == Gamemode.RESCUE
 				|| getGamemode() == Gamemode.HARDPOINT) {
 
@@ -1285,11 +1284,11 @@ public class GameInstance implements Listener {
 					}
 				}
 
-				if (getGamemode() == Gamemode.DESTROY || getGamemode() == Gamemode.RESCUE) {
+				if (getGamemode() == Gamemode.RESCUE) {
 					if (getAlivePlayers(redTeam) == 0) {
 						addBluePoint();
 
-						if (!(blueTeamScore >= maxScore_DESTROY) && !(blueTeamScore >= maxScore_RESCUE)) {
+						if (!(blueTeamScore >= maxScore_RESCUE)) {
 							startNewRound(7, blueTeam);
 						}
 
@@ -1300,7 +1299,7 @@ public class GameInstance implements Listener {
 					} else if (getAlivePlayers(blueTeam) == 0) {
 						addRedPoint();
 
-						if (!(redTeamScore >= maxScore_DESTROY) && !(redTeamScore >= maxScore_RESCUE)) {
+						if (!(redTeamScore >= maxScore_RESCUE)) {
 							startNewRound(7, redTeam);
 						}
 
@@ -1310,11 +1309,7 @@ public class GameInstance implements Listener {
 						cancel();
 					}
 
-					if (blueTeamScore >= maxScore_DESTROY || redTeamScore >= maxScore_DESTROY && getGamemode().equals(Gamemode.DESTROY)) {
-						endGameByScore(this);
-						cancel();
-						return;
-					}else if (blueTeamScore >= maxScore_RESCUE || redTeamScore >= maxScore_RESCUE && getGamemode().equals(Gamemode.RESCUE)) {
+					if (blueTeamScore >= maxScore_RESCUE || redTeamScore >= maxScore_RESCUE && getGamemode().equals(Gamemode.RESCUE)) {
 						endGameByScore(this);
 						cancel();
 						return;
@@ -1499,7 +1494,7 @@ public class GameInstance implements Listener {
 	private int getAlivePlayers(ArrayList<Player> team) {
 		int count = 0;
 
-		if (getGamemode() != Gamemode.DESTROY && getGamemode() != Gamemode.RESCUE)
+		if (getGamemode() != Gamemode.RESCUE)
 			return 1;
 
 		for (Player p : team) {
@@ -1516,7 +1511,7 @@ public class GameInstance implements Listener {
 
 		AssignmentManager.getInstance().updateAssignments(p, 1, getGamemode());
 
-		if (getGamemode() == Gamemode.DESTROY || getGamemode() == Gamemode.RESCUE) {
+		if (getGamemode() == Gamemode.RESCUE) {
 			p.setGameMode(GameMode.SPECTATOR);
 			p.getInventory().clear();
 			isAlive.put(p, false);
@@ -1707,7 +1702,7 @@ public class GameInstance implements Listener {
 
 		RankPerks rank = Main.getRank(killer);
 
-		if (getGamemode().equals(Gamemode.TDM) || getGamemode().equals(Gamemode.KC) || getGamemode().equals(Gamemode.RSB) || getGamemode().equals(Gamemode.DOM) || getGamemode().equals(Gamemode.RESCUE) || getGamemode().equals(Gamemode.DESTROY) || getGamemode().equals(Gamemode.HARDPOINT)) {
+		if (getGamemode().equals(Gamemode.TDM) || getGamemode().equals(Gamemode.KC) || getGamemode().equals(Gamemode.RSB) || getGamemode().equals(Gamemode.DOM) || getGamemode().equals(Gamemode.RESCUE) || getGamemode().equals(Gamemode.HARDPOINT)) {
 			if (isOnRedTeam(killer)) {
 
 				double xp = rank.getKillExperience();
@@ -1722,7 +1717,7 @@ public class GameInstance implements Listener {
 				ProgressionManager.getInstance().addExperience(killer, xp);
 				CreditManager.setCredits(killer, CreditManager.getCredits(killer) + rank.getKillCredits());
 				kill(victim, killer);
-				if (getGamemode() != Gamemode.RESCUE && getGamemode() != Gamemode.DESTROY && getGamemode() != Gamemode.KC) {
+				if (getGamemode() != Gamemode.RESCUE && getGamemode() != Gamemode.KC) {
 					if (getGamemode() != Gamemode.HARDPOINT) {
 						addRedPoint();
 					} else if (hardpointController == 1) {
@@ -1743,7 +1738,7 @@ public class GameInstance implements Listener {
 				ProgressionManager.getInstance().addExperience(killer, xp);
 				CreditManager.setCredits(killer, CreditManager.getCredits(killer) + rank.getKillCredits());
 				kill(victim, killer);
-				if (getGamemode() != Gamemode.RESCUE && getGamemode() != Gamemode.DESTROY && getGamemode() != Gamemode.KC) {
+				if (getGamemode() != Gamemode.RESCUE && getGamemode() != Gamemode.KC) {
 					if (getGamemode() != Gamemode.HARDPOINT) {
 						addBluePoint();
 					} else if (hardpointController == 0) {
