@@ -136,7 +136,7 @@ public class CodGun extends CodWeapon {
 	}
 
 	public ItemStack getMenuItem() {
-		return gunItem.clone();
+		return CrackShotGun.updateItem(getName(), gunItem.clone(), null);
 	}
 
 	public int getLevelUnlock() {
