@@ -33,13 +33,21 @@ public class CrackShotGun implements Listener {
 			item = ((com.shampaggon.crackshot.CSUtility) instance).generateWeapon(name);
 		} catch(Error|Exception ignored) {}
 
+		updateItem(name, item, null);
+
+		return item == null ? new ItemStack(Material.AIR) : item;
+	}
+
+	public static void updateItem(String name, ItemStack item, Player player) {
 		try {
 			if(Bukkit.getPluginManager().getPlugin("CrackShotPlus") != null) {
-				me.DeeCaaD.CrackShotPlus.CSPapi.updateItemStackFeaturesNonPlayer(name, item);
+				if (player == null)
+					me.DeeCaaD.CrackShotPlus.CSPapi.updateItemStackFeaturesNonPlayer(name, item);
+				else
+					me.DeeCaaD.CrackShotPlus.CSPapi.updateItemStackFeatures(name, item, player);
 			}
 		} catch (Error|Exception ignored) {}
 
-		return item == null ? new ItemStack(Material.AIR) : item;
 	}
 
 	//ba-dum-tss

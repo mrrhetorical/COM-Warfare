@@ -19,6 +19,7 @@ import com.rhetorical.cod.streaks.KillStreak;
 import com.rhetorical.cod.streaks.KillStreakManager;
 import com.rhetorical.cod.weapons.CodGun;
 import com.rhetorical.cod.weapons.CodWeapon;
+import com.rhetorical.cod.weapons.CrackShotGun;
 import org.bukkit.*;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
@@ -68,7 +69,6 @@ public class GameInstance implements Listener {
 			maxScore_KC,
 			maxScore_GUN,
 			maxScore_OITC,
-			maxScore_DESTROY,
 			maxScore_RESCUE,
 			maxScore_HARDPOINT;
 
@@ -136,7 +136,6 @@ public class GameInstance implements Listener {
 			maxScore_KC = Main.getPlugin().getConfig().getInt("maxScore.KC");
 			maxScore_GUN = GameManager.gunGameGuns.size();
 			maxScore_OITC = Main.getPlugin().getConfig().getInt("maxScore.OITC");
-			maxScore_DESTROY = Main.getPlugin().getConfig().getInt("maxScore.DESTROY");
 			maxScore_RESCUE = Main.getPlugin().getConfig().getInt("maxScore.RESCUE");
 			maxScore_HARDPOINT = Main.getPlugin().getConfig().getInt("maxScore.HARDPOINT");
 		} else {
@@ -147,7 +146,6 @@ public class GameInstance implements Listener {
 			maxScore_DOM = 200;
 			maxScore_CTF = 3;
 			maxScore_OITC = 3;
-			maxScore_DESTROY = 4;
 			maxScore_RESCUE = 4;
 			maxScore_GUN = GameManager.gunGameGuns.size();
 			maxScore_HARDPOINT = 75;
@@ -604,12 +602,16 @@ public class GameInstance implements Listener {
 
 			p.getInventory().setItem(0, LoadoutManager.getInstance().knife);
 			if (!primary.equals(LoadoutManager.getInstance().blankPrimary)) {
-				p.getInventory().setItem(1, primary.getGunItem());
+				ItemStack primaryGun = primary.getGunItem();
+				CrackShotGun.updateItem(primary.getName(), primary.getGunItem(), p);
+				p.getInventory().setItem(1, primaryGun);
 				p.getInventory().setItem(28, primaryAmmo);
 			}
 
 			if (!secondary.equals(LoadoutManager.getInstance().blankSecondary)) {
-				p.getInventory().setItem(2, secondary.getGunItem());
+				ItemStack secondaryGun = secondary.getGunItem();
+				CrackShotGun.updateItem(secondary.getName(), secondary.getGunItem(), p);
+				p.getInventory().setItem(2, secondaryGun);
 				p.getInventory().setItem(29, secondaryAmmo);
 			}
 
@@ -654,6 +656,7 @@ public class GameInstance implements Listener {
 			if (getState() != GameState.STOPPING) {
 				CodGun gun = GameManager.gunGameGuns.get(ffaPlayerScores.get(p));
 				ItemStack gunItem = gun.getGunItem();
+				CrackShotGun.updateItem(gun.getName(), gunItem, p);
 				ItemStack ammo = gun.getAmmo();
 				ammo.setAmount(gun.getAmmoCount());
 

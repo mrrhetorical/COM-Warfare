@@ -148,7 +148,9 @@ public class LoadoutManager {
 		// Primary & Ammo
 
 		if (!primary.equals(LoadoutManager.getInstance().blankPrimary)) {
-			p.getInventory().setItem(1, primary.getGunItem());
+			ItemStack primaryGun = primary.getGunItem();
+			CrackShotGun.updateItem(primary.getName(), primaryGun, p);
+			p.getInventory().setItem(1, primaryGun);
 
 			ItemStack primaryAmmo = primary.getAmmo();
 			primaryAmmo.setAmount(primary.getAmmoCount());
@@ -158,7 +160,9 @@ public class LoadoutManager {
 		// Secondary & Ammo
 
 		if (!secondary.equals(LoadoutManager.getInstance().blankSecondary)) {
-			p.getInventory().setItem(2, secondary.getGunItem());
+			ItemStack secondaryGun = secondary.getGunItem();
+			CrackShotGun.updateItem(secondary.getName(), secondaryGun, p);
+			p.getInventory().setItem(2, secondaryGun);
 			if (!loadout.hasPerk(Perk.ONE_MAN_ARMY)) {
 				ItemStack secondaryAmmo = secondary.getAmmo();
 				secondaryAmmo.setAmount(secondary.getAmmoCount());

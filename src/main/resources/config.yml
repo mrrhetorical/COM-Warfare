@@ -36,7 +36,6 @@ gameTime:
   OITC: 300
   GUN: 600
   RESCUE: 120
-  DESTROY: 120
   HARDPOINT: 600
 #Default health: How much health should the player start with? (Default is 20 in Minecraft, but 100 can be used to make guns do more precise damage amounts.) Default: 20 {PREMIUM-ONLY}
 defaultHealth: 100
