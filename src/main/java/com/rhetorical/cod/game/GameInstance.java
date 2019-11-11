@@ -602,16 +602,12 @@ public class GameInstance implements Listener {
 
 			p.getInventory().setItem(0, LoadoutManager.getInstance().knife);
 			if (!primary.equals(LoadoutManager.getInstance().blankPrimary)) {
-				ItemStack primaryGun = primary.getGunItem();
-				CrackShotGun.updateItem(primary.getName(), primary.getGunItem(), p);
-				p.getInventory().setItem(1, primaryGun);
+				p.getInventory().setItem(1, CrackShotGun.updateItem(primary.getName(), primary.getGunItem(), p));
 				p.getInventory().setItem(28, primaryAmmo);
 			}
 
 			if (!secondary.equals(LoadoutManager.getInstance().blankSecondary)) {
-				ItemStack secondaryGun = secondary.getGunItem();
-				CrackShotGun.updateItem(secondary.getName(), secondary.getGunItem(), p);
-				p.getInventory().setItem(2, secondaryGun);
+				p.getInventory().setItem(2, CrackShotGun.updateItem(secondary.getName(), secondary.getGunItem(), p));
 				p.getInventory().setItem(29, secondaryAmmo);
 			}
 
@@ -655,12 +651,11 @@ public class GameInstance implements Listener {
 			p.getInventory().setItem(0, LoadoutManager.getInstance().knife);
 			if (getState() != GameState.STOPPING) {
 				CodGun gun = GameManager.gunGameGuns.get(ffaPlayerScores.get(p));
-				ItemStack gunItem = gun.getGunItem();
-				CrackShotGun.updateItem(gun.getName(), gunItem, p);
+
 				ItemStack ammo = gun.getAmmo();
 				ammo.setAmount(gun.getAmmoCount());
 
-				p.getInventory().setItem(1, gunItem);
+				p.getInventory().setItem(1, CrackShotGun.updateItem(gun.getName(), gun.getGunItem(), p));
 				p.getInventory().setItem(28, ammo);
 			}
 		}
@@ -1850,7 +1845,8 @@ public class GameInstance implements Listener {
 
 		killerScore.addKillstreak();
 
-		KillStreakManager.getInstance().checkStreaks(killer);
+		if (getGamemode() != Gamemode.OITC && getGamemode() != Gamemode.GUN)
+			KillStreakManager.getInstance().checkStreaks(killer);
 
 		killerScore.addKill();
 

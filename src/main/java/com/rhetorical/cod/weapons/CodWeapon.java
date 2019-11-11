@@ -120,6 +120,8 @@ public class CodWeapon {
 		
 		weaponItem.setItemMeta(meta);
 
+		weaponItem = CrackShotGun.updateItem(getName(), weaponItem, null);
+
 		return weaponItem;
 	}
 
