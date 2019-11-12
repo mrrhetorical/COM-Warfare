@@ -2,10 +2,7 @@ package com.rhetorical.cod.game;
 
 import com.rhetorical.cod.Main;
 import com.rhetorical.cod.lang.Lang;
-import org.bukkit.ChatColor;
-import org.bukkit.DyeColor;
-import org.bukkit.Location;
-import org.bukkit.Material;
+import org.bukkit.*;
 import org.bukkit.block.banner.Pattern;
 import org.bukkit.block.banner.PatternType;
 import org.bukkit.entity.ArmorStand;
@@ -57,6 +54,11 @@ class DomFlag {
 
 		if (name != null)
 			name.remove();
+
+		name = null;
+		flag = null;
+
+		Bukkit.getLogger().info("Successfully removed flag: " + getFlagName().getMessage());
 	}
 
 	Lang getFlagName() {

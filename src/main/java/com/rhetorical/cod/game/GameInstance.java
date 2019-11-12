@@ -548,15 +548,8 @@ public class GameInstance implements Listener {
 			}
 		}
 
-		if (getGamemode() == Gamemode.CTF)
-			spawnCtfFlags();
-
 		startGameTimer(gameTime, false);
 		setState(GameState.IN_GAME);
-	}
-
-	private void dropFlag(Item flag, Location location) {
-		location.getWorld().dropItem(location, flag.getItemStack());
 	}
 
 	private void spawnCtfFlags() {
@@ -1123,9 +1116,11 @@ public class GameInstance implements Listener {
 				getScoreboardManager().setupGameBoard(p, getFancyTime(gameTime));
 			}
 
-			if (getGamemode() == Gamemode.DOM) {
+			if (getGamemode() == Gamemode.DOM)
 				spawnDomFlags();
-			}
+
+			if (getGamemode() == Gamemode.CTF)
+				spawnCtfFlags();
 		} else {
 			for (Player p : players) {
 				if (isOnBlueTeam(p)) {
@@ -2113,6 +2108,10 @@ public class GameInstance implements Listener {
 
 	@EventHandler
 	public void onPlayerPickupDogtag(PlayerPickupItemEvent e) {
+
+		if (e.isCancelled())
+			return;
+
 		Player p = e.getPlayer();
 
 		if (!GameManager.isInMatch(p))
@@ -2173,6 +2172,8 @@ public class GameInstance implements Listener {
 	private void spawnDomFlags() {
 		if(!getGamemode().equals(Gamemode.DOM))
 			return;
+
+		despawnDomFlags();
 
 		Location aLoc = getMap().getAFlagSpawn();
 		Location bLoc = getMap().getBFlagSpawn();

@@ -115,7 +115,7 @@ public class PerkListener implements Listener {
 		return isInLastStand;
 	}
 
-	@EventHandler
+	@EventHandler(priority = EventPriority.HIGH)
 	public void scavengerPickup(PlayerPickupItemEvent e) {
 
 		Player p = e.getPlayer();
@@ -132,7 +132,8 @@ public class PerkListener implements Listener {
 			currentAmmo.setAmount(currentAmmo.getAmount() + ammoToAdd.getAmount());
 
 			p.getInventory().setItem(19, currentAmmo);
-		}
+		} else
+			e.setCancelled(true);
 	}
 
 	///// PERK TWO /////

@@ -2,6 +2,7 @@ package com.rhetorical.cod.game;
 
 import com.rhetorical.cod.Main;
 import com.rhetorical.cod.lang.Lang;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.ArmorStand;
@@ -52,6 +53,9 @@ class CtfFlag {
 		this.flagLoc = flagLoc.clone();
 		this.team = team;
 		this.owner = owner;
+
+		inFlagHolder = true;
+		pickedUp = false;
 	}
 
 	void spawn() {
@@ -59,6 +63,9 @@ class CtfFlag {
 	}
 
 	void spawn(Location location) {
+		if (getLocation().getWorld() == null)
+			return;
+
 		name = (ArmorStand) getLocation().getWorld().spawnEntity(location.clone().add(0, 2, 0), EntityType.ARMOR_STAND);
 
 		name.setCustomName(getFlagName().getMessage());
@@ -73,9 +80,6 @@ class CtfFlag {
 		flag.setSmall(true);
 		flag.setMarker(true);
 		flag.setHelmet(FlagUtil.getBannerForTeam(getTeam().getCode()));
-
-		inFlagHolder = true;
-		pickedUp = false;
 	}
 
 	void pickup(Player p) {
@@ -109,14 +113,23 @@ class CtfFlag {
 	}
 
 	void despawn() {
-		if (flag != null)
+		if (flag != null) {
+			for (Player p : getOwner().getPlayers())
+				p.sendMessage("Removed flag's flag");
 			flag.remove();
+		}
 
-		if (name != null)
+		if (name != null) {
+			for (Player p : getOwner().getPlayers())
+				p.sendMessage("Removed flag's nameplate");
 			name.remove();
+		}
 
 		name = null;
 		flag = null;
+
+		for (Player p : getOwner().getPlayers())
+			p.sendMessage("Successfully removed flag: " + getFlagName().getMessage());
 	}
 
 	void resetFlag() {
