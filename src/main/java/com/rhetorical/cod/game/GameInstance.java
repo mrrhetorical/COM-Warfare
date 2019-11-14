@@ -29,6 +29,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
+import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -2794,5 +2795,11 @@ public class GameInstance implements Listener {
 			} catch(Exception e) {
 				e.printStackTrace();
 			}
+	}
+
+	@EventHandler
+	public void preventItemHandSwap(PlayerSwapHandItemsEvent e) {
+		if (getPlayers().contains(e.getPlayer()))
+			e.setCancelled(true);
 	}
 }
