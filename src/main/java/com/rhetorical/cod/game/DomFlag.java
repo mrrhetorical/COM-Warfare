@@ -58,7 +58,6 @@ class DomFlag {
 		name = null;
 		flag = null;
 
-		Bukkit.getLogger().info("Successfully removed flag: " + getFlagName().getMessage());
 	}
 
 	Lang getFlagName() {

@@ -124,16 +124,34 @@ public class PerkListener implements Listener {
 		if (GameManager.isInMatch(p) && LoadoutManager.getInstance().getCurrentLoadout(p).hasPerk(Perk.SCAVENGER) && i.getType().equals(Material.LAPIS_BLOCK)) {
 			e.getItem().remove();
 
-			ItemStack ammoToAdd = LoadoutManager.getInstance().getCurrentLoadout(p).getPrimary().getAmmo();
-			ammoToAdd.setAmount(LoadoutManager.getInstance().getCurrentLoadout(p).getPrimary().getAmmoCount() / 8);
+			{
+				ItemStack ammoToAdd = LoadoutManager.getInstance().getCurrentLoadout(p).getPrimary().getAmmo();
+				ammoToAdd.setAmount(LoadoutManager.getInstance().getCurrentLoadout(p).getPrimary().getAmmoCount() / 8);
 
-			ItemStack currentAmmo = p.getInventory().getItem(19);
+				ItemStack currentAmmo = p.getInventory().getItem(28);
 
-			currentAmmo.setAmount(currentAmmo.getAmount() + ammoToAdd.getAmount());
+				if (currentAmmo != null)
+					currentAmmo.setAmount(currentAmmo.getAmount() + ammoToAdd.getAmount());
+				else
+					currentAmmo = ammoToAdd;
 
-			p.getInventory().setItem(19, currentAmmo);
-		} else
-			e.setCancelled(true);
+				p.getInventory().setItem(28, currentAmmo);
+			}
+
+			{
+				ItemStack ammoToAdd = LoadoutManager.getInstance().getCurrentLoadout(p).getSecondary().getAmmo();
+				ammoToAdd.setAmount(LoadoutManager.getInstance().getCurrentLoadout(p).getSecondary().getAmmoCount() / 8);
+
+				ItemStack currentAmmo = p.getInventory().getItem(29);
+
+				if (currentAmmo != null)
+					currentAmmo.setAmount(currentAmmo.getAmount() + ammoToAdd.getAmount());
+				else
+					currentAmmo = ammoToAdd;
+
+				p.getInventory().setItem(29, currentAmmo);
+			}
+		}
 	}
 
 	///// PERK TWO /////

@@ -1741,6 +1741,10 @@ public class GameInstance implements Listener {
 				updateScores(victim, killer, rank);
 			}
 
+			Entity bag = PerkListener.getInstance().scavengerDeath(victim, killer);
+			if (bag != null)
+				entityManager.registerEntity(bag);
+
 		} else if (getGamemode().equals(Gamemode.CTF) || getGamemode().equals(Gamemode.INFECT)) {
 			if (redTeam.contains(killer)) {
 				Main.sendMessage(killer, "" + ChatColor.RED + ChatColor.BOLD + "YOU " + ChatColor.RESET + "" + ChatColor.WHITE + "[" + Lang.KILLED_TEXT.getMessage() + "] " + ChatColor.RESET + ChatColor.BLUE + ChatColor.BOLD + victim.getDisplayName(), Main.getLang());
@@ -2047,9 +2051,6 @@ public class GameInstance implements Listener {
 				} else {
 					PerkListener.getInstance().lastStand(victim, this);
 				}
-				Entity bag = PerkListener.getInstance().scavengerDeath(victim, shooter);
-				if (bag != null)
-					entityManager.registerEntity(bag);
 			}
 		}
 	}
@@ -2108,9 +2109,6 @@ public class GameInstance implements Listener {
 
 	@EventHandler
 	public void onPlayerPickupDogtag(PlayerPickupItemEvent e) {
-
-		if (e.isCancelled())
-			return;
 
 		Player p = e.getPlayer();
 

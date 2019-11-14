@@ -114,22 +114,15 @@ class CtfFlag {
 
 	void despawn() {
 		if (flag != null) {
-			for (Player p : getOwner().getPlayers())
-				p.sendMessage("Removed flag's flag");
 			flag.remove();
 		}
 
 		if (name != null) {
-			for (Player p : getOwner().getPlayers())
-				p.sendMessage("Removed flag's nameplate");
 			name.remove();
 		}
 
 		name = null;
 		flag = null;
-
-		for (Player p : getOwner().getPlayers())
-			p.sendMessage("Successfully removed flag: " + getFlagName().getMessage());
 	}
 
 	void resetFlag() {
