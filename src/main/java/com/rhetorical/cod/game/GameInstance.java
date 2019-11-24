@@ -517,6 +517,10 @@ public class GameInstance implements Listener {
 		assignTeams();
 		playerScores.clear();
 
+		despawnDomFlags();
+		despawnHardpointFlag();
+		despawnCtfFlags();
+
 		for (Player p : players) {
 
 			LoadoutManager.getInstance().getActiveLoadouts().remove(p);
@@ -624,11 +628,11 @@ public class GameInstance implements Listener {
 
 			p.getInventory().setItem(0, LoadoutManager.getInstance().knife);
 
-			if (getGamemode() != Gamemode.INFECT || (getGamemode() == Gamemode.INFECT && blueTeam.contains(p))) {
+			if (getGamemode() != Gamemode.Gamemode.INFECT || (getGamemode() == Gamemode.Gamemode.INFECT && blueTeam.contains(p))) {
 				LoadoutManager.getInstance().giveLoadout(p, loadout);
 			}
 
-			if (getGamemode() == Gamemode.INFECT && redTeam.contains(p)) {
+			if (getGamemode() == Gamemode.Gamemode.INFECT && redTeam.contains(p)) {
 				p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 20 * gameTime, 1));
 			}
 
@@ -729,7 +733,7 @@ public class GameInstance implements Listener {
 
 				Main.sendMessage(p, Lang.ASSIGNED_TO_TEAM.getMessage().replace("{team-color}", tColor + "").replace("{team}", team), Main.getLang());
 			}
-		} else if (getGamemode() == Gamemode.INFECT) {
+		} else if (getGamemode() == Gamemode.Gamemode.INFECT) {
 			Collections.shuffle(players);
 			for (Player p : players) {
 				if (redTeam.size() > 0) {
@@ -1183,7 +1187,7 @@ public class GameInstance implements Listener {
 						blueFlag.checkNearbyPlayers();
 				}
 
-				if (currentMap.getGamemode() == Gamemode.INFECT) {
+				if (currentMap.getGamemode() == Gamemode.Gamemode.INFECT) {
 					blueTeamScore = blueTeam.size();
 					redTeamScore = redTeam.size();
 
@@ -1529,12 +1533,12 @@ public class GameInstance implements Listener {
 			dropDogTag(p);
 		}
 
-		if (getGamemode() == Gamemode.INFECT && redTeam.contains(killer)) {
+		if (getGamemode() == Gamemode.Gamemode.INFECT && redTeam.contains(killer)) {
 			blueTeam.remove(p);
 
 			redTeam.add(p);
 
-			if (getGamemode().equals(Gamemode.INFECT)) {
+			if (getGamemode().equals(Gamemode.Gamemode.INFECT)) {
 				blueTeamScore = blueTeam.size();
 				redTeamScore = redTeam.size();
 			}
@@ -1742,9 +1746,11 @@ public class GameInstance implements Listener {
 				updateScores(victim, killer, rank);
 			}
 
-			Entity bag = PerkListener.getInstance().scavengerDeath(victim, killer);
-			if (bag != null)
-				entityManager.registerEntity(bag);
+			if(getGamemode() != Gamemode.GUN && getGamemode() != Gamemode.OITC && getGamemode() != Gamemode.RSB && (getGamemode() != Gamemode.Gamemode.INFECT || isOnBlueTeam(killer))) {
+				Entity bag = PerkListener.getInstance().scavengerDeath(victim, killer);
+				if (bag != null)
+					entityManager.registerEntity(bag);
+			}
 
 		} else if (getGamemode().equals(Gamemode.CTF) || getGamemode().equals(Gamemode.INFECT)) {
 			if (redTeam.contains(killer)) {
@@ -1871,29 +1877,19 @@ public class GameInstance implements Listener {
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onPlayerHit(EntityDamageByEntityEvent e) {
 
+		if (e.isCancelled())
+			return;
+
 		if (!(e.getEntity() instanceof Player && e.getDamager() instanceof Player))
 			return;
 
 		Player victim = (Player) e.getEntity();
 		Player attacker = (Player) e.getDamager();
 
-		if (GameManager.isInMatch(victim) || GameManager.isInMatch(attacker)) {
-			e.setCancelled(true);
-		} else {
-			return;
-		}
-
-		if (!players.contains(victim) && !players.contains(attacker))
+		if (!canDamage(attacker, victim))
 			return;
 
-		if (getState() != GameState.IN_GAME) {
-			return;
-		}
-
-		if (!areEnemies(attacker, victim)) {
-			e.setDamage(0);
-			return;
-		}
+		e.setCancelled(true);
 
 		double damage;
 
@@ -1928,9 +1924,12 @@ public class GameInstance implements Listener {
 			damage = Math.round(Main.getDefaultHealth() / 4);
 		}
 
-		if(!health.isDead(attacker))
-			damagePlayer(victim, damage, attacker);
+		if (getGamemode() != Gamemode.GUN && getGamemode() != Gamemode.OITC && getGamemode() != Gamemode.RSB && (getGamemode() != Gamemode.INFECT || isOnBlueTeam(attacker))) {
+			if (LoadoutManager.getInstance().getCurrentLoadout(attacker).hasPerk(Perk.COMMANDO))
+				e.setDamage(Main.getDefaultHealth() * 10);
+		}
 
+		damagePlayer(victim, damage, attacker);
 	}
 
 	@EventHandler
@@ -1951,6 +1950,10 @@ public class GameInstance implements Listener {
 
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerHitWolf(EntityDamageByEntityEvent e) {
+
+		if (e.isCancelled())
+			return;
+
 		if (!(e.getDamager() instanceof Player || e.getDamager() instanceof Projectile))
 			return;
 
@@ -2000,6 +2003,9 @@ public class GameInstance implements Listener {
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerHitByWeapon(EntityDamageByEntityEvent e) {
 
+		if (e.isCancelled())
+			return;
+
 		Projectile bullet;
 
 		if (e.getDamager() instanceof Projectile) {
@@ -2014,95 +2020,98 @@ public class GameInstance implements Listener {
 		if (!(e.getEntity() instanceof Player))
 			return;
 
-		if (e.isCancelled())
-			return;
-
 		Player victim = (Player) e.getEntity();
 		Player shooter = (Player) bullet.getShooter();
 
+		if (!canDamage(shooter, victim))
+			return;
+
+		e.setCancelled(true);
+
 		double damage = e.getDamage();
 
-		if (!players.contains(victim) && !players.contains(shooter))
+		damagePlayer(victim, damage, shooter);
+	}
+
+	private boolean canDamage(Player a, Player b) {
+		if (!players.contains(b) && !players.contains(a))
+			return false;
+
+		if (getState() != GameState.IN_GAME)
+			return false;
+
+		if (!areEnemies(a, b))
+			return false;
+
+		if (health.isDead(b))
+			return false;
+
+		return true;
+	}
+
+	public void damagePlayer(Player victim, double damage, Player... damagers) {
+		if (health.isDead(victim))
 			return;
+
 
 		if (getState() != GameState.IN_GAME) {
 			return;
 		}
 
-		if (players.contains(victim) && players.contains(shooter)) {
-			e.setCancelled(true);
-		} else {
-			return;
-		}
+		if (getGamemode() == Gamemode.OITC) {
+			damage = health.defaultHealth * 2;
+		} else if (getGamemode() != Gamemode.GUN && getGamemode() != Gamemode.RSB && getGamemode() != Gamemode.INFECT) {
+			if (damagers.length != 0) {
+				Player shooter = damagers[0];
+				if (LoadoutManager.getInstance().getCurrentLoadout(shooter).hasPerk(Perk.STOPPING_POWER)) {
+					damage *= 1.2d;
+				}
 
-		if (!areEnemies(shooter, victim)) {
-			return;
-		}
-		if (!health.isDead(victim)) {
-
-			if (getGamemode() == Gamemode.OITC) {
-				damage = health.defaultHealth * 2;
-			}
-
-			damagePlayer(victim, damage, shooter);
-
-			if (health.isDead(victim)) {
-				if (!LoadoutManager.getInstance().getCurrentLoadout(victim).hasPerk(Perk.LAST_STAND)) {
-					handleDeath(shooter, victim);
-				} else {
-					PerkListener.getInstance().lastStand(victim, this);
+				if (LoadoutManager.getInstance().getCurrentLoadout(victim).hasPerk(Perk.JUGGERNAUT)) {
+					damage /= 1.2d;
 				}
 			}
 		}
-	}
-
-	public void damagePlayer(Player p, double damage, Player... damagers) {
-		if (health.isDead(p))
-			return;
-
-
-		if (getState() != GameState.IN_GAME) {
-			return;
-		}
 
 		if (damagers.length < 1) {
-			health.damage(p, damage);
+			health.damage(victim, damage);
 		} else {
-			if (areEnemies(p, damagers[0])) {
+			if (areEnemies(victim, damagers[0])) {
 				if (getGamemode() == Gamemode.OITC) {
 					damage = health.defaultHealth * 2;
 				}
 
-				health.damage(p, damage);
+				health.damage(victim, damage);
 			}
 		}
-		if (health.isDead(p)) {
-			if (!LoadoutManager.getInstance().getCurrentLoadout(p).hasPerk(Perk.LAST_STAND)) {
+
+		if (health.isDead(victim)) {
+			if (!LoadoutManager.getInstance().getCurrentLoadout(victim).hasPerk(Perk.LAST_STAND) || !(getGamemode() != Gamemode.GUN && getGamemode() != Gamemode.OITC && getGamemode() != Gamemode.RSB && (getGamemode() != Gamemode.Gamemode.INFECT || isOnBlueTeam(victim)))) {
 				if (damagers.length < 1) {
-					Main.sendMessage(p, "" + ChatColor.GREEN + ChatColor.BOLD + "YOU " + ChatColor.RESET + "" + ChatColor.WHITE + "[" + Lang.KILLED_TEXT.getMessage() + "] " + ChatColor.RESET + ChatColor.GREEN + ChatColor.BOLD + "YOURSELF", Main.getLang());
-					kill(p, p);
+					Main.sendMessage(victim, "" + ChatColor.GREEN + ChatColor.BOLD + "YOU " + ChatColor.RESET + "" + ChatColor.WHITE + "[" + Lang.KILLED_TEXT.getMessage() + "] " + ChatColor.RESET + ChatColor.GREEN + ChatColor.BOLD + "YOURSELF", Main.getLang());
+					kill(victim, victim);
 				} else {
-					handleDeath(damagers[0], p);
+					handleDeath(damagers[0], victim);
 				}
 			} else {
-				if (!PerkListener.getInstance().getIsInLastStand().contains(p)) {
-					PerkListener.getInstance().getIsInLastStand().add(p);
-					PerkListener.getInstance().lastStand(p, this);
+				if (!PerkListener.getInstance().getIsInLastStand().contains(victim)) {
+					PerkListener.getInstance().getIsInLastStand().add(victim);
+					PerkListener.getInstance().lastStand(victim, this);
 					if (damagers.length > 0) {
 						Player attacker = damagers[0];
 						double xp = Main.getRank(attacker).getKillExperience() / 2f;
 						ChatColor t1 = redTeam.contains(attacker) ? ChatColor.RED : blueTeam.contains(attacker) ? ChatColor.BLUE : ChatColor.LIGHT_PURPLE;
 						ChatColor t2 = t1 == ChatColor.RED ? ChatColor.BLUE : t1 == ChatColor.BLUE ? ChatColor.RED : ChatColor.LIGHT_PURPLE;
-						Main.sendMessage(attacker, "" + t1 + ChatColor.BOLD + "YOU " + ChatColor.RESET + ChatColor.WHITE + "[" + Lang.DOWNED_TEXT.getMessage() + "] " + ChatColor.RESET + t2 + ChatColor.BOLD + p.getDisplayName(), Main.getLang());
+						Main.sendMessage(attacker, "" + t1 + ChatColor.BOLD + "YOU " + ChatColor.RESET + ChatColor.WHITE + "[" + Lang.DOWNED_TEXT.getMessage() + "] " + ChatColor.RESET + t2 + ChatColor.BOLD + victim.getDisplayName(), Main.getLang());
 						Main.sendActionBar(attacker, ChatColor.YELLOW + "+" + xp + "xp");
 						ProgressionManager.getInstance().addExperience(attacker, xp);
 						CreditManager.setCredits(attacker, CreditManager.getCredits(attacker) + Main.getRank(attacker).getKillCredits());
 					}
 				} else {
-					PerkListener.getInstance().getIsInLastStand().remove(p);
-					p.setSneaking(false);
-					p.setWalkSpeed(0.2f);
-					handleDeath(damagers[0], p);
+					PerkListener.getInstance().getIsInLastStand().remove(victim);
+					victim.setSneaking(false);
+					victim.setWalkSpeed(0.2f);
+					handleDeath(damagers[0], victim);
 				}
 			}
 		}
@@ -2774,7 +2783,7 @@ public class GameInstance implements Listener {
 			gameTime = Main.getPlugin().getConfig().getInt("gameTime." + getGamemode().toString());
 		} else {
 			if (ComVersion.getPurchased())
-				gameTime = Main.getPlugin().getConfig().getInt("maxScore.INFECT");
+				gameTime = Main.getPlugin().getConfig().getInt("maxScore.Gamemode.INFECT");
 			else
 				gameTime = 120;
 		}

@@ -3,6 +3,8 @@ package com.rhetorical.cod.perks;
 import com.rhetorical.cod.Main;
 import com.rhetorical.cod.game.GameInstance;
 import com.rhetorical.cod.game.GameManager;
+import com.rhetorical.cod.game.GameState;
+import com.rhetorical.cod.game.Gamemode;
 import com.rhetorical.cod.lang.Lang;
 import com.rhetorical.cod.loadouts.Loadout;
 import com.rhetorical.cod.loadouts.LoadoutManager;
@@ -46,8 +48,15 @@ public class PerkListener implements Listener {
 	public void marathon(FoodLevelChangeEvent e) {
 		Player p = (Player) e.getEntity();
 
-		if (GameManager.isInMatch(p) && LoadoutManager.getInstance().getCurrentLoadout(p).hasPerk(Perk.MARATHON)) {
-			e.setCancelled(true);
+		if (LoadoutManager.getInstance().getCurrentLoadout(p).hasPerk(Perk.MARATHON)) {
+			GameInstance i = GameManager.getMatchWhichContains(p);
+			if (i == null)
+				return;
+			if (i.getState() != GameState.IN_GAME)
+				return;
+			if(i.getGamemode() != Gamemode.GUN && i.getGamemode() != Gamemode.OITC && i.getGamemode() != Gamemode.RSB && (i.getGamemode() != Gamemode.INFECT || i.isOnBlueTeam(p))) {
+				e.setCancelled(true);
+			}
 		}
 	}
 
@@ -155,41 +164,45 @@ public class PerkListener implements Listener {
 	}
 
 	///// PERK TWO /////
-	@EventHandler(priority = EventPriority.HIGH)
-	public void stoppingPower(EntityDamageByEntityEvent e) {
-		if (e.getEntity() instanceof Player && e.getDamager() instanceof Player) {
-			if (!(GameManager.isInMatch((Player) e.getDamager()) && GameManager.isInMatch((Player) e.getEntity())))
-				return;
-			if (LoadoutManager.getInstance().getCurrentLoadout((Player) e.getDamager()).hasPerk(Perk.STOPPING_POWER)) {
-				e.setDamage(e.getDamage() * 1.2D);
-			}
-		}
-	}
-
-	@EventHandler(priority = EventPriority.HIGH)
-	public void juggernaut(EntityDamageByEntityEvent e) {
-		if (e.getEntity() instanceof Player && e.getDamager() instanceof Player) {
-			if (!(GameManager.isInMatch((Player) e.getDamager()) && GameManager.isInMatch((Player) e.getEntity())))
-				return;
-			if (LoadoutManager.getInstance().getCurrentLoadout((Player) e.getEntity()).hasPerk(Perk.JUGGERNAUT)) {
-				e.setDamage(e.getDamage() / 1.2D);
-			}
-		}
-	}
+//
+//  Moved to GameInstance#damagePlayer(...)
+//
+//	@EventHandler(priority = EventPriority.HIGH)
+//	public void stoppingPower(EntityDamageByEntityEvent e) {
+//		if (e.getEntity() instanceof Player && e.getDamager() instanceof Player) {
+//			if (!(GameManager.isInMatch((Player) e.getDamager()) && GameManager.isInMatch((Player) e.getEntity())))
+//				return;
+//			if (LoadoutManager.getInstance().getCurrentLoadout((Player) e.getDamager()).hasPerk(Perk.STOPPING_POWER)) {
+//				e.setDamage(e.getDamage() * 1.2D);
+//			}
+//		}
+//	}
+//
+//	@EventHandler(priority = EventPriority.HIGHEST)
+//	public void juggernaut(EntityDamageByEntityEvent e) {
+//		if (e.getEntity() instanceof Player && e.getDamager() instanceof Player) {
+//			if (!(GameManager.isInMatch((Player) e.getDamager()) && GameManager.isInMatch((Player) e.getEntity())))
+//				return;
+//			if (LoadoutManager.getInstance().getCurrentLoadout((Player) e.getEntity()).hasPerk(Perk.JUGGERNAUT)) {
+//				e.setDamage(e.getDamage() / 1.2D);
+//			}
+//		}
+//	}
 	
 	///// PERK THREE /////
-	@EventHandler(priority = EventPriority.HIGH)
-	public void commando(EntityDamageByEntityEvent e) {
-		if (e.getEntity() instanceof Player && e.getDamager() instanceof Player) {
-			if (!(GameManager.isInMatch((Player) e.getEntity()) && GameManager.isInMatch((Player) e.getDamager())))
-				return;
-			
-			if (LoadoutManager.getInstance().getCurrentLoadout((Player) e.getDamager()).hasPerk(Perk.COMMANDO)) {
-				e.setDamage(200D);
-			}
-			
-		}
-	}
+//  Moved to GameInstance#onPlayerHit(...)
+//	@EventHandler(priority = EventPriority.HIGHEST)
+//	public void commando(EntityDamageByEntityEvent e) {
+//		if (e.getEntity() instanceof Player && e.getDamager() instanceof Player) {
+//			if (!(GameManager.isInMatch((Player) e.getEntity()) && GameManager.isInMatch((Player) e.getDamager())))
+//				return;
+//
+//			if (LoadoutManager.getInstance().getCurrentLoadout((Player) e.getDamager()).hasPerk(Perk.COMMANDO)) {
+//				e.setDamage(200D);
+//			}
+//
+//		}
+//	}
 	
 	private HashMap<Player, BukkitRunnable> lastStandRunnables = new HashMap<>();
 	
