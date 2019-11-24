@@ -628,11 +628,11 @@ public class GameInstance implements Listener {
 
 			p.getInventory().setItem(0, LoadoutManager.getInstance().knife);
 
-			if (getGamemode() != Gamemode.Gamemode.INFECT || (getGamemode() == Gamemode.Gamemode.INFECT && blueTeam.contains(p))) {
+			if (getGamemode() != Gamemode.INFECT || (getGamemode() == Gamemode.INFECT && blueTeam.contains(p))) {
 				LoadoutManager.getInstance().giveLoadout(p, loadout);
 			}
 
-			if (getGamemode() == Gamemode.Gamemode.INFECT && redTeam.contains(p)) {
+			if (getGamemode() == Gamemode.INFECT && redTeam.contains(p)) {
 				p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 20 * gameTime, 1));
 			}
 
@@ -733,7 +733,7 @@ public class GameInstance implements Listener {
 
 				Main.sendMessage(p, Lang.ASSIGNED_TO_TEAM.getMessage().replace("{team-color}", tColor + "").replace("{team}", team), Main.getLang());
 			}
-		} else if (getGamemode() == Gamemode.Gamemode.INFECT) {
+		} else if (getGamemode() == Gamemode.INFECT) {
 			Collections.shuffle(players);
 			for (Player p : players) {
 				if (redTeam.size() > 0) {
@@ -1187,7 +1187,7 @@ public class GameInstance implements Listener {
 						blueFlag.checkNearbyPlayers();
 				}
 
-				if (currentMap.getGamemode() == Gamemode.Gamemode.INFECT) {
+				if (currentMap.getGamemode() == Gamemode.INFECT) {
 					blueTeamScore = blueTeam.size();
 					redTeamScore = redTeam.size();
 
@@ -1533,12 +1533,12 @@ public class GameInstance implements Listener {
 			dropDogTag(p);
 		}
 
-		if (getGamemode() == Gamemode.Gamemode.INFECT && redTeam.contains(killer)) {
+		if (getGamemode() == Gamemode.INFECT && redTeam.contains(killer)) {
 			blueTeam.remove(p);
 
 			redTeam.add(p);
 
-			if (getGamemode().equals(Gamemode.Gamemode.INFECT)) {
+			if (getGamemode().equals(Gamemode.INFECT)) {
 				blueTeamScore = blueTeam.size();
 				redTeamScore = redTeam.size();
 			}
@@ -1746,7 +1746,7 @@ public class GameInstance implements Listener {
 				updateScores(victim, killer, rank);
 			}
 
-			if(getGamemode() != Gamemode.GUN && getGamemode() != Gamemode.OITC && getGamemode() != Gamemode.RSB && (getGamemode() != Gamemode.Gamemode.INFECT || isOnBlueTeam(killer))) {
+			if(getGamemode() != Gamemode.GUN && getGamemode() != Gamemode.OITC && getGamemode() != Gamemode.RSB && (getGamemode() != Gamemode.INFECT || isOnBlueTeam(killer))) {
 				Entity bag = PerkListener.getInstance().scavengerDeath(victim, killer);
 				if (bag != null)
 					entityManager.registerEntity(bag);
@@ -2086,7 +2086,7 @@ public class GameInstance implements Listener {
 		}
 
 		if (health.isDead(victim)) {
-			if (!LoadoutManager.getInstance().getCurrentLoadout(victim).hasPerk(Perk.LAST_STAND) || !(getGamemode() != Gamemode.GUN && getGamemode() != Gamemode.OITC && getGamemode() != Gamemode.RSB && (getGamemode() != Gamemode.Gamemode.INFECT || isOnBlueTeam(victim)))) {
+			if (!LoadoutManager.getInstance().getCurrentLoadout(victim).hasPerk(Perk.LAST_STAND) || !(getGamemode() != Gamemode.GUN && getGamemode() != Gamemode.OITC && getGamemode() != Gamemode.RSB && (getGamemode() != Gamemode.INFECT || isOnBlueTeam(victim)))) {
 				if (damagers.length < 1) {
 					Main.sendMessage(victim, "" + ChatColor.GREEN + ChatColor.BOLD + "YOU " + ChatColor.RESET + "" + ChatColor.WHITE + "[" + Lang.KILLED_TEXT.getMessage() + "] " + ChatColor.RESET + ChatColor.GREEN + ChatColor.BOLD + "YOURSELF", Main.getLang());
 					kill(victim, victim);
