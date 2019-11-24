@@ -19,6 +19,10 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Inventory class for the Match Browser
+ * */
+
 public class MatchBrowser implements Listener {
 
 	private static MatchBrowser instance;

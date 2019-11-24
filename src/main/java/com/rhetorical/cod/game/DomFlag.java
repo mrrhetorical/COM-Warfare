@@ -15,7 +15,9 @@ import org.bukkit.inventory.meta.BannerMeta;
 import java.util.ArrayList;
 import java.util.List;
 
-//Used for domination as well as hardpoint
+/**
+ * Used for domination and hardpoint flags
+ * */
 class DomFlag {
 	private ArmorStand flag, name;
 
@@ -88,6 +90,9 @@ class DomFlag {
 		return pls;
 	}
 
+	/**
+	 * @return The "score" of the flag (how many players are on the flag) based on the team of the players nearby.
+	 * */
 	int checkFlag(GameInstance game) {
 
 		int blue = 0;

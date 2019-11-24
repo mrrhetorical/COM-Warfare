@@ -27,6 +27,9 @@ public class CrackShotGun implements Listener {
 			Bukkit.getServer().getPluginManager().registerEvents(new CrackShotGun(), Main.getPlugin());
 	}
 
+	/**
+	 * @return The CrackShot representation of the weapon in question or nothing if none exists.
+	 * */
 	public static ItemStack generateWeapon(String name) {
 		ItemStack item = null;
 		try {
@@ -36,6 +39,9 @@ public class CrackShotGun implements Listener {
 		return item == null ? new ItemStack(Material.AIR) : item;
 	}
 
+	/**
+	 * Updates the item as a gun from CrackShot given the owning player's features such as skins, attachments, etc. stored in CrackShot.
+	 * */
 	public static ItemStack updateItem(String name, ItemStack item, Player player) {
 		try {
 			if(Bukkit.getPluginManager().getPlugin("CrackShotPlus") != null) {
@@ -48,7 +54,10 @@ public class CrackShotGun implements Listener {
 		return item;
 	}
 
-	//ba-dum-tss
+	/**
+	 * Ba-dum-tss....
+	 * Damage handler for CrackShot weapons.
+	 * */
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onCrackShot(com.shampaggon.crackshot.events.WeaponDamageEntityEvent e) {
 

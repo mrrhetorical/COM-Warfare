@@ -24,6 +24,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
 
+/**
+ * Manages and manipulates data regarding loadouts.
+ * */
+
 public class LoadoutManager {
 
 	private static LoadoutManager instance;

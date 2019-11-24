@@ -90,7 +90,10 @@ public class CreditManager {
 		saveCredits(Bukkit.getPlayer(name));
 	}
 	
-	
+
+	/**
+	 * @return Returns if the target player has enough money (credits) to cover the cost of the purchase.
+	 * */
 	public static boolean purchase(Player p, int cost) {
 
 		if (getCredits(p) >= cost) {

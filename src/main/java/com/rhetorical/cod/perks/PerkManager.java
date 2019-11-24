@@ -7,6 +7,10 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 
+/**
+ * Manages perks for shops and stuff
+ * */
+
 public class PerkManager {
 
 	private static PerkManager instance;

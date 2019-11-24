@@ -28,24 +28,37 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
+
+/**
+ *  COM-Warfare is a plugin that completely changes Minecraft servers to give its players an experience similar to that of Call of Duty!
+ *
+ * @author Caleb Brock
+ * @version 2.12.15
+ * */
 
 public class Main extends JavaPlugin {
 
 	private static Main instance;
 
+	/**
+	 * @return Returns an instance of the Main class (assuming it is created).
+	 * */
 	public static Plugin getPlugin() {
 		return getInstance();
 	}
+
+	/**
+	 * @return Returns an instance of the Main class as a Plugin (assuming it is created).
+	 * @see Plugin
+	 * */
 	public static Main getInstance() {
 		return instance;
 	}
@@ -102,6 +115,9 @@ public class Main extends JavaPlugin {
 		hasProtocol = Bukkit.getServer().getPluginManager().getPlugin("ProtocolLib") != null;
 	}
 
+	/**
+	 * Sets up the plugin and loads various information handlers such as the killstreak manager, loadout manager, etc.
+	 * */
 	@Override
 	public void onEnable() {
 
@@ -282,6 +298,9 @@ public class Main extends JavaPlugin {
 		}
 	}
 
+	/**
+	 * Attempts to cleanly shut down all games and save all map change progress.
+	 * */
 	@Override
 	public void onDisable() {
 
@@ -296,17 +315,17 @@ public class Main extends JavaPlugin {
 		}
 	}
 
-	static boolean hasPerm(CommandSender p, String s, boolean... inGame) {
+	/**
+	 * @param s = The permission node to check
+	 * @param inGame = Whether not the command can be used in game
+	 * @return Returns true if the given command sender has the permission node, the permission node "com.*", or if they're a server operator.
+	 * */
+	static boolean hasPerm(CommandSender p, String s, boolean inGame) {
 
-		boolean canUseInGame = false;
-
-		if (inGame.length > 0) {
-			canUseInGame = inGame[0];
-		}
 		if (p.hasPermission(s) || p.hasPermission("com.*") || p instanceof ConsoleCommandSender || p.isOp()) {
 			if (p instanceof Player) {
 				if (GameManager.isInMatch((Player) p)) {
-					if (!canUseInGame){
+					if (!inGame){
 						sendMessage(p, Main.getPrefix() + Lang.NOT_ALLOWED_IN_GAME.getMessage(), getLang());
 						return false;
 					}
@@ -319,6 +338,18 @@ public class Main extends JavaPlugin {
 		}
 	}
 
+	/**
+	 * Interface for Main#hasPerm(CommandSender, String, boolean)
+	 * @see Main#hasPerm(CommandSender, String, boolean)
+	 * @return Returns true if the given command sender has the permission node, the permission node "com.*", or if they're a server operator and aren't in game.
+	 * */
+	static boolean hasPerm(CommandSender p, String s) {
+		return hasPerm(p, s, false);
+	}
+
+	/**
+	 * @return Returns if the server has QualityArmory loaded on it.
+	 * */
 	public static boolean isUsingQA() {
 		return Bukkit.getServer().getPluginManager().getPlugin("QualityArmory") != null;
 	}
@@ -1102,6 +1133,10 @@ public class Main extends JavaPlugin {
 		return true;
 	}
 
+
+	/**
+	 * Attempts to load McTranslate++'s API.
+	 * */
 	private void connectToTranslationService() {
 		try {
 			translate = new McTranslate(Main.getPlugin(), Main.translate_api_key);
@@ -1110,6 +1145,10 @@ public class Main extends JavaPlugin {
 		}
 	}
 
+	/**
+	 * Removes all players from all games cleanly.
+	 * @return Returns if the operation was successful.
+	 * */
 	private boolean bootPlayers() {
 		GameInstance[] runningGames = new GameInstance[GameManager.getRunningGames().size()];
 
@@ -1133,6 +1172,10 @@ public class Main extends JavaPlugin {
 		return true;
 	}
 
+	/**
+	 * Creates the weapon from command given the command arguments.
+	 * @param args = The arguments passed from the createWeapon command.
+	 * */
 	private void createWeapon(CommandSender p, String[] args) {
 
 		String command = "/cod createWeapon (name) (Lethal/Tactical) (Unlock Type: level/credits/both) (Grenade Material) (Level Unlock) (amount) (Cost)";
@@ -1233,6 +1276,10 @@ public class Main extends JavaPlugin {
 		}
 	}
 
+	/**
+	 * Creates the weapon from command given the command arguments.
+	 * @param args = The arguments passed from the createGun command.
+	 * */
 	private void createGun(CommandSender p, String[] args) {
 		String command = "/cod createGun (Gun name) (Primary/Secondary) (Unlock type: level/credits/both) (Ammo Amount) (Gun Material[:data]) (Ammo Material[:data]) (Level Unlock) (Cost)";
 		if (args.length == 9) {
@@ -1347,6 +1394,10 @@ public class Main extends JavaPlugin {
 
 	}
 
+	/**
+	 * @return Gets the RankPerk the player belongs to.
+	 * @see RankPerks
+	 * */
 	public static RankPerks getRank(Player p) {
 		for (RankPerks perk : Main.getServerRanks()) {
 			if (p.hasPermission("com." + perk.getName())) {
@@ -1363,10 +1414,17 @@ public class Main extends JavaPlugin {
 		return new RankPerks("default", 1, 100D, 10);
 	}
 
+	/**
+	 * Sends a message to the target without translation.
+	 * */
 	private static void sendMessage(CommandSender target, String message) {
 		target.sendMessage(message);
 	}
 
+	/**
+	 * Sends a message to the target and attempts to translate given the target lang with McTranslate++.
+	 * @param targetLang = The target language to attempt to translate the message to.
+	 * */
 	public static void sendMessage(CommandSender target, String message, Object targetLang) {
 
 		if (targetLang == McLang.EN || !ComVersion.getPurchased()) {
@@ -1386,10 +1444,18 @@ public class Main extends JavaPlugin {
 		sendMessage(target, translatedMessage);
 	}
 
+	/**
+	 * Sends title to the player. (interface)
+	 * @see Main#sendTitle(Player, String, String, ChatColor, int...)
+	 * */
 	public static void sendTitle(Player p, String title, String subtitle, int... timings) {
 		sendTitle(p, title, subtitle, ChatColor.YELLOW, timings);
 	}
 
+	/**
+	 * Sends a title to the player given the Color, fade in, out, and stay times.
+	 * @param timings = Fade in, stay, and fade out times.
+	 * */
 	public static void sendTitle(Player p, String title, String subtitle, ChatColor legacyColor, int... timings) {
 
 		int start;
@@ -1414,6 +1480,9 @@ public class Main extends JavaPlugin {
 //		p.sendTitle(title, subtitle, 10, 0, 10);
 	}
 
+	/**
+	 * Sends an action bar with the given message to the target player.
+	 * */
 	public static void sendActionBar(Player p, String message) {
 		try {
 			p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
@@ -1428,6 +1497,9 @@ public class Main extends JavaPlugin {
 		}
 	}
 
+	/**
+	 * Opens the main menu in COM-Warfare for the target player.
+	 * */
 	public static void openMainMenu(Player p) {
 		p.openInventory(InventoryManager.getInstance().mainInventory);
 		try {
@@ -1438,16 +1510,28 @@ public class Main extends JavaPlugin {
 		}
 	}
 
+	/**
+	 * @return If the server is running on Bukkit 1.8.X or earlier builds.
+	 * */
 	public static boolean isLegacy() { return legacy; }
 
+	/**
+	 * @return Returns if the server has QualityArmory installed.
+	 * */
 	public static boolean hasQualityArms() {
 		return getInstance().hasQA;
 	}
 
+	/**
+	 * @return Returns if the server has CrackShot installed.
+	 * */
 	public static boolean hasCrackShot() {
 		return getInstance().hasCS;
 	}
 
+	/**
+	 * @return Returns if the server has ProtocolLib installed.
+	 * */
 	public static boolean hasProtocolLib() {
 		return getInstance().hasProtocol;
 	}
@@ -1456,6 +1540,9 @@ public class Main extends JavaPlugin {
 		return disabling;
 	}
 
+	/**
+	 * @return Returns the lobby server in a bungee configuration as a String.
+	 * */
 	public String getLobbyServer() {
 		return lobbyServer;
 	}
@@ -1464,6 +1551,9 @@ public class Main extends JavaPlugin {
 		return getInstance().codPrefix;
 	}
 
+	/**
+	 * @return The McTranslate language of choice for translation.
+	 * */
 	public static Object getLang() {
 		return getInstance().lang;
 	}

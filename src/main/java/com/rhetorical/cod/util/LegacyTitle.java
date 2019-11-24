@@ -6,6 +6,9 @@ import org.bukkit.entity.Player;
 
 import java.lang.reflect.Constructor;
 
+/**
+ * This class is used to send titles to users running Minecraft 1.8.8
+ * */
 public class LegacyTitle {
 
 	public static void sendTitle(Player player, String text, int fadeInTime, int showTime, int fadeOutTime, ChatColor color) {

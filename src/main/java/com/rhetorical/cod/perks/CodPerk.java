@@ -5,11 +5,15 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
 
+/**
+ * More robust information about the Perk.
+ * @see Perk
+ * */
 public class CodPerk {
 	private Perk perk;
 	private PerkSlot slot;
 	private ItemStack item;
-	private ArrayList<String> lore = new ArrayList<String>();
+	private ArrayList<String> lore = new ArrayList<>();
 	private int cost;
 	
 	public CodPerk(Perk perk, ItemStack item, PerkSlot slot, ArrayList<String> lore, int cost) {

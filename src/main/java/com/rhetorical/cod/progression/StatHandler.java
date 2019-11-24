@@ -6,6 +6,9 @@ import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 
+/**
+ * This class handles things for storing data used in leaderboards and the combat record.
+ * */
 public class StatHandler {
 
 	public static void addKill(Player p) {

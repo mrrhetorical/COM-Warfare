@@ -5,7 +5,9 @@ import org.bukkit.entity.Player;
 
 import java.lang.reflect.InvocationTargetException;
 
-///This class is used to send action bars to users running Minecraft 1.8.8
+/**
+ * This class is used to send action bars to users running Minecraft 1.8.8
+ * */
 public class LegacyActionBar {
 
 	public static void sendActionBarMessage(Player bukkitPlayer, String message) {

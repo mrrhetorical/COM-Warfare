@@ -91,7 +91,10 @@ public class CodWeapon {
 	public UnlockType getType() {
 		return unlockType;
 	}
-	
+
+	/**
+	 * @return The weapon item as set up by gun plugins. If the weapon doesn't exist in either QA or CrackShot, it is given a basic treatment by this plugin.
+	 * */
 	protected ItemStack setupWeaponItem(ItemStack weaponItem) {
 		if (Main.hasQualityArms()) {
 			if (!this.equals(LoadoutManager.getInstance().blankLethal) && !this.equals(LoadoutManager.getInstance().blankTactical)) {
@@ -125,6 +128,12 @@ public class CodWeapon {
 		return weaponItem;
 	}
 
+	/**
+	 * Gets the menu item for the gun. Slightly different from Weapon item.
+	 * @deprecated Use CodWeapon#setupWeaponItem(ItemStack) instead.
+	 * @see CodWeapon#setupWeaponItem(ItemStack)
+	 * */
+	@Deprecated
 	protected ItemStack setupMenuItem(ItemStack gunItem) {
 		ItemStack gun = getWeaponItem();
 

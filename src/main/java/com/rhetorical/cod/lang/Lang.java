@@ -2,6 +2,10 @@ package com.rhetorical.cod.lang;
 
 import com.rhetorical.cod.files.LangFile;
 
+/**
+ * Enum containing all lang.yml messages.
+ * */
+
 public enum Lang {
 
 	UNKNOWN_COMMAND("&cUnknown Command! Try using '/cod help' for a list of commands."),

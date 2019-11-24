@@ -41,6 +41,9 @@ public class QualityGun implements Listener {
 		return stack != null ? stack : new ItemStack(Material.AIR);
 	}
 
+	/**
+	 * Handles damage from QualityArmory's weapons separately.
+	 * */
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onQualityWeaponDamage(me.zombie_striker.qg.api.QAWeaponDamageEntityEvent e) {
 		Player victim;

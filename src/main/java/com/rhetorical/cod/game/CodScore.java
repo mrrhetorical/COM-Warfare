@@ -3,6 +3,10 @@ package com.rhetorical.cod.game;
 import com.rhetorical.cod.progression.StatHandler;
 import org.bukkit.entity.Player;
 
+/**
+ * Stat card for a given player.
+ * */
+
 public class CodScore {
 
 	final Player owner;

@@ -25,16 +25,12 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 import java.util.Objects;
 
-public class Listeners implements Listener {
+/**
+ * This file contains global listeners for anything having to do with COD-Warfare, but that is not necessarily
+ * tied to a specific game mode, and has to do with base function of the plugin outside of managing the game.
+ * */
 
-	/*
-	 * GLOBAL LISTENERS -------------------- This file contains global listeners
-	 * for anything having to do with COD-Warfare, but that is not necessarily
-	 * tied to a specific game mode, and has to do with base function of the
-	 * plugin outside of managing the game.
-	 * 
-	 * 
-	 */
+public class Listeners implements Listener {
 
 	@EventHandler
 	public void playerLeaveGame(PlayerQuitEvent e) {

@@ -185,6 +185,9 @@ public class ProgressionManager {
 		return (level * 400d) + 800;
 	}
 
+	/**
+	 * Updates the player's xp hotbar.
+	 * */
 	public void update(Player p) {
 
 		try {

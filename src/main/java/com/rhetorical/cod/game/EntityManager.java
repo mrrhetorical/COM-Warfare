@@ -5,6 +5,10 @@ import org.bukkit.entity.Entity;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Class to handle spawning & despawning entities within a match.
+ * */
+
 class EntityManager {
 	private List<Entity> spawned = new ArrayList<>();
 

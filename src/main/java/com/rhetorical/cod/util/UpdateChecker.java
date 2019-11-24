@@ -8,6 +8,11 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.Scanner;
 
+/**
+ * This class checks for updates from the GitHub repo for COM-Warfare.
+ * @see <a href=https://github.com/mrrhetorical/COM-Warfare/">GitHub repo</a>
+ * */
+
 public class UpdateChecker {
 
 	public class UpdateResponse {

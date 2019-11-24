@@ -8,6 +8,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Map data class to be used by GameInstance.
+ * @see GameInstance
+ * */
+
 public class CodMap {
 	
 	private String name;

@@ -7,6 +7,9 @@ import org.bukkit.configuration.file.FileConfiguration;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Manages the level names for each level.
+ * */
 public class LevelNames {
 
 	private static LevelNames singleton;

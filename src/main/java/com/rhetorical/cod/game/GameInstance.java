@@ -40,6 +40,10 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
 
+/**
+ * This handles like 60% of everything needed for a game of COM-Warfare. This is the representation of the actual Game Lobby.
+ * */
+
 public class GameInstance implements Listener {
 
 	private long id;
@@ -172,6 +176,9 @@ public class GameInstance implements Listener {
 		startLobbyTimer(lobbyTime);
 	}
 
+	/**
+	 * Sets up the next maps for map voting.
+	 * */
 	private void setupNextMaps() {
 		clearNextMaps();
 		CodMap m1 = GameManager.pickRandomMap();
@@ -188,6 +195,9 @@ public class GameInstance implements Listener {
 			nextModes[1] = nextMaps[1].getRandomGameMode();
 	}
 
+	/**
+	 * Cleans up residue from map voting.
+	 * */
 	private void clearNextMaps() {
 		if (nextMaps[0] != null && nextMaps[0] != currentMap) {
 			GameManager.usedMaps.remove(nextMaps[0]);
@@ -198,6 +208,9 @@ public class GameInstance implements Listener {
 		}
 	}
 
+	/**
+	 * Adds a vote for the given map from the given player
+	 * */
 	public void addVote(int map, Player p) throws Exception {
 		if (map != 1 && map != 0)
 			throw new Exception(Main.getPrefix() + "Improper map selected!");
@@ -209,6 +222,9 @@ public class GameInstance implements Listener {
 			mapVotes[map].add(p);
 	}
 
+	/**
+	 * Resets the game instance to prepare for the next game. DO NOT CALL FROM OUTSIDE OF GAME LOOP WITHOUT FIRST STOPPING GAME.
+	 * */
 	private void reset() {
 
 		redTeamScore = 0;
@@ -291,6 +307,10 @@ public class GameInstance implements Listener {
 		updateTimeLeft();
 	}
 
+	/**
+	 * Adds the given player to the game lobby.
+	 * @return Returns if the player may join the match.
+	 * */
 	boolean addPlayer(Player p) {
 
 		if (p == null)
@@ -424,6 +444,9 @@ public class GameInstance implements Listener {
 		ffaPlayerScores.put(p, ffaPlayerScores.get(p) - 1);
 	}
 
+	/**
+	 * Removes the given player from the game lobby.
+	 * */
 	public void removePlayer(Player p) {
 		if (!players.contains(p))
 			return;
@@ -506,6 +529,9 @@ public class GameInstance implements Listener {
 		System.gc();
 	}
 
+	/**
+	 * Starts the game
+	 * */
 	private void startGame() {
 
 		forceStarted = false;
@@ -573,6 +599,9 @@ public class GameInstance implements Listener {
 		blueFlag.spawn();
 	}
 
+	/**
+	 * Spawns the player within the current map.
+	 * */
 	private void spawnCodPlayer(Player p, Location L) {
 		p.teleport(L);
 		p.getInventory().clear();
@@ -666,6 +695,9 @@ public class GameInstance implements Listener {
 		KillStreakManager.getInstance().streaksAfterDeath(p);
 	}
 
+	/**
+	 * Drops a dog tag belonging to the target player.
+	 * */
 	private void dropDogTag(Player p) {
 		if (!GameManager.isInMatch(p))
 			return;
@@ -711,6 +743,9 @@ public class GameInstance implements Listener {
 		}
 	}
 
+	/**
+	 * Assigns player to teams randomly.
+	 * */
 	private void assignTeams() {
 
 		if (getGamemode() != Gamemode.FFA && getGamemode() != Gamemode.OITC && getGamemode() != Gamemode.GUN) {
@@ -754,6 +789,9 @@ public class GameInstance implements Listener {
 
 	}
 
+	/**
+	 * Stops the game with a timer.
+	 * */
 	private void stopGame() {
 
 		setState(GameState.STOPPING);
@@ -923,6 +961,9 @@ public class GameInstance implements Listener {
 		br.runTaskTimer(Main.getPlugin(), 0L, 20L);
 	}
 
+	/**
+	 * Starts the game loop. Only needs to be called once from opening a game instance.
+	 * */
 	private void startLobbyTimer(int time) {
 
 		setState(GameState.STARTING);
@@ -1395,6 +1436,7 @@ public class GameInstance implements Listener {
 		runnable.cancel();
 	}
 
+	@Deprecated
 	public void resetScoreBoard() {
 		if (getGamemode() != Gamemode.FFA && getGamemode() != Gamemode.GUN && getGamemode() != Gamemode.OITC) {
 			try {
@@ -1411,6 +1453,9 @@ public class GameInstance implements Listener {
 		}
 	}
 
+	/**
+	 * @return Gets the winning team as a string.
+	 * */
 	private String getWinningTeam() {
 
 		if (getGamemode().equals(Gamemode.FFA) || getGamemode().equals(Gamemode.OITC) || getGamemode().equals(Gamemode.GUN)) {
@@ -1452,6 +1497,10 @@ public class GameInstance implements Listener {
 		return "tie";
 	}
 
+	/**
+	 * @param time = Time in seconds.
+	 * @return Formatted time in minutes and seconds.
+	 * */
 	private String getFancyTime(int time) {
 
 		String seconds = Integer.toString(time % 60);
@@ -1472,6 +1521,7 @@ public class GameInstance implements Listener {
 	public ArrayList<Player> getPlayers() {
 		return players;
 	}
+
 
 	private boolean areEnemies(Player a, Player b) {
 
@@ -1505,6 +1555,12 @@ public class GameInstance implements Listener {
 	}
 
 
+	/**
+	 * Kills the target player within the modified health system.
+	 *
+	 * @param p = The player to kill
+	 * @param killer = The player who killed the player
+	 * */
 	public void kill(Player p, Player killer) {
 
 		AssignmentManager.getInstance().updateAssignments(p, 1, getGamemode());
@@ -1696,6 +1752,9 @@ public class GameInstance implements Listener {
 		}
 	}
 
+	/**
+	 * Handles things that should happen on death for the given player and victim.
+	 * */
 	private void handleDeath(Player killer, Player victim) {
 
 		RankPerks rank = Main.getRank(killer);
@@ -1874,6 +1933,9 @@ public class GameInstance implements Listener {
 
 	/* Gamemode Listeners */
 
+	/**
+	 * Melee hit listener.
+	 * */
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onPlayerHit(EntityDamageByEntityEvent e) {
 
@@ -1948,6 +2010,9 @@ public class GameInstance implements Listener {
 
 	}
 
+	/**
+	 * Player hits dog [ :( ] listener.
+	 * */
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerHitWolf(EntityDamageByEntityEvent e) {
 
@@ -2000,6 +2065,9 @@ public class GameInstance implements Listener {
 		}
 	}
 
+	/**
+	 * Listener for when a player hits another player using a ranged weapon.
+	 * */
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerHitByWeapon(EntityDamageByEntityEvent e) {
 
@@ -2033,6 +2101,11 @@ public class GameInstance implements Listener {
 		damagePlayer(victim, damage, shooter);
 	}
 
+	/**
+	 * @param a = The damager
+	 * @param b = The victim
+	 * @return Returns if person a can damage person b.
+	 * */
 	private boolean canDamage(Player a, Player b) {
 		if (!players.contains(b) && !players.contains(a))
 			return false;
@@ -2049,6 +2122,9 @@ public class GameInstance implements Listener {
 		return true;
 	}
 
+	/**
+	 * Damages the victim for the given damage.
+	 * */
 	public void damagePlayer(Player victim, double damage, Player... damagers) {
 		if (health.isDead(victim))
 			return;

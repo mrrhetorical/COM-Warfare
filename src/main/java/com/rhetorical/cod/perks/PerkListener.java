@@ -27,6 +27,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * This class adds functionality for perks that aren't damage based.
+ * */
 public class PerkListener implements Listener {
 
 	private static PerkListener instance;
@@ -44,6 +47,9 @@ public class PerkListener implements Listener {
 	}
 
 	///// PERK ONE /////
+	/**
+	 * Prevents food level changing for marathon users
+	 * */
 	@EventHandler
 	public void marathon(FoodLevelChangeEvent e) {
 		Player p = (Player) e.getEntity();
@@ -59,7 +65,9 @@ public class PerkListener implements Listener {
 			}
 		}
 	}
-
+	/**
+	 * Switches the class for the given player with a 10 second cooldown
+	 * */
 	public void oneManArmy(Player p) {
 
 		Location l = p.getLocation();
@@ -102,6 +110,10 @@ public class PerkListener implements Listener {
 		br.runTaskLater(Main.getPlugin(), 200L);
 	}
 
+	/**
+	 * Drops a scavenger pack at the victim's body if the killer has scavenger equipped.
+	 * @return Returns the scavenger pack dropped.
+	 * */
 	public Entity scavengerDeath(Player victim, Player killer) {
 		if (LoadoutManager.getInstance().getCurrentLoadout(killer).hasPerk(Perk.SCAVENGER)) {
 
@@ -124,6 +136,9 @@ public class PerkListener implements Listener {
 		return isInLastStand;
 	}
 
+	/**
+	 * Handles picking up of the scavenger pack.
+	 * */
 	@EventHandler(priority = EventPriority.HIGH)
 	public void scavengerPickup(PlayerPickupItemEvent e) {
 
@@ -205,7 +220,10 @@ public class PerkListener implements Listener {
 //	}
 	
 	private HashMap<Player, BukkitRunnable> lastStandRunnables = new HashMap<>();
-	
+
+	/**
+	 * Puts the target player in last stand mode
+	 * */
 	public void lastStand(Player p, GameInstance i) {
 		
 		i.health.reset(p);

@@ -132,6 +132,10 @@ public class GameManager {
 		}
 	}
 
+	/**
+	 * Attempts to find a match for the given player.
+	 * @return Returns if the player was able to join a match.
+	 * */
 	public static boolean findMatch(Player p) {
 
 		loadPlayerData(p);
@@ -204,6 +208,10 @@ public class GameManager {
 		// Found match!
 	}
 
+	/**
+	 * Tries to join a specific game instance.
+	 * @return Returns if the player was able to successfully join the game.
+	 * */
 	public static boolean joinGame(Player p, GameInstance match) {
 
 		loadPlayerData(p);
@@ -218,6 +226,10 @@ public class GameManager {
 		return success;
 	}
 
+
+	/**
+	 * Loads all data associated with the player relevant to playing a match of COM-Warfare.
+	 * */
 	private static void loadPlayerData(Player p) {
 		ShopManager.getInstance().checkForNewGuns(p);
 

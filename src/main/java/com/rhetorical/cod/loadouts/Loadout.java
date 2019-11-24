@@ -13,6 +13,10 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 
+/**
+ * Representation of the players' loadouts
+ * */
+
 public class Loadout implements Listener {
 
 	private Player owner;

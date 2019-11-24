@@ -21,6 +21,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * Handles purchase data, list of available guns and whatnot.
+ * */
+
 public class ShopManager {
 
 	private static ShopManager instance;

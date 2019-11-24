@@ -21,6 +21,9 @@ public class CodGun extends CodWeapon {
 	private int levelUnlock;
 	private int creditUnlock;
 
+	/**
+	 * Creates a gun with the given parameters.
+	 * */
 	public CodGun(String name, GunType gunT, UnlockType t, int a, ItemStack ammoI, ItemStack gunI, int levelUnlock) {
 
 		super(name, null, t, gunI, levelUnlock);
@@ -38,6 +41,9 @@ public class CodGun extends CodWeapon {
 		menuItem = setupMenuItem(gunI);
 	}
 
+	/**
+	 * Creates a gun with the given parameters including the name of the ammo (for QualityArmory)
+	 * */
 	public CodGun(String name, String ammoName, GunType gunT, UnlockType t, int a, ItemStack ammoI, ItemStack gunI, int levelUnlock) {
 
 		super(name, null, t, gunI, levelUnlock);
@@ -55,6 +61,9 @@ public class CodGun extends CodWeapon {
 		menuItem = setupMenuItem(gunI);
 	}
 
+	/**
+	 * Intended to be used for generating blank guns.
+	 * */
 	public CodGun(String name, GunType gunT, UnlockType t, int a, ItemStack ammoI, ItemStack gunI, int levelUnlock, boolean isBlank) {
 
 		super(name, null, t, gunI, levelUnlock, isBlank);
@@ -75,7 +84,7 @@ public class CodGun extends CodWeapon {
 			menuItem = gunI;
 		}
 	}
-	
+
 	public void save() {
 		
 		GunsFile.reloadData();

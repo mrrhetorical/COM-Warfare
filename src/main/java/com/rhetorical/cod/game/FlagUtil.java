@@ -9,8 +9,15 @@ import org.bukkit.inventory.meta.BannerMeta;
 
 import java.util.ArrayList;
 
+/**
+ * Simple util class for flags.
+ * */
+
 class FlagUtil {
 
+	/**
+	 * @return Returns a banner for the target team given it's id.
+	 * */
 	static ItemStack getBannerForTeam(int team) {
 
 		ItemStack stack;

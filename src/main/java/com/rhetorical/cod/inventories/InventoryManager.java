@@ -32,6 +32,11 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.*;
 
+/**
+ * Manages pretty much most inventories.
+ * TODO: Split into multiple classes
+ * */
+
 public class InventoryManager implements Listener {
 
 	private static InventoryManager instance;
@@ -909,6 +914,9 @@ public class InventoryManager implements Listener {
 		return true;
 	}
 
+	/**
+	 * Click handler for within inventories.
+	 * */
 	@EventHandler
 	public void inventoryClickListener(InventoryClickEvent e) {
 		if (!(e.getWhoClicked() instanceof Player))

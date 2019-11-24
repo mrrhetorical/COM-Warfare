@@ -8,6 +8,10 @@ import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 
+/**
+ * Handles automatic download of McTranslate++.
+ * */
+
 class DependencyManager {
 
 	boolean checkDependencies() {

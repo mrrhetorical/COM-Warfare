@@ -30,6 +30,10 @@ enum Team {
 	}
 }
 
+/**
+ * Handles the CTF Flag for Capture the Flag
+ * */
+
 class CtfFlag {
 
 	private final GameInstance owner;
