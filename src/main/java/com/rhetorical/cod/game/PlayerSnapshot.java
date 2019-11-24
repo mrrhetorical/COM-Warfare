@@ -11,6 +11,10 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * Saves data tied to players so it can be restored upon leaving COM-Warfare.
+ * */
+
 class PlayerSnapshot {
 
     private static List<PlayerSnapshot> snapshots = new ArrayList<>();

@@ -12,6 +12,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * Handles health for each player.
+ * */
+
 public class HealthManager {
 	private HashMap<Player, Double> healthMap = new HashMap<Player, Double>();
 	
