@@ -17,7 +17,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
@@ -54,7 +53,7 @@ public class PerkListener implements Listener {
 	public void marathon(FoodLevelChangeEvent e) {
 		Player p = (Player) e.getEntity();
 
-		if (LoadoutManager.getInstance().getCurrentLoadout(p).hasPerk(Perk.MARATHON)) {
+		if (LoadoutManager.getInstance().getActiveLoadout(p).hasPerk(Perk.MARATHON)) {
 			GameInstance i = GameManager.getMatchWhichContains(p);
 			if (i == null)
 				return;
@@ -81,7 +80,7 @@ public class PerkListener implements Listener {
 					time--;
 				} else {
 					if (p.getLocation().distance(l) < 1D) {
-						Loadout loadout = LoadoutManager.getInstance().getCurrentLoadout(p);
+						Loadout loadout = LoadoutManager.getInstance().getActiveLoadout(p);
 						p.getInventory().clear();
 						p.getInventory().setItem(0, LoadoutManager.getInstance().knife);
 						p.getInventory().setItem(1, loadout.getPrimary().getMenuItem());
@@ -115,7 +114,7 @@ public class PerkListener implements Listener {
 	 * @return Returns the scavenger pack dropped.
 	 * */
 	public Entity scavengerDeath(Player victim, Player killer) {
-		if (LoadoutManager.getInstance().getCurrentLoadout(killer).hasPerk(Perk.SCAVENGER)) {
+		if (LoadoutManager.getInstance().getActiveLoadout(killer).hasPerk(Perk.SCAVENGER)) {
 
 			Item i = victim.getWorld().dropItem(victim.getLocation(), new ItemStack(Material.LAPIS_BLOCK));
 
@@ -145,12 +144,12 @@ public class PerkListener implements Listener {
 		Player p = e.getPlayer();
 		ItemStack i = e.getItem().getItemStack();
 
-		if (GameManager.isInMatch(p) && LoadoutManager.getInstance().getCurrentLoadout(p).hasPerk(Perk.SCAVENGER) && i.getType().equals(Material.LAPIS_BLOCK)) {
+		if (GameManager.isInMatch(p) && LoadoutManager.getInstance().getActiveLoadout(p).hasPerk(Perk.SCAVENGER) && i.getType().equals(Material.LAPIS_BLOCK)) {
 			e.getItem().remove();
 
 			{
-				ItemStack ammoToAdd = LoadoutManager.getInstance().getCurrentLoadout(p).getPrimary().getAmmo();
-				ammoToAdd.setAmount(LoadoutManager.getInstance().getCurrentLoadout(p).getPrimary().getAmmoCount() / 8);
+				ItemStack ammoToAdd = LoadoutManager.getInstance().getActiveLoadout(p).getPrimary().getAmmo();
+				ammoToAdd.setAmount(LoadoutManager.getInstance().getActiveLoadout(p).getPrimary().getAmmoCount() / 8);
 
 				ItemStack currentAmmo = p.getInventory().getItem(28);
 
@@ -163,8 +162,8 @@ public class PerkListener implements Listener {
 			}
 
 			{
-				ItemStack ammoToAdd = LoadoutManager.getInstance().getCurrentLoadout(p).getSecondary().getAmmo();
-				ammoToAdd.setAmount(LoadoutManager.getInstance().getCurrentLoadout(p).getSecondary().getAmmoCount() / 8);
+				ItemStack ammoToAdd = LoadoutManager.getInstance().getActiveLoadout(p).getSecondary().getAmmo();
+				ammoToAdd.setAmount(LoadoutManager.getInstance().getActiveLoadout(p).getSecondary().getAmmoCount() / 8);
 
 				ItemStack currentAmmo = p.getInventory().getItem(29);
 
@@ -187,7 +186,7 @@ public class PerkListener implements Listener {
 //		if (e.getEntity() instanceof Player && e.getDamager() instanceof Player) {
 //			if (!(GameManager.isInMatch((Player) e.getDamager()) && GameManager.isInMatch((Player) e.getEntity())))
 //				return;
-//			if (LoadoutManager.getInstance().getCurrentLoadout((Player) e.getDamager()).hasPerk(Perk.STOPPING_POWER)) {
+//			if (LoadoutManager.getInstance().getActiveLoadout((Player) e.getDamager()).hasPerk(Perk.STOPPING_POWER)) {
 //				e.setDamage(e.getDamage() * 1.2D);
 //			}
 //		}
@@ -198,7 +197,7 @@ public class PerkListener implements Listener {
 //		if (e.getEntity() instanceof Player && e.getDamager() instanceof Player) {
 //			if (!(GameManager.isInMatch((Player) e.getDamager()) && GameManager.isInMatch((Player) e.getEntity())))
 //				return;
-//			if (LoadoutManager.getInstance().getCurrentLoadout((Player) e.getEntity()).hasPerk(Perk.JUGGERNAUT)) {
+//			if (LoadoutManager.getInstance().getActiveLoadout((Player) e.getEntity()).hasPerk(Perk.JUGGERNAUT)) {
 //				e.setDamage(e.getDamage() / 1.2D);
 //			}
 //		}
@@ -212,7 +211,7 @@ public class PerkListener implements Listener {
 //			if (!(GameManager.isInMatch((Player) e.getEntity()) && GameManager.isInMatch((Player) e.getDamager())))
 //				return;
 //
-//			if (LoadoutManager.getInstance().getCurrentLoadout((Player) e.getDamager()).hasPerk(Perk.COMMANDO)) {
+//			if (LoadoutManager.getInstance().getActiveLoadout((Player) e.getDamager()).hasPerk(Perk.COMMANDO)) {
 //				e.setDamage(200D);
 //			}
 //

@@ -1987,7 +1987,7 @@ public class GameInstance implements Listener {
 		}
 
 		if (getGamemode() != Gamemode.GUN && getGamemode() != Gamemode.OITC && getGamemode() != Gamemode.RSB && (getGamemode() != Gamemode.INFECT || isOnBlueTeam(attacker))) {
-			if (LoadoutManager.getInstance().getCurrentLoadout(attacker).hasPerk(Perk.COMMANDO))
+			if (LoadoutManager.getInstance().getActiveLoadout(attacker).hasPerk(Perk.COMMANDO))
 				e.setDamage(Main.getDefaultHealth() * 10);
 		}
 
@@ -2139,11 +2139,11 @@ public class GameInstance implements Listener {
 		} else if (getGamemode() != Gamemode.GUN && getGamemode() != Gamemode.RSB && getGamemode() != Gamemode.INFECT) {
 			if (damagers.length != 0) {
 				Player shooter = damagers[0];
-				if (LoadoutManager.getInstance().getCurrentLoadout(shooter).hasPerk(Perk.STOPPING_POWER)) {
+				if (LoadoutManager.getInstance().getActiveLoadout(shooter).hasPerk(Perk.STOPPING_POWER)) {
 					damage *= 1.2d;
 				}
 
-				if (LoadoutManager.getInstance().getCurrentLoadout(victim).hasPerk(Perk.JUGGERNAUT)) {
+				if (LoadoutManager.getInstance().getActiveLoadout(victim).hasPerk(Perk.JUGGERNAUT)) {
 					damage /= 1.2d;
 				}
 			}
@@ -2162,7 +2162,7 @@ public class GameInstance implements Listener {
 		}
 
 		if (health.isDead(victim)) {
-			if (!LoadoutManager.getInstance().getCurrentLoadout(victim).hasPerk(Perk.LAST_STAND) || !(getGamemode() != Gamemode.GUN && getGamemode() != Gamemode.OITC && getGamemode() != Gamemode.RSB && (getGamemode() != Gamemode.INFECT || isOnBlueTeam(victim)))) {
+			if (!LoadoutManager.getInstance().getActiveLoadout(victim).hasPerk(Perk.LAST_STAND) || !(getGamemode() != Gamemode.GUN && getGamemode() != Gamemode.OITC && getGamemode() != Gamemode.RSB && (getGamemode() != Gamemode.INFECT || isOnBlueTeam(victim)))) {
 				if (damagers.length < 1) {
 					Main.sendMessage(victim, "" + ChatColor.GREEN + ChatColor.BOLD + "YOU " + ChatColor.RESET + "" + ChatColor.WHITE + "[" + Lang.KILLED_TEXT.getMessage() + "] " + ChatColor.RESET + ChatColor.GREEN + ChatColor.BOLD + "YOURSELF", Main.getLang());
 					kill(victim, victim);

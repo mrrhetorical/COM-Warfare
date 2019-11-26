@@ -498,12 +498,12 @@ public class LoadoutManager {
 		}
 	}
 
-	public Loadout getCurrentLoadout(Player p) {
-
-		List<Loadout> loadouts = getLoadouts(p);
-
-		return loadouts.get(0);
-	}
+//	public Loadout getActiveLoadout(Player p) {
+//
+//		List<Loadout> loadouts = getLoadouts(p);
+//
+//		return loadouts.get(0);
+//	}
 
 	public List<Loadout> getLoadouts(Player p) {
 		if (!playerLoadouts.containsKey(p)) {

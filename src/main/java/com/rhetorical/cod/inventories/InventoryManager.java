@@ -1151,7 +1151,7 @@ public class InventoryManager implements Listener {
 
 			boolean hasOneManArmy = false;
 
-			if (LoadoutManager.getInstance().getCurrentLoadout(p).hasPerk(Perk.ONE_MAN_ARMY)) {
+			if (LoadoutManager.getInstance().getActiveLoadout(p).hasPerk(Perk.ONE_MAN_ARMY)) {
 				hasOneManArmy = true;
 			}
 
