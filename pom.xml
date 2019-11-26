@@ -30,6 +30,12 @@
 			<id>dmulloy2-repo</id>
 			<url>http://repo.dmulloy2.net/nexus/repository/public/</url>
 		</repository>
+
+		<repository>
+			<id>project.local</id>
+			<name>project</name>
+			<url>file:${project.basedir}/repo</url>
+		</repository>
 	</repositories>
 
 	<dependencies>
@@ -55,7 +61,7 @@
 		</dependency>
 
 		<dependency>
-			<groupId>com.shampaaggon</groupId>
+			<groupId>com.shampaggon</groupId>
 			<artifactId>crackshot</artifactId>
 			<version>0.98.9</version>
 			<scope>provided</scope>
@@ -64,14 +70,14 @@
 		<dependency>
 			<groupId>com.deecaad</groupId>
 			<artifactId>CrackShotPlus</artifactId>
-			<version>1.83</version>
+			<version>1.85</version>
 			<scope>provided</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>me.zombie_striker</groupId>
 			<artifactId>QualityArmory</artifactId>
-			<version>1.1.145</version>
+			<version>1.1.148</version>
 			<scope>provided</scope>
 		</dependency>
 
