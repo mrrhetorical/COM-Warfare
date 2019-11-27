@@ -132,6 +132,10 @@ class CtfFlag {
 	void resetFlag() {
 		despawn();
 		spawn();
+
+		flagHolder = null;
+		pickedUp = false;
+		inFlagHolder = true;
 	}
 
 	void scorePoint(Player p) {
@@ -213,7 +217,7 @@ class CtfFlag {
 			return;
 
 		if ( (getTeam() == Team.BLUE && getOwner().isOnBlueTeam(nearest)) || (getTeam() == Team.RED	&& getOwner().isOnRedTeam(nearest)) ) {
-			if (nearest.equals(getOtherFlag().getFlagHolder())) {
+			if (getOtherFlag().getFlagHolder() != null && nearest.equals(getOtherFlag().getFlagHolder()) && isInFlagHolder()) {
 				getOtherFlag().scorePoint(nearest);
 				getOwner().incrementScore(nearest);
 			} else if (!isInFlagHolder()) {
