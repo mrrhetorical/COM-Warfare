@@ -140,6 +140,7 @@ class CtfFlag {
 
 		flagHolder = null;
 		pickedUp = false;
+		inFlagHolder = true;
 
 		getOwner().setTeamArmor(p);
 
