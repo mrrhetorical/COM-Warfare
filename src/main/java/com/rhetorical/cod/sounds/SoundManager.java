@@ -15,20 +15,20 @@ public class SoundManager implements Listener {
 
 	private static SoundManager instance;
 
-	private Map<Class, SoundData> soundDataMap = new HashMap<>();
+	private Map<String, SoundData> soundDataMap = new HashMap<>();
 
 	private SoundManager() {
-		Bukkit.getServer().getPluginManager().registerEvents(this, Main.getInstance());
+		Bukkit.getServer().getPluginManager().registerEvents(this, Main.getPlugin());
 
-		soundDataMap.put(GameEndSoundEvent.class, new SoundData());
-		soundDataMap.put(PlayerDieSoundEvent.class, new SoundData());
-		soundDataMap.put(GameStartSoundEvent.class, new SoundData());
-		soundDataMap.put(PlayerLevelUpSoundEvent.class, new SoundData());
-		soundDataMap.put(PlayerSpawnSoundEvent.class, new SoundData());
-		soundDataMap.put(PlayerPrestigeSoundEvent.class, new SoundData());
+		soundDataMap.put("GameEndSoundEvent", new SoundData());
+		soundDataMap.put("PlayerDieSoundEvent", new SoundData());
+		soundDataMap.put("GameStartSoundEvent", new SoundData());
+		soundDataMap.put("PlayerLevelUpSoundEvent", new SoundData());
+		soundDataMap.put("PlayerSpawnSoundEvent", new SoundData());
+		soundDataMap.put("PlayerPrestigeSoundEvent", new SoundData());
 
-		for(Class c : soundDataMap.keySet()) {
-			soundDataMap.get(c).load(c.getName());
+		for(String c : soundDataMap.keySet()) {
+			soundDataMap.get(c).load(c);
 		}
 	}
 
@@ -45,14 +45,13 @@ public class SoundManager implements Listener {
 		}
 	}
 
+
 	@EventHandler
-	public void onPlayerSoundEvent(PlayerSoundEvent e) {
-		if (e.isCancelled())
-			return;
+	public void onPlayerLevelUp(PlayerLevelUpSoundEvent e) {
 
-		SoundData data = soundDataMap.get(e.getClass());
-		if (data != null)
+		SoundData data = soundDataMap.get("PlayerLevelUpSoundEvent");
+		if (data != null) {
 			playSound(e.getPlayer(), data);
+		}
 	}
-
 }

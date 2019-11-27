@@ -5,15 +5,18 @@ import org.bukkit.event.HandlerList;
 
 public class SoundEvent extends Event {
 
-	private static final HandlerList handlerList = new HandlerList();
+	private static final HandlerList HANDLERS = new HandlerList();
 
 	private boolean cancelled = false;
 
 	SoundEvent() {}
 
-	@Override
 	public HandlerList getHandlers() {
-		return handlerList;
+		return HANDLERS;
+	}
+
+	public static HandlerList getHandlerList() {
+		return HANDLERS;
 	}
 
 	public boolean isCancelled() {

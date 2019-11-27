@@ -4,7 +4,6 @@ package com.rhetorical.cod.sounds;
 import com.rhetorical.cod.Main;
 import com.rhetorical.cod.files.SoundFile;
 import org.bukkit.ChatColor;
-import org.bukkit.Sound;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +11,7 @@ import java.util.List;
 class SoundData {
 
 	class SoundStruct {
-		Sound sound;
+		String sound;
 		float volume;
 		float pitch;
 	}
@@ -23,8 +22,9 @@ class SoundData {
 
 	void load(String event) {
 		if (!SoundFile.getData().contains(event)) {
-			SoundFile.getData().set("event", sounds);
+			SoundFile.getData().set(event, sounds);
 			SoundFile.saveData();
+			SoundFile.reloadData();
 			return;
 		}
 		List<String> unparsed = SoundFile.getData().getStringList(event);
@@ -61,10 +61,8 @@ class SoundData {
 				v = contents[1],
 				p = contents[2];
 
-		Sound sound;
 		float volume, pitch;
 		try {
-			sound = Sound.valueOf(s.toUpperCase());
 			volume = Float.parseFloat(v);
 			pitch = Float.parseFloat(p);
 		} catch (Exception e) {
@@ -73,7 +71,7 @@ class SoundData {
 		}
 
 		SoundStruct soundStruct = new SoundStruct();
-		soundStruct.sound = sound;
+		soundStruct.sound = s;
 		soundStruct.volume = volume;
 		soundStruct.pitch = pitch;
 
