@@ -2539,7 +2539,8 @@ public class GameInstance implements Listener {
 
 							fw.setFireworkMeta(fwm);
 						} else {
-							p.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, 20, 1));
+							if (!LoadoutManager.getInstance().getActiveLoadout(p).hasPerk(Perk.NINJA))
+								p.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, 20, 1));
 						}
 					}
 				} else if(isOnRedTeam(owner)) {
@@ -2564,7 +2565,8 @@ public class GameInstance implements Listener {
 
 							fw.setFireworkMeta(fwm);
 						} else {
-							p.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, 20, 1));
+							if(!LoadoutManager.getInstance().getActiveLoadout(p).hasPerk(Perk.NINJA))
+								p.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, 20, 1));
 						}
 					}
 				} else {
@@ -2593,7 +2595,8 @@ public class GameInstance implements Listener {
 
 							fw.setFireworkMeta(fwm);
 						} else {
-							p.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, 20, 1));
+							if (!LoadoutManager.getInstance().getActiveLoadout(p).hasPerk(Perk.NINJA))
+								p.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, 20, 1));
 						}
 					}
 				}
