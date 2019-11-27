@@ -73,11 +73,8 @@ public class CrackShotGun implements Listener {
 	 * Ba-dum-tss....
 	 * Damage handler for CrackShot weapons.
 	 * */
-	@EventHandler(priority = EventPriority.HIGHEST)
+	@EventHandler(priority = EventPriority.HIGH)
 	public void onCrackShot(com.shampaggon.crackshot.events.WeaponDamageEntityEvent e) {
-
-		if (!weapons.contains(e.getWeaponTitle()))
-			return;
 
 		Player victim;
 		if (!(e.getVictim() instanceof Player))
@@ -87,7 +84,10 @@ public class CrackShotGun implements Listener {
 
 		double damage = e.getDamage();
 
-		e.setDamage(0);
+		if (!weapons.contains(e.getWeaponTitle()))
+			e.setCancelled(true);
+		else
+			e.setDamage(0);
 
 		GameInstance match = GameManager.getMatchWhichContains(victim);
 		if (match != null) {
