@@ -47,11 +47,13 @@ public class SoundManager implements Listener {
 
 
 	@EventHandler
-	public void onPlayerLevelUp(PlayerLevelUpSoundEvent e) {
+	public void onPlayerSoundEvent(PlayerSoundEvent e) {
 
-		SoundData data = soundDataMap.get("PlayerLevelUpSoundEvent");
+		SoundData data = soundDataMap.get(e.getEventName());
 		if (data != null) {
 			playSound(e.getPlayer(), data);
 		}
 	}
+
+
 }
