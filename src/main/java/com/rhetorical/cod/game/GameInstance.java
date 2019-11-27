@@ -2157,6 +2157,14 @@ public class GameInstance implements Listener {
 			}
 		}
 
+		if (LoadoutManager.getInstance().getActiveLoadout(victim).hasPerk(Perk.DANGER_CLOSE)) {
+			double cur = health.getHealth(victim);
+			if (cur == Main.getDefaultHealth() && cur - damage < 0) {
+				health.setHealth(victim, 1);
+				return;
+			}
+		}
+
 		if (damagers.length < 1) {
 			health.damage(victim, damage);
 		} else {
