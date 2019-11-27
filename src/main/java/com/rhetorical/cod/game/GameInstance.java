@@ -549,7 +549,7 @@ public class GameInstance implements Listener {
 
 		for (Player p : players) {
 
-			LoadoutManager.getInstance().getActiveLoadouts().remove(p);
+//			LoadoutManager.getInstance().getActiveLoadouts().remove(p);
 
 			KillStreakManager.getInstance().reset(p);
 
