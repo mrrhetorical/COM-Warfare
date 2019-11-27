@@ -5,6 +5,7 @@ import com.rhetorical.cod.Main;
 import com.rhetorical.cod.files.ProgressionFile;
 import com.rhetorical.cod.inventories.ShopManager;
 import com.rhetorical.cod.lang.Lang;
+import com.rhetorical.cod.sounds.events.PlayerLevelUpSoundEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -86,6 +87,8 @@ public class ProgressionManager {
 
 		this.level.put(p, this.level.get(p) + 1);
 		p.sendMessage(Main.getPrefix() + Lang.RANK_UP_MESSAGE.getMessage().replace("{level}", getLevel(p) + ""));
+
+		Bukkit.getServer().getPluginManager().callEvent(new PlayerLevelUpSoundEvent(p)); //testing event
 
 		if (this.getLevel(p) == this.maxLevel) {
 			p.sendMessage(Main.getPrefix() + Lang.RANK_UP_READY_TO_PRESTIGE.getMessage());
