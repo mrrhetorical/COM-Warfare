@@ -1161,12 +1161,6 @@ public class GameInstance implements Listener {
 
 				getScoreboardManager().setupGameBoard(p, getFancyTime(gameTime));
 			}
-
-			if (getGamemode() == Gamemode.DOM)
-				spawnDomFlags();
-
-			if (getGamemode() == Gamemode.CTF)
-				spawnCtfFlags();
 		} else {
 			for (Player p : players) {
 				if (isOnBlueTeam(p)) {
@@ -1194,6 +1188,14 @@ public class GameInstance implements Listener {
 
 					cancel();
 					return;
+				}
+
+				if (t == time) {
+					if (getGamemode() == Gamemode.DOM)
+						spawnDomFlags();
+
+					if (getGamemode() == Gamemode.CTF)
+						spawnCtfFlags();
 				}
 
 				if (t % 60 == 0 && getGamemode() == Gamemode.HARDPOINT) {
