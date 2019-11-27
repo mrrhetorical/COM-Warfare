@@ -1950,10 +1950,13 @@ public class GameInstance implements Listener {
 		Player victim = (Player) e.getEntity();
 		Player attacker = (Player) e.getDamager();
 
+		if (victim.equals(attacker)) {
+			e.setCancelled(true);
+			return;
+		}
+
 		if (!canDamage(attacker, victim))
 			return;
-
-		e.setCancelled(true);
 
 		double damage;
 
@@ -1983,17 +1986,20 @@ public class GameInstance implements Listener {
 		}
 
 		if (heldWeapon.getType() == Material.DIAMOND_SWORD || heldWeapon.getType() == gSwordMat || heldWeapon.getType() == Material.IRON_SWORD || heldWeapon.getType() == Material.STONE_SWORD || heldWeapon.getType() == wSwordMat) {
+			e.setCancelled(true);
 			damage = Main.getDefaultHealth() * Main.getInstance().knifeDamage;
 		} else {
-			damage = Math.round(Main.getDefaultHealth() / 4);
+			e.setDamage(0);
+			return;
 		}
 
 		if (getGamemode() != Gamemode.GUN && getGamemode() != Gamemode.OITC && getGamemode() != Gamemode.RSB && (getGamemode() != Gamemode.INFECT || isOnBlueTeam(attacker))) {
 			if (LoadoutManager.getInstance().getActiveLoadout(attacker).hasPerk(Perk.COMMANDO))
-				e.setDamage(Main.getDefaultHealth() * 10);
+				damage = 10 * Main.getDefaultHealth();
 		}
 
-		damagePlayer(victim, damage, attacker);
+		if (damage != 0)
+			damagePlayer(victim, damage, attacker);
 	}
 
 	@EventHandler
@@ -2108,7 +2114,7 @@ public class GameInstance implements Listener {
 	 * @param b = The victim
 	 * @return Returns if person a can damage person b.
 	 * */
-	private boolean canDamage(Player a, Player b) {
+	public boolean canDamage(Player a, Player b) {
 		if (!players.contains(b) && !players.contains(a))
 			return false;
 

@@ -3,6 +3,8 @@ package com.rhetorical.cod.weapons;
 import com.rhetorical.cod.Main;
 import com.rhetorical.cod.game.GameInstance;
 import com.rhetorical.cod.game.GameManager;
+import com.rhetorical.cod.inventories.ShopManager;
+import me.zombie_striker.qg.config.CrackshotLoader;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -11,9 +13,14 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class CrackShotGun implements Listener {
 
 	private static Object instance;
+
+	private Set<String> weapons = new HashSet<>();
 
 	public static void setup() {
 		boolean installed = true;
@@ -23,8 +30,16 @@ public class CrackShotGun implements Listener {
 			installed = false;
 		}
 
-		if (installed)
-			Bukkit.getServer().getPluginManager().registerEvents(new CrackShotGun(), Main.getPlugin());
+		if (installed) {
+			CrackShotGun instance = new CrackShotGun();
+			for (CodWeapon w : ShopManager.getInstance().getLethalWeapons()) {
+				instance.weapons.add(w.getName());
+			}
+			for (CodWeapon w : ShopManager.getInstance().getTacticalWeapons()) {
+				instance.weapons.add(w.getName());
+			}
+			Bukkit.getServer().getPluginManager().registerEvents(instance, Main.getPlugin());
+		}
 	}
 
 	/**
@@ -58,8 +73,11 @@ public class CrackShotGun implements Listener {
 	 * Ba-dum-tss....
 	 * Damage handler for CrackShot weapons.
 	 * */
-	@EventHandler(priority = EventPriority.HIGH)
+	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onCrackShot(com.shampaggon.crackshot.events.WeaponDamageEntityEvent e) {
+
+		if (!weapons.contains(e.getWeaponTitle()))
+			return;
 
 		Player victim;
 		if (!(e.getVictim() instanceof Player))
@@ -67,16 +85,15 @@ public class CrackShotGun implements Listener {
 
 		victim = (Player) e.getVictim();
 
-		if (!GameManager.isInMatch(victim) && !GameManager.isInMatch(e.getPlayer()))
-			return;
-
-		e.setCancelled(true);
-
 		double damage = e.getDamage();
 
+		e.setDamage(0);
+
 		GameInstance match = GameManager.getMatchWhichContains(victim);
-		if (match != null)
-			match.damagePlayer(victim, damage, e.getPlayer());
+		if (match != null) {
+			if (match.canDamage(e.getPlayer(), victim) || e.getPlayer().equals(victim))
+				match.damagePlayer(victim, damage, e.getPlayer());
+		}
 	}
 
 }
