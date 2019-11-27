@@ -1190,7 +1190,7 @@ public class GameInstance implements Listener {
 					return;
 				}
 
-				if (t == time) {
+				if (t == time - 5) {
 					if (getGamemode() == Gamemode.DOM)
 						spawnDomFlags();
 
@@ -1708,7 +1708,9 @@ public class GameInstance implements Listener {
 	public CodMap getMap() {
 
 		if (currentMap == null) {
-			changeMap(GameManager.pickRandomMap());
+			CodMap map = GameManager.pickRandomMap();
+			GameManager.usedMaps.add(map);
+			changeMap(map);
 		}
 
 		return currentMap;
