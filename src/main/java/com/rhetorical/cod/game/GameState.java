@@ -1,6 +1,6 @@
 package com.rhetorical.cod.game;
 
-import net.md_5.bungee.api.ChatColor;
+import org.bukkit.ChatColor;
 
 public enum GameState {
 	STARTING(ChatColor.GREEN), IN_GAME(ChatColor.YELLOW), STOPPING(ChatColor.RED), WAITING(ChatColor.GREEN);
