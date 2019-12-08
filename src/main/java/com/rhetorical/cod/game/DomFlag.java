@@ -187,7 +187,7 @@ class DomFlag {
 		ChatColor color = getCaptureProgress() > 0 ? ChatColor.BLUE : ChatColor.RED;
 		int points = Math.abs(getCaptureProgress());
 		for (int i = 0; i < 10; i++) {
-			builder.append(i > points ? ChatColor.GRAY : color);
+			builder.append(i > points - 1 ? ChatColor.GRAY : color);
 			builder.append("■");
 		}
 

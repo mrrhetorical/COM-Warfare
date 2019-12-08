@@ -1137,12 +1137,21 @@ public class GameInstance implements Listener {
 						if (closestObjective != null) {
 							p.setCompassTarget(closestObjective);
 							int distance = (int) p.getLocation().distance(closestObjective);
-							ItemStack stack = new ItemStack(Material.COMPASS, distance <= 100 ? distance != 0 ? distance : 1 : 100);
+							ItemStack stack = p.getInventory().getItem(8);
+							boolean exists = true;
+							int displayedDistance = distance <= 100 ? distance != 0 ? distance : 1 : 100;
+							if (stack == null || stack.getType() == Material.AIR) {
+								stack = new ItemStack(Material.COMPASS, displayedDistance);
+								exists = false;
+							} else {
+								stack.setAmount(displayedDistance);
+							}
 							ItemMeta meta = stack.getItemMeta();
 							if (meta != null)
 								meta.setDisplayName(Lang.CLOSEST_OBJECTIVE.getMessage().replace("{distance}", distance <= 100 ? Integer.toString(distance) : ">100"));
 							stack.setItemMeta(meta);
-							p.getInventory().setItem(8, stack);
+							if (!exists)
+								p.getInventory().setItem(8, stack);
 						}
 					}
 				}
