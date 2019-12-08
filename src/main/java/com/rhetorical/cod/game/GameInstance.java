@@ -113,6 +113,7 @@ public class GameInstance implements Listener {
 	private Player pinkNukeActive;
 
 	private boolean pastClassChange = true;
+	private boolean canVote = true;
 
 
 	GameInstance(ArrayList<Player> pls, CodMap map) {
@@ -271,16 +272,14 @@ public class GameInstance implements Listener {
 	}
 
 	void changeMap(CodMap map) {
+		GameManager.usedMaps.remove(getMap());
+		clearNextMaps();
+		canVote = false;
 
 		if (map != null) {
-			GameManager.usedMaps.remove(getMap());
-
 			currentMap = map;
+			map.changeGamemode();
 		}
-
-		map = currentMap;
-
-		map.changeGamemode();
 
 		updateTimeLeft();
 	}
@@ -290,6 +289,7 @@ public class GameInstance implements Listener {
 			return;
 
 		GameManager.usedMaps.remove(getMap());
+		clearNextMaps();
 
 		currentMap = map;
 		map.setGamemode(mode);
@@ -302,6 +302,9 @@ public class GameInstance implements Listener {
 
 		if (!getMap().getAvailableGamemodes().contains(gm))
 			return;
+
+		clearNextMaps();
+		canVote = false;
 
 		currentMap.changeGamemode(gm);
 
@@ -969,6 +972,7 @@ public class GameInstance implements Listener {
 		setState(GameState.STARTING);
 
 		forceStarted = false;
+		canVote = true;
 
 
 		try {
@@ -1019,7 +1023,7 @@ public class GameInstance implements Listener {
 					scoreBar.getClass().getMethod("setProgress", Double.class).invoke(scoreBar, progress);
 				} catch(Exception|NoClassDefFoundError ignored) {}
 
-				if (t == 20) {
+				if (canVote && t == 20) {
 					CodMap[] maps = nextMaps;
 					if (mapVotes[0].size() > mapVotes[1].size()) {
 						changeMap(maps[0], nextModes[0]);
@@ -1065,7 +1069,7 @@ public class GameInstance implements Listener {
 						p.getClass().getMethod("setPlayerListFooter", String.class).invoke(p, Lang.LOBBY_FOOTER.getMessage().replace("{time}", getFancyTime(t)));
 					} catch(Exception ignored) {}
 
-					if (t > 20) {
+					if (canVote && t > 20) {
 						if (p.getInventory().getItem(3) == null || !p.getInventory().getItem(3).getType().equals(InventoryManager.getInstance().voteItemA.getType())) {
 							ItemStack voteItem = InventoryManager.getInstance().voteItemA;
 							ItemMeta voteMeta = voteItem.getItemMeta();
