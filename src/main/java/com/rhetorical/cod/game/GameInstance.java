@@ -1778,6 +1778,9 @@ public class GameInstance implements Listener {
 	@Nullable
 	private Location getClosestObjective(Player p) {
 		if (getGamemode() == Gamemode.DOM) {
+			if (aFlag == null || bFlag == null || cFlag == null)
+				return null;
+
 			DomFlag closest = aFlag;
 			if (p.getLocation().distanceSquared(bFlag.getLocation()) < p.getLocation().distanceSquared(closest.getLocation()))
 				closest = bFlag;
@@ -1787,25 +1790,32 @@ public class GameInstance implements Listener {
 			return closest.getLocation();
 		}
 
-		if (getGamemode() == Gamemode.CTF) {
+		if (getGamemode() == Gamemode.CTF)
+		{
+			if (redFlag == null || blueFlag == null)
+				return null;
+
+			CtfFlag a, b;
 			if (isOnBlueTeam(p)) {
-				Location closest = redFlag.getPosition();
-				if (!blueFlag.isInFlagHolder())
-					if (blueFlag.getPosition().distanceSquared(p.getLocation()) < closest.distanceSquared(p.getLocation()))
-						closest = blueFlag.getPosition();
-
-				return closest;
+				a = redFlag;
+				b = blueFlag;
 			} else {
-				Location closest = blueFlag.getPosition();
-				if (!redFlag.isInFlagHolder())
-					if (redFlag.getPosition().distanceSquared(p.getLocation()) < closest.distanceSquared(p.getLocation()))
-						closest = redFlag.getPosition();
-
-				return closest;
+				a = blueFlag;
+				b = redFlag;
 			}
+
+			Location closest = a.getPosition();
+			if (!b.isInFlagHolder())
+				if (b.getPosition().distanceSquared(p.getLocation()) < closest.distanceSquared(p.getLocation()))
+					closest = b.getPosition();
+
+			return closest;
 		}
 
 		else if (getGamemode() == Gamemode.HARDPOINT) {
+			if (hardpointFlag == null)
+				return null;
+
 			return hardpointFlag.getLocation();
 		}
 
