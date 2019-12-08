@@ -1046,9 +1046,8 @@ public class GameInstance implements Listener {
 
 				if (t % 30 == 0 || (t % 10 == 0 && t < 30) || (t % 5 == 0 && t < 15)) {
 					for (Player p : game.players) {
-						Main.sendMessage(p, Lang.GAME_STARTING_MESSAGE.getMessage().replace("{time}", getFancyTime(t)), Main.getLang());
-						Main.sendMessage(p, Lang.GAME_STARTING_MAP_MESSAGE.getMessage().replace("{map}", getMap().getName()).replace("{mode}", getMap().getGamemode().toString()) ,Main.getLang());
-						if (t > 20) {
+						sendNextMap(p, t);
+						if (t > 20 && canVote) {
 							Main.sendMessage(p, Lang.MAP_VOTING_HEADER.getMessage(), Main.getLang());
 							Main.sendMessage(p, ChatColor.GRAY + "===============", Main.getLang());
 							Main.sendMessage(p, Lang.MAP_VOTING_NAMES.getMessage().replace("{1}", nextMaps[0].getName() + " - " + nextModes[0].toString()).replace("{2}", nextMaps[1].getName() + " - " + nextModes	[1].toString()), Main.getLang());
@@ -3000,6 +2999,11 @@ public class GameInstance implements Listener {
 			} catch(Exception e) {
 				e.printStackTrace();
 			}
+	}
+
+	void sendNextMap(Player p, int t) {
+		Main.sendMessage(p, Lang.GAME_STARTING_MESSAGE.getMessage().replace("{time}", getFancyTime(t)), Main.getLang());
+		Main.sendMessage(p, Lang.GAME_STARTING_MAP_MESSAGE.getMessage().replace("{map}", getMap().getName()).replace("{mode}", getMap().getGamemode().toString()), Main.getLang());
 	}
 
 	@EventHandler
