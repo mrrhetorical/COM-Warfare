@@ -27,8 +27,6 @@ public enum Lang {
 	TEAM_NOT_EXISTS_WITH_NAME("&cNo team exists with that name!"),
 	SET_FLAG_CTF_SUCCESS("&aSuccessfully set {team}&a flag spawn!"),
 	SET_FLAG_DOM_SUCCESS("&aSuccessfully set {flag}&a flag spawn!"),
-	CAPTURING_FLAG("&aYou are capturing the flag!"),
-	DEFENDING_FLAG("&cYou are defending the flag!"),
 	LOBBY_NOT_EXISTS("&cThere is no lobby to send you to!"),
 	BALANCE_COMMAND("&aYou have &e{credits}&a credits!"),
 	GIVE_BALANCE_COMMAND("&aSuccessfully gave {player} {amount} credits! They now have {total} credits!"),
@@ -236,7 +234,8 @@ public enum Lang {
 	SCOREBOARD_SCORE("Score: %s"),
 	SCOREBOARD_TIME("%s"),
 	FLAG_BLUE("&9Blue Flag"),
-	FLAG_RED("&cRed Flag");
+	FLAG_RED("&cRed Flag"),
+	CLOSEST_OBJECTIVE("&eClosest Objective: {distance}m");
 
 
 	private String message;

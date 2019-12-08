@@ -162,6 +162,16 @@ class CtfFlag {
 		return flagLoc.clone();
 	}
 
+	Location getPosition() {
+		if (isInFlagHolder())
+			return getLocation();
+		else
+			if (!isPickedUp())
+				return flag.getLocation();
+			else
+				return getFlagHolder().getLocation();
+	}
+
 
 	Player getFlagHolder() {
 		return flagHolder;

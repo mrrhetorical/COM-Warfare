@@ -38,6 +38,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import javax.annotation.Nullable;
 import java.util.*;
 
 /**
@@ -600,7 +601,7 @@ public class GameInstance implements Listener {
 	}
 
 	/**
-	 * Spawns the player within the current map.
+	 * Spawns the player within the current map at the given Location.
 	 * */
 	private void spawnCodPlayer(Player p, Location L) {
 		p.teleport(L);
@@ -663,6 +664,10 @@ public class GameInstance implements Listener {
 
 			if (getGamemode() == Gamemode.INFECT && redTeam.contains(p)) {
 				p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 20 * gameTime, 1));
+			}
+
+			if (getGamemode() == Gamemode.CTF || getGamemode() == Gamemode.DOM || getGamemode() == Gamemode.HARDPOINT) {
+				p.getInventory().setItem(8, new ItemStack(Material.COMPASS, 1));
 			}
 
 		} else if (getGamemode() == Gamemode.OITC) {
@@ -1325,6 +1330,22 @@ public class GameInstance implements Listener {
 					}
 				}
 
+				if (getGamemode() == Gamemode.CTF || getGamemode() == Gamemode.DOM || getGamemode() == Gamemode.HARDPOINT) {
+					for (Player p : getPlayers()) {
+						Location closestObjective = getClosestObjective(p);
+						if (closestObjective != null) {
+							p.setCompassTarget(closestObjective);
+							int distance = (int) p.getLocation().distance(closestObjective);
+							ItemStack stack = new ItemStack(Material.COMPASS, distance <= 100 ? distance : 100);
+							ItemMeta meta = stack.getItemMeta();
+							if (meta != null)
+								meta.setDisplayName(Lang.CLOSEST_OBJECTIVE.getMessage().replace("{distance}", Integer.toString(distance)));
+							stack.setItemMeta(meta);
+							p.getInventory().setItem(8, stack);
+						}
+					}
+				}
+
 				if (getGamemode() == Gamemode.RESCUE) {
 					if (getAlivePlayers(redTeam) == 0) {
 						addBluePoint();
@@ -1754,6 +1775,46 @@ public class GameInstance implements Listener {
 			else
 				spawnCodPlayer(p, getMap().getPinkSpawn());
 		}
+	}
+
+	/**
+	 * Gets the closest objective for the player.
+	 * */
+	@Nullable
+	private Location getClosestObjective(Player p) {
+		if (getGamemode() == Gamemode.DOM) {
+			DomFlag closest = aFlag;
+			if (p.getLocation().distanceSquared(bFlag.getLocation()) < p.getLocation().distanceSquared(closest.getLocation()))
+				closest = bFlag;
+			else if (p.getLocation().distanceSquared(cFlag.getLocation()) < p.getLocation().distanceSquared(closest.getLocation()))
+				closest = cFlag;
+
+			return closest.getLocation();
+		}
+
+		if (getGamemode() == Gamemode.CTF) {
+			if (isOnBlueTeam(p)) {
+				Location closest = redFlag.getPosition();
+				if (!blueFlag.isInFlagHolder())
+					if (blueFlag.getPosition().distanceSquared(p.getLocation()) < closest.distanceSquared(p.getLocation()))
+						closest = blueFlag.getPosition();
+
+				return closest;
+			} else {
+				Location closest = blueFlag.getPosition();
+				if (!redFlag.isInFlagHolder())
+					if (redFlag.getPosition().distanceSquared(p.getLocation()) < closest.distanceSquared(p.getLocation()))
+						closest = redFlag.getPosition();
+
+				return closest;
+			}
+		}
+
+		else if (getGamemode() == Gamemode.HARDPOINT) {
+			return hardpointFlag.getLocation();
+		}
+
+		return null;
 	}
 
 	/**
