@@ -1118,6 +1118,40 @@ public class GameInstance implements Listener {
 		br.runTaskTimer(Main.getPlugin(), 0L, 20L);
 	}
 
+
+	/**
+	 * Starts things that should run in the game loop but should run at a faster tick rate.
+	 * */
+	private void startPriorityGameTimer() {
+		BukkitRunnable br = new BukkitRunnable() {
+			@Override
+			public void run() {
+				if (getState() != GameState.IN_GAME) {
+					this.cancel();
+					return;
+				}
+
+				if (getGamemode() == Gamemode.CTF || getGamemode() == Gamemode.DOM || getGamemode() == Gamemode.HARDPOINT) {
+					for (Player p : getPlayers()) {
+						Location closestObjective = getClosestObjective(p);
+						if (closestObjective != null) {
+							p.setCompassTarget(closestObjective);
+							int distance = (int) p.getLocation().distance(closestObjective);
+							ItemStack stack = new ItemStack(Material.COMPASS, distance <= 100 ? distance != 0 ? distance : 1 : 100);
+							ItemMeta meta = stack.getItemMeta();
+							if (meta != null)
+								meta.setDisplayName(Lang.CLOSEST_OBJECTIVE.getMessage().replace("{distance}", distance <= 100 ? Integer.toString(distance) : ">100"));
+							stack.setItemMeta(meta);
+							p.getInventory().setItem(8, stack);
+						}
+					}
+				}
+			}
+		};
+
+		br.runTaskTimer(Main.getPlugin(), 0L, 5L);
+	}
+
 	private void startGameTimer(int time, boolean newRound) {
 
 		pastClassChange = false;
@@ -1161,6 +1195,8 @@ public class GameInstance implements Listener {
 
 				getScoreboardManager().setupGameBoard(p, getFancyTime(gameTime));
 			}
+
+			startPriorityGameTimer();
 		} else {
 			for (Player p : players) {
 				if (isOnBlueTeam(p)) {
@@ -1322,22 +1358,6 @@ public class GameInstance implements Listener {
 					} else if ((blueTeamScore >= maxScore_HARDPOINT || redTeamScore >= maxScore_HARDPOINT) && getGamemode().equals(Gamemode.HARDPOINT)) {
 						endGameByScore(this);
 						return;
-					}
-				}
-
-				if (getGamemode() == Gamemode.CTF || getGamemode() == Gamemode.DOM || getGamemode() == Gamemode.HARDPOINT) {
-					for (Player p : getPlayers()) {
-						Location closestObjective = getClosestObjective(p);
-						if (closestObjective != null) {
-							p.setCompassTarget(closestObjective);
-							int distance = (int) p.getLocation().distance(closestObjective);
-							ItemStack stack = new ItemStack(Material.COMPASS, distance <= 100 ? distance != 0 ? distance : 1 : 100);
-							ItemMeta meta = stack.getItemMeta();
-							if (meta != null)
-								meta.setDisplayName(Lang.CLOSEST_OBJECTIVE.getMessage().replace("{distance}", Integer.toString(distance)));
-							stack.setItemMeta(meta);
-							p.getInventory().setItem(8, stack);
-						}
 					}
 				}
 
