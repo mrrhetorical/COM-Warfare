@@ -26,7 +26,7 @@ class DomFlag {
 
 	private int secondsSinceLastNeutralized = 0;
 
-	private final int secondsToNextNeutralizedMessage = 5;
+	private final int secondsToNextNeutralizedMessage = 20;
 
 	DomFlag(Lang flagName, Location flagLoc) {
 		this.flagName = flagName;

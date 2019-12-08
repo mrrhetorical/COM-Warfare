@@ -665,11 +665,6 @@ public class GameInstance implements Listener {
 			if (getGamemode() == Gamemode.INFECT && redTeam.contains(p)) {
 				p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 20 * gameTime, 1));
 			}
-
-			if (getGamemode() == Gamemode.CTF || getGamemode() == Gamemode.DOM || getGamemode() == Gamemode.HARDPOINT) {
-				p.getInventory().setItem(8, new ItemStack(Material.COMPASS, 1));
-			}
-
 		} else if (getGamemode() == Gamemode.OITC) {
 			p.getInventory().setItem(0, LoadoutManager.getInstance().knife);
 			p.getInventory().setItem(1, GameManager.oitcGun.getGunItem());
@@ -1336,7 +1331,7 @@ public class GameInstance implements Listener {
 						if (closestObjective != null) {
 							p.setCompassTarget(closestObjective);
 							int distance = (int) p.getLocation().distance(closestObjective);
-							ItemStack stack = new ItemStack(Material.COMPASS, distance <= 100 ? distance : 100);
+							ItemStack stack = new ItemStack(Material.COMPASS, distance <= 100 ? distance != 0 ? distance : 1 : 100);
 							ItemMeta meta = stack.getItemMeta();
 							if (meta != null)
 								meta.setDisplayName(Lang.CLOSEST_OBJECTIVE.getMessage().replace("{distance}", Integer.toString(distance)));
@@ -1786,7 +1781,7 @@ public class GameInstance implements Listener {
 			DomFlag closest = aFlag;
 			if (p.getLocation().distanceSquared(bFlag.getLocation()) < p.getLocation().distanceSquared(closest.getLocation()))
 				closest = bFlag;
-			else if (p.getLocation().distanceSquared(cFlag.getLocation()) < p.getLocation().distanceSquared(closest.getLocation()))
+			if (p.getLocation().distanceSquared(cFlag.getLocation()) < p.getLocation().distanceSquared(closest.getLocation()))
 				closest = cFlag;
 
 			return closest.getLocation();
