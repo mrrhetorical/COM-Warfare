@@ -15,12 +15,14 @@ import com.rhetorical.cod.progression.CreditManager;
 import com.rhetorical.cod.progression.ProgressionManager;
 import com.rhetorical.cod.progression.RankPerks;
 import com.rhetorical.cod.progression.StatHandler;
+import com.rhetorical.cod.sounds.events.AirstrikeExplodeEvent;
 import com.rhetorical.cod.streaks.KillStreak;
 import com.rhetorical.cod.streaks.KillStreakManager;
 import com.rhetorical.cod.weapons.CodGun;
 import com.rhetorical.cod.weapons.CodWeapon;
 import com.rhetorical.cod.weapons.CrackShotGun;
 import org.bukkit.*;
+import org.bukkit.block.Block;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -103,6 +105,9 @@ public class GameInstance implements Listener {
 
 	private boolean blueUavActive;
 	private boolean redUavActive;
+
+	private boolean blueVSATActive;
+	private boolean redVSATActive;
 
 	private boolean blueCounterUavActive;
 	private boolean redCounterUavActive;
@@ -2576,6 +2581,25 @@ public class GameInstance implements Listener {
 			} else {
 				startUav(p);
 			}
+		} else if (p.getItemInHand().equals(KillStreak.VSAT.getKillStreakItem())) {
+			if (isOnBlueTeam(p)) {
+				if (!blueUavActive) {
+					startVSAT(p);
+				} else {
+					Main.sendMessage(p, Lang.KILLSTREAK_AIRSPACE_OCCUPIED.getMessage(), Main.getLang());
+				}
+			} else if (isOnRedTeam(p)) {
+				if (!redUavActive) {
+					startVSAT(p);
+				} else {
+					Main.sendMessage(p, Lang.KILLSTREAK_AIRSPACE_OCCUPIED.getMessage(), Main.getLang());
+				}
+
+			} else {
+				startVSAT(p);
+			}
+		} else if (p.getItemInHand().equals(KillStreak.AIRSTRIKE.getKillStreakItem())) {
+			callAirstrike(p);
 		} else if (p.getItemInHand().equals(KillStreak.COUNTER_UAV.getKillStreakItem())) {
 			startCounterUav(p);
 			if (!isOnBlueTeam(p) && !isOnRedTeam(p)) {
@@ -2714,6 +2738,125 @@ public class GameInstance implements Listener {
 		br.runTaskTimer(Main.getPlugin(), 3L, 60L);
 	}
 
+	private void startVSAT(Player owner) {
+
+		if (!players.contains(owner))
+			return;
+
+		if (isOnRedTeam(owner))
+			redVSATActive = true;
+		else if (isOnBlueTeam(owner))
+			blueVSATActive = true;
+
+		owner.getInventory().remove(KillStreak.UAV.getKillStreakItem());
+		KillStreakManager.getInstance().useStreak(owner, KillStreak.UAV);
+
+		BukkitRunnable br = new BukkitRunnable() {
+
+			int t = 15;
+
+			@Override
+			public void run() {
+				t--;
+
+				if (t < 0) {
+					if (isOnRedTeam(owner))
+						redVSATActive = false;
+					else if (isOnBlueTeam(owner))
+						blueVSATActive = false;
+					this.cancel();
+				}
+
+				if(isOnBlueTeam(owner)) {
+					if (redCounterUavActive)
+						return;
+
+					//blue launched
+					for (Player p : redTeam) {
+						if (health.isDead(p))
+							continue;
+
+						if (Main.isLegacy()) {
+							Firework fw = p.getLocation().getWorld().spawn(p.getLocation(), Firework.class);
+							FireworkMeta fwm = fw.getFireworkMeta();
+							fwm.addEffect(FireworkEffect.builder()
+									.flicker(false)
+									.trail(true)
+									.with(FireworkEffect.Type.BALL)
+									.withColor(Color.RED)
+									.build());
+
+							fwm.setPower(3);
+
+							fw.setFireworkMeta(fwm);
+						} else {
+							if (!LoadoutManager.getInstance().getActiveLoadout(p).hasPerk(Perk.GHOST))
+								p.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, 60, 1));
+						}
+					}
+				} else if(isOnRedTeam(owner)) {
+					//red launched
+					if (blueCounterUavActive)
+						return;
+
+					for (Player p : blueTeam) {
+						if (health.isDead(p))
+							continue;
+						if (Main.isLegacy()) {
+							Firework fw = p.getLocation().getWorld().spawn(p.getLocation(), Firework.class);
+							FireworkMeta fwm = fw.getFireworkMeta();
+							fwm.addEffect(FireworkEffect.builder()
+									.flicker(false)
+									.trail(true)
+									.with(FireworkEffect.Type.BALL)
+									.withColor(Color.BLUE)
+									.build());
+
+							fwm.setPower(3);
+
+							fw.setFireworkMeta(fwm);
+						} else {
+							if(!LoadoutManager.getInstance().getActiveLoadout(p).hasPerk(Perk.GHOST))
+								p.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, 60, 1));
+						}
+					}
+				} else {
+					//pink
+					if (pinkCounterUavActive)
+						return;
+
+					for (Player p : players) {
+						if (p == owner)
+							continue;
+
+						if (health.isDead(p))
+							continue;
+
+						if (Main.isLegacy()) {
+							Firework fw = p.getLocation().getWorld().spawn(p.getLocation(), Firework.class);
+							FireworkMeta fwm = fw.getFireworkMeta();
+							fwm.addEffect(FireworkEffect.builder()
+									.flicker(false)
+									.trail(true)
+									.with(FireworkEffect.Type.BALL)
+									.withColor(Color.PURPLE)
+									.build());
+
+							fwm.setPower(3);
+
+							fw.setFireworkMeta(fwm);
+						} else {
+							if (!LoadoutManager.getInstance().getActiveLoadout(p).hasPerk(Perk.GHOST))
+								p.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, 60, 1));
+						}
+					}
+				}
+			}
+		};
+
+		br.runTaskTimer(Main.getPlugin(), 3L, 60L);
+	}
+
 	private void startCounterUav(Player owner) {
 
 		if (!players.contains(owner))
@@ -2749,6 +2892,50 @@ public class GameInstance implements Listener {
 	}
 
 	public HashMap<Player, Wolf[]> dogsScoreStreak = new HashMap<>();
+
+	private void callAirstrike(Player owner) {
+		for (Player p : getPlayers())
+			p.sendMessage(Lang.AIRSTRIKE_INCOMING.getMessage());
+
+		ArrayList<Player> targets;
+		ArrayList<Player> team;
+		if (isOnRedTeam(owner)) {
+			targets = new ArrayList<>(blueTeam);
+			team = blueTeam;
+		} else if (isOnBlueTeam(owner)) {
+			targets = new ArrayList<>(redTeam);
+			team = redTeam;
+		} else {
+			targets = new ArrayList<>(getPlayers());
+			team = getPlayers();
+		}
+
+		for (Player p : team) {
+			if (p.getUniqueId().equals(owner.getUniqueId()) || LoadoutManager.getInstance().getActiveLoadout(p).hasPerk(Perk.COLD_BLOODED))
+				targets.remove(p);
+		}
+
+		int targeted = (int) Math.round(Math.random() * 5);
+		for (int i = 0; i < targeted; i++) {
+			int index = (int) Math.round((Math.random() * (targets.size() - 1) + 1));
+			Bukkit.getPluginManager().callEvent(new AirstrikeExplodeEvent(targets.get(index)));
+			if (!isUnderRoof(targets.get(index)))
+				kill(targets.get(index), owner);
+			targets.remove(index);
+		}
+	}
+
+	private boolean isUnderRoof(Player p) {
+		for (int i = 0; i < 180; i++) {
+			if (p.getEyeLocation().getBlockY() >= 180)
+				return false;
+
+			Block b = p.getEyeLocation().add(0, i, 0).getBlock();
+			if (b.getType() != Material.AIR)
+				return true;
+		}
+		return false;
+	}
 
 	private void startDogs(Player owner) {
 		if (!players.contains(owner))
