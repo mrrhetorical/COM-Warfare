@@ -6,7 +6,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.ArrayList;
 
 /**
- * More robust information about the Perk.
+ * More information about the Perk loaded in from the config.
  * @see Perk
  * */
 public class CodPerk {

@@ -2583,13 +2583,13 @@ public class GameInstance implements Listener {
 			}
 		} else if (p.getItemInHand().equals(KillStreak.VSAT.getKillStreakItem())) {
 			if (isOnBlueTeam(p)) {
-				if (!blueUavActive) {
+				if (!blueVSATActive) {
 					startVSAT(p);
 				} else {
 					Main.sendMessage(p, Lang.KILLSTREAK_AIRSPACE_OCCUPIED.getMessage(), Main.getLang());
 				}
 			} else if (isOnRedTeam(p)) {
-				if (!redUavActive) {
+				if (!redVSATActive) {
 					startVSAT(p);
 				} else {
 					Main.sendMessage(p, Lang.KILLSTREAK_AIRSPACE_OCCUPIED.getMessage(), Main.getLang());
@@ -2748,8 +2748,8 @@ public class GameInstance implements Listener {
 		else if (isOnBlueTeam(owner))
 			blueVSATActive = true;
 
-		owner.getInventory().remove(KillStreak.UAV.getKillStreakItem());
-		KillStreakManager.getInstance().useStreak(owner, KillStreak.UAV);
+		owner.getInventory().remove(KillStreak.VSAT.getKillStreakItem());
+		KillStreakManager.getInstance().useStreak(owner, KillStreak.VSAT);
 
 		BukkitRunnable br = new BukkitRunnable() {
 
@@ -2791,7 +2791,7 @@ public class GameInstance implements Listener {
 							fw.setFireworkMeta(fwm);
 						} else {
 							if (!LoadoutManager.getInstance().getActiveLoadout(p).hasPerk(Perk.GHOST))
-								p.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, 60, 1));
+								p.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, 65, 1));
 						}
 					}
 				} else if(isOnRedTeam(owner)) {
@@ -2817,7 +2817,7 @@ public class GameInstance implements Listener {
 							fw.setFireworkMeta(fwm);
 						} else {
 							if(!LoadoutManager.getInstance().getActiveLoadout(p).hasPerk(Perk.GHOST))
-								p.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, 60, 1));
+								p.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, 65, 1));
 						}
 					}
 				} else {
@@ -2847,7 +2847,7 @@ public class GameInstance implements Listener {
 							fw.setFireworkMeta(fwm);
 						} else {
 							if (!LoadoutManager.getInstance().getActiveLoadout(p).hasPerk(Perk.GHOST))
-								p.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, 60, 1));
+								p.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, 65, 1));
 						}
 					}
 				}
@@ -2894,6 +2894,12 @@ public class GameInstance implements Listener {
 	public HashMap<Player, Wolf[]> dogsScoreStreak = new HashMap<>();
 
 	private void callAirstrike(Player owner) {
+		if (!players.contains(owner))
+			return;
+
+		owner.getInventory().remove(KillStreak.AIRSTRIKE.getKillStreakItem());
+		KillStreakManager.getInstance().useStreak(owner, KillStreak.AIRSTRIKE);
+
 		for (Player p : getPlayers())
 			p.sendMessage(Lang.AIRSTRIKE_INCOMING.getMessage());
 
@@ -2911,17 +2917,20 @@ public class GameInstance implements Listener {
 		}
 
 		for (Player p : team) {
-			if (p.getUniqueId().equals(owner.getUniqueId()) || LoadoutManager.getInstance().getActiveLoadout(p).hasPerk(Perk.COLD_BLOODED))
+			if (p.getUniqueId().equals(owner.getUniqueId()) || health.isDead(p) || LoadoutManager.getInstance().getActiveLoadout(p).hasPerk(Perk.COLD_BLOODED))
 				targets.remove(p);
 		}
 
 		int targeted = (int) Math.round(Math.random() * 5);
+
 		for (int i = 0; i < targeted; i++) {
-			int index = (int) Math.round((Math.random() * (targets.size() - 1) + 1));
-			Bukkit.getPluginManager().callEvent(new AirstrikeExplodeEvent(targets.get(index)));
-			if (!isUnderRoof(targets.get(index)))
-				kill(targets.get(index), owner);
-			targets.remove(index);
+			if (!targets.isEmpty()) {
+				int index = (int) Math.round(Math.random() * (targets.size() - 1));
+				Bukkit.getPluginManager().callEvent(new AirstrikeExplodeEvent(targets.get(index)));
+				if (!isUnderRoof(targets.get(index)))
+					damagePlayer(targets.get(index), Main.getDefaultHealth() * 100, owner);
+				targets.remove(index);
+			}
 		}
 	}
 

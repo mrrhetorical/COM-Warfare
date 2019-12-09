@@ -9,14 +9,6 @@ import java.util.List;
 
 public enum Perk {
 
-	//completed 1: marathon, scavenger, one man army, hardline
-
-	//completed 2: stopping power, juggernaut
-
-	//completed 3: commando, last stand
-
-	//todo: implement cold blooded, danger close, and ghost
-
 	//cold blooded stops ai streaks (dogs and heli) from attacking player
 	//ghost/ninja stops uav from affecting them
 	//danger close allows players who would've died in 1 hit to stay alive at 1hp
@@ -31,7 +23,7 @@ public enum Perk {
 	COMMANDO("Commando", "Knife damage is always a one hit kill!"), GHOST("Ghost", "Can't be seen by UAV or VSAT"), LAST_STAND("Last Stand", "Go into a final stand before dying.");
 	
 	private String name;
-	private ArrayList<String> lore = new ArrayList<>();
+	private ArrayList<String> lore;
 	
 	Perk(String name, String lore) {
 		this.setName(name);
@@ -43,6 +35,8 @@ public enum Perk {
 	}
 
 	public ArrayList<String> getLore() {
+		if (lore == null)
+			lore = new ArrayList<>();
 		return lore;
 	}
 
