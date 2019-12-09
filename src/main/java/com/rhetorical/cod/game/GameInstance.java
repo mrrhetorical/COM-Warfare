@@ -1257,6 +1257,45 @@ public class GameInstance implements Listener {
 
 				if (t == 0) {
 
+					if (getGamemode() == Gamemode.RESCUE || getGamemode() == Gamemode.GUNFIGHT) {
+						if (getAlivePlayers(redTeam) > getAlivePlayers(blueTeam)) {
+							addBluePoint();
+
+							if (getGamemode() == Gamemode.RESCUE) {
+								if (!(blueTeamScore >= maxScore_RESCUE))
+									startNewRound(7, blueTeam);
+							}
+							else if (getGamemode() == Gamemode.GUNFIGHT) {
+								if (!(blueTeamScore >= maxScore_GUNFIGHT))
+									startNewRound(7, blueTeam);
+							}
+
+							for (Player pp : players) {
+								isAlive.put(pp, true);
+							}
+							cancel();
+						} else if (getAlivePlayers(redTeam) > getAlivePlayers(blueTeam)) {
+							addRedPoint();
+
+							if (getGamemode() == Gamemode.RESCUE) {
+								if (!(redTeamScore >= maxScore_RESCUE))
+									startNewRound(7, redTeam);
+							} else if (getGamemode() == Gamemode.GUNFIGHT) {
+								if (!(redTeamScore >= maxScore_GUNFIGHT))
+									startNewRound(7, redTeam);
+							}
+
+							for (Player pp : players) {
+								isAlive.put(pp, true);
+							}
+							cancel();
+						} else {
+							startNewRound(7, null);
+						}
+						cancel();
+						return;
+					}
+
 					stopGame();
 
 					cancel();
@@ -1496,20 +1535,22 @@ public class GameInstance implements Listener {
 
 	private void startNewRound(int delay, List<Player> prevRWT) {
 		for(Player p : players) {
-			if (prevRWT != null && !prevRWT.isEmpty()) {
-				ChatColor tColor;
-				String team;
 
+			ChatColor tColor = ChatColor.GRAY;
+			String team = "nobody";
+
+			if (prevRWT != null && !prevRWT.isEmpty()) {
 				if (prevRWT.equals(blueTeam)) {
 					tColor = ChatColor.BLUE;
 					team = "blue";
-                } else {
+				} else {
 					tColor = ChatColor.RED;
 					team = "red";
-                }
-
-				Main.sendTitle(p, Lang.TEAM_WON_ROUND.getMessage().replace("{team-color}", tColor + "").replace("{team}", team), Lang.NEXT_ROUND_STARTING.getMessage().replace("{time}", delay + ""), tColor);
+				}
 			}
+
+			Main.sendTitle(p, Lang.TEAM_WON_ROUND.getMessage().replace("{team-color}", tColor + "").replace("{team}", team), Lang.NEXT_ROUND_STARTING.getMessage().replace("{time}", delay + ""), tColor);
+
 		}
 
 		BukkitRunnable br = new BukkitRunnable() {
