@@ -2647,7 +2647,7 @@ public class GameInstance implements Listener {
 
 							fw.setFireworkMeta(fwm);
 						} else {
-							if (!LoadoutManager.getInstance().getActiveLoadout(p).hasPerk(Perk.NINJA))
+							if (!LoadoutManager.getInstance().getActiveLoadout(p).hasPerk(Perk.GHOST))
 								p.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, 20, 1));
 						}
 					}
@@ -2673,7 +2673,7 @@ public class GameInstance implements Listener {
 
 							fw.setFireworkMeta(fwm);
 						} else {
-							if(!LoadoutManager.getInstance().getActiveLoadout(p).hasPerk(Perk.NINJA))
+							if(!LoadoutManager.getInstance().getActiveLoadout(p).hasPerk(Perk.GHOST))
 								p.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, 20, 1));
 						}
 					}
@@ -2703,7 +2703,7 @@ public class GameInstance implements Listener {
 
 							fw.setFireworkMeta(fwm);
 						} else {
-							if (!LoadoutManager.getInstance().getActiveLoadout(p).hasPerk(Perk.NINJA))
+							if (!LoadoutManager.getInstance().getActiveLoadout(p).hasPerk(Perk.GHOST))
 								p.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, 20, 1));
 						}
 					}
@@ -2761,56 +2761,12 @@ public class GameInstance implements Listener {
 		Wolf[] wolves = new Wolf[8];
 
 		for (int i = 0; i < 8; i++) {
-			Wolf wolf = owner.getLocation().getWorld().spawn(owner.getLocation(), Wolf.class);
-			wolf.setOwner(owner);
-			wolf.setAngry(true);
-			DyeColor collarColor;
-
-			if (isOnBlueTeam(owner))
-				collarColor = DyeColor.BLUE;
-			else if (isOnRedTeam(owner))
-				collarColor = DyeColor.RED;
-			else
-				collarColor = DyeColor.PINK;
-
-			wolf.setCollarColor(collarColor);
-			wolf.setCanPickupItems(false);
-			wolf.setCustomName(owner.getDisplayName() + "'s Dog");
-			wolf.setCustomNameVisible(true);
-			wolf.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 20 * 20, 2));
-
-			wolves[i] = wolf;
+			updateDogs(owner, wolves, i);
 		}
 
 		for (int i = 0; i < wolves.length; i++) {
 			Wolf wolf = wolves[i];
-
-			if (isOnBlueTeam(owner)) {
-				Player target;
-				int index = (new Random()).nextInt(redTeam.size());
-				target = redTeam.get(index);
-
-				wolf.setTarget(target);
-			} else if (isOnRedTeam(owner)) {
-				Player target;
-				int index = (new Random()).nextInt(blueTeam.size());
-				target = blueTeam.get(index);
-
-				wolf.setTarget(target);
-			} else {
-				Player target;
-				do {
-					int index = (new Random()).nextInt(players.size());
-					target = players.get(index);
-					if (players.size() == 1) {
-						target = null;
-						break;
-					}
-				} while (!target.equals(owner));
-
-				if (target != null)
-					wolf.setTarget(target);
-			}
+			setNewDogsTarget(wolf, owner);
 		}
 
 		if (dogsScoreStreak.containsKey(owner)) {
@@ -2844,65 +2800,63 @@ public class GameInstance implements Listener {
 				for (int i = 0; i < wolves.length; i++) {
 					Wolf w = wolves[i];
 					if (w == null) {
-						Wolf wolf = owner.getLocation().getWorld().spawn(owner.getLocation(), Wolf.class);
-						wolf.setOwner(owner);
-						wolf.setAngry(true);
-						DyeColor collarColor;
-
-						if (isOnBlueTeam(owner))
-							collarColor = DyeColor.BLUE;
-						else if (isOnRedTeam(owner))
-							collarColor = DyeColor.RED;
-						else
-							collarColor = DyeColor.PINK;
-
-						wolf.setCollarColor(collarColor);
-						wolf.setCanPickupItems(false);
-						wolf.setCustomName(owner.getDisplayName() + "'s Dog");
-						wolf.setCustomNameVisible(true);
-						wolf.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 20 * 20, 2));
-						wolves[i] = wolf;
+						updateDogs(owner, wolves, i);
 						w = wolves[i];
 					}
 
 					w.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 20, 2));
 
-					if (w.getTarget() == null
-							|| !(w.getTarget() instanceof Player)
-							|| (w.getTarget() instanceof Player && health.isDead(((Player) w.getTarget())))) {
-						if (isOnBlueTeam(owner)) {
-							Player target;
-							int index = (new Random()).nextInt(redTeam.size());
-							target = redTeam.get(index);
-
-							w.setTarget(target);
-
-						} else if (isOnRedTeam(owner)) {
-							Player target;
-							int index = (new Random()).nextInt(blueTeam.size());
-							target = blueTeam.get(index);
-
-							w.setTarget(target);
-						} else {
-							Player target;
-							do {
-								int index = (new Random()).nextInt(players.size());
-								target = players.get(index);
-								if (players.size() == 1) {
-									target = null;
-									break;
-								}
-							} while (!target.equals(owner));
-
-							if (target != null)
-								w.setTarget(target);
-						}
+					if (w.getTarget() == null || !(w.getTarget() instanceof Player) || (w.getTarget() instanceof Player && health.isDead(((Player) w.getTarget())))) {
+						setNewDogsTarget(w, owner);
 					}
 				}
 			}
 		};
 
 		br.runTaskTimer(Main.getPlugin(), 0L, 20L);
+	}
+
+	private void setNewDogsTarget(Wolf w, Player owner) {
+		List<Player> targets;
+		if (isOnBlueTeam(owner)) {
+			targets = redTeam;
+		} else if (isOnRedTeam(owner)) {
+			targets = blueTeam;
+		} else {
+			targets = getPlayers();
+		}
+
+		Player target;
+		List<Player> team = new ArrayList<>(targets);
+		for (Player p : targets)
+			if (p.getUniqueId().equals(owner.getUniqueId()) || LoadoutManager.getInstance().getActiveLoadout(p).hasPerk(Perk.COLD_BLOODED))
+				team.remove(p);
+		int index = (new Random()).nextInt(team.size());
+		target = team.get(index);
+
+		w.setTarget(target);
+	}
+
+	private void updateDogs(Player owner, Wolf[] wolves, int i) {
+		Wolf wolf = owner.getLocation().getWorld().spawn(owner.getLocation(), Wolf.class);
+		wolf.setOwner(owner);
+		wolf.setAngry(true);
+		DyeColor collarColor;
+
+		if (isOnBlueTeam(owner))
+			collarColor = DyeColor.BLUE;
+		else if (isOnRedTeam(owner))
+			collarColor = DyeColor.RED;
+		else
+			collarColor = DyeColor.PINK;
+
+		wolf.setCollarColor(collarColor);
+		wolf.setCanPickupItems(false);
+		wolf.setCustomName(owner.getDisplayName() + "'s Dog");
+		wolf.setCustomNameVisible(true);
+		wolf.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 20 * 20, 2));
+
+		wolves[i] = wolf;
 	}
 
 	private void startNuke(Player owner) {

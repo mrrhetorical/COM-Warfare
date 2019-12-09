@@ -13,15 +13,18 @@ public class CodPerk {
 	private Perk perk;
 	private PerkSlot slot;
 	private ItemStack item;
-	private ArrayList<String> lore = new ArrayList<>();
 	private int cost;
 	
 	public CodPerk(Perk perk, ItemStack item, PerkSlot slot, ArrayList<String> lore, int cost) {
 		setPerk(perk);
 		setItem(item);
 		setSlot(slot);
-		setLore(lore);
 		setCost(cost);
+		for (int i = 0; i < lore.size(); i++) {
+			String line = lore.get(i);
+			lore.set(i, line.replace("&", "\u00A7"));
+		}
+		perk.setLore(lore);
 	}
 
 	public Perk getPerk() {
@@ -54,11 +57,7 @@ public class CodPerk {
 	}
 
 	public ArrayList<String> getLore() {
-		return lore;
-	}
-
-	private void setLore(ArrayList<String> lore) {
-		this.lore = lore;
+		return getPerk().getLore();
 	}
 
 	public int getCost() {
