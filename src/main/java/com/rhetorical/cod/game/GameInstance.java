@@ -1537,15 +1537,15 @@ public class GameInstance implements Listener {
 		for(Player p : players) {
 
 			ChatColor tColor = ChatColor.GRAY;
-			String team = "nobody";
+			String team = "Nobody";
 
 			if (prevRWT != null && !prevRWT.isEmpty()) {
 				if (prevRWT.equals(blueTeam)) {
 					tColor = ChatColor.BLUE;
-					team = "blue";
+					team = "BLUE";
 				} else {
 					tColor = ChatColor.RED;
-					team = "red";
+					team = "RED";
 				}
 			}
 

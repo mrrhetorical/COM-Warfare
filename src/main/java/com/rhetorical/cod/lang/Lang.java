@@ -114,7 +114,7 @@ public enum Lang {
 	LOBBY_FOOTER("&7Game Starts in {time}!"),
 	GAME_STARTING("&7The game is starting now!"),
 	MAP_VOTING_NEXT_MAP("&7The next map is set to: {map}"),
-	TEAM_WON_ROUND("{team-color}The {team} won the round!"),
+	TEAM_WON_ROUND("{team-color}{team} won the round!"),
 	NEXT_ROUND_STARTING("The next round will start in {time} seconds"),
 	RESPAWN_IF_DOG_TAG_PICKED_UP("&cYou will respawn if your teammate pick up your dog tag!"),
 	RESPAWN_NEXT_ROUND("&cYou will respawn next round!"),
