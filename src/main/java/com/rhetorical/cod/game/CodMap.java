@@ -100,6 +100,8 @@ public class CodMap {
 			if (getBlueSpawns().size() >= 1 && getRedSpawns().size() >= 1) {
 				if (!availableGamemodes.contains(Gamemode.TDM) && !blacklistedModes.contains(Gamemode.TDM))
 					availableGamemodes.add(Gamemode.TDM);
+				if (!availableGamemodes.contains(Gamemode.GUNFIGHT) && !blacklistedModes.contains(Gamemode.GUNFIGHT))
+					availableGamemodes.add(Gamemode.GUNFIGHT);
 				if (!availableGamemodes.contains(Gamemode.RSB) && !blacklistedModes.contains(Gamemode.RSB))
 					availableGamemodes.add(Gamemode.RSB);
 				if (!availableGamemodes.contains(Gamemode.INFECT) && !blacklistedModes.contains(Gamemode.INFECT))

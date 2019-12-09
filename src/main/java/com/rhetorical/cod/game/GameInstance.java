@@ -15,7 +15,7 @@ import com.rhetorical.cod.progression.CreditManager;
 import com.rhetorical.cod.progression.ProgressionManager;
 import com.rhetorical.cod.progression.RankPerks;
 import com.rhetorical.cod.progression.StatHandler;
-import com.rhetorical.cod.sounds.events.AirstrikeExplodeEvent;
+import com.rhetorical.cod.sounds.events.AirstrikeExplodeSoundEvent;
 import com.rhetorical.cod.streaks.KillStreak;
 import com.rhetorical.cod.streaks.KillStreakManager;
 import com.rhetorical.cod.weapons.CodGun;
@@ -78,7 +78,8 @@ public class GameInstance implements Listener {
 			maxScore_GUN,
 			maxScore_OITC,
 			maxScore_RESCUE,
-			maxScore_HARDPOINT;
+			maxScore_HARDPOINT,
+			maxScore_GUNFIGHT;
 
 	private CtfFlag redFlag, blueFlag;
 
@@ -150,6 +151,7 @@ public class GameInstance implements Listener {
 			maxScore_OITC = Main.getPlugin().getConfig().getInt("maxScore.OITC");
 			maxScore_RESCUE = Main.getPlugin().getConfig().getInt("maxScore.RESCUE");
 			maxScore_HARDPOINT = Main.getPlugin().getConfig().getInt("maxScore.HARDPOINT");
+			maxScore_GUNFIGHT = Main.getPlugin().getConfig().getInt("maxScore.GUNFIGHT");
 		} else {
 			maxScore_TDM = 75;
 			maxScore_RSB = 75;
@@ -161,6 +163,7 @@ public class GameInstance implements Listener {
 			maxScore_RESCUE = 4;
 			maxScore_GUN = GameManager.gunGameGuns.size();
 			maxScore_HARDPOINT = 75;
+			maxScore_GUNFIGHT = 6;
 		}
 
 		setState(GameState.WAITING);
@@ -384,7 +387,7 @@ public class GameInstance implements Listener {
 				ffaPlayerScores.put(p, maxScore_OITC);
 			}
 
-			if (getGamemode() != Gamemode.RESCUE) {
+			if (getGamemode() != Gamemode.RESCUE && getGamemode() != Gamemode.GUNFIGHT) {
 
 				Location spawn;
 				if (isOnRedTeam(p)) {
@@ -582,7 +585,7 @@ public class GameInstance implements Listener {
 			}
 		}
 
-		if (getGamemode() == Gamemode.RESCUE) {
+		if (getGamemode() == Gamemode.RESCUE || getGamemode() == Gamemode.GUNFIGHT) {
 			for (Player p : players) {
 				isAlive.put(p, true);
 			}
@@ -609,16 +612,15 @@ public class GameInstance implements Listener {
 	}
 
 	/**
-	 * Spawns the player within the current map at the given Location.
+	 * Spawns the player within the current map at the given Location with the given loadout.
 	 * */
-	private void spawnCodPlayer(Player p, Location L) {
+	private void spawnCodPlayer(Player p, Location L, Loadout loadout) {
 		p.teleport(L);
 		p.getInventory().clear();
 		p.setGameMode(GameMode.ADVENTURE);
 		p.setHealth(20d);
 		p.setFoodLevel(20);
 		health.reset(p);
-		Loadout loadout = LoadoutManager.getInstance().getActiveLoadout(p);
 
 		setTeamArmor(p);
 
@@ -662,7 +664,8 @@ public class GameInstance implements Listener {
 				|| getGamemode() == Gamemode.FFA
 				|| getGamemode() == Gamemode.INFECT
 				|| getGamemode() == Gamemode.RESCUE
-				|| getGamemode() == Gamemode.HARDPOINT) {
+				|| getGamemode() == Gamemode.HARDPOINT
+				|| getGamemode() == Gamemode.GUNFIGHT) {
 
 			p.getInventory().setItem(0, LoadoutManager.getInstance().knife);
 
@@ -701,6 +704,13 @@ public class GameInstance implements Listener {
 		p.updateInventory();
 
 		KillStreakManager.getInstance().streaksAfterDeath(p);
+	}
+
+	/**
+	 * Spawns the player within the current map at the given Location with their selected loadout.
+	 * */
+	private void spawnCodPlayer(Player p, Location loc) {
+		spawnCodPlayer(p, loc, LoadoutManager.getInstance().getActiveLoadout(p));
 	}
 
 	/**
@@ -1147,12 +1157,9 @@ public class GameInstance implements Listener {
 							int distance = (int) p.getLocation().distance(closestObjective);
 							ItemStack stack = p.getInventory().getItem(8);
 							boolean exists = true;
-							int displayedDistance = distance <= 100 ? distance != 0 ? distance : 1 : 100;
 							if (stack == null || stack.getType() == Material.AIR) {
-								stack = new ItemStack(Material.COMPASS, displayedDistance);
+								stack = new ItemStack(Material.COMPASS, 1);
 								exists = false;
-							} else {
-								stack.setAmount(displayedDistance);
 							}
 							ItemMeta meta = stack.getItemMeta();
 							if (meta != null)
@@ -1179,7 +1186,6 @@ public class GameInstance implements Listener {
 			setState(GameState.IN_GAME);
 
 			try {
-//			scoreBar.removeAll();
 				scoreBar.getClass().getMethod("removeAll").invoke(scoreBar);
 			} catch(NoClassDefFoundError e) {
 				System.out.println();
@@ -1201,7 +1207,7 @@ public class GameInstance implements Listener {
 
 					} catch(NoClassDefFoundError e) {
 						System.out.println();
-					}catch(Exception ignored) {}
+					} catch(Exception ignored) {}
 
 					if (getGamemode() == Gamemode.OITC) {
 						ffaPlayerScores.put(p, maxScore_OITC);
@@ -1215,16 +1221,30 @@ public class GameInstance implements Listener {
 
 			startPriorityGameTimer();
 		} else {
-			for (Player p : players) {
-				if (isOnBlueTeam(p)) {
-					spawnCodPlayer(p, getMap().getBlueSpawn());
-				} else if (isOnRedTeam(p)) {
-					spawnCodPlayer(p, getMap().getRedSpawn());
-				} else {
-					assignTeams();
-				}
 
-			}
+
+			if (getGamemode() == Gamemode.GUNFIGHT) {
+				CodGun primary = LoadoutManager.getInstance().getRandomPrimary();
+				CodGun secondary = LoadoutManager.getInstance().getRandomSecondary();
+				CodWeapon lethal = LoadoutManager.getInstance().getRandomLethal();
+				CodWeapon tactical = LoadoutManager.getInstance().getRandomTactical();
+
+				Loadout loadout = new Loadout(null, "GUNFIGHT LOAOUT", primary, secondary, Math.random() > 0.5 ? lethal : LoadoutManager.getInstance().blankLethal, Math.random() > 0.5 ? tactical : LoadoutManager.getInstance().blankTactical, null, null, null, false);
+				for (Player p : getPlayers())
+					if (isOnBlueTeam(p))
+						spawnCodPlayer(p, getMap().getBlueSpawn(), loadout);
+					else if (isOnRedTeam(p))
+						spawnCodPlayer(p, getMap().getRedSpawn(), loadout);
+					else
+						assignTeams();
+			} else if (getGamemode() == Gamemode.RESCUE)
+				for (Player p : getPlayers())
+					if (isOnBlueTeam(p))
+						spawnCodPlayer(p, getMap().getBlueSpawn());
+					else if (isOnRedTeam(p))
+						spawnCodPlayer(p, getMap().getRedSpawn());
+					else
+						assignTeams();
 		}
 
 		GameInstance game = this;
@@ -1378,13 +1398,18 @@ public class GameInstance implements Listener {
 					}
 				}
 
-				if (getGamemode() == Gamemode.RESCUE) {
+				if (getGamemode() == Gamemode.RESCUE || getGamemode() == Gamemode.GUNFIGHT) {
 					if (getAlivePlayers(redTeam) == 0) {
 						addBluePoint();
 
-						if (!(blueTeamScore >= maxScore_RESCUE)) {
-							startNewRound(7, blueTeam);
-						}
+							if (getGamemode() == Gamemode.RESCUE) {
+								if (!(blueTeamScore >= maxScore_RESCUE))
+									startNewRound(7, blueTeam);
+							}
+							else if (getGamemode() == Gamemode.GUNFIGHT) {
+								if (!(blueTeamScore >= maxScore_GUNFIGHT))
+									startNewRound(7, blueTeam);
+							}
 
 						for (Player pp : players) {
 							isAlive.put(pp, true);
@@ -1393,8 +1418,12 @@ public class GameInstance implements Listener {
 					} else if (getAlivePlayers(blueTeam) == 0) {
 						addRedPoint();
 
-						if (!(redTeamScore >= maxScore_RESCUE)) {
-							startNewRound(7, redTeam);
+						if (getGamemode() == Gamemode.RESCUE) {
+							if (!(redTeamScore >= maxScore_RESCUE))
+								startNewRound(7, redTeam);
+						} else if (getGamemode() == Gamemode.GUNFIGHT) {
+							if (!(redTeamScore >= maxScore_GUNFIGHT))
+								startNewRound(7, redTeam);
 						}
 
 						for (Player pp : players) {
@@ -1403,10 +1432,17 @@ public class GameInstance implements Listener {
 						cancel();
 					}
 
-					if (blueTeamScore >= maxScore_RESCUE || redTeamScore >= maxScore_RESCUE && getGamemode().equals(Gamemode.RESCUE)) {
-						endGameByScore(this);
-						cancel();
-						return;
+					if (getGamemode() == Gamemode.RESCUE) {
+						if (blueTeamScore >= maxScore_RESCUE || redTeamScore >= maxScore_RESCUE && getGamemode() == Gamemode.RESCUE) {
+							endGameByScore(this);
+							cancel();
+							return;
+						}
+					} else if (getGamemode() == Gamemode.GUNFIGHT) {
+						if (blueTeamScore >= maxScore_GUNFIGHT || redTeamScore >= maxScore_GUNFIGHT && getGamemode() == Gamemode.GUNFIGHT) {
+							endGameByScore(this);
+							cancel();
+						}
 					}
 				}
 
@@ -1597,7 +1633,7 @@ public class GameInstance implements Listener {
 	private int getAlivePlayers(ArrayList<Player> team) {
 		int count = 0;
 
-		if (getGamemode() != Gamemode.RESCUE)
+		if (getGamemode() != Gamemode.RESCUE && getGamemode() != Gamemode.GUNFIGHT)
 			return 1;
 
 		for (Player p : team) {
@@ -1620,7 +1656,7 @@ public class GameInstance implements Listener {
 
 		AssignmentManager.getInstance().updateAssignments(p, 1, getGamemode());
 
-		if (getGamemode() == Gamemode.RESCUE) {
+		if (getGamemode() == Gamemode.RESCUE || getGamemode() == Gamemode.GUNFIGHT) {
 			p.setGameMode(GameMode.SPECTATOR);
 			p.getInventory().clear();
 			isAlive.put(p, false);
@@ -1866,7 +1902,7 @@ public class GameInstance implements Listener {
 
 		RankPerks rank = Main.getRank(killer);
 
-		if (getGamemode().equals(Gamemode.TDM) || getGamemode().equals(Gamemode.KC) || getGamemode().equals(Gamemode.RSB) || getGamemode().equals(Gamemode.DOM) || getGamemode().equals(Gamemode.RESCUE) || getGamemode().equals(Gamemode.HARDPOINT)) {
+		if (getGamemode().equals(Gamemode.TDM) || getGamemode().equals(Gamemode.KC) || getGamemode().equals(Gamemode.RSB) || getGamemode().equals(Gamemode.DOM) || getGamemode().equals(Gamemode.RESCUE) || getGamemode().equals(Gamemode.GUNFIGHT) || getGamemode().equals(Gamemode.HARDPOINT)) {
 			if (isOnRedTeam(killer)) {
 
 				double xp = rank.getKillExperience();
@@ -1881,7 +1917,7 @@ public class GameInstance implements Listener {
 				ProgressionManager.getInstance().addExperience(killer, xp);
 				CreditManager.setCredits(killer, CreditManager.getCredits(killer) + rank.getKillCredits());
 				kill(victim, killer);
-				if (getGamemode() != Gamemode.RESCUE && getGamemode() != Gamemode.KC) {
+				if (getGamemode() != Gamemode.RESCUE && getGamemode() != Gamemode.KC && getGamemode() != Gamemode.GUNFIGHT) {
 					if (getGamemode() != Gamemode.HARDPOINT) {
 						addRedPoint();
 					} else if (hardpointController == 1) {
@@ -1902,7 +1938,7 @@ public class GameInstance implements Listener {
 				ProgressionManager.getInstance().addExperience(killer, xp);
 				CreditManager.setCredits(killer, CreditManager.getCredits(killer) + rank.getKillCredits());
 				kill(victim, killer);
-				if (getGamemode() != Gamemode.RESCUE && getGamemode() != Gamemode.KC) {
+				if (getGamemode() != Gamemode.RESCUE && getGamemode() != Gamemode.KC && getGamemode() != Gamemode.GUNFIGHT) {
 					if (getGamemode() != Gamemode.HARDPOINT) {
 						addBluePoint();
 					} else if (hardpointController == 0) {
@@ -2098,7 +2134,7 @@ public class GameInstance implements Listener {
 			return;
 		}
 
-		if (getGamemode() != Gamemode.GUN && getGamemode() != Gamemode.OITC && getGamemode() != Gamemode.RSB && (getGamemode() != Gamemode.INFECT || isOnBlueTeam(attacker))) {
+		if (getGamemode() != Gamemode.GUN && getGamemode() != Gamemode.OITC && getGamemode() != Gamemode.RSB && getGamemode() != Gamemode.GUNFIGHT && (getGamemode() != Gamemode.INFECT || isOnBlueTeam(attacker))) {
 			if (LoadoutManager.getInstance().getActiveLoadout(attacker).hasPerk(Perk.COMMANDO))
 				damage = 10 * Main.getDefaultHealth();
 		}
@@ -2249,7 +2285,7 @@ public class GameInstance implements Listener {
 
 		if (getGamemode() == Gamemode.OITC) {
 			damage = health.defaultHealth * 2;
-		} else if (getGamemode() != Gamemode.GUN && getGamemode() != Gamemode.RSB && getGamemode() != Gamemode.INFECT) {
+		} else if (getGamemode() != Gamemode.GUN && getGamemode() != Gamemode.RSB && getGamemode() != Gamemode.INFECT && getGamemode() != Gamemode.GUNFIGHT) {
 			if (damagers.length != 0) {
 				Player shooter = damagers[0];
 				if (LoadoutManager.getInstance().getActiveLoadout(shooter).hasPerk(Perk.STOPPING_POWER)) {
@@ -2283,7 +2319,7 @@ public class GameInstance implements Listener {
 		}
 
 		if (health.isDead(victim)) {
-			if (!LoadoutManager.getInstance().getActiveLoadout(victim).hasPerk(Perk.LAST_STAND) || !(getGamemode() != Gamemode.GUN && getGamemode() != Gamemode.OITC && getGamemode() != Gamemode.RSB && (getGamemode() != Gamemode.INFECT || isOnBlueTeam(victim)))) {
+			if (!LoadoutManager.getInstance().getActiveLoadout(victim).hasPerk(Perk.LAST_STAND) || !(getGamemode() != Gamemode.GUN && getGamemode() != Gamemode.GUNFIGHT && getGamemode() != Gamemode.OITC && getGamemode() != Gamemode.RSB && (getGamemode() != Gamemode.INFECT || isOnBlueTeam(victim)))) {
 				if (damagers.length < 1) {
 					Main.sendMessage(victim, "" + ChatColor.GREEN + ChatColor.BOLD + "YOU " + ChatColor.RESET + "" + ChatColor.WHITE + "[" + Lang.KILLED_TEXT.getMessage() + "] " + ChatColor.RESET + ChatColor.GREEN + ChatColor.BOLD + "YOURSELF", Main.getLang());
 					kill(victim, victim);
@@ -2926,7 +2962,7 @@ public class GameInstance implements Listener {
 		for (int i = 0; i < targeted; i++) {
 			if (!targets.isEmpty()) {
 				int index = (int) Math.round(Math.random() * (targets.size() - 1));
-				Bukkit.getPluginManager().callEvent(new AirstrikeExplodeEvent(targets.get(index)));
+				Bukkit.getPluginManager().callEvent(new AirstrikeExplodeSoundEvent(targets.get(index)));
 				if (!isUnderRoof(targets.get(index)))
 					damagePlayer(targets.get(index), Main.getDefaultHealth() * 100, owner);
 				targets.remove(index);
