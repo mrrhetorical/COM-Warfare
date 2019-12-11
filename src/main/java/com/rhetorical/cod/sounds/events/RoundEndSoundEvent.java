@@ -6,16 +6,16 @@ import java.util.Set;
 
 public class RoundEndSoundEvent extends SoundEvent {
 
-	private Set<Player> players;
+	private Player player;
 	private boolean victory;
 
-	public RoundEndSoundEvent(Set<Player> players, boolean victory) {
-		this.players = players;
+	public RoundEndSoundEvent(Player player, boolean victory) {
+		this.player = player;
 		this.victory = victory;
 	}
 
-	public Set<Player> getPlayers() {
-		return players;
+	public Player getPlayer() {
+		return player;
 	}
 
 	public boolean isVictory() {

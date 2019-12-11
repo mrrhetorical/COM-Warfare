@@ -15,7 +15,7 @@ import com.rhetorical.cod.progression.CreditManager;
 import com.rhetorical.cod.progression.ProgressionManager;
 import com.rhetorical.cod.progression.RankPerks;
 import com.rhetorical.cod.progression.StatHandler;
-import com.rhetorical.cod.sounds.events.AirstrikeExplodeSoundEvent;
+import com.rhetorical.cod.sounds.events.*;
 import com.rhetorical.cod.streaks.KillStreak;
 import com.rhetorical.cod.streaks.KillStreakManager;
 import com.rhetorical.cod.weapons.CodGun;
@@ -561,8 +561,6 @@ public class GameInstance implements Listener {
 
 		for (Player p : players) {
 
-//			LoadoutManager.getInstance().getActiveLoadouts().remove(p);
-
 			KillStreakManager.getInstance().reset(p);
 
 			playerScores.put(p, new CodScore(p));
@@ -583,6 +581,9 @@ public class GameInstance implements Listener {
 				}
 				spawnCodPlayer(p, currentMap.getPinkSpawn());
 			}
+
+			Bukkit.getPluginManager().callEvent(new GameStartSoundEvent(p, getGamemode()));
+
 		}
 
 		if (getGamemode() == Gamemode.RESCUE || getGamemode() == Gamemode.GUNFIGHT) {
@@ -864,6 +865,8 @@ public class GameInstance implements Listener {
 			} else if (getWinningTeam().equals(p.getDisplayName())) {
 				won = true;
 			}
+
+			Bukkit.getPluginManager().callEvent(new GameEndSoundEvent(p, won));
 
 			AssignmentManager.getInstance().updateAssignments(p, 0, getGamemode(), won);
 
@@ -1549,6 +1552,15 @@ public class GameInstance implements Listener {
 				}
 			}
 
+			if (prevRWT != null) {
+				if (prevRWT.equals(blueTeam) && isOnBlueTeam(p))
+					Bukkit.getPluginManager().callEvent(new RoundEndSoundEvent(p, true));
+				else if (prevRWT.equals(redTeam) && isOnRedTeam(p))
+					Bukkit.getPluginManager().callEvent(new RoundEndSoundEvent(p, true));
+				else
+					Bukkit.getPluginManager().callEvent(new RoundEndSoundEvent(p, false));
+			}
+
 			Main.sendTitle(p, Lang.TEAM_WON_ROUND.getMessage().replace("{team-color}", tColor + "").replace("{team}", team), Lang.NEXT_ROUND_STARTING.getMessage().replace("{time}", delay + ""), tColor);
 
 		}
@@ -1694,6 +1706,8 @@ public class GameInstance implements Listener {
 	 * @param killer = The player who killed the player
 	 * */
 	public void kill(Player p, Player killer) {
+
+		Bukkit.getPluginManager().callEvent(new PlayerDieSoundEvent(p));
 
 		AssignmentManager.getInstance().updateAssignments(p, 1, getGamemode());
 
@@ -2356,6 +2370,7 @@ public class GameInstance implements Listener {
 				}
 
 				health.damage(victim, damage);
+				Bukkit.getPluginManager().callEvent(new PlayerHitmarkerSoundEvent(damagers[0]));
 			}
 		}
 

@@ -3,20 +3,18 @@ package com.rhetorical.cod.sounds.events;
 import com.rhetorical.cod.game.Gamemode;
 import org.bukkit.entity.Player;
 
-import java.util.Set;
-
 public class GameStartSoundEvent extends SoundEvent {
 
-	private Set<Player> players;
+	private Player player;
 	private Gamemode gamemode;
 
-	public GameStartSoundEvent(Set<Player> players, Gamemode gamemode) {
-		this.players = players;
+	public GameStartSoundEvent(Player player, Gamemode gamemode) {
+		this.player = player;
 		this.gamemode = gamemode;
 	}
 
-	public Set<Player> getPlayers() {
-		return players;
+	public Player getPlayer() {
+		return player;
 	}
 
 	public Gamemode getGamemode() {

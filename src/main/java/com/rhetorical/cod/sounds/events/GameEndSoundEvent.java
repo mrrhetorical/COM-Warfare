@@ -2,20 +2,18 @@ package com.rhetorical.cod.sounds.events;
 
 import org.bukkit.entity.Player;
 
-import java.util.Set;
-
 public class GameEndSoundEvent extends SoundEvent {
 
-	private Set<Player> players;
+	private Player player;
 	private boolean victory;
 
-	public GameEndSoundEvent(Set<Player> players, boolean victory) {
-		this.players = players;
+	public GameEndSoundEvent(Player players, boolean victory) {
+		this.player = players;
 		this.victory = victory;
 	}
 
-	public Set<Player> getPlayers() {
-		return players;
+	public Player getPlayer() {
+		return player;
 	}
 
 	public boolean isVictory() {
