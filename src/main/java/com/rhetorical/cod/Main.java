@@ -13,6 +13,7 @@ import com.rhetorical.cod.perks.PerkManager;
 import com.rhetorical.cod.progression.CreditManager;
 import com.rhetorical.cod.progression.ProgressionManager;
 import com.rhetorical.cod.progression.RankPerks;
+import com.rhetorical.cod.sounds.SoundManager;
 import com.rhetorical.cod.streaks.KillStreakManager;
 import com.rhetorical.cod.util.LegacyActionBar;
 import com.rhetorical.cod.util.LegacyTitle;
@@ -213,6 +214,7 @@ public class Main extends JavaPlugin {
 		StatsFile.setup(getPlugin());
 		KillstreaksFile.setup(getPlugin());
 		AssignmentFile.setup(getPlugin());
+		SoundFile.setup(getPlugin());
 
 		QualityGun.setup();
 		CrackShotGun.setup();
@@ -225,6 +227,7 @@ public class Main extends JavaPlugin {
 		KillStreakManager.getInstance();
 		InventoryManager.getInstance();
 		AssignmentManager.getInstance();
+		SoundManager.getInstance();
 
 		GameManager.setupOITC();
 		GameManager.setupGunGame();

@@ -3,14 +3,10 @@ package com.rhetorical.cod.game;
 import com.rhetorical.cod.Main;
 import com.rhetorical.cod.lang.Lang;
 import org.bukkit.*;
-import org.bukkit.block.banner.Pattern;
-import org.bukkit.block.banner.PatternType;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.BannerMeta;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +23,10 @@ class DomFlag {
 	private int capture; // Range: -10 to 10. Lower is red, higher is blue.
 
 	private List<Player> lastCapping = new ArrayList<>();
+
+	private int secondsSinceLastNeutralized = 0;
+
+	private final int secondsToNextNeutralizedMessage = 20;
 
 	DomFlag(Lang flagName, Location flagLoc) {
 		this.flagName = flagName;
@@ -95,6 +95,8 @@ class DomFlag {
 	 * */
 	int checkFlag(GameInstance game) {
 
+		int prevCaptureProgress = getCaptureProgress();
+
 		int blue = 0;
 		int red = 0;
 
@@ -158,7 +160,10 @@ class DomFlag {
 				updateName(ChatColor.WHITE + getFlagName().getMessage());
 				updateFlag(-1);
 				for (Player p : game.getPlayers()) {
-					p.sendMessage(Lang.FLAG_NEUTRALIZED.getMessage().replace("{flag}", flag));
+					if (secondsSinceLastNeutralized >= getSecondsToNextNeutralizedMessage()) {
+						p.sendMessage(Lang.FLAG_NEUTRALIZED.getMessage().replace("{flag}", flag));
+						secondsSinceLastNeutralized = 0;
+					}
 				}
 			}
 
@@ -169,23 +174,24 @@ class DomFlag {
 			}
 		}
 
-		for (Player p : playersOnPoint) {
-			if (flagOwner == 0) {
-				if (game.isOnRedTeam(p))
-					Main.sendActionBar(p, Lang.CAPTURING_FLAG.getMessage());
-				else if (game.isOnBlueTeam(p))
-					Main.sendActionBar(p, Lang.DEFENDING_FLAG.getMessage());
-			} else if (flagOwner == 1) {
-				if (game.isOnRedTeam(p))
-					Main.sendActionBar(p, Lang.DEFENDING_FLAG.getMessage());
-				else if (game.isOnBlueTeam(p))
-					Main.sendActionBar(p, Lang.CAPTURING_FLAG.getMessage());
-			} else {
-				Main.sendActionBar(p, Lang.CAPTURING_FLAG.getMessage());
-			}
-		}
+		for (Player p : playersOnPoint)
+			Main.sendActionBar(p, getProgressMessage());
+
+		secondsSinceLastNeutralized++;
 
 		return flagOwner;
+	}
+
+	private String getProgressMessage() {
+		StringBuilder builder = new StringBuilder();
+		ChatColor color = getCaptureProgress() > 0 ? ChatColor.BLUE : ChatColor.RED;
+		int points = Math.abs(getCaptureProgress());
+		for (int i = 0; i < 10; i++) {
+			builder.append(i > points - 1 ? ChatColor.GRAY : color);
+			builder.append("■");
+		}
+
+		return builder.toString();
 	}
 
 	void updateFlag(int team) {
@@ -194,5 +200,9 @@ class DomFlag {
 
 	void updateName(String value) {
 		name.setCustomName(value);
+	}
+
+	private int getSecondsToNextNeutralizedMessage() {
+		return secondsToNextNeutralizedMessage;
 	}
 }

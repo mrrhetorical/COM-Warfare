@@ -39,6 +39,8 @@ public class Loadout implements Listener {
 	private Inventory perk2Inventory;
 	private Inventory perk3Inventory;
 
+	private boolean save;
+
 	public Loadout(Player o, String n, CodGun p, CodGun s, CodWeapon l, CodWeapon t, CodPerk p1, CodPerk p2, CodPerk p3) {
 		this.owner = o;
 		this.name = n;
@@ -51,8 +53,23 @@ public class Loadout implements Listener {
 		this.perk3 = p3;
 	}
 
+	public Loadout(Player o, String n, CodGun p, CodGun s, CodWeapon l, CodWeapon t, CodPerk p1, CodPerk p2, CodPerk p3, boolean save) {
+		this.owner = o;
+		this.name = n;
+		this.primary = p;
+		this.secondary = s;
+		this.lethal = l;
+		this.tactical = t;
+		this.perk1 = p1;
+		this.perk2 = p2;
+		this.perk3 = p3;
+		this.save = save;
+	}
+
 	public void setPrimary(CodGun gun) {
 		this.primary = gun;
+		if (!save)
+			return;
 		LoadoutManager.getInstance().save(this.getOwner());
 		LoadoutManager.getInstance().load(this.getOwner());
 		InventoryManager.getInstance().setupCreateClassInventory(this.getOwner());
@@ -60,6 +77,8 @@ public class Loadout implements Listener {
 
 	public void setSecondary(CodGun gun) {
 		this.secondary = gun;
+		if (!save)
+			return;
 		LoadoutManager.getInstance().save(this.getOwner());
 		LoadoutManager.getInstance().load(this.getOwner());
 		InventoryManager.getInstance().setupCreateClassInventory(this.getOwner());
@@ -67,6 +86,8 @@ public class Loadout implements Listener {
 
 	public void setLethal(CodWeapon grenade) {
 		this.lethal = grenade;
+		if (!save)
+			return;
 		LoadoutManager.getInstance().save(this.getOwner());
 		LoadoutManager.getInstance().load(this.getOwner());
 		InventoryManager.getInstance().setupCreateClassInventory(this.getOwner());
@@ -74,6 +95,8 @@ public class Loadout implements Listener {
 
 	public void setTactical(CodWeapon grenade) {
 		this.tactical = grenade;
+		if (!save)
+			return;
 		LoadoutManager.getInstance().save(this.getOwner());
 		LoadoutManager.getInstance().load(this.getOwner());
 		InventoryManager.getInstance().setupCreateClassInventory(this.getOwner());
@@ -83,18 +106,24 @@ public class Loadout implements Listener {
 		switch (slot) {
 			case ONE:
 				this.perk1 = perk;
+				if (!save)
+					return;
 				LoadoutManager.getInstance().save(this.getOwner());
 				LoadoutManager.getInstance().load(this.getOwner());
 				InventoryManager.getInstance().setupCreateClassInventory(this.getOwner());
 				break;
 			case TWO:
 				this.perk2 = perk;
+				if (!save)
+					return;
 				LoadoutManager.getInstance().save(this.getOwner());
 				LoadoutManager.getInstance().load(this.getOwner());
 				InventoryManager.getInstance().setupCreateClassInventory(this.getOwner());
 				break;
 			case THREE:
 				this.perk3 = perk;
+				if (!save)
+					return;
 				LoadoutManager.getInstance().save(this.getOwner());
 				LoadoutManager.getInstance().load(this.getOwner());
 				InventoryManager.getInstance().setupCreateClassInventory(this.getOwner());
@@ -141,8 +170,7 @@ public class Loadout implements Listener {
 	}
 
 	public boolean hasPerk(Perk perk) {
-		return getPerk1().getPerk().equals(perk) || getPerk2().getPerk().equals(perk) || getPerk3().getPerk().equals(perk);
-
+		return (getPerk1() != null && getPerk1().getPerk().equals(perk)) || (getPerk2() != null && getPerk2().getPerk().equals(perk)) || (getPerk3() != null && getPerk3().getPerk().equals(perk));
 	}
 
 	public Inventory getPrimaryInventory() {

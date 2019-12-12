@@ -14,7 +14,9 @@ public enum KillStreak {
 	COUNTER_UAV(Lang.COUNTER_UAV_NAME.getMessage(), 4, new ItemStack(Material.REDSTONE)),
 	DOGS(Lang.DOGS_NAME.getMessage(), 9, new ItemStack(Material.PAPER)),
 	NUKE(Lang.NUKE_NAME.getMessage(), 25, new ItemStack(Material.TNT)),
-	JUGGERNAUT(Lang.JUGGERNAUT_NAME.getMessage(), 12, new ItemStack(Material.BREAD));
+	JUGGERNAUT(Lang.JUGGERNAUT_NAME.getMessage(), 12, new ItemStack(Material.BREAD)),
+	AIRSTRIKE(Lang.AIRSTRIKE_NAME.getMessage(), 7, new ItemStack(Material.GLASS_BOTTLE)),
+	VSAT(Lang.VSAT_NAME.getMessage(), 14, new ItemStack(Material.GOLD_NUGGET));
 
 	private int requiredKills;
 	private ItemStack item;

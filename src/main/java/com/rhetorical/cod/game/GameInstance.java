@@ -15,12 +15,14 @@ import com.rhetorical.cod.progression.CreditManager;
 import com.rhetorical.cod.progression.ProgressionManager;
 import com.rhetorical.cod.progression.RankPerks;
 import com.rhetorical.cod.progression.StatHandler;
+import com.rhetorical.cod.sounds.events.*;
 import com.rhetorical.cod.streaks.KillStreak;
 import com.rhetorical.cod.streaks.KillStreakManager;
 import com.rhetorical.cod.weapons.CodGun;
 import com.rhetorical.cod.weapons.CodWeapon;
 import com.rhetorical.cod.weapons.CrackShotGun;
 import org.bukkit.*;
+import org.bukkit.block.Block;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -38,6 +40,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import javax.annotation.Nullable;
 import java.util.*;
 
 /**
@@ -75,7 +78,8 @@ public class GameInstance implements Listener {
 			maxScore_GUN,
 			maxScore_OITC,
 			maxScore_RESCUE,
-			maxScore_HARDPOINT;
+			maxScore_HARDPOINT,
+			maxScore_GUNFIGHT;
 
 	private CtfFlag redFlag, blueFlag;
 
@@ -103,6 +107,9 @@ public class GameInstance implements Listener {
 	private boolean blueUavActive;
 	private boolean redUavActive;
 
+	private boolean blueVSATActive;
+	private boolean redVSATActive;
+
 	private boolean blueCounterUavActive;
 	private boolean redCounterUavActive;
 	private boolean pinkCounterUavActive;
@@ -112,6 +119,7 @@ public class GameInstance implements Listener {
 	private Player pinkNukeActive;
 
 	private boolean pastClassChange = true;
+	private boolean canVote = true;
 
 
 	GameInstance(ArrayList<Player> pls, CodMap map) {
@@ -143,6 +151,7 @@ public class GameInstance implements Listener {
 			maxScore_OITC = Main.getPlugin().getConfig().getInt("maxScore.OITC");
 			maxScore_RESCUE = Main.getPlugin().getConfig().getInt("maxScore.RESCUE");
 			maxScore_HARDPOINT = Main.getPlugin().getConfig().getInt("maxScore.HARDPOINT");
+			maxScore_GUNFIGHT = Main.getPlugin().getConfig().getInt("maxScore.GUNFIGHT");
 		} else {
 			maxScore_TDM = 75;
 			maxScore_RSB = 75;
@@ -154,6 +163,7 @@ public class GameInstance implements Listener {
 			maxScore_RESCUE = 4;
 			maxScore_GUN = GameManager.gunGameGuns.size();
 			maxScore_HARDPOINT = 75;
+			maxScore_GUNFIGHT = 6;
 		}
 
 		setState(GameState.WAITING);
@@ -270,16 +280,14 @@ public class GameInstance implements Listener {
 	}
 
 	void changeMap(CodMap map) {
+		GameManager.usedMaps.remove(getMap());
+		clearNextMaps();
+		canVote = false;
 
 		if (map != null) {
-			GameManager.usedMaps.remove(getMap());
-
 			currentMap = map;
+			map.changeGamemode();
 		}
-
-		map = currentMap;
-
-		map.changeGamemode();
 
 		updateTimeLeft();
 	}
@@ -289,6 +297,7 @@ public class GameInstance implements Listener {
 			return;
 
 		GameManager.usedMaps.remove(getMap());
+		clearNextMaps();
 
 		currentMap = map;
 		map.setGamemode(mode);
@@ -301,6 +310,9 @@ public class GameInstance implements Listener {
 
 		if (!getMap().getAvailableGamemodes().contains(gm))
 			return;
+
+		clearNextMaps();
+		canVote = false;
 
 		currentMap.changeGamemode(gm);
 
@@ -375,7 +387,7 @@ public class GameInstance implements Listener {
 				ffaPlayerScores.put(p, maxScore_OITC);
 			}
 
-			if (getGamemode() != Gamemode.RESCUE) {
+			if (getGamemode() != Gamemode.RESCUE && getGamemode() != Gamemode.GUNFIGHT) {
 
 				Location spawn;
 				if (isOnRedTeam(p)) {
@@ -549,8 +561,6 @@ public class GameInstance implements Listener {
 
 		for (Player p : players) {
 
-//			LoadoutManager.getInstance().getActiveLoadouts().remove(p);
-
 			KillStreakManager.getInstance().reset(p);
 
 			playerScores.put(p, new CodScore(p));
@@ -571,9 +581,12 @@ public class GameInstance implements Listener {
 				}
 				spawnCodPlayer(p, currentMap.getPinkSpawn());
 			}
+
+			Bukkit.getPluginManager().callEvent(new GameStartSoundEvent(p, getGamemode()));
+
 		}
 
-		if (getGamemode() == Gamemode.RESCUE) {
+		if (getGamemode() == Gamemode.RESCUE || getGamemode() == Gamemode.GUNFIGHT) {
 			for (Player p : players) {
 				isAlive.put(p, true);
 			}
@@ -600,18 +613,19 @@ public class GameInstance implements Listener {
 	}
 
 	/**
-	 * Spawns the player within the current map.
+	 * Spawns the player within the current map at the given Location with the given loadout.
 	 * */
-	private void spawnCodPlayer(Player p, Location L) {
+	private void spawnCodPlayer(Player p, Location L, Loadout loadout) {
 		p.teleport(L);
 		p.getInventory().clear();
 		p.setGameMode(GameMode.ADVENTURE);
 		p.setHealth(20d);
 		p.setFoodLevel(20);
 		health.reset(p);
-		Loadout loadout = LoadoutManager.getInstance().getActiveLoadout(p);
 
 		setTeamArmor(p);
+
+		Bukkit.getPluginManager().callEvent(new PlayerSpawnSoundEvent(p));
 
 		if (getGamemode() == Gamemode.RSB) {
 
@@ -653,7 +667,8 @@ public class GameInstance implements Listener {
 				|| getGamemode() == Gamemode.FFA
 				|| getGamemode() == Gamemode.INFECT
 				|| getGamemode() == Gamemode.RESCUE
-				|| getGamemode() == Gamemode.HARDPOINT) {
+				|| getGamemode() == Gamemode.HARDPOINT
+				|| getGamemode() == Gamemode.GUNFIGHT) {
 
 			p.getInventory().setItem(0, LoadoutManager.getInstance().knife);
 
@@ -664,7 +679,6 @@ public class GameInstance implements Listener {
 			if (getGamemode() == Gamemode.INFECT && redTeam.contains(p)) {
 				p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 20 * gameTime, 1));
 			}
-
 		} else if (getGamemode() == Gamemode.OITC) {
 			p.getInventory().setItem(0, LoadoutManager.getInstance().knife);
 			p.getInventory().setItem(1, GameManager.oitcGun.getGunItem());
@@ -693,6 +707,13 @@ public class GameInstance implements Listener {
 		p.updateInventory();
 
 		KillStreakManager.getInstance().streaksAfterDeath(p);
+	}
+
+	/**
+	 * Spawns the player within the current map at the given Location with their selected loadout.
+	 * */
+	private void spawnCodPlayer(Player p, Location loc) {
+		spawnCodPlayer(p, loc, LoadoutManager.getInstance().getActiveLoadout(p));
 	}
 
 	/**
@@ -847,6 +868,8 @@ public class GameInstance implements Listener {
 				won = true;
 			}
 
+			Bukkit.getPluginManager().callEvent(new GameEndSoundEvent(p, won));
+
 			AssignmentManager.getInstance().updateAssignments(p, 0, getGamemode(), won);
 
 			AssignmentManager.getInstance().save(p);
@@ -969,6 +992,7 @@ public class GameInstance implements Listener {
 		setState(GameState.STARTING);
 
 		forceStarted = false;
+		canVote = true;
 
 
 		try {
@@ -1019,7 +1043,7 @@ public class GameInstance implements Listener {
 					scoreBar.getClass().getMethod("setProgress", Double.class).invoke(scoreBar, progress);
 				} catch(Exception|NoClassDefFoundError ignored) {}
 
-				if (t == 20) {
+				if (canVote && t == 20) {
 					CodMap[] maps = nextMaps;
 					if (mapVotes[0].size() > mapVotes[1].size()) {
 						changeMap(maps[0], nextModes[0]);
@@ -1042,9 +1066,8 @@ public class GameInstance implements Listener {
 
 				if (t % 30 == 0 || (t % 10 == 0 && t < 30) || (t % 5 == 0 && t < 15)) {
 					for (Player p : game.players) {
-						Main.sendMessage(p, Lang.GAME_STARTING_MESSAGE.getMessage().replace("{time}", getFancyTime(t)), Main.getLang());
-						Main.sendMessage(p, Lang.GAME_STARTING_MAP_MESSAGE.getMessage().replace("{map}", getMap().getName()).replace("{mode}", getMap().getGamemode().toString()) ,Main.getLang());
-						if (t > 20) {
+						sendNextMap(p, t);
+						if (t > 20 && canVote) {
 							Main.sendMessage(p, Lang.MAP_VOTING_HEADER.getMessage(), Main.getLang());
 							Main.sendMessage(p, ChatColor.GRAY + "===============", Main.getLang());
 							Main.sendMessage(p, Lang.MAP_VOTING_NAMES.getMessage().replace("{1}", nextMaps[0].getName() + " - " + nextModes[0].toString()).replace("{2}", nextMaps[1].getName() + " - " + nextModes	[1].toString()), Main.getLang());
@@ -1065,7 +1088,7 @@ public class GameInstance implements Listener {
 						p.getClass().getMethod("setPlayerListFooter", String.class).invoke(p, Lang.LOBBY_FOOTER.getMessage().replace("{time}", getFancyTime(t)));
 					} catch(Exception ignored) {}
 
-					if (t > 20) {
+					if (canVote && t > 20) {
 						if (p.getInventory().getItem(3) == null || !p.getInventory().getItem(3).getType().equals(InventoryManager.getInstance().voteItemA.getType())) {
 							ItemStack voteItem = InventoryManager.getInstance().voteItemA;
 							ItemMeta voteMeta = voteItem.getItemMeta();
@@ -1118,6 +1141,46 @@ public class GameInstance implements Listener {
 		br.runTaskTimer(Main.getPlugin(), 0L, 20L);
 	}
 
+
+	/**
+	 * Starts things that should run in the game loop but should run at a faster tick rate.
+	 * */
+	private void startPriorityGameTimer() {
+		BukkitRunnable br = new BukkitRunnable() {
+			@Override
+			public void run() {
+				if (getState() != GameState.IN_GAME) {
+					this.cancel();
+					return;
+				}
+
+				if (getGamemode() == Gamemode.CTF || getGamemode() == Gamemode.DOM || getGamemode() == Gamemode.HARDPOINT) {
+					for (Player p : getPlayers()) {
+						Location closestObjective = getClosestObjective(p);
+						if (closestObjective != null) {
+							p.setCompassTarget(closestObjective);
+							int distance = (int) p.getLocation().distance(closestObjective);
+							ItemStack stack = p.getInventory().getItem(8);
+							boolean exists = true;
+							if (stack == null || stack.getType() == Material.AIR) {
+								stack = new ItemStack(Material.COMPASS, 1);
+								exists = false;
+							}
+							ItemMeta meta = stack.getItemMeta();
+							if (meta != null)
+								meta.setDisplayName(Lang.CLOSEST_OBJECTIVE.getMessage().replace("{distance}", distance <= 100 ? Integer.toString(distance) : ">100"));
+							stack.setItemMeta(meta);
+							if (!exists)
+								p.getInventory().setItem(8, stack);
+						}
+					}
+				}
+			}
+		};
+
+		br.runTaskTimer(Main.getPlugin(), 0L, 5L);
+	}
+
 	private void startGameTimer(int time, boolean newRound) {
 
 		pastClassChange = false;
@@ -1128,7 +1191,6 @@ public class GameInstance implements Listener {
 			setState(GameState.IN_GAME);
 
 			try {
-//			scoreBar.removeAll();
 				scoreBar.getClass().getMethod("removeAll").invoke(scoreBar);
 			} catch(NoClassDefFoundError e) {
 				System.out.println();
@@ -1150,7 +1212,7 @@ public class GameInstance implements Listener {
 
 					} catch(NoClassDefFoundError e) {
 						System.out.println();
-					}catch(Exception ignored) {}
+					} catch(Exception ignored) {}
 
 					if (getGamemode() == Gamemode.OITC) {
 						ffaPlayerScores.put(p, maxScore_OITC);
@@ -1161,17 +1223,33 @@ public class GameInstance implements Listener {
 
 				getScoreboardManager().setupGameBoard(p, getFancyTime(gameTime));
 			}
-		} else {
-			for (Player p : players) {
-				if (isOnBlueTeam(p)) {
-					spawnCodPlayer(p, getMap().getBlueSpawn());
-				} else if (isOnRedTeam(p)) {
-					spawnCodPlayer(p, getMap().getRedSpawn());
-				} else {
-					assignTeams();
-				}
 
-			}
+			startPriorityGameTimer();
+		} else {
+
+
+			if (getGamemode() == Gamemode.GUNFIGHT) {
+				CodGun primary = LoadoutManager.getInstance().getRandomPrimary();
+				CodGun secondary = LoadoutManager.getInstance().getRandomSecondary();
+				CodWeapon lethal = LoadoutManager.getInstance().getRandomLethal();
+				CodWeapon tactical = LoadoutManager.getInstance().getRandomTactical();
+
+				Loadout loadout = new Loadout(null, "GUNFIGHT LOAOUT", primary, secondary, Math.random() > 0.5 ? lethal : LoadoutManager.getInstance().blankLethal, Math.random() > 0.5 ? tactical : LoadoutManager.getInstance().blankTactical, null, null, null, false);
+				for (Player p : getPlayers())
+					if (isOnBlueTeam(p))
+						spawnCodPlayer(p, getMap().getBlueSpawn(), loadout);
+					else if (isOnRedTeam(p))
+						spawnCodPlayer(p, getMap().getRedSpawn(), loadout);
+					else
+						assignTeams();
+			} else if (getGamemode() == Gamemode.RESCUE)
+				for (Player p : getPlayers())
+					if (isOnBlueTeam(p))
+						spawnCodPlayer(p, getMap().getBlueSpawn());
+					else if (isOnRedTeam(p))
+						spawnCodPlayer(p, getMap().getRedSpawn());
+					else
+						assignTeams();
 		}
 
 		GameInstance game = this;
@@ -1184,13 +1262,52 @@ public class GameInstance implements Listener {
 
 				if (t == 0) {
 
+					if (getGamemode() == Gamemode.RESCUE || getGamemode() == Gamemode.GUNFIGHT) {
+						if (getAlivePlayers(redTeam) > getAlivePlayers(blueTeam)) {
+							addBluePoint();
+
+							if (getGamemode() == Gamemode.RESCUE) {
+								if (!(blueTeamScore >= maxScore_RESCUE))
+									startNewRound(7, blueTeam);
+							}
+							else if (getGamemode() == Gamemode.GUNFIGHT) {
+								if (!(blueTeamScore >= maxScore_GUNFIGHT))
+									startNewRound(7, blueTeam);
+							}
+
+							for (Player pp : players) {
+								isAlive.put(pp, true);
+							}
+							cancel();
+						} else if (getAlivePlayers(redTeam) > getAlivePlayers(blueTeam)) {
+							addRedPoint();
+
+							if (getGamemode() == Gamemode.RESCUE) {
+								if (!(redTeamScore >= maxScore_RESCUE))
+									startNewRound(7, redTeam);
+							} else if (getGamemode() == Gamemode.GUNFIGHT) {
+								if (!(redTeamScore >= maxScore_GUNFIGHT))
+									startNewRound(7, redTeam);
+							}
+
+							for (Player pp : players) {
+								isAlive.put(pp, true);
+							}
+							cancel();
+						} else {
+							startNewRound(7, null);
+						}
+						cancel();
+						return;
+					}
+
 					stopGame();
 
 					cancel();
 					return;
 				}
 
-				if (t == time) {
+				if (t == time - 5) {
 					if (getGamemode() == Gamemode.DOM)
 						spawnDomFlags();
 
@@ -1325,13 +1442,18 @@ public class GameInstance implements Listener {
 					}
 				}
 
-				if (getGamemode() == Gamemode.RESCUE) {
+				if (getGamemode() == Gamemode.RESCUE || getGamemode() == Gamemode.GUNFIGHT) {
 					if (getAlivePlayers(redTeam) == 0) {
 						addBluePoint();
 
-						if (!(blueTeamScore >= maxScore_RESCUE)) {
-							startNewRound(7, blueTeam);
-						}
+							if (getGamemode() == Gamemode.RESCUE) {
+								if (!(blueTeamScore >= maxScore_RESCUE))
+									startNewRound(7, blueTeam);
+							}
+							else if (getGamemode() == Gamemode.GUNFIGHT) {
+								if (!(blueTeamScore >= maxScore_GUNFIGHT))
+									startNewRound(7, blueTeam);
+							}
 
 						for (Player pp : players) {
 							isAlive.put(pp, true);
@@ -1340,8 +1462,12 @@ public class GameInstance implements Listener {
 					} else if (getAlivePlayers(blueTeam) == 0) {
 						addRedPoint();
 
-						if (!(redTeamScore >= maxScore_RESCUE)) {
-							startNewRound(7, redTeam);
+						if (getGamemode() == Gamemode.RESCUE) {
+							if (!(redTeamScore >= maxScore_RESCUE))
+								startNewRound(7, redTeam);
+						} else if (getGamemode() == Gamemode.GUNFIGHT) {
+							if (!(redTeamScore >= maxScore_GUNFIGHT))
+								startNewRound(7, redTeam);
 						}
 
 						for (Player pp : players) {
@@ -1350,10 +1476,17 @@ public class GameInstance implements Listener {
 						cancel();
 					}
 
-					if (blueTeamScore >= maxScore_RESCUE || redTeamScore >= maxScore_RESCUE && getGamemode().equals(Gamemode.RESCUE)) {
-						endGameByScore(this);
-						cancel();
-						return;
+					if (getGamemode() == Gamemode.RESCUE) {
+						if (blueTeamScore >= maxScore_RESCUE || redTeamScore >= maxScore_RESCUE && getGamemode() == Gamemode.RESCUE) {
+							endGameByScore(this);
+							cancel();
+							return;
+						}
+					} else if (getGamemode() == Gamemode.GUNFIGHT) {
+						if (blueTeamScore >= maxScore_GUNFIGHT || redTeamScore >= maxScore_GUNFIGHT && getGamemode() == Gamemode.GUNFIGHT) {
+							endGameByScore(this);
+							cancel();
+						}
 					}
 				}
 
@@ -1407,20 +1540,31 @@ public class GameInstance implements Listener {
 
 	private void startNewRound(int delay, List<Player> prevRWT) {
 		for(Player p : players) {
-			if (prevRWT != null && !prevRWT.isEmpty()) {
-				ChatColor tColor;
-				String team;
 
+			ChatColor tColor = ChatColor.GRAY;
+			String team = "Nobody";
+
+			if (prevRWT != null && !prevRWT.isEmpty()) {
 				if (prevRWT.equals(blueTeam)) {
 					tColor = ChatColor.BLUE;
-					team = "blue";
-                } else {
+					team = "BLUE";
+				} else {
 					tColor = ChatColor.RED;
-					team = "red";
-                }
-
-				Main.sendTitle(p, Lang.TEAM_WON_ROUND.getMessage().replace("{team-color}", tColor + "").replace("{team}", team), Lang.NEXT_ROUND_STARTING.getMessage().replace("{time}", delay + ""), tColor);
+					team = "RED";
+				}
 			}
+
+			if (prevRWT != null) {
+				if (prevRWT.equals(blueTeam) && isOnBlueTeam(p))
+					Bukkit.getPluginManager().callEvent(new RoundEndSoundEvent(p, true));
+				else if (prevRWT.equals(redTeam) && isOnRedTeam(p))
+					Bukkit.getPluginManager().callEvent(new RoundEndSoundEvent(p, true));
+				else
+					Bukkit.getPluginManager().callEvent(new RoundEndSoundEvent(p, false));
+			}
+
+			Main.sendTitle(p, Lang.TEAM_WON_ROUND.getMessage().replace("{team-color}", tColor + "").replace("{team}", team), Lang.NEXT_ROUND_STARTING.getMessage().replace("{time}", delay + ""), tColor);
+
 		}
 
 		BukkitRunnable br = new BukkitRunnable() {
@@ -1544,7 +1688,7 @@ public class GameInstance implements Listener {
 	private int getAlivePlayers(ArrayList<Player> team) {
 		int count = 0;
 
-		if (getGamemode() != Gamemode.RESCUE)
+		if (getGamemode() != Gamemode.RESCUE && getGamemode() != Gamemode.GUNFIGHT)
 			return 1;
 
 		for (Player p : team) {
@@ -1565,9 +1709,11 @@ public class GameInstance implements Listener {
 	 * */
 	public void kill(Player p, Player killer) {
 
+		Bukkit.getPluginManager().callEvent(new PlayerDieSoundEvent(p));
+
 		AssignmentManager.getInstance().updateAssignments(p, 1, getGamemode());
 
-		if (getGamemode() == Gamemode.RESCUE) {
+		if (getGamemode() == Gamemode.RESCUE || getGamemode() == Gamemode.GUNFIGHT) {
 			p.setGameMode(GameMode.SPECTATOR);
 			p.getInventory().clear();
 			isAlive.put(p, false);
@@ -1708,7 +1854,9 @@ public class GameInstance implements Listener {
 	public CodMap getMap() {
 
 		if (currentMap == null) {
-			changeMap(GameManager.pickRandomMap());
+			CodMap map = GameManager.pickRandomMap();
+			GameManager.usedMaps.add(map);
+			changeMap(map);
 		}
 
 		return currentMap;
@@ -1755,13 +1903,63 @@ public class GameInstance implements Listener {
 	}
 
 	/**
+	 * Gets the closest objective for the player.
+	 * */
+	@Nullable
+	private Location getClosestObjective(Player p) {
+		if (getGamemode() == Gamemode.DOM) {
+			if (aFlag == null || bFlag == null || cFlag == null)
+				return null;
+
+			DomFlag closest = aFlag;
+			if (p.getLocation().distanceSquared(bFlag.getLocation()) < p.getLocation().distanceSquared(closest.getLocation()))
+				closest = bFlag;
+			if (p.getLocation().distanceSquared(cFlag.getLocation()) < p.getLocation().distanceSquared(closest.getLocation()))
+				closest = cFlag;
+
+			return closest.getLocation();
+		}
+
+		if (getGamemode() == Gamemode.CTF)
+		{
+			if (redFlag == null || blueFlag == null)
+				return null;
+
+			CtfFlag a, b;
+			if (isOnBlueTeam(p)) {
+				a = redFlag;
+				b = blueFlag;
+			} else {
+				a = blueFlag;
+				b = redFlag;
+			}
+
+			Location closest = a.getPosition();
+			if (!b.isInFlagHolder())
+				if (b.getPosition().distanceSquared(p.getLocation()) < closest.distanceSquared(p.getLocation()))
+					closest = b.getPosition();
+
+			return closest;
+		}
+
+		else if (getGamemode() == Gamemode.HARDPOINT) {
+			if (hardpointFlag == null)
+				return null;
+
+			return hardpointFlag.getLocation();
+		}
+
+		return null;
+	}
+
+	/**
 	 * Handles things that should happen on death for the given player and victim.
 	 * */
 	private void handleDeath(Player killer, Player victim) {
 
 		RankPerks rank = Main.getRank(killer);
 
-		if (getGamemode().equals(Gamemode.TDM) || getGamemode().equals(Gamemode.KC) || getGamemode().equals(Gamemode.RSB) || getGamemode().equals(Gamemode.DOM) || getGamemode().equals(Gamemode.RESCUE) || getGamemode().equals(Gamemode.HARDPOINT)) {
+		if (getGamemode().equals(Gamemode.TDM) || getGamemode().equals(Gamemode.KC) || getGamemode().equals(Gamemode.RSB) || getGamemode().equals(Gamemode.DOM) || getGamemode().equals(Gamemode.RESCUE) || getGamemode().equals(Gamemode.GUNFIGHT) || getGamemode().equals(Gamemode.HARDPOINT)) {
 			if (isOnRedTeam(killer)) {
 
 				double xp = rank.getKillExperience();
@@ -1776,7 +1974,7 @@ public class GameInstance implements Listener {
 				ProgressionManager.getInstance().addExperience(killer, xp);
 				CreditManager.setCredits(killer, CreditManager.getCredits(killer) + rank.getKillCredits());
 				kill(victim, killer);
-				if (getGamemode() != Gamemode.RESCUE && getGamemode() != Gamemode.KC) {
+				if (getGamemode() != Gamemode.RESCUE && getGamemode() != Gamemode.KC && getGamemode() != Gamemode.GUNFIGHT) {
 					if (getGamemode() != Gamemode.HARDPOINT) {
 						addRedPoint();
 					} else if (hardpointController == 1) {
@@ -1797,7 +1995,7 @@ public class GameInstance implements Listener {
 				ProgressionManager.getInstance().addExperience(killer, xp);
 				CreditManager.setCredits(killer, CreditManager.getCredits(killer) + rank.getKillCredits());
 				kill(victim, killer);
-				if (getGamemode() != Gamemode.RESCUE && getGamemode() != Gamemode.KC) {
+				if (getGamemode() != Gamemode.RESCUE && getGamemode() != Gamemode.KC && getGamemode() != Gamemode.GUNFIGHT) {
 					if (getGamemode() != Gamemode.HARDPOINT) {
 						addBluePoint();
 					} else if (hardpointController == 0) {
@@ -1993,7 +2191,7 @@ public class GameInstance implements Listener {
 			return;
 		}
 
-		if (getGamemode() != Gamemode.GUN && getGamemode() != Gamemode.OITC && getGamemode() != Gamemode.RSB && (getGamemode() != Gamemode.INFECT || isOnBlueTeam(attacker))) {
+		if (getGamemode() != Gamemode.GUN && getGamemode() != Gamemode.OITC && getGamemode() != Gamemode.RSB && getGamemode() != Gamemode.GUNFIGHT && (getGamemode() != Gamemode.INFECT || isOnBlueTeam(attacker))) {
 			if (LoadoutManager.getInstance().getActiveLoadout(attacker).hasPerk(Perk.COMMANDO))
 				damage = 10 * Main.getDefaultHealth();
 		}
@@ -2144,7 +2342,7 @@ public class GameInstance implements Listener {
 
 		if (getGamemode() == Gamemode.OITC) {
 			damage = health.defaultHealth * 2;
-		} else if (getGamemode() != Gamemode.GUN && getGamemode() != Gamemode.RSB && getGamemode() != Gamemode.INFECT) {
+		} else if (getGamemode() != Gamemode.GUN && getGamemode() != Gamemode.RSB && getGamemode() != Gamemode.INFECT && getGamemode() != Gamemode.GUNFIGHT) {
 			if (damagers.length != 0) {
 				Player shooter = damagers[0];
 				if (LoadoutManager.getInstance().getActiveLoadout(shooter).hasPerk(Perk.STOPPING_POWER)) {
@@ -2157,6 +2355,14 @@ public class GameInstance implements Listener {
 			}
 		}
 
+		if (LoadoutManager.getInstance().getActiveLoadout(victim).hasPerk(Perk.DANGER_CLOSE)) {
+			double cur = health.getHealth(victim);
+			if (cur == Main.getDefaultHealth() && cur - damage < 0) {
+				health.setHealth(victim, 1);
+				return;
+			}
+		}
+
 		if (damagers.length < 1) {
 			health.damage(victim, damage);
 		} else {
@@ -2166,11 +2372,12 @@ public class GameInstance implements Listener {
 				}
 
 				health.damage(victim, damage);
+				Bukkit.getPluginManager().callEvent(new PlayerHitmarkerSoundEvent(damagers[0]));
 			}
 		}
 
 		if (health.isDead(victim)) {
-			if (!LoadoutManager.getInstance().getActiveLoadout(victim).hasPerk(Perk.LAST_STAND) || !(getGamemode() != Gamemode.GUN && getGamemode() != Gamemode.OITC && getGamemode() != Gamemode.RSB && (getGamemode() != Gamemode.INFECT || isOnBlueTeam(victim)))) {
+			if (!LoadoutManager.getInstance().getActiveLoadout(victim).hasPerk(Perk.LAST_STAND) || !(getGamemode() != Gamemode.GUN && getGamemode() != Gamemode.GUNFIGHT && getGamemode() != Gamemode.OITC && getGamemode() != Gamemode.RSB && (getGamemode() != Gamemode.INFECT || isOnBlueTeam(victim)))) {
 				if (damagers.length < 1) {
 					Main.sendMessage(victim, "" + ChatColor.GREEN + ChatColor.BOLD + "YOU " + ChatColor.RESET + "" + ChatColor.WHITE + "[" + Lang.KILLED_TEXT.getMessage() + "] " + ChatColor.RESET + ChatColor.GREEN + ChatColor.BOLD + "YOURSELF", Main.getLang());
 					kill(victim, victim);
@@ -2468,6 +2675,25 @@ public class GameInstance implements Listener {
 			} else {
 				startUav(p);
 			}
+		} else if (p.getItemInHand().equals(KillStreak.VSAT.getKillStreakItem())) {
+			if (isOnBlueTeam(p)) {
+				if (!blueVSATActive) {
+					startVSAT(p);
+				} else {
+					Main.sendMessage(p, Lang.KILLSTREAK_AIRSPACE_OCCUPIED.getMessage(), Main.getLang());
+				}
+			} else if (isOnRedTeam(p)) {
+				if (!redVSATActive) {
+					startVSAT(p);
+				} else {
+					Main.sendMessage(p, Lang.KILLSTREAK_AIRSPACE_OCCUPIED.getMessage(), Main.getLang());
+				}
+
+			} else {
+				startVSAT(p);
+			}
+		} else if (p.getItemInHand().equals(KillStreak.AIRSTRIKE.getKillStreakItem())) {
+			callAirstrike(p);
 		} else if (p.getItemInHand().equals(KillStreak.COUNTER_UAV.getKillStreakItem())) {
 			startCounterUav(p);
 			if (!isOnBlueTeam(p) && !isOnRedTeam(p)) {
@@ -2539,7 +2765,7 @@ public class GameInstance implements Listener {
 
 							fw.setFireworkMeta(fwm);
 						} else {
-							if (!LoadoutManager.getInstance().getActiveLoadout(p).hasPerk(Perk.NINJA))
+							if (!LoadoutManager.getInstance().getActiveLoadout(p).hasPerk(Perk.GHOST))
 								p.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, 20, 1));
 						}
 					}
@@ -2565,7 +2791,7 @@ public class GameInstance implements Listener {
 
 							fw.setFireworkMeta(fwm);
 						} else {
-							if(!LoadoutManager.getInstance().getActiveLoadout(p).hasPerk(Perk.NINJA))
+							if(!LoadoutManager.getInstance().getActiveLoadout(p).hasPerk(Perk.GHOST))
 								p.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, 20, 1));
 						}
 					}
@@ -2595,8 +2821,127 @@ public class GameInstance implements Listener {
 
 							fw.setFireworkMeta(fwm);
 						} else {
-							if (!LoadoutManager.getInstance().getActiveLoadout(p).hasPerk(Perk.NINJA))
+							if (!LoadoutManager.getInstance().getActiveLoadout(p).hasPerk(Perk.GHOST))
 								p.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, 20, 1));
+						}
+					}
+				}
+			}
+		};
+
+		br.runTaskTimer(Main.getPlugin(), 3L, 60L);
+	}
+
+	private void startVSAT(Player owner) {
+
+		if (!players.contains(owner))
+			return;
+
+		if (isOnRedTeam(owner))
+			redVSATActive = true;
+		else if (isOnBlueTeam(owner))
+			blueVSATActive = true;
+
+		owner.getInventory().remove(KillStreak.VSAT.getKillStreakItem());
+		KillStreakManager.getInstance().useStreak(owner, KillStreak.VSAT);
+
+		BukkitRunnable br = new BukkitRunnable() {
+
+			int t = 15;
+
+			@Override
+			public void run() {
+				t--;
+
+				if (t < 0) {
+					if (isOnRedTeam(owner))
+						redVSATActive = false;
+					else if (isOnBlueTeam(owner))
+						blueVSATActive = false;
+					this.cancel();
+				}
+
+				if(isOnBlueTeam(owner)) {
+					if (redCounterUavActive)
+						return;
+
+					//blue launched
+					for (Player p : redTeam) {
+						if (health.isDead(p))
+							continue;
+
+						if (Main.isLegacy()) {
+							Firework fw = p.getLocation().getWorld().spawn(p.getLocation(), Firework.class);
+							FireworkMeta fwm = fw.getFireworkMeta();
+							fwm.addEffect(FireworkEffect.builder()
+									.flicker(false)
+									.trail(true)
+									.with(FireworkEffect.Type.BALL)
+									.withColor(Color.RED)
+									.build());
+
+							fwm.setPower(3);
+
+							fw.setFireworkMeta(fwm);
+						} else {
+							if (!LoadoutManager.getInstance().getActiveLoadout(p).hasPerk(Perk.GHOST))
+								p.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, 65, 1));
+						}
+					}
+				} else if(isOnRedTeam(owner)) {
+					//red launched
+					if (blueCounterUavActive)
+						return;
+
+					for (Player p : blueTeam) {
+						if (health.isDead(p))
+							continue;
+						if (Main.isLegacy()) {
+							Firework fw = p.getLocation().getWorld().spawn(p.getLocation(), Firework.class);
+							FireworkMeta fwm = fw.getFireworkMeta();
+							fwm.addEffect(FireworkEffect.builder()
+									.flicker(false)
+									.trail(true)
+									.with(FireworkEffect.Type.BALL)
+									.withColor(Color.BLUE)
+									.build());
+
+							fwm.setPower(3);
+
+							fw.setFireworkMeta(fwm);
+						} else {
+							if(!LoadoutManager.getInstance().getActiveLoadout(p).hasPerk(Perk.GHOST))
+								p.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, 65, 1));
+						}
+					}
+				} else {
+					//pink
+					if (pinkCounterUavActive)
+						return;
+
+					for (Player p : players) {
+						if (p == owner)
+							continue;
+
+						if (health.isDead(p))
+							continue;
+
+						if (Main.isLegacy()) {
+							Firework fw = p.getLocation().getWorld().spawn(p.getLocation(), Firework.class);
+							FireworkMeta fwm = fw.getFireworkMeta();
+							fwm.addEffect(FireworkEffect.builder()
+									.flicker(false)
+									.trail(true)
+									.with(FireworkEffect.Type.BALL)
+									.withColor(Color.PURPLE)
+									.build());
+
+							fwm.setPower(3);
+
+							fw.setFireworkMeta(fwm);
+						} else {
+							if (!LoadoutManager.getInstance().getActiveLoadout(p).hasPerk(Perk.GHOST))
+								p.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, 65, 1));
 						}
 					}
 				}
@@ -2642,6 +2987,59 @@ public class GameInstance implements Listener {
 
 	public HashMap<Player, Wolf[]> dogsScoreStreak = new HashMap<>();
 
+	private void callAirstrike(Player owner) {
+		if (!players.contains(owner))
+			return;
+
+		owner.getInventory().remove(KillStreak.AIRSTRIKE.getKillStreakItem());
+		KillStreakManager.getInstance().useStreak(owner, KillStreak.AIRSTRIKE);
+
+		for (Player p : getPlayers())
+			p.sendMessage(Lang.AIRSTRIKE_INCOMING.getMessage());
+
+		ArrayList<Player> targets;
+		ArrayList<Player> team;
+		if (isOnRedTeam(owner)) {
+			targets = new ArrayList<>(blueTeam);
+			team = blueTeam;
+		} else if (isOnBlueTeam(owner)) {
+			targets = new ArrayList<>(redTeam);
+			team = redTeam;
+		} else {
+			targets = new ArrayList<>(getPlayers());
+			team = getPlayers();
+		}
+
+		for (Player p : team) {
+			if (p.getUniqueId().equals(owner.getUniqueId()) || health.isDead(p) || LoadoutManager.getInstance().getActiveLoadout(p).hasPerk(Perk.COLD_BLOODED))
+				targets.remove(p);
+		}
+
+		int targeted = (int) Math.round(Math.random() * 5);
+
+		for (int i = 0; i < targeted; i++) {
+			if (!targets.isEmpty()) {
+				int index = (int) Math.round(Math.random() * (targets.size() - 1));
+				Bukkit.getPluginManager().callEvent(new AirstrikeExplodeSoundEvent(targets.get(index)));
+				if (!isUnderRoof(targets.get(index)))
+					damagePlayer(targets.get(index), Main.getDefaultHealth() * 100, owner);
+				targets.remove(index);
+			}
+		}
+	}
+
+	private boolean isUnderRoof(Player p) {
+		for (int i = 0; i < 180; i++) {
+			if (p.getEyeLocation().getBlockY() >= 180)
+				return false;
+
+			Block b = p.getEyeLocation().add(0, i, 0).getBlock();
+			if (b.getType() != Material.AIR)
+				return true;
+		}
+		return false;
+	}
+
 	private void startDogs(Player owner) {
 		if (!players.contains(owner))
 			return;
@@ -2653,56 +3051,12 @@ public class GameInstance implements Listener {
 		Wolf[] wolves = new Wolf[8];
 
 		for (int i = 0; i < 8; i++) {
-			Wolf wolf = owner.getLocation().getWorld().spawn(owner.getLocation(), Wolf.class);
-			wolf.setOwner(owner);
-			wolf.setAngry(true);
-			DyeColor collarColor;
-
-			if (isOnBlueTeam(owner))
-				collarColor = DyeColor.BLUE;
-			else if (isOnRedTeam(owner))
-				collarColor = DyeColor.RED;
-			else
-				collarColor = DyeColor.PINK;
-
-			wolf.setCollarColor(collarColor);
-			wolf.setCanPickupItems(false);
-			wolf.setCustomName(owner.getDisplayName() + "'s Dog");
-			wolf.setCustomNameVisible(true);
-			wolf.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 20 * 20, 2));
-
-			wolves[i] = wolf;
+			updateDogs(owner, wolves, i);
 		}
 
 		for (int i = 0; i < wolves.length; i++) {
 			Wolf wolf = wolves[i];
-
-			if (isOnBlueTeam(owner)) {
-				Player target;
-				int index = (new Random()).nextInt(redTeam.size());
-				target = redTeam.get(index);
-
-				wolf.setTarget(target);
-			} else if (isOnRedTeam(owner)) {
-				Player target;
-				int index = (new Random()).nextInt(blueTeam.size());
-				target = blueTeam.get(index);
-
-				wolf.setTarget(target);
-			} else {
-				Player target;
-				do {
-					int index = (new Random()).nextInt(players.size());
-					target = players.get(index);
-					if (players.size() == 1) {
-						target = null;
-						break;
-					}
-				} while (!target.equals(owner));
-
-				if (target != null)
-					wolf.setTarget(target);
-			}
+			setNewDogsTarget(wolf, owner);
 		}
 
 		if (dogsScoreStreak.containsKey(owner)) {
@@ -2736,65 +3090,63 @@ public class GameInstance implements Listener {
 				for (int i = 0; i < wolves.length; i++) {
 					Wolf w = wolves[i];
 					if (w == null) {
-						Wolf wolf = owner.getLocation().getWorld().spawn(owner.getLocation(), Wolf.class);
-						wolf.setOwner(owner);
-						wolf.setAngry(true);
-						DyeColor collarColor;
-
-						if (isOnBlueTeam(owner))
-							collarColor = DyeColor.BLUE;
-						else if (isOnRedTeam(owner))
-							collarColor = DyeColor.RED;
-						else
-							collarColor = DyeColor.PINK;
-
-						wolf.setCollarColor(collarColor);
-						wolf.setCanPickupItems(false);
-						wolf.setCustomName(owner.getDisplayName() + "'s Dog");
-						wolf.setCustomNameVisible(true);
-						wolf.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 20 * 20, 2));
-						wolves[i] = wolf;
+						updateDogs(owner, wolves, i);
 						w = wolves[i];
 					}
 
 					w.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 20, 2));
 
-					if (w.getTarget() == null
-							|| !(w.getTarget() instanceof Player)
-							|| (w.getTarget() instanceof Player && health.isDead(((Player) w.getTarget())))) {
-						if (isOnBlueTeam(owner)) {
-							Player target;
-							int index = (new Random()).nextInt(redTeam.size());
-							target = redTeam.get(index);
-
-							w.setTarget(target);
-
-						} else if (isOnRedTeam(owner)) {
-							Player target;
-							int index = (new Random()).nextInt(blueTeam.size());
-							target = blueTeam.get(index);
-
-							w.setTarget(target);
-						} else {
-							Player target;
-							do {
-								int index = (new Random()).nextInt(players.size());
-								target = players.get(index);
-								if (players.size() == 1) {
-									target = null;
-									break;
-								}
-							} while (!target.equals(owner));
-
-							if (target != null)
-								w.setTarget(target);
-						}
+					if (w.getTarget() == null || !(w.getTarget() instanceof Player) || (w.getTarget() instanceof Player && health.isDead(((Player) w.getTarget())))) {
+						setNewDogsTarget(w, owner);
 					}
 				}
 			}
 		};
 
 		br.runTaskTimer(Main.getPlugin(), 0L, 20L);
+	}
+
+	private void setNewDogsTarget(Wolf w, Player owner) {
+		List<Player> targets;
+		if (isOnBlueTeam(owner)) {
+			targets = redTeam;
+		} else if (isOnRedTeam(owner)) {
+			targets = blueTeam;
+		} else {
+			targets = getPlayers();
+		}
+
+		Player target;
+		List<Player> team = new ArrayList<>(targets);
+		for (Player p : targets)
+			if (p.getUniqueId().equals(owner.getUniqueId()) || LoadoutManager.getInstance().getActiveLoadout(p).hasPerk(Perk.COLD_BLOODED))
+				team.remove(p);
+		int index = (new Random()).nextInt(team.size());
+		target = team.get(index);
+
+		w.setTarget(target);
+	}
+
+	private void updateDogs(Player owner, Wolf[] wolves, int i) {
+		Wolf wolf = owner.getLocation().getWorld().spawn(owner.getLocation(), Wolf.class);
+		wolf.setOwner(owner);
+		wolf.setAngry(true);
+		DyeColor collarColor;
+
+		if (isOnBlueTeam(owner))
+			collarColor = DyeColor.BLUE;
+		else if (isOnRedTeam(owner))
+			collarColor = DyeColor.RED;
+		else
+			collarColor = DyeColor.PINK;
+
+		wolf.setCollarColor(collarColor);
+		wolf.setCanPickupItems(false);
+		wolf.setCustomName(owner.getDisplayName() + "'s Dog");
+		wolf.setCustomNameVisible(true);
+		wolf.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 20 * 20, 2));
+
+		wolves[i] = wolf;
 	}
 
 	private void startNuke(Player owner) {
@@ -2891,6 +3243,11 @@ public class GameInstance implements Listener {
 			} catch(Exception e) {
 				e.printStackTrace();
 			}
+	}
+
+	void sendNextMap(Player p, int t) {
+		Main.sendMessage(p, Lang.GAME_STARTING_MESSAGE.getMessage().replace("{time}", getFancyTime(t)), Main.getLang());
+		Main.sendMessage(p, Lang.GAME_STARTING_MAP_MESSAGE.getMessage().replace("{map}", getMap().getName()).replace("{mode}", getMap().getGamemode().toString()), Main.getLang());
 	}
 
 	@EventHandler

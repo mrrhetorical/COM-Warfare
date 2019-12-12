@@ -89,7 +89,7 @@ public class KillStreakManager {
 			KillStreak[] killStreaks = new KillStreak[3];
 			killStreaks[0] = (KillStreak.UAV);
 			killStreaks[1] = (KillStreak.COUNTER_UAV);
-			killStreaks[2] = (KillStreak.DOGS);
+			killStreaks[2] = (KillStreak.AIRSTRIKE);
 			playerKillstreaks.put(p, killStreaks);
 			saveStreaks(p);
 			return;

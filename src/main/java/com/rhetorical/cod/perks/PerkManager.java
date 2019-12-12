@@ -84,7 +84,7 @@ public class PerkManager {
 				Main.getPlugin().getConfig().set("Perks." + i + ".material", Material.APPLE.toString());
 				Main.getPlugin().getConfig().set("Perks." + i + ".cost", 0);
 				Main.getPlugin().getConfig().set("Perks." + i + ".slot", slot.toString());
-				Main.getPlugin().getConfig().set("Perks." + i + ".lore", new ArrayList<String>());
+				Main.getPlugin().getConfig().set("Perks." + i + ".lore", perk.getLore());
 
 				availablePerks.add(new CodPerk(perk, new ItemStack(Material.APPLE), slot, new ArrayList<>(), 0));
 
@@ -139,7 +139,7 @@ public class PerkManager {
 			Main.getPlugin().getConfig().set("Perks.default." + s + ".name", Perk.values()[s - 1].toString());
 			Main.getPlugin().getConfig().set("Perks.default." + s + ".material", Material.APPLE.toString());
 			Main.getPlugin().getConfig().set("Perks.default." + s + ".slot", slot.toString());
-			Main.getPlugin().getConfig().set("Perks.default." + s + ".lore", new ArrayList<String>());
+			Main.getPlugin().getConfig().set("Perks.default." + s + ".lore", Perk.values()[s - 1].getLore());
 
 			Main.getPlugin().saveConfig();
 			Main.getPlugin().reloadConfig();

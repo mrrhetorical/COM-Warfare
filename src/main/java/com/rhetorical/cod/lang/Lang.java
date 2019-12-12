@@ -27,8 +27,6 @@ public enum Lang {
 	TEAM_NOT_EXISTS_WITH_NAME("&cNo team exists with that name!"),
 	SET_FLAG_CTF_SUCCESS("&aSuccessfully set {team}&a flag spawn!"),
 	SET_FLAG_DOM_SUCCESS("&aSuccessfully set {flag}&a flag spawn!"),
-	CAPTURING_FLAG("&aYou are capturing the flag!"),
-	DEFENDING_FLAG("&cYou are defending the flag!"),
 	LOBBY_NOT_EXISTS("&cThere is no lobby to send you to!"),
 	BALANCE_COMMAND("&aYou have &e{credits}&a credits!"),
 	GIVE_BALANCE_COMMAND("&aSuccessfully gave {player} {amount} credits! They now have {total} credits!"),
@@ -96,6 +94,9 @@ public enum Lang {
 	NUKE_NAME("&6&lNuke"),
 	DOGS_NAME("&6&lDogs"),
 	JUGGERNAUT_NAME("&6&lJuggernaut Suit"),
+	AIRSTRIKE_NAME("&6&lAirstrike"),
+	AIRSTRIKE_INCOMING("&cAirstrike incoming!"),
+	VSAT_NAME("&6&lOrbital VSAT"),
 	JUGGERNAUT_STARTED("&eYou are now in a Juggernaut Suit! You have 5x health!"),
 	PLAYER_DOG_TAG_NAME("{team-color}{player}'s dog tag."),
 	ASSIGNED_TO_TEAM("{team-color}You are on the {team} team!"),
@@ -113,7 +114,7 @@ public enum Lang {
 	LOBBY_FOOTER("&7Game Starts in {time}!"),
 	GAME_STARTING("&7The game is starting now!"),
 	MAP_VOTING_NEXT_MAP("&7The next map is set to: {map}"),
-	TEAM_WON_ROUND("{team-color}The {team} won the round!"),
+	TEAM_WON_ROUND("{team-color}{team} won the round!"),
 	NEXT_ROUND_STARTING("The next round will start in {time} seconds"),
 	RESPAWN_IF_DOG_TAG_PICKED_UP("&cYou will respawn if your teammate pick up your dog tag!"),
 	RESPAWN_NEXT_ROUND("&cYou will respawn next round!"),
@@ -236,7 +237,8 @@ public enum Lang {
 	SCOREBOARD_SCORE("Score: %s"),
 	SCOREBOARD_TIME("%s"),
 	FLAG_BLUE("&9Blue Flag"),
-	FLAG_RED("&cRed Flag");
+	FLAG_RED("&cRed Flag"),
+	CLOSEST_OBJECTIVE("&eClosest Objective: {distance}m");
 
 
 	private String message;

@@ -37,6 +37,7 @@ gameTime:
   GUN: 600
   RESCUE: 120
   HARDPOINT: 600
+  GUNFIGHT: 120
 #Default health: How much health should the player start with? (Default is 20 in Minecraft, but 100 can be used to make guns do more precise damage amounts.) Default: 20 {PREMIUM-ONLY}
 defaultHealth: 100
 #Max level: What is the maximum level that a player can reach before they stop to level up?
@@ -59,8 +60,8 @@ maxScore:
   INFECT: 120
   #OITC: The amount of lives in One in the Chamber
   OITC: 3
-  #DESTROY/RESCUE: The amount of rounds required to win.
-  DESTROY: 4
+  #GUNFIGHT/RESCUE: The amount of rounds required to win.
+  GUNFIGHT: 4
   RESCUE: 4
   #HARDPOINT: The amount of kills required while holding the point required to win.
   HARDPOINT: 75
