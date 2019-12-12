@@ -625,6 +625,8 @@ public class GameInstance implements Listener {
 
 		setTeamArmor(p);
 
+		Bukkit.getPluginManager().callEvent(new PlayerSpawnSoundEvent(p));
+
 		if (getGamemode() == Gamemode.RSB) {
 
 			CodGun primary = LoadoutManager.getInstance().getRandomPrimary();

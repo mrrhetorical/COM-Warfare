@@ -44,22 +44,14 @@ public class SoundManager implements Listener {
 	}
 
 	private void playSound(Player p, SoundData data) {
-		for (SoundData.SoundStruct sound : data.getSounds()) {
+		for (String s : data.getSoundStructMap().keySet()) {
+			SoundData.SoundStruct sound = data.getSoundStructMap().get(s);
 			p.playSound(p.getLocation(), sound.sound, sound.volume, sound.pitch);
 		}
 	}
 
-	private void playSound(Player p, SoundData data, int index) {
-		try {
-			SoundData.SoundStruct sound = data.getSounds().get(index);
-			p.playSound(p.getLocation(), sound.sound, sound.volume, sound.pitch);
-		} catch (Exception|Error ignored) {}
-	}
-
-
 	@EventHandler
 	public void onPlayerSoundEvent(PlayerSoundEvent e) {
-
 		SoundData data = soundDataMap.get(e.getEventName());
 		if (data != null) {
 			playSound(e.getPlayer(), data);
@@ -69,27 +61,24 @@ public class SoundManager implements Listener {
 	@EventHandler
 	public void onGameEnd(GameEndSoundEvent e) {
 		SoundData data = soundDataMap.get(e.getEventName());
-		int index = e.isVictory() ? 0 : 1;
-		playSound(e.getPlayer(), data, index);
+		if (data != null)
+			playSound(e.getPlayer(), data);
 	}
 
 	@EventHandler
 	public void onGameStart(GameStartSoundEvent e) {
-		Gamemode gm = e.getGamemode();
-		int i;
-		for (i = 0; i < Gamemode.values().length - 1; i++) {
-			if (Gamemode.values()[i] == gm)
-				break;
+		SoundData data = soundDataMap.get(e.getEventName());
+		if (data != null) {
+			playSound(e.getPlayer(), data);
 		}
-
-		playSound(e.getPlayer(), soundDataMap.get(e.getEventName()), i);
 	}
 
 	@EventHandler
 	public void onRoundEnd(RoundEndSoundEvent e) {
 		SoundData data = soundDataMap.get(e.getEventName());
-		int index = e.isVictory() ? 0 : 1;
-		playSound(e.getPlayer(), data, index);
+		if (data != null) {
+			playSound(e.getPlayer(), data);
+		}
 	}
 
 
