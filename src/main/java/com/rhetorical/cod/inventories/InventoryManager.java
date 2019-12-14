@@ -533,6 +533,9 @@ public class InventoryManager implements Listener {
 			if (gun.getType() == UnlockType.BOTH || gun.getType() == UnlockType.CREDITS) {
 				if (((gun.getType() == UnlockType.CREDITS || ProgressionManager.getInstance().getLevel(p) >= gun.getLevelUnlock())) && !ShopManager.getInstance().getPurchasedGuns().get(p).contains(gun)) {
 
+					if (!gun.isShowInShop())
+						continue;
+
 					ItemStack item = gun.getMenuItem();
 
 					ItemMeta gunMeta = item.getItemMeta();
@@ -559,6 +562,10 @@ public class InventoryManager implements Listener {
 		for (CodWeapon grenade : grenades) {
 			if (grenade.getType() == UnlockType.BOTH || grenade.getType() == UnlockType.CREDITS) {
 				if (((grenade.getType() == UnlockType.CREDITS || ProgressionManager.getInstance().getLevel(p) >= grenade.getLevelUnlock()) && !ShopManager.getInstance().getPurchasedWeapons().get(p).contains(grenade))) {
+
+					if (!grenade.isShowInShop())
+						continue;
+
 					ItemStack item = grenade.getMenuItem();
 
 					ItemMeta gunMeta = item.getItemMeta();

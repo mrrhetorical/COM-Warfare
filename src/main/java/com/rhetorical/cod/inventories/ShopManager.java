@@ -96,11 +96,14 @@ public class ShopManager {
 			int creditsUnlock = GunsFile.getData().getInt("Guns.Primary." + i + ".creditUnlock");
 
 			String ammoName = GunsFile.getData().getString("Guns.Primary." + i + ".ammoName");
+
+			boolean shop = GunsFile.getData().getBoolean("Guns.Primary." + i + ".showInShop");
+
 			CodGun gun;
 			if (ammoName == null) {
-				gun = new CodGun(name, GunType.Primary, unlockType, ammoCount, ammoItem, gunItem,  levelUnlock);
+				gun = new CodGun(name, GunType.Primary, unlockType, ammoCount, ammoItem, gunItem,  levelUnlock, shop);
 			} else {
-				gun = new CodGun(name, ammoName, GunType.Primary, unlockType, ammoCount, ammoItem, gunItem, levelUnlock);
+				gun = new CodGun(name, ammoName, GunType.Primary, unlockType, ammoCount, ammoItem, gunItem, levelUnlock, shop);
 			}
 
 			gun.setCreditUnlock(creditsUnlock);
@@ -129,11 +132,14 @@ public class ShopManager {
 			int creditsUnlock = GunsFile.getData().getInt("Guns.Secondary." + i + ".creditUnlock");
 
 			String ammoName = GunsFile.getData().getString("Guns.Secondary." + i + ".ammoName");
+
+			boolean shop = GunsFile.getData().getBoolean("Guns.Secondary." + i + ".showInShop");
+
 			CodGun gun;
 			if (ammoName == null) {
-				gun = new CodGun(name, GunType.Secondary, unlockType, ammoCount, ammoItem, gunItem, levelUnlock);
+				gun = new CodGun(name, GunType.Secondary, unlockType, ammoCount, ammoItem, gunItem, levelUnlock, shop);
 			} else {
-				gun = new CodGun(name, ammoName, GunType.Secondary, unlockType, ammoCount, ammoItem, gunItem, levelUnlock);
+				gun = new CodGun(name, ammoName, GunType.Secondary, unlockType, ammoCount, ammoItem, gunItem, levelUnlock, shop);
 			}
 			gun.setCreditUnlock(creditsUnlock);
 			secondaryGuns.add(gun);
@@ -164,7 +170,9 @@ public class ShopManager {
 
 			ItemStack weapon = new ItemStack(weaponMaterial, amount, weaponData);
 
-			CodWeapon grenade = new CodWeapon(weaponName, WeaponType.LETHAL, type, weapon, levelUnlock);
+			boolean shop = GunsFile.getData().getBoolean("Weapons.LETHAL." + i + ".showInShop");
+
+			CodWeapon grenade = new CodWeapon(weaponName, WeaponType.LETHAL, type, weapon, levelUnlock, shop);
 			grenade.setCreditUnlock(creditUnlock);
 			lethalWeapons.add(grenade);
 		}
@@ -187,7 +195,9 @@ public class ShopManager {
 
 			ItemStack weapon = new ItemStack(weaponMaterial, amount, weaponData);
 
-			CodWeapon grenade = new CodWeapon(weaponName, WeaponType.TACTICAL, type, weapon, levelUnlock);
+			boolean shop = GunsFile.getData().getBoolean("Weapons.TACTICAL." + i + ".showInShop");
+
+			CodWeapon grenade = new CodWeapon(weaponName, WeaponType.TACTICAL, type, weapon, levelUnlock, shop);
 			grenade.setCreditUnlock(creditUnlock);
 			tacticalWeapons.add(grenade);
 		}
