@@ -461,7 +461,7 @@ public class ShopManager {
 				}
 			}
 		} else if (grenade.getType() == UnlockType.BOTH) {
-			if (ProgressionManager.getInstance().getLevel(p) == grenade.getLevelUnlock()) {
+			if (ProgressionManager.getInstance().getLevel(p) == grenade.getLevelUnlock() && grenade.isShowInShop()) {
 				Main.sendMessage(p,
 						Main.getPrefix() + Lang.WEAPON_PURCHASE_UNLOCKED.getMessage().replace("{gun-name}", grenade.getName()), Main.getLang());
 			}
@@ -486,7 +486,7 @@ public class ShopManager {
 					}
 				}
 			} else if (gun.getType() == UnlockType.BOTH) {
-				if (ProgressionManager.getInstance().getLevel(p) == gun.getLevelUnlock()) {
+				if (ProgressionManager.getInstance().getLevel(p) == gun.getLevelUnlock() && gun.isShowInShop()) {
 					Main.sendMessage(p, Main.getPrefix() + Lang.WEAPON_PURCHASE_UNLOCKED.getMessage().replace("{gun-name}", gun.getName()), Main.getLang());
 				}
 			}
@@ -506,7 +506,7 @@ public class ShopManager {
 					}
 				}
 			} else if (gun.getType() == UnlockType.BOTH) {
-				if (ProgressionManager.getInstance().getLevel(p) >= gun.getLevelUnlock()) {
+				if (ProgressionManager.getInstance().getLevel(p) >= gun.getLevelUnlock() && gun.isShowInShop()) {
 					Main.sendMessage(p, Main.getPrefix() + Lang.WEAPON_PURCHASE_UNLOCKED.getMessage().replace("{gun-name}", gun.getName()), Main.getLang());
 				}
 			}
