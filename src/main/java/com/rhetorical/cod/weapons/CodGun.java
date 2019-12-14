@@ -24,9 +24,9 @@ public class CodGun extends CodWeapon {
 	/**
 	 * Creates a gun with the given parameters.
 	 * */
-	public CodGun(String name, GunType gunT, UnlockType t, int a, ItemStack ammoI, ItemStack gunI, int levelUnlock) {
+	public CodGun(String name, GunType gunT, UnlockType t, int a, ItemStack ammoI, ItemStack gunI, int levelUnlock, boolean shop) {
 
-		super(name, null, t, gunI, levelUnlock);
+		super(name, null, t, gunI, levelUnlock, shop);
 
 		this.name = name;
 		this.ammoName = "";
@@ -44,9 +44,9 @@ public class CodGun extends CodWeapon {
 	/**
 	 * Creates a gun with the given parameters including the name of the ammo (for QualityArmory)
 	 * */
-	public CodGun(String name, String ammoName, GunType gunT, UnlockType t, int a, ItemStack ammoI, ItemStack gunI, int levelUnlock) {
+	public CodGun(String name, String ammoName, GunType gunT, UnlockType t, int a, ItemStack ammoI, ItemStack gunI, int levelUnlock, boolean shop) {
 
-		super(name, null, t, gunI, levelUnlock);
+		super(name, null, t, gunI, levelUnlock, shop);
 
 		this.name = name;
 		this.ammoName = ammoName;
@@ -64,9 +64,9 @@ public class CodGun extends CodWeapon {
 	/**
 	 * Intended to be used for generating blank guns.
 	 * */
-	public CodGun(String name, GunType gunT, UnlockType t, int a, ItemStack ammoI, ItemStack gunI, int levelUnlock, boolean isBlank) {
+	public CodGun(String name, GunType gunT, UnlockType t, int a, ItemStack ammoI, ItemStack gunI, int levelUnlock, boolean isBlank, boolean shop) {
 
-		super(name, null, t, gunI, levelUnlock, isBlank);
+		super(name, null, t, gunI, levelUnlock, isBlank, shop);
 
 		this.name = name;
 		this.setGunType(gunT);
@@ -100,6 +100,7 @@ public class CodGun extends CodWeapon {
 			GunsFile.getData().set("Guns." + gunType.toString() + ".default.unlockType", unlockType.toString());
 			GunsFile.getData().set("Guns." + gunType.toString() + ".default.levelUnlock", levelUnlock);
 			GunsFile.getData().set("Guns." + gunType.toString() + ".default.creditUnlock", creditUnlock);
+			GunsFile.getData().set("Guns." + gunType.toString() + ".default.showInShop", isShowInShop());
 			GunsFile.saveData();
 			GunsFile.reloadData();
 			return;
@@ -124,6 +125,7 @@ public class CodGun extends CodWeapon {
 		GunsFile.getData().set("Guns." + gunType.toString() + "." + k + ".unlockType", unlockType.toString());
 		GunsFile.getData().set("Guns." + gunType.toString() + "." + k + ".levelUnlock", levelUnlock);
 		GunsFile.getData().set("Guns." + gunType.toString() + "." + k + ".creditUnlock", creditUnlock);
+		GunsFile.getData().set("Guns." + gunType.toString() + "." + k + ".showInShop", isShowInShop());
 		GunsFile.saveData();
 		GunsFile.reloadData();
 	}

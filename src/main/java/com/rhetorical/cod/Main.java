@@ -1249,7 +1249,7 @@ public class Main extends JavaPlugin {
 				return;
 			}
 
-			CodWeapon grenadeWeapon = new CodWeapon(name, grenadeType, unlockType, grenade, levelUnlock);
+			CodWeapon grenadeWeapon = new CodWeapon(name, grenadeType, unlockType, grenade, levelUnlock, true);
 
 			grenadeWeapon.setCreditUnlock(cost);
 
@@ -1367,7 +1367,7 @@ public class Main extends JavaPlugin {
 				return;
 			}
 
-			CodGun gun = new CodGun(name, gunType, unlockType, ammoAmount, ammoItem, gunItem, levelUnlock);
+			CodGun gun = new CodGun(name, gunType, unlockType, ammoAmount, ammoItem, gunItem, levelUnlock, true);
 
 			gun.setCreditUnlock(cost);
 

@@ -21,24 +21,32 @@ public class CodWeapon {
 	private int levelUnlock;
 	private int creditUnlock;
 
-	public CodWeapon(String n, WeaponType wt, UnlockType t, ItemStack weaponI, int levelUnlock) {
-		this.levelUnlock = levelUnlock;
-		weaponType = wt;
-		
-		unlockType = t;
+	private boolean showInShop;
+
+	public CodWeapon(String n, WeaponType wt, UnlockType t, ItemStack weaponI, int levelUnlock, boolean shop) {
+
+		setShowInShop(shop);
+
+		setLevelUnlock(levelUnlock);
+		setWeaponType(wt);
+
+		setType(t);
 	
-		name = n;
+		setName(n);
+
 		weaponItem = setupWeaponItem(weaponI);
 		menuItem = setupMenuItem(weaponI);
 	}
 
-	public CodWeapon(String n, WeaponType wt, UnlockType t, ItemStack weaponI, int levelUnlock, boolean isBlank) {
-		this.levelUnlock = levelUnlock;
-		weaponType = wt;
+	public CodWeapon(String n, WeaponType wt, UnlockType t, ItemStack weaponI, int levelUnlock, boolean isBlank, boolean shop) {
+		setLevelUnlock(levelUnlock);
 
-		unlockType = t;
+		setShowInShop(shop);
 
-		name = n;
+		setWeaponType(wt);
+		setType(t);
+
+		setName(n);
 		if (!isBlank) {
 			weaponItem = setupWeaponItem(weaponI);
 			menuItem = setupMenuItem(weaponI);
@@ -59,6 +67,7 @@ public class CodWeapon {
 			GunsFile.getData().set("Weapons." + weaponType.toString() + ".default.unlockType", unlockType.toString());
 			GunsFile.getData().set("Weapons." + weaponType.toString() + ".default.levelUnlock", levelUnlock);
 			GunsFile.getData().set("Weapons." + weaponType.toString() + ".default.creditUnlock", creditUnlock);
+			GunsFile.getData().set("Weapons." + weaponType.toString() + ".default.showInShop", isShowInShop());
 			GunsFile.saveData();
 			GunsFile.reloadData();
 			return;
@@ -80,6 +89,7 @@ public class CodWeapon {
 		GunsFile.getData().set("Weapons." + weaponType.toString() + "." + k + ".unlockType", unlockType.toString());
 		GunsFile.getData().set("Weapons." + weaponType.toString() + "." + k + ".levelUnlock", levelUnlock);
 		GunsFile.getData().set("Weapons." + weaponType.toString() + "." + k + ".creditUnlock", creditUnlock);
+		GunsFile.getData().set("Weapons." + weaponType.toString() + "." + k + ".showInShop", isShowInShop());
 		GunsFile.saveData();
 		GunsFile.reloadData();
 	}
@@ -206,5 +216,13 @@ public class CodWeapon {
 
 	public void setWeaponType(WeaponType weaponType) {
 		this.weaponType = weaponType;
+	}
+
+	public boolean isShowInShop() {
+		return showInShop;
+	}
+
+	public void setShowInShop(boolean value) {
+		showInShop = value;
 	}
 }

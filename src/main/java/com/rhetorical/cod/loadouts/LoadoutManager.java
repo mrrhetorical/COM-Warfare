@@ -229,11 +229,12 @@ public class LoadoutManager {
 			ItemStack gunItem = new ItemStack(gunMat, 1, gunData);
 
 			String ammoName = GunsFile.getData().getString("Guns.Primary.default.ammoName");
+			boolean shop = GunsFile.getData().getBoolean("Guns.Primary.default.showInShop");
 			CodGun gun;
 			if (ammoName == null) {
-				gun = new CodGun(gunName, GunType.Primary, null, ammoAmount, ammoItem, gunItem, 0);
+				gun = new CodGun(gunName, GunType.Primary, null, ammoAmount, ammoItem, gunItem, 0, shop);
 			} else {
-				gun = new CodGun(gunName, ammoName, GunType.Primary, null, ammoAmount, ammoItem, gunItem, 0);
+				gun = new CodGun(gunName, ammoName, GunType.Primary, null, ammoAmount, ammoItem, gunItem, 0, shop);
 			}
 			gun.setCreditUnlock(0);
 
@@ -264,11 +265,12 @@ public class LoadoutManager {
 			ItemStack gunItem = new ItemStack(gunMat, 1, gunData);
 
 			String ammoName = GunsFile.getData().getString("Guns.Secondary.default.ammoName");
+			boolean shop = GunsFile.getData().getBoolean("Guns.Secondary.default.showInShop");
 			CodGun gun;
 			if (ammoName == null) {
-				gun = new CodGun(gunName, GunType.Secondary, null, ammoAmount, ammoItem, gunItem, 0);
+				gun = new CodGun(gunName, GunType.Secondary, null, ammoAmount, ammoItem, gunItem, 0, shop);
 			} else {
-				gun = new CodGun(gunName, ammoName, GunType.Secondary, null, ammoAmount, ammoItem, gunItem, 0);
+				gun = new CodGun(gunName, ammoName, GunType.Secondary, null, ammoAmount, ammoItem, gunItem, 0, shop);
 			}
 
 			gun.setCreditUnlock(0);
@@ -302,9 +304,11 @@ public class LoadoutManager {
 			}
 			short weaponData = (short) GunsFile.getData().getInt("Weapons.LETHAL.default.data");
 
+			boolean shop = GunsFile.getData().getBoolean("Weapons.LETHAL.default.showInShop");
+
 			ItemStack weapon = new ItemStack(weaponMaterial, amount, weaponData);
 
-			defaultLethal = new CodWeapon(weaponName, WeaponType.LETHAL, type, weapon, 0);
+			defaultLethal = new CodWeapon(weaponName, WeaponType.LETHAL, type, weapon, 0, shop);
 		}
 
 		return defaultLethal;
@@ -334,7 +338,9 @@ public class LoadoutManager {
 
 			ItemStack weapon = new ItemStack(weaponMaterial, amount, weaponData);
 
-			defaultTactical = new CodWeapon(weaponName, WeaponType.TACTICAL, type, weapon, 0);
+			boolean shop = GunsFile.getData().getBoolean("Weapons.TACTICAL.default.showInShop");
+
+			defaultTactical = new CodWeapon(weaponName, WeaponType.TACTICAL, type, weapon, 0, shop);
 		}
 
 		return defaultTactical;
