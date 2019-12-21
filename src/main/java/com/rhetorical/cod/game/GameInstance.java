@@ -121,6 +121,9 @@ public class GameInstance implements Listener {
 	private boolean pastClassChange = true;
 	private boolean canVote = true;
 
+	//todo: keep tracck of all runnables and cancel out when staritng
+	private List<BukkitRunnable> runnables = new ArrayList<>();
+
 
 	GameInstance(ArrayList<Player> pls, CodMap map) {
 
@@ -1030,7 +1033,6 @@ public class GameInstance implements Listener {
 
 			@Override
 			public void run() {
-
 				if (t == 0 || forceStarted || getState() == GameState.IN_GAME || getState() == GameState.STOPPING) {
 
 					for (Player p : getPlayers()) {
@@ -1779,6 +1781,7 @@ public class GameInstance implements Listener {
 			int t = 3;
 
 			public void run() {
+
 
 				p.getInventory().clear();
 				p.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 120, 1));
@@ -2869,6 +2872,7 @@ public class GameInstance implements Listener {
 
 			@Override
 			public void run() {
+
 				t--;
 
 				if (t < 0) {
@@ -2989,6 +2993,7 @@ public class GameInstance implements Listener {
 		BukkitRunnable br = new BukkitRunnable() {
 			@Override
 			public void run() {
+
 				if (isOnBlueTeam(owner)) {
 					blueCounterUavActive = false;
 				} else if (isOnRedTeam(owner)) {
@@ -3091,6 +3096,7 @@ public class GameInstance implements Listener {
 
 			@Override
 			public void run() {
+
 				t--;
 
 				if (t < 0) {
@@ -3266,6 +3272,18 @@ public class GameInstance implements Listener {
 	void sendNextMap(Player p, int t) {
 		Main.sendMessage(p, Lang.GAME_STARTING_MESSAGE.getMessage().replace("{time}", getFancyTime(t)), Main.getLang());
 		Main.sendMessage(p, Lang.GAME_STARTING_MAP_MESSAGE.getMessage().replace("{map}", getMap().getName()).replace("{mode}", getMap().getGamemode().toString()), Main.getLang());
+	}
+
+	public List<BukkitRunnable> getRunnables() {
+		return runnables;
+	}
+
+	public void destroy() {
+		List<BukkitRunnable> r = new ArrayList<>(getRunnables());
+		for (BukkitRunnable runnable : r) {
+			runnable.cancel();
+			getRunnables().remove(runnable);
+		}
 	}
 
 	@EventHandler
