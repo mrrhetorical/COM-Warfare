@@ -1031,7 +1031,29 @@ public class GameInstance implements Listener {
 			@Override
 			public void run() {
 
+				if (t == 0 || forceStarted || getState() == GameState.IN_GAME || getState() == GameState.STOPPING) {
+
+					for (Player p : getPlayers()) {
+						if (t == 0) {
+							Main.sendMessage(p, Lang.GAME_STARTING.getMessage(), Main.getLang());
+						}
+					}
+
+					clearNextMaps();
+
+					startGame();
+
+					cancel();
+
+					return;
+				}
+
 				String counter = getFancyTime(t);
+
+				if (getPlayers().size() == 1) {
+					t = lobbyTime;
+				} else
+					t--;
 
 				try {
 					scoreBar.getClass().getMethod("setTitle", String.class).invoke(scoreBar, ChatColor.GOLD + getMap().getName() + " " + ChatColor.GRAY + "«" + ChatColor.WHITE + counter + ChatColor.RESET + "" + ChatColor.GRAY + "» " + ChatColor.GOLD + getMap().getGamemode().toString());
@@ -1115,26 +1137,6 @@ public class GameInstance implements Listener {
 						p.getInventory().setItem(4, new ItemStack(Material.AIR));
 					}
 				}
-
-				if (t == 0 || forceStarted) {
-
-					for (Player p : getPlayers()) {
-						if (t == 0) {
-							Main.sendMessage(p, Lang.GAME_STARTING.getMessage(), Main.getLang());
-						}
-					}
-
-					clearNextMaps();
-
-					startGame();
-
-					cancel();
-				}
-
-				if (getPlayers().size() == 1) {
-					t = lobbyTime;
-				} else
-					t--;
 			}
 		};
 
@@ -1321,6 +1323,7 @@ public class GameInstance implements Listener {
 
 				if ((t == time || timeSinceLastHardpoint == 60) && getGamemode() == Gamemode.HARDPOINT) {
 					updateHardpointFlagLocation();
+					timeSinceLastHardpoint = 0;
 				}
 
 				if (getState() != GameState.IN_GAME) {
