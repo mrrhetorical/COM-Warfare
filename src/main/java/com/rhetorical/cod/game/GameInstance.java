@@ -1260,6 +1260,7 @@ public class GameInstance implements Listener {
 		gameRunnable = new BukkitRunnable() {
 
 			int t = time;
+			int timeSinceLastHardpoint = 0;
 			@Override
 			public void run() {
 
@@ -1318,7 +1319,7 @@ public class GameInstance implements Listener {
 						spawnCtfFlags();
 				}
 
-				if (t % 60 == 0 && getGamemode() == Gamemode.HARDPOINT) {
+				if ((t == time || timeSinceLastHardpoint == 60) && getGamemode() == Gamemode.HARDPOINT) {
 					updateHardpointFlagLocation();
 				}
 
@@ -1331,11 +1332,17 @@ public class GameInstance implements Listener {
 					pastClassChange = true;
 				}
 
+				timeSinceLastHardpoint++;
 				if (getGamemode() != Gamemode.HARDPOINT)
 					t--;
 				else {
 					if (hardpointFlag == null || Math.abs(hardpointFlag.getCaptureProgress()) != 10)
 						t--;
+					else
+						if (hardpointFlag.getCaptureProgress() == -10)
+							addRedPoint();
+						else
+							addBluePoint();
 				}
 
 				String counter = getFancyTime(t);
