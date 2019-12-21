@@ -46,7 +46,8 @@ public class SoundManager implements Listener {
 	private void playSound(Player p, SoundData data) {
 		for (String s : data.getSoundStructMap().keySet()) {
 			SoundData.SoundStruct sound = data.getSoundStructMap().get(s);
-			p.playSound(p.getLocation(), sound.sound, sound.volume, sound.pitch);
+			if (!sound.sound.equalsIgnoreCase("none") && !sound.sound.equals("") && !sound.sound.isEmpty())
+				p.playSound(p.getLocation(), sound.sound, sound.volume, sound.pitch);
 		}
 	}
 

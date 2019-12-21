@@ -25,8 +25,8 @@ class SoundData {
 	void load(String event) {
 		if (event.equalsIgnoreCase("GameEndSoundEvent") || event.equalsIgnoreCase("RoundEndSoundEvent")) {
 			if (!SoundFile.getData().contains(event)) {
-				SoundFile.getData().set(event + ".victory", "VICTORY::1.0::1.0");
-				SoundFile.getData().set(event + ".loss", "LOSS::1.0::1.0");
+				SoundFile.getData().set(event + ".victory", "NONE::1.0::1.0");
+				SoundFile.getData().set(event + ".loss", "NONE::1.0::1.0");
 				SoundFile.saveData();
 				SoundFile.reloadData();
 			} else {
@@ -44,14 +44,14 @@ class SoundData {
 			if (!SoundFile.getData().contains(event)) {
 				for (int i = 0; i < Gamemode.values().length - 1; i++) {
 					Gamemode mode = Gamemode.values()[i];
-					SoundFile.getData().set(event + "." + mode.toString().toLowerCase(), mode.toString() + "::1.0::1.0");
+					SoundFile.getData().set(event + "." + mode.toString().toLowerCase(), "NONE::1.0::1.0");
 				}
 				SoundFile.saveData();
 				SoundFile.reloadData();
 			} else {
 				for (int i = 0; i < Gamemode.values().length - 1; i++) {
 					Gamemode mode = Gamemode.values()[i];
-					String s = SoundFile.getData().getString(event + "." + mode.toString().toLowerCase(), mode.toString() + "::1.0::1.0");
+					String s = SoundFile.getData().getString(event + "." + mode.toString().toLowerCase());
 					SoundStruct ss = deserialize(s);
 					if (ss != null)
 						soundStructMap.put(mode.toString().toLowerCase(), ss);
@@ -60,7 +60,7 @@ class SoundData {
 			return;
 		} else {
 			if (!SoundFile.getData().contains(event)) {
-				SoundFile.getData().set(event, "SOUND_NAME::1.0::1.0");
+				SoundFile.getData().set(event, "NONE::1.0::1.0");
 				SoundFile.saveData();
 				SoundFile.reloadData();
 			} else {

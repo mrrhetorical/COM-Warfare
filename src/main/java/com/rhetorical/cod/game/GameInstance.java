@@ -1188,6 +1188,9 @@ public class GameInstance implements Listener {
 		entityManager.clearEntities();
 
 		if (!newRound) {
+			//todo: remove
+			Bukkit.getLogger().info(String.format("Starting game with mode %s on map %s!", getGamemode().toString(), getMap().getName()));
+
 			setState(GameState.IN_GAME);
 
 			try {
@@ -1328,7 +1331,12 @@ public class GameInstance implements Listener {
 					pastClassChange = true;
 				}
 
-				t--;
+				if (getGamemode() != Gamemode.HARDPOINT)
+					t--;
+				else {
+					if (hardpointFlag == null || Math.abs(hardpointFlag.getCaptureProgress()) != 10)
+						t--;
+				}
 
 				String counter = getFancyTime(t);
 
@@ -2479,7 +2487,7 @@ public class GameInstance implements Listener {
 		Location cLoc = getMap().getCFlagSpawn();
 
 		if(aLoc == null || bLoc == null || cLoc == null) {
-			Main.sendMessage(Main.getConsole(), Main.getPrefix() + ChatColor.RED + "The Alpha, Beta, or Charlie flag spawns have not been set for the current map in arena id " + getId() + ". The game will likely not work properly.", Main.getLang());
+			Main.sendMessage(Main.getConsole(), Main.getPrefix() + ChatColor.RED + "The Alpdha, Beta, or Charlie flag spawns have not been set for the current map in arena id " + getId() + ". The game will likely not work properly.", Main.getLang());
 			return;
 		}
 
