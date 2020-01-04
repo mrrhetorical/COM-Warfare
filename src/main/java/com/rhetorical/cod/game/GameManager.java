@@ -342,6 +342,8 @@ public class GameManager {
 		for (Player p : i.getPlayers()) {
 			Main.sendMessage(p, Lang.CURRENT_GAME_REMOVED.getMessage(), Main.getLang());
 		}
+
+		i.destroy();
 		
 		Main.sendMessage(Main.getConsole(), Main.getPrefix() + ChatColor.GRAY + "Game instance id " + i.getId() + " has been removed!", Main.getLang());
 

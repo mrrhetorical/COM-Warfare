@@ -17,7 +17,7 @@ import org.bukkit.inventory.Inventory;
  * Representation of the players' loadouts
  * */
 
-public class Loadout implements Listener {
+public class Loadout {
 
 	private Player owner;
 	private String name;
@@ -51,6 +51,7 @@ public class Loadout implements Listener {
 		this.perk1 = p1;
 		this.perk2 = p2;
 		this.perk3 = p3;
+		save = true;
 	}
 
 	public Loadout(Player o, String n, CodGun p, CodGun s, CodWeapon l, CodWeapon t, CodPerk p1, CodPerk p2, CodPerk p3, boolean save) {
@@ -267,40 +268,40 @@ public class Loadout implements Listener {
 		this.tacticalInventory = inventory;
 	}
 
-	@EventHandler
-	public void inventoryClickListener(InventoryClickEvent e) {
-		if (!(e.getWhoClicked() instanceof Player))
-			return;
-
-		Player p = (Player) e.getWhoClicked();
-
-		if (InventoryManager.getInstance().shouldCancelClick(e.getInventory(), p)) {
-			e.setCancelled(true);
-		} else {
-			return;
-		}
-
-		if (e.getCurrentItem() == null)
-			return;
-
-		if (!(e.getInventory().equals(this.getPrimaryInventory()) || e.getInventory().equals(this.getSecondaryInventory()) || e.getInventory().equals(this.getLethalInventory()) || e.getInventory().equals(this.getTacticalInventory()))) {
-			return;
-		}
-
-		if (e.getCurrentItem().equals(InventoryManager.getInstance().backInv)) {
-			p.closeInventory();
-			return;
-		}
-
-		if (e.getInventory().equals(this.getPrimaryInventory())) {
-			for (CodGun gun : ShopManager.getInstance().getPrimaryGuns()) {
-				if (gun.getMenuItem().equals(e.getCurrentItem())) {
-					this.setPrimary(gun);
-					p.closeInventory();
-					p.openInventory(InventoryManager.getInstance().createClassInventory.get(p));
-				}
-			}
-		}
-	}
+//	@EventHandler
+//	public void inventoryClickListener(InventoryClickEvent e) {
+//		if (!(e.getWhoClicked() instanceof Player))
+//			return;
+//
+//		Player p = (Player) e.getWhoClicked();
+//
+//		if (InventoryManager.getInstance().shouldCancelClick(e.getInventory(), p)) {
+//			e.setCancelled(true);
+//		} else {
+//			return;
+//		}
+//
+//		if (e.getCurrentItem() == null)
+//			return;
+//
+//		if (!(e.getInventory().equals(this.getPrimaryInventory()) || e.getInventory().equals(this.getSecondaryInventory()) || e.getInventory().equals(this.getLethalInventory()) || e.getInventory().equals(this.getTacticalInventory()))) {
+//			return;
+//		}
+//
+//		if (e.getCurrentItem().equals(InventoryManager.getInstance().backInv)) {
+//			p.closeInventory();
+//			return;
+//		}
+//
+//		if (e.getInventory().equals(this.getPrimaryInventory())) {
+//			for (CodGun gun : ShopManager.getInstance().getPrimaryGuns()) {
+//				if (gun.getMenuItem().equals(e.getCurrentItem())) {
+//					this.setPrimary(gun);
+//					p.closeInventory();
+//					p.openInventory(InventoryManager.getInstance().createClassInventory.get(p));
+//				}
+//			}
+//		}
+//	}
 
 }

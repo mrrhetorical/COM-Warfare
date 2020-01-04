@@ -57,7 +57,6 @@ public class GameInstance implements Listener {
 	private int lobbyTime;
 
 	private GameState state;
-	private BukkitRunnable gameRunnable;
 
 	private ArrayList<Player> blueTeam = new ArrayList<>();
 	private ArrayList<Player> redTeam = new ArrayList<>();
@@ -120,6 +119,9 @@ public class GameInstance implements Listener {
 
 	private boolean pastClassChange = true;
 	private boolean canVote = true;
+
+	//todo: keep tracck of all runnables and cancel out when staritng
+	private List<BukkitRunnable> runnables = new ArrayList<>();
 
 
 	GameInstance(ArrayList<Player> pls, CodMap map) {
@@ -907,6 +909,15 @@ public class GameInstance implements Listener {
 			int t = 10;
 
 			public void run() {
+
+				if (t <= 0) {
+					game.reset();
+					cancel();
+					getRunnables().remove(this);
+					return;
+				}
+
+
 				if (t == 10) {
 					for (Player p : game.players) {
 						String teamFormat = "";
@@ -967,20 +978,16 @@ public class GameInstance implements Listener {
 					}
 				}
 
-				for (Player p : getPlayers()) {
-					Main.sendActionBar(p, Lang.RETURNING_TO_LOBBY.getMessage().replace("{time}", t + ""));
-				}
-
 				t--;
 
-				if (t <= 0) {
-					game.reset();
-					cancel();
+				for (Player p : getPlayers()) {
+					Main.sendActionBar(p, Lang.RETURNING_TO_LOBBY.getMessage().replace("{time}", t + ""));
 				}
 
 			}
 		};
 
+		getRunnables().add(br);
 		br.runTaskTimer(Main.getPlugin(), 0L, 20L);
 	}
 
@@ -1030,8 +1037,27 @@ public class GameInstance implements Listener {
 
 			@Override
 			public void run() {
+				if (t == 0 || forceStarted || getState() == GameState.IN_GAME || getState() == GameState.STOPPING) {
+
+					for (Player p : getPlayers()) {
+						if (t == 0) {
+							Main.sendMessage(p, Lang.GAME_STARTING.getMessage(), Main.getLang());
+						}
+					}
+
+					clearNextMaps();
+					startGame();
+					cancel();
+					getRunnables().remove(this);
+					return;
+				}
 
 				String counter = getFancyTime(t);
+
+				if (getPlayers().size() == 1) {
+					t = lobbyTime;
+				} else
+					t--;
 
 				try {
 					scoreBar.getClass().getMethod("setTitle", String.class).invoke(scoreBar, ChatColor.GOLD + getMap().getName() + " " + ChatColor.GRAY + "«" + ChatColor.WHITE + counter + ChatColor.RESET + "" + ChatColor.GRAY + "» " + ChatColor.GOLD + getMap().getGamemode().toString());
@@ -1115,29 +1141,10 @@ public class GameInstance implements Listener {
 						p.getInventory().setItem(4, new ItemStack(Material.AIR));
 					}
 				}
-
-				if (t == 0 || forceStarted) {
-
-					for (Player p : getPlayers()) {
-						if (t == 0) {
-							Main.sendMessage(p, Lang.GAME_STARTING.getMessage(), Main.getLang());
-						}
-					}
-
-					clearNextMaps();
-
-					startGame();
-
-					cancel();
-				}
-
-				if (getPlayers().size() == 1) {
-					t = lobbyTime;
-				} else
-					t--;
 			}
 		};
 
+		getRunnables().add(br);
 		br.runTaskTimer(Main.getPlugin(), 0L, 20L);
 	}
 
@@ -1150,7 +1157,8 @@ public class GameInstance implements Listener {
 			@Override
 			public void run() {
 				if (getState() != GameState.IN_GAME) {
-					this.cancel();
+					cancel();
+					getRunnables().remove(this);
 					return;
 				}
 
@@ -1178,6 +1186,7 @@ public class GameInstance implements Listener {
 			}
 		};
 
+		getRunnables().add(br);
 		br.runTaskTimer(Main.getPlugin(), 0L, 5L);
 	}
 
@@ -1188,6 +1197,9 @@ public class GameInstance implements Listener {
 		entityManager.clearEntities();
 
 		if (!newRound) {
+			//todo: remove
+			Bukkit.getLogger().info(String.format("Starting game with mode %s on map %s!", getGamemode().toString(), getMap().getName()));
+
 			setState(GameState.IN_GAME);
 
 			try {
@@ -1254,9 +1266,10 @@ public class GameInstance implements Listener {
 
 		GameInstance game = this;
 
-		gameRunnable = new BukkitRunnable() {
+		BukkitRunnable br = new BukkitRunnable() {
 
 			int t = time;
+			int timeSinceLastHardpoint = 0;
 			@Override
 			public void run() {
 
@@ -1278,7 +1291,10 @@ public class GameInstance implements Listener {
 							for (Player pp : players) {
 								isAlive.put(pp, true);
 							}
+
+							getRunnables().remove(this);
 							cancel();
+							return;
 						} else if (getAlivePlayers(redTeam) > getAlivePlayers(blueTeam)) {
 							addRedPoint();
 
@@ -1293,16 +1309,21 @@ public class GameInstance implements Listener {
 							for (Player pp : players) {
 								isAlive.put(pp, true);
 							}
+
+							getRunnables().remove(this);
 							cancel();
+							return;
 						} else {
 							startNewRound(7, null);
 						}
+						getRunnables().remove(this);
 						cancel();
 						return;
 					}
 
 					stopGame();
 
+					getRunnables().remove(this);
 					cancel();
 					return;
 				}
@@ -1315,8 +1336,9 @@ public class GameInstance implements Listener {
 						spawnCtfFlags();
 				}
 
-				if (t % 60 == 0 && getGamemode() == Gamemode.HARDPOINT) {
+				if ((t == time || timeSinceLastHardpoint == 60) && getGamemode() == Gamemode.HARDPOINT) {
 					updateHardpointFlagLocation();
+					timeSinceLastHardpoint = 0;
 				}
 
 				if (getState() != GameState.IN_GAME) {
@@ -1328,7 +1350,18 @@ public class GameInstance implements Listener {
 					pastClassChange = true;
 				}
 
-				t--;
+				timeSinceLastHardpoint++;
+				if (getGamemode() != Gamemode.HARDPOINT)
+					t--;
+				else {
+					if (hardpointFlag == null || Math.abs(hardpointFlag.getCaptureProgress()) != 10)
+						t--;
+					else
+						if (hardpointFlag.getCaptureProgress() == -10)
+							addRedPoint();
+						else
+							addBluePoint();
+				}
 
 				String counter = getFancyTime(t);
 
@@ -1479,13 +1512,12 @@ public class GameInstance implements Listener {
 					if (getGamemode() == Gamemode.RESCUE) {
 						if (blueTeamScore >= maxScore_RESCUE || redTeamScore >= maxScore_RESCUE && getGamemode() == Gamemode.RESCUE) {
 							endGameByScore(this);
-							cancel();
 							return;
 						}
 					} else if (getGamemode() == Gamemode.GUNFIGHT) {
 						if (blueTeamScore >= maxScore_GUNFIGHT || redTeamScore >= maxScore_GUNFIGHT && getGamemode() == Gamemode.GUNFIGHT) {
 							endGameByScore(this);
-							cancel();
+							return;
 						}
 					}
 				}
@@ -1500,12 +1532,6 @@ public class GameInstance implements Listener {
 				}
 
 				if(currentMap.getGamemode().equals(Gamemode.OITC)) {
-//					for (Player p : players) {
-//						if (ffaPlayerScores.get(p) >= maxScore_OITC) {
-//							endGameByScore(this);
-//							return;
-//						}
-//					}
 					for(Player p : getPlayers()) {
 						boolean lastManStanding = true;
 						for(Player other : getPlayers()) {
@@ -1535,7 +1561,8 @@ public class GameInstance implements Listener {
 			}
 
 		};
-		gameRunnable.runTaskTimer(Main.getPlugin(), 0L, 20L);
+		getRunnables().add(br);
+		br.runTaskTimer(Main.getPlugin(), 0L, 20L);
 	}
 
 	private void startNewRound(int delay, List<Player> prevRWT) {
@@ -1574,11 +1601,13 @@ public class GameInstance implements Listener {
 			}
 		};
 
+		getRunnables().add(br);
 		br.runTaskLater(Main.getPlugin(), 20L * (long) delay);
 	}
 
 	private void endGameByScore(BukkitRunnable runnable) {
 		stopGame();
+		getRunnables().remove(runnable);
 		runnable.cancel();
 	}
 
@@ -1762,6 +1791,7 @@ public class GameInstance implements Listener {
 
 			public void run() {
 
+
 				p.getInventory().clear();
 				p.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 120, 1));
 				p.removePotionEffect(PotionEffectType.SPEED);
@@ -1785,17 +1815,23 @@ public class GameInstance implements Listener {
 								assignTeams();
 							}
 
+							getRunnables().remove(this);
 							cancel();
+							return;
 						} else {
 							spawnCodPlayer(p, getMap().getPinkSpawn());
+							getRunnables().remove(this);
 							cancel();
+							return;
 						}
 					} else {
 						p.setGameMode(GameMode.ADVENTURE);
 						p.teleport(Main.getLobbyLocation());
 						p.setHealth(20D);
 						p.setFoodLevel(20);
+						getRunnables().remove(this);
 						cancel();
+						return;
 					}
 				}
 
@@ -1803,6 +1839,7 @@ public class GameInstance implements Listener {
 			}
 		};
 
+		getRunnables().add(br);
 		br.runTaskTimer(Main.getPlugin(), 0L, 20L);
 	}
 
@@ -2479,7 +2516,7 @@ public class GameInstance implements Listener {
 		Location cLoc = getMap().getCFlagSpawn();
 
 		if(aLoc == null || bLoc == null || cLoc == null) {
-			Main.sendMessage(Main.getConsole(), Main.getPrefix() + ChatColor.RED + "The Alpha, Beta, or Charlie flag spawns have not been set for the current map in arena id " + getId() + ". The game will likely not work properly.", Main.getLang());
+			Main.sendMessage(Main.getConsole(), Main.getPrefix() + ChatColor.RED + "The Alpdha, Beta, or Charlie flag spawns have not been set for the current map in arena id " + getId() + ". The game will likely not work properly.", Main.getLang());
 			return;
 		}
 
@@ -2739,7 +2776,9 @@ public class GameInstance implements Listener {
 						redUavActive = false;
 					else if (isOnBlueTeam(owner))
 						blueUavActive = false;
-					this.cancel();
+					getRunnables().remove(this);
+					cancel();
+					return;
 				}
 
 				if(isOnBlueTeam(owner)) {
@@ -2829,6 +2868,7 @@ public class GameInstance implements Listener {
 			}
 		};
 
+		getRunnables().add(br);
 		br.runTaskTimer(Main.getPlugin(), 3L, 60L);
 	}
 
@@ -2851,6 +2891,7 @@ public class GameInstance implements Listener {
 
 			@Override
 			public void run() {
+
 				t--;
 
 				if (t < 0) {
@@ -2858,7 +2899,9 @@ public class GameInstance implements Listener {
 						redVSATActive = false;
 					else if (isOnBlueTeam(owner))
 						blueVSATActive = false;
-					this.cancel();
+					getRunnables().remove(this);
+					cancel();
+					return;
 				}
 
 				if(isOnBlueTeam(owner)) {
@@ -2948,6 +2991,7 @@ public class GameInstance implements Listener {
 			}
 		};
 
+		getRunnables().add(br);
 		br.runTaskTimer(Main.getPlugin(), 3L, 60L);
 	}
 
@@ -2971,6 +3015,7 @@ public class GameInstance implements Listener {
 		BukkitRunnable br = new BukkitRunnable() {
 			@Override
 			public void run() {
+
 				if (isOnBlueTeam(owner)) {
 					blueCounterUavActive = false;
 				} else if (isOnRedTeam(owner)) {
@@ -3073,6 +3118,7 @@ public class GameInstance implements Listener {
 
 			@Override
 			public void run() {
+
 				t--;
 
 				if (t < 0) {
@@ -3084,7 +3130,8 @@ public class GameInstance implements Listener {
 					for (Wolf w : wolves) {
 						Objects.requireNonNull(w).remove();
 					}
-					this.cancel();
+					getRunnables().remove(this);
+					cancel();
 					return;
 				}
 				for (int i = 0; i < wolves.length; i++) {
@@ -3103,6 +3150,7 @@ public class GameInstance implements Listener {
 			}
 		};
 
+		getRunnables().add(br);
 		br.runTaskTimer(Main.getPlugin(), 0L, 20L);
 	}
 
@@ -3187,7 +3235,9 @@ public class GameInstance implements Listener {
 						blueNukeActive = false;
 						redNukeActive = false;
 						pinkNukeActive = null;
-						this.cancel();
+						getRunnables().remove(this);
+						cancel();
+						return;
 					}
 
 					for (Player p : players) {
@@ -3199,6 +3249,7 @@ public class GameInstance implements Listener {
 				}
 			};
 
+			getRunnables().add(br);
 			br.runTaskTimer(Main.getPlugin(), 0L, 20L);
 		}
 	}
@@ -3248,6 +3299,18 @@ public class GameInstance implements Listener {
 	void sendNextMap(Player p, int t) {
 		Main.sendMessage(p, Lang.GAME_STARTING_MESSAGE.getMessage().replace("{time}", getFancyTime(t)), Main.getLang());
 		Main.sendMessage(p, Lang.GAME_STARTING_MAP_MESSAGE.getMessage().replace("{map}", getMap().getName()).replace("{mode}", getMap().getGamemode().toString()), Main.getLang());
+	}
+
+	public List<BukkitRunnable> getRunnables() {
+		return runnables;
+	}
+
+	public void destroy() {
+		List<BukkitRunnable> r = new ArrayList<>(getRunnables());
+		for (BukkitRunnable runnable : r) {
+			runnable.cancel();
+			getRunnables().remove(runnable);
+		}
 	}
 
 	@EventHandler
