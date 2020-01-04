@@ -412,6 +412,7 @@ public class ShopManager {
 
 	}
 
+	@Deprecated
 	public boolean isAvailableForPurchase(Player p, CodGun gun) {
 
 		if (gun.getType() == UnlockType.LEVEL || gun.getType() == UnlockType.BOTH) {
