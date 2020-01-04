@@ -541,7 +541,7 @@ public class InventoryManager implements Listener {
 					ItemMeta gunMeta = item.getItemMeta();
 
 					ArrayList<String> lore = new ArrayList<>();
-
+					lore.add(ChatColor.RESET + gun.getName());
 					lore.add(Lang.SHOP_COST.getMessage() + ": " + gun.getCreditUnlock());
 
 					gunMeta.setLore(lore);
@@ -572,6 +572,7 @@ public class InventoryManager implements Listener {
 
 					if (gunMeta != null) {
 						ArrayList<String> lore = new ArrayList<>();
+						lore.add(ChatColor.RESET + grenade.getName());
 						lore.add(Lang.SHOP_COST.getMessage() + ": " + grenade.getCreditUnlock());
 						gunMeta.setLore(lore);
 						item.setItemMeta(gunMeta);
@@ -1061,10 +1062,10 @@ public class InventoryManager implements Listener {
 			guns.addAll(ShopManager.getInstance().getSecondaryGuns());
 
 			for (CodGun gun : guns) {
-				if (!e.getCurrentItem().hasItemMeta() || !e.getCurrentItem().getItemMeta().hasDisplayName() )
+				if (!e.getCurrentItem().hasItemMeta() || !e.getCurrentItem().getItemMeta().hasDisplayName())
 					return;
 
-				if (e.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase(gun.getName())) {
+				if (!e.getCurrentItem().getItemMeta().getLore().isEmpty() && e.getCurrentItem().getItemMeta().getLore().get(0).toUpperCase().contains(gun.getName().toUpperCase())) {
 					int cost = gun.getCreditUnlock();
 					if (CreditManager.purchase(p, cost)) {
 						ArrayList<CodGun> purchasedGuns = ShopManager.getInstance().purchasedGuns.get(p);
@@ -1097,7 +1098,7 @@ public class InventoryManager implements Listener {
 				if (!e.getCurrentItem().hasItemMeta() || !e.getCurrentItem().getItemMeta().hasDisplayName())
 					return;
 
-				if (e.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase(grenade.getName())) {
+				if (!e.getCurrentItem().getItemMeta().getLore().isEmpty() && e.getCurrentItem().getItemMeta().getLore().get(0).toUpperCase().contains(grenade.getName().toUpperCase())) {
 					int cost = grenade.getCreditUnlock();
 					if (CreditManager.purchase(p, cost)) {
 						ArrayList<CodWeapon> purchasedGrenades = ShopManager.getInstance().purchasedWeapons.get(p);
