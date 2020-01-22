@@ -4,5 +4,6 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>me.zombie_striker</groupId>
   <artifactId>QualityArmory</artifactId>
-  <version>1.1.148</version>
+  <version>1.1.154</version>
+  <description>POM was created from install:install-file</description>
 </project>
