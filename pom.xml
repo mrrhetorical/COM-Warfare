@@ -35,7 +35,7 @@
 		<repository>
 			<id>project.local</id>
 			<name>project</name>
-			<url>file:${project.basedir}/repo</url>
+			<url>file://${project.basedir}/repo/</url>
 		</repository>
 	</repositories>
 
@@ -57,13 +57,13 @@
 		<dependency>
 			<groupId>org.spigotmc</groupId>
 			<artifactId>spigot-api</artifactId>
-			<version>1.15-R0.1-SNAPSHOT</version>
+			<version>1.15.2-R0.1-SNAPSHOT</version>
 			<scope>provided</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>com.shampaggon</groupId>
-			<artifactId>crackshot</artifactId>
+			<artifactId>CrackShot</artifactId>
 			<version>0.98.9</version>
 			<scope>provided</scope>
 		</dependency>
@@ -78,7 +78,7 @@
 		<dependency>
 			<groupId>me.zombie_striker</groupId>
 			<artifactId>QualityArmory</artifactId>
-			<version>1.1.148</version>
+			<version>1.1.154</version>
 			<scope>provided</scope>
 		</dependency>
 
