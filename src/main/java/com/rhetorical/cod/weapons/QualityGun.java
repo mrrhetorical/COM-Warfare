@@ -1,6 +1,6 @@
 package com.rhetorical.cod.weapons;
 
-import com.rhetorical.cod.Main;
+import com.rhetorical.cod.ComWarfare;
 import com.rhetorical.cod.game.GameInstance;
 import com.rhetorical.cod.game.GameManager;
 import org.bukkit.Bukkit;
@@ -16,8 +16,8 @@ public class QualityGun implements Listener {
 	public static void setup() {
 		//does nothing
 
-		if (Main.hasQualityArms()) {
-			Bukkit.getServer().getPluginManager().registerEvents(new QualityGun(), Main.getPlugin());
+		if (ComWarfare.hasQualityArms()) {
+			Bukkit.getServer().getPluginManager().registerEvents(new QualityGun(), ComWarfare.getPlugin());
 		}
 	}
 

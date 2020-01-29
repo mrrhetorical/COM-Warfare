@@ -1,7 +1,7 @@
 package com.rhetorical.cod.progression;
 
 import com.rhetorical.cod.ComVersion;
-import com.rhetorical.cod.Main;
+import com.rhetorical.cod.ComWarfare;
 import com.rhetorical.cod.files.ProgressionFile;
 import com.rhetorical.cod.inventories.ShopManager;
 import com.rhetorical.cod.lang.Lang;
@@ -43,8 +43,8 @@ public class ProgressionManager {
 			this.loadData(p);
 		}
 
-		int maxLevelFromConfig = Main.getPlugin().getConfig().getInt("maxLevel");
-		int maxPrestigeLevelFromConfig = ComVersion.getPurchased() ? Main.getPlugin().getConfig().getInt("maxPrestigeLevel") : 0;
+		int maxLevelFromConfig = ComWarfare.getPlugin().getConfig().getInt("maxLevel");
+		int maxPrestigeLevelFromConfig = ComVersion.getPurchased() ? ComWarfare.getPlugin().getConfig().getInt("maxPrestigeLevel") : 0;
 
 		if (maxLevelFromConfig <= 0) {
 			this.maxLevel = 55;
@@ -75,7 +75,7 @@ public class ProgressionManager {
 			this.level.put(p, level);
 		}
 		if (showMessage) {
-			p.sendMessage(Main.getPrefix() + Lang.RANK_UP_MESSAGE.getMessage().replace("{level}", getLevel(p) + ""));
+			p.sendMessage(ComWarfare.getPrefix() + Lang.RANK_UP_MESSAGE.getMessage().replace("{level}", getLevel(p) + ""));
 		}
 
 	}
@@ -87,12 +87,12 @@ public class ProgressionManager {
 		}
 
 		this.level.put(p, this.level.get(p) + 1);
-		p.sendMessage(Main.getPrefix() + Lang.RANK_UP_MESSAGE.getMessage().replace("{level}", getLevel(p) + ""));
+		p.sendMessage(ComWarfare.getPrefix() + Lang.RANK_UP_MESSAGE.getMessage().replace("{level}", getLevel(p) + ""));
 
 		Bukkit.getServer().getPluginManager().callEvent(new PlayerLevelUpSoundEvent(p)); //testing event
 
 		if (this.getLevel(p) == this.maxLevel) {
-			p.sendMessage(Main.getPrefix() + Lang.RANK_UP_READY_TO_PRESTIGE.getMessage());
+			p.sendMessage(ComWarfare.getPrefix() + Lang.RANK_UP_READY_TO_PRESTIGE.getMessage());
 		}
 
 		ShopManager.getInstance().checkForNewGuns(p);
@@ -110,7 +110,7 @@ public class ProgressionManager {
 		this.prestigeLevel.put(p, level);
 
 		if (showMessage) {
-			p.sendMessage(Main.getPrefix() + Lang.RANK_UP_PRESTIGE_MESSAGE.getMessage().replace("{level}", getPrestigeLevel(p) + ""));
+			p.sendMessage(ComWarfare.getPrefix() + Lang.RANK_UP_PRESTIGE_MESSAGE.getMessage().replace("{level}", getPrestigeLevel(p) + ""));
 		}
 
 	}
@@ -121,7 +121,7 @@ public class ProgressionManager {
 		}
 
 		if (getPrestigeLevel(p) >= maxPrestigeLevel) {
-			Main.sendMessage(p, Lang.ALREADY_HIGHEST_PRESTIGE.getMessage(), Main.getPrefix());
+			ComWarfare.sendMessage(p, Lang.ALREADY_HIGHEST_PRESTIGE.getMessage(), ComWarfare.getPrefix());
 			return false;
 		}
 
@@ -133,8 +133,8 @@ public class ProgressionManager {
 
 
 		Bukkit.getPluginManager().callEvent(new PlayerPrestigeSoundEvent(p));
-		p.sendMessage(Main.getPrefix() + Lang.RANK_UP_PRESTIGE_MESSAGE.getMessage().replace("{level}", getPrestigeLevel(p) + ""));
-		p.sendMessage(Main.getPrefix() + Lang.RANK_RESET_MESSAGE.getMessage());
+		p.sendMessage(ComWarfare.getPrefix() + Lang.RANK_UP_PRESTIGE_MESSAGE.getMessage().replace("{level}", getPrestigeLevel(p) + ""));
+		p.sendMessage(ComWarfare.getPrefix() + Lang.RANK_RESET_MESSAGE.getMessage());
 		return true;
 	}
 
@@ -198,7 +198,7 @@ public class ProgressionManager {
 		try {
 			p.setExp((float) (getExperience(p) / getExperienceForLevel(getLevel(p))));
 		} catch (Exception e) {
-			Main.sendMessage(Main.getConsole(), Lang.ERROR_SETTING_PLAYER_EXPERIENCE_LEVEL.getMessage(), Main.getLang());
+			ComWarfare.sendMessage(ComWarfare.getConsole(), Lang.ERROR_SETTING_PLAYER_EXPERIENCE_LEVEL.getMessage(), ComWarfare.getLang());
 		}
 	}
 
@@ -206,7 +206,7 @@ public class ProgressionManager {
 		int k = 0;
 		while (ProgressionFile.getData().contains("Players." + k)) {
 
-			if (p == Bukkit.getPlayer(ProgressionFile.getData().getString("Players." + k + ".name"))) {
+			if (p.getName().equalsIgnoreCase(ProgressionFile.getData().getString("Players." + k + ".name"))) {
 				int playerLevel = ProgressionFile.getData().getInt("Players." + k + ".level");
 				double playerExperience = ProgressionFile.getData().getDouble("Players." + k + ".experience");
 				int playerPrestigeLevel = ProgressionFile.getData().getInt("Players." + k + ".prestigeLevel");

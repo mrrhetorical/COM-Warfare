@@ -1,6 +1,6 @@
 package com.rhetorical.cod.game;
 
-import com.rhetorical.cod.Main;
+import com.rhetorical.cod.ComWarfare;
 import com.rhetorical.cod.files.ArenasFile;
 import org.bukkit.Location;
 
@@ -129,7 +129,7 @@ public class CodMap {
 		}
 
 		if (getPinkSpawns() != null) {
-			if (getPinkSpawns().size() >= Main.getMaxPlayers()) {
+			if (getPinkSpawns().size() >= ComWarfare.getMaxPlayers()) {
 				if (!availableGamemodes.contains(Gamemode.FFA) && !blacklistedModes.contains(Gamemode.FFA))
 					availableGamemodes.add(Gamemode.FFA);
 				if(!availableGamemodes.contains(Gamemode.OITC) && !blacklistedModes.contains(Gamemode.OITC)) {

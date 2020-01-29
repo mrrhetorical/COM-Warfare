@@ -7,7 +7,6 @@ import com.rhetorical.cod.lang.Lang;
 import com.rhetorical.cod.lang.LevelNames;
 import com.rhetorical.cod.progression.CreditManager;
 import com.rhetorical.cod.progression.ProgressionManager;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Wolf;
@@ -38,7 +37,7 @@ public class Listeners implements Listener {
 		// remove from cod
 		for (GameInstance i : GameManager.getRunningGames()) {
 			if (i.getPlayers().contains(p)) {
-				p.teleport(Main.getLobbyLocation());
+				p.teleport(ComWarfare.getLobbyLocation());
 				i.removePlayer(p);
 				break;
 			}
@@ -50,7 +49,7 @@ public class Listeners implements Listener {
 		Player p = e.getPlayer();
 		CreditManager.loadCredits(p);
 
-		if (Main.isServerMode()) {
+		if (ComWarfare.isServerMode()) {
 			GameManager.findMatch(p);
 		}
 	}
@@ -134,7 +133,7 @@ public class Listeners implements Listener {
 			return;
 		}
 
-		double damage = Main.getDefaultHealth();
+		double damage = ComWarfare.getDefaultHealth();
 		for (Player pp : Objects.requireNonNull(GameManager.getMatchWhichContains(p)).dogsScoreStreak.keySet()) {
 			for (Wolf w : Objects.requireNonNull(GameManager.getMatchWhichContains(p)).dogsScoreStreak.get(pp)) {
 				if (w.getCustomName().equals(e.getDamager().getCustomName())) {
@@ -166,7 +165,7 @@ public class Listeners implements Listener {
 				return;
 			}
 
-			scalar = (Main.getDefaultHealth() / 20D);
+			scalar = (ComWarfare.getDefaultHealth() / 20D);
 			
 			damage = e.getDamage() * scalar;
 			

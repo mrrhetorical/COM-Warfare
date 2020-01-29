@@ -1,7 +1,6 @@
 package com.rhetorical.cod.sounds;
 
-import com.rhetorical.cod.Main;
-import com.rhetorical.cod.game.Gamemode;
+import com.rhetorical.cod.ComWarfare;
 import com.rhetorical.cod.sounds.events.*;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -19,7 +18,7 @@ public class SoundManager implements Listener {
 	private Map<String, SoundData> soundDataMap = new HashMap<>();
 
 	private SoundManager() {
-		Bukkit.getServer().getPluginManager().registerEvents(this, Main.getPlugin());
+		Bukkit.getServer().getPluginManager().registerEvents(this, ComWarfare.getPlugin());
 
 		soundDataMap.put("GameEndSoundEvent", new SoundData());
 		soundDataMap.put("PlayerDieSoundEvent", new SoundData());

@@ -2,7 +2,7 @@ package com.rhetorical.cod.util;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import com.rhetorical.cod.Main;
+import com.rhetorical.cod.ComWarfare;
 
 import java.net.URL;
 import java.net.URLConnection;
@@ -31,11 +31,11 @@ public class UpdateChecker {
 			try { Thread.sleep(10000); } catch (Exception ignored) {}
 
 			if (result[0].newVersion) {
-				Main.getConsole().sendMessage(Main.getPrefix() + "Your version of COM-Warfare is not up to date! Please update this plugin for the intended experience!");
-				Main.getConsole().sendMessage(Main.getPrefix() + String.format("Your version of COM-Warfare: %s", Main.getPlugin().getDescription().getVersion()));
-				Main.getConsole().sendMessage(Main.getPrefix() + String.format("Most recent of COM-Warfare: %s", result[0].versionNumber));
+				ComWarfare.getConsole().sendMessage(ComWarfare.getPrefix() + "Your version of COM-Warfare is not up to date! Please update this plugin for the intended experience!");
+				ComWarfare.getConsole().sendMessage(ComWarfare.getPrefix() + String.format("Your version of COM-Warfare: %s", ComWarfare.getPlugin().getDescription().getVersion()));
+				ComWarfare.getConsole().sendMessage(ComWarfare.getPrefix() + String.format("Most recent of COM-Warfare: %s", result[0].versionNumber));
 			} else {
-				Main.getConsole().sendMessage(Main.getPrefix() + "Your version of COM-Warfare is up to date!");
+				ComWarfare.getConsole().sendMessage(ComWarfare.getPrefix() + "Your version of COM-Warfare is up to date!");
 			}
 		}).start();
 	}
@@ -57,7 +57,7 @@ public class UpdateChecker {
 					JsonObject object = g.fromJson(response, JsonObject.class);
 					String latest = object.get("tag_name").getAsString();
 
-					String[] current = Main.getPlugin().getDescription().getVersion().split("\\.");
+					String[] current = ComWarfare.getPlugin().getDescription().getVersion().split("\\.");
 					String[] remote = latest.split("\\.");
 
 					boolean old = false;

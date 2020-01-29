@@ -1,10 +1,9 @@
 package com.rhetorical.cod.weapons;
 
-import com.rhetorical.cod.Main;
+import com.rhetorical.cod.ComWarfare;
 import com.rhetorical.cod.game.GameInstance;
 import com.rhetorical.cod.game.GameManager;
 import com.rhetorical.cod.inventories.ShopManager;
-import me.zombie_striker.qg.config.CrackshotLoader;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -38,7 +37,7 @@ public class CrackShotGun implements Listener {
 			for (CodWeapon w : ShopManager.getInstance().getTacticalWeapons()) {
 				instance.weapons.add(w.getName());
 			}
-			Bukkit.getServer().getPluginManager().registerEvents(instance, Main.getPlugin());
+			Bukkit.getServer().getPluginManager().registerEvents(instance, ComWarfare.getPlugin());
 		}
 	}
 

@@ -2,7 +2,7 @@ package com.rhetorical.cod.game;
 
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
-import com.rhetorical.cod.Main;
+import com.rhetorical.cod.ComWarfare;
 import com.rhetorical.cod.assignments.AssignmentManager;
 import com.rhetorical.cod.files.ArenasFile;
 import com.rhetorical.cod.inventories.InventoryManager;
@@ -16,7 +16,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
-import java.lang.reflect.Array;
 import java.util.*;
 
 public class GameManager {
@@ -29,7 +28,7 @@ public class GameManager {
 	public static List<CodGun> gunGameGuns = new ArrayList<>();
 
 	public static void setupOITC() {
-		String oitcGunName = Main.getPlugin().getConfig().getString("OITC_Gun");
+		String oitcGunName = ComWarfare.getPlugin().getConfig().getString("OITC_Gun");
 		if (oitcGunName == null)
 			return;
 
@@ -44,7 +43,7 @@ public class GameManager {
 	}
 
 	public static void setupGunGame() {
-		List<String> guns = Main.getPlugin().getConfig().getStringList("GunProgression");
+		List<String> guns = ComWarfare.getPlugin().getConfig().getStringList("GunProgression");
 		for(String g : guns) {
 			if (ShopManager.getInstance().getWeaponForName(g) instanceof CodGun) {
 				CodGun gun = (CodGun) ShopManager.getInstance().getWeaponForName(g);
@@ -140,16 +139,16 @@ public class GameManager {
 
 		loadPlayerData(p);
 		
-		if (Main.getLobbyLocation() == null) {
-			Main.sendMessage(p, Main.getPrefix() + Lang.NO_LOBBY_SET.getMessage(), Main.getLang());
-			Main.sendMessage(p, Main.getPrefix() + Lang.COULD_NOT_CREATE_MATCH_BECAUSE_NO_LOBBY.getMessage(), Main.getLang());
+		if (ComWarfare.getLobbyLocation() == null) {
+			ComWarfare.sendMessage(p, ComWarfare.getPrefix() + Lang.NO_LOBBY_SET.getMessage(), ComWarfare.getLang());
+			ComWarfare.sendMessage(p, ComWarfare.getPrefix() + Lang.COULD_NOT_CREATE_MATCH_BECAUSE_NO_LOBBY.getMessage(), ComWarfare.getLang());
 			return false;
 		}
 		
 
 		for (GameInstance i : runningGames) {
 			if (i.getPlayers().contains(p)) {
-				Main.sendMessage(p, Lang.ALREADY_IN_GAME.getMessage(), Main.getLang());
+				ComWarfare.sendMessage(p, Lang.ALREADY_IN_GAME.getMessage(), ComWarfare.getLang());
 				return false;
 			}
 		}
@@ -158,7 +157,7 @@ public class GameManager {
 
 		GameInstance newGame;
 
-		Main.sendMessage(p, Lang.SEARCHING_FOR_MATCH.getMessage(), Main.getLang());
+		ComWarfare.sendMessage(p, Lang.SEARCHING_FOR_MATCH.getMessage(), ComWarfare.getLang());
 		for (GameInstance i : runningGames) {
 			if (i.getPlayers().size() < 12) {
 				if (i.getPlayers().size() == 0) {
@@ -173,12 +172,12 @@ public class GameManager {
 
 		if (possibleMatches.size() == 0) {
 
-			Main.sendMessage(p, Lang.COULD_NOT_FIND_MATCH.getMessage(), Main.getLang());
-			Main.sendMessage(p, Lang.CREATING_MATCH.getMessage(), Main.getLang());
+			ComWarfare.sendMessage(p, Lang.COULD_NOT_FIND_MATCH.getMessage(), ComWarfare.getLang());
+			ComWarfare.sendMessage(p, Lang.CREATING_MATCH.getMessage(), ComWarfare.getLang());
 
 			CodMap map = pickRandomMap();
 			if (map == null) {
-				Main.sendMessage(p, Lang.COULD_NOT_CREATE_MATCH_BECAUSE_NO_MAPS.getMessage(), Main.getLang());
+				ComWarfare.sendMessage(p, Lang.COULD_NOT_CREATE_MATCH_BECAUSE_NO_MAPS.getMessage(), ComWarfare.getLang());
 				return false;
 			}
 
@@ -190,16 +189,16 @@ public class GameManager {
 
 			newGame.addPlayer(p);
 
-			Main.sendMessage(p, Lang.CREATED_LOBBY.getMessage(), Main.getLang());
+			ComWarfare.sendMessage(p, Lang.CREATED_LOBBY.getMessage(), ComWarfare.getLang());
 			return true;
 
 		}
 
-		Main.sendMessage(p, Lang.FOUND_MATCH.getMessage(), Main.getLang());
-		Main.sendMessage(p, Lang.JOINING_GAME.getMessage(), Main.getLang());
+		ComWarfare.sendMessage(p, Lang.FOUND_MATCH.getMessage(), ComWarfare.getLang());
+		ComWarfare.sendMessage(p, Lang.JOINING_GAME.getMessage(), ComWarfare.getLang());
 
 		if (!possibleMatches.lastEntry().getValue().addPlayer(p)) {
-			Main.sendMessage(p, Lang.COULD_NOT_JOIN_GAME.getMessage(), Main.getLang());
+			ComWarfare.sendMessage(p, Lang.COULD_NOT_JOIN_GAME.getMessage(), ComWarfare.getLang());
 		}
 
 
@@ -216,12 +215,12 @@ public class GameManager {
 
 		loadPlayerData(p);
 
-		Main.sendMessage(p,  Lang.JOINING_GAME.getMessage(), Main.getLang());
+		ComWarfare.sendMessage(p,  Lang.JOINING_GAME.getMessage(), ComWarfare.getLang());
 
 		boolean success = match.addPlayer(p);
 
 		if (!success)
-			Main.sendMessage(p, Lang.COULD_NOT_JOIN_GAME.getMessage(), Main.getLang());
+			ComWarfare.sendMessage(p, Lang.COULD_NOT_JOIN_GAME.getMessage(), ComWarfare.getLang());
 
 		return success;
 	}
@@ -237,7 +236,7 @@ public class GameManager {
 			LoadoutManager.getInstance().load(p);
 			InventoryManager.getInstance().setupPlayerSelectionInventories(p);
 		} catch(Exception e) {
-			Main.sendMessage(Main.getConsole(), Main.getPrefix() + Lang.ERROR_READING_PLAYER_LOADOUT.getMessage(), Main.getLang());
+			ComWarfare.sendMessage(ComWarfare.getConsole(), ComWarfare.getPrefix() + Lang.ERROR_READING_PLAYER_LOADOUT.getMessage(), ComWarfare.getLang());
 		}
 
 		AssignmentManager.getInstance().load(p);
@@ -250,19 +249,19 @@ public class GameManager {
 	@SuppressWarnings("UnstableApiUsage")
 	public static void leaveMatch(Player p) {
 		if (!isInMatch(p) || getMatchWhichContains(p) == null) {
-			Main.sendMessage(p, Lang.PLAYER_NOT_IN_GAME.getMessage(), Main.getLang());
+			ComWarfare.sendMessage(p, Lang.PLAYER_NOT_IN_GAME.getMessage(), ComWarfare.getLang());
 			return;
 		}
 
 		Objects.requireNonNull(getMatchWhichContains(p)).removePlayer(p);
 
-		Main.sendMessage(p, Lang.PLAYER_LEAVE_GAME.getMessage(), Main.getLang());
-		if (Main.isServerMode() && !Main.getInstance().getLobbyServer().equalsIgnoreCase("none")) {
+		ComWarfare.sendMessage(p, Lang.PLAYER_LEAVE_GAME.getMessage(), ComWarfare.getLang());
+		if (ComWarfare.isServerMode() && !ComWarfare.getInstance().getLobbyServer().equalsIgnoreCase("none")) {
 			try {
 				ByteArrayDataOutput out = ByteStreams.newDataOutput();
 				out.writeUTF("Connect");
-				out.writeUTF(Main.getInstance().getLobbyServer());
-				p.sendPluginMessage(Main.getInstance(), "BungeeCord", out.toByteArray());
+				out.writeUTF(ComWarfare.getInstance().getLobbyServer());
+				p.sendPluginMessage(ComWarfare.getInstance(), "BungeeCord", out.toByteArray());
 			} catch (Exception e) {
 				p.kickPlayer("");
 			}
@@ -314,7 +313,7 @@ public class GameManager {
 			}
 		}
 
-		Main.sendMessage(Main.getConsole(), Lang.RAN_OUT_OF_MAPS.getMessage(), Main.getLang());
+		ComWarfare.sendMessage(ComWarfare.getConsole(), Lang.RAN_OUT_OF_MAPS.getMessage(), ComWarfare.getLang());
 
 		return null;
 	}
@@ -340,12 +339,12 @@ public class GameManager {
 	public static void removeInstance(GameInstance i) {
 
 		for (Player p : i.getPlayers()) {
-			Main.sendMessage(p, Lang.CURRENT_GAME_REMOVED.getMessage(), Main.getLang());
+			ComWarfare.sendMessage(p, Lang.CURRENT_GAME_REMOVED.getMessage(), ComWarfare.getLang());
 		}
 
 		i.destroy();
 		
-		Main.sendMessage(Main.getConsole(), Main.getPrefix() + ChatColor.GRAY + "Game instance id " + i.getId() + " has been removed!", Main.getLang());
+		ComWarfare.sendMessage(ComWarfare.getConsole(), ComWarfare.getPrefix() + ChatColor.GRAY + "Game instance id " + i.getId() + " has been removed!", ComWarfare.getLang());
 
 		usedMaps.remove(i.getMap());
 
