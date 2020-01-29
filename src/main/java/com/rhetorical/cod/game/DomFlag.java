@@ -1,6 +1,6 @@
 package com.rhetorical.cod.game;
 
-import com.rhetorical.cod.Main;
+import com.rhetorical.cod.ComWarfare;
 import com.rhetorical.cod.lang.Lang;
 import org.bukkit.*;
 import org.bukkit.entity.ArmorStand;
@@ -104,7 +104,7 @@ class DomFlag {
 
 		for (Player p : lastCapping) {
 			if (!playersOnPoint.contains(p))
-				Main.sendActionBar(p, " "); //clear out the "you are in the cap zone" messages
+				ComWarfare.sendActionBar(p, " "); //clear out the "you are in the cap zone" messages
 		}
 
 		for (Player p : playersOnPoint) {
@@ -175,7 +175,7 @@ class DomFlag {
 		}
 
 		for (Player p : playersOnPoint)
-			Main.sendActionBar(p, getProgressMessage());
+			ComWarfare.sendActionBar(p, getProgressMessage());
 
 		secondsSinceLastNeutralized++;
 

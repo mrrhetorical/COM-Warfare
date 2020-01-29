@@ -1,6 +1,6 @@
 package com.rhetorical.cod.util;
 
-import com.rhetorical.cod.Main;
+import com.rhetorical.cod.ComWarfare;
 import org.bukkit.entity.Player;
 
 import java.lang.reflect.InvocationTargetException;
@@ -11,7 +11,7 @@ import java.lang.reflect.InvocationTargetException;
 public class LegacyActionBar {
 
 	public static void sendActionBarMessage(Player bukkitPlayer, String message) {
-		if (!Main.hasProtocolLib())
+		if (!ComWarfare.hasProtocolLib())
 			return;
 		sendRawActionBarMessage(bukkitPlayer, "{\"text\": \"" + message + "\"}");
 	}

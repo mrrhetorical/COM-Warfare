@@ -1,6 +1,6 @@
 package com.rhetorical.cod.weapons;
 
-import com.rhetorical.cod.Main;
+import com.rhetorical.cod.ComWarfare;
 import com.rhetorical.cod.files.GunsFile;
 import com.rhetorical.cod.loadouts.LoadoutManager;
 import org.bukkit.Material;
@@ -106,7 +106,7 @@ public class CodWeapon {
 	 * @return The weapon item as set up by gun plugins. If the weapon doesn't exist in either QA or CrackShot, it is given a basic treatment by this plugin.
 	 * */
 	protected ItemStack setupWeaponItem(ItemStack weaponItem) {
-		if (Main.hasQualityArms()) {
+		if (ComWarfare.hasQualityArms()) {
 			if (!this.equals(LoadoutManager.getInstance().blankLethal) && !this.equals(LoadoutManager.getInstance().blankTactical)) {
 				ItemStack gun = QualityGun.getGunForName(getName());
 
@@ -116,7 +116,7 @@ public class CodWeapon {
 			}
 		}
 
-		if (Main.hasCrackShot()) {
+		if (ComWarfare.hasCrackShot()) {
 			if (!this.equals(LoadoutManager.getInstance().blankLethal) && !this.equals(LoadoutManager.getInstance().blankTactical)) {
 				ItemStack gun = CrackShotGun.generateWeapon(getName());
 

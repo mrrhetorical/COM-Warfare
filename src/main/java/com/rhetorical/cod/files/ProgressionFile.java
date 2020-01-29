@@ -32,7 +32,7 @@ public class ProgressionFile {
 				Bukkit.getServer().getLogger().severe(ChatColor.RED + "Could not create progression.yml!");
 			}
 		}
-		progression = YamlConfiguration.loadConfiguration(pfile);
+		reloadData();
 	}
 
 	public static FileConfiguration getData() {

@@ -1,6 +1,6 @@
 package com.rhetorical.cod.assignments;
 
-import com.rhetorical.cod.Main;
+import com.rhetorical.cod.ComWarfare;
 import com.rhetorical.cod.files.AssignmentFile;
 import com.rhetorical.cod.game.Gamemode;
 import com.rhetorical.cod.lang.Lang;
@@ -152,7 +152,7 @@ public class AssignmentManager {
 		CreditManager.setCredits(p, CreditManager.getCredits(p) + assignment.getReward());
 
 
-		Main.sendMessage(p, Lang.ASSIGNMENT_COMPLETED.getMessage().replace("{amount}", assignment.getReward() + ""), Main.getLang());
+		ComWarfare.sendMessage(p, Lang.ASSIGNMENT_COMPLETED.getMessage().replace("{amount}", assignment.getReward() + ""), ComWarfare.getLang());
 	}
 
 	public List<Assignment> getAssignments(Player p) {

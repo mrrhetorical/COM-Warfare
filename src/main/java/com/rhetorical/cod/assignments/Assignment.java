@@ -1,6 +1,5 @@
 package com.rhetorical.cod.assignments;
 
-import com.rhetorical.cod.Main;
 import com.rhetorical.cod.game.Gamemode;
 import org.bukkit.entity.Player;
 

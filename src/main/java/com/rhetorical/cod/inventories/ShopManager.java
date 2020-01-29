@@ -1,10 +1,9 @@
 package com.rhetorical.cod.inventories;
 
-import com.rhetorical.cod.Main;
+import com.rhetorical.cod.ComWarfare;
 import com.rhetorical.cod.files.GunsFile;
 import com.rhetorical.cod.files.ShopFile;
 import com.rhetorical.cod.lang.Lang;
-import com.rhetorical.cod.loadouts.Loadout;
 import com.rhetorical.cod.loadouts.LoadoutManager;
 import com.rhetorical.cod.perks.CodPerk;
 import com.rhetorical.cod.perks.PerkManager;
@@ -161,7 +160,7 @@ public class ShopManager {
 			try {
 				weaponMaterial = Material.valueOf(weaponMat);
 			} catch (Exception e) {
-				Main.sendMessage(Main.getConsole(), Main.getPrefix() + ChatColor.RED + "Could not load lethal " + weaponName + " because no material exits with name " + weaponMat + "!", Main.getLang());
+				ComWarfare.sendMessage(ComWarfare.getConsole(), ComWarfare.getPrefix() + ChatColor.RED + "Could not load lethal " + weaponName + " because no material exits with name " + weaponMat + "!", ComWarfare.getLang());
 				continue;
 			}
 			int levelUnlock = GunsFile.getData().getInt("Weapons.LETHAL." + i + ".levelUnlock");
@@ -186,7 +185,7 @@ public class ShopManager {
 			try {
 				weaponMaterial = Material.valueOf(weaponMat);
 			} catch (Exception e) {
-				Main.sendMessage(Main.getConsole(), Main.getPrefix() + ChatColor.RED + "Could not load tactical " + weaponName + " because no material exits with name " + weaponMat + "!", Main.getLang());
+				ComWarfare.sendMessage(ComWarfare.getConsole(), ComWarfare.getPrefix() + ChatColor.RED + "Could not load tactical " + weaponName + " because no material exits with name " + weaponMat + "!", ComWarfare.getLang());
 				continue;
 			}
 			int levelUnlock = GunsFile.getData().getInt("Weapons.TACTICAL." + i + ".levelUnlock");
@@ -437,7 +436,7 @@ public class ShopManager {
 
 		ShopManager.getInstance().setPurchasedGuns(purchased);
 
-		Main.sendMessage(p, Main.getPrefix() + Lang.WEAPON_UNLOCKED.getMessage().replace("{gun-name}", gun.getName()), Main.getLang());
+		ComWarfare.sendMessage(p, ComWarfare.getPrefix() + Lang.WEAPON_UNLOCKED.getMessage().replace("{gun-name}", gun.getName()), ComWarfare.getLang());
 	}
 
 	private void unlockGrenade(Player p, CodWeapon grenade) {
@@ -457,14 +456,14 @@ public class ShopManager {
 
 					ShopManager.getInstance().setPurchasedWeapons(purchased);
 
-					Main.sendMessage(p, Main.getPrefix() + Lang.WEAPON_UNLOCKED.getMessage().replace("{gun-name}", grenade.getName()), Main.getLang());
+					ComWarfare.sendMessage(p, ComWarfare.getPrefix() + Lang.WEAPON_UNLOCKED.getMessage().replace("{gun-name}", grenade.getName()), ComWarfare.getLang());
 
 				}
 			}
 		} else if (grenade.getType() == UnlockType.BOTH) {
 			if (ProgressionManager.getInstance().getLevel(p) == grenade.getLevelUnlock() && grenade.isShowInShop()) {
-				Main.sendMessage(p,
-						Main.getPrefix() + Lang.WEAPON_PURCHASE_UNLOCKED.getMessage().replace("{gun-name}", grenade.getName()), Main.getLang());
+				ComWarfare.sendMessage(p,
+						ComWarfare.getPrefix() + Lang.WEAPON_PURCHASE_UNLOCKED.getMessage().replace("{gun-name}", grenade.getName()), ComWarfare.getLang());
 			}
 		}
 	}
@@ -488,7 +487,7 @@ public class ShopManager {
 				}
 			} else if (gun.getType() == UnlockType.BOTH) {
 				if (ProgressionManager.getInstance().getLevel(p) == gun.getLevelUnlock() && gun.isShowInShop()) {
-					Main.sendMessage(p, Main.getPrefix() + Lang.WEAPON_PURCHASE_UNLOCKED.getMessage().replace("{gun-name}", gun.getName()), Main.getLang());
+					ComWarfare.sendMessage(p, ComWarfare.getPrefix() + Lang.WEAPON_PURCHASE_UNLOCKED.getMessage().replace("{gun-name}", gun.getName()), ComWarfare.getLang());
 				}
 			}
 
@@ -508,7 +507,7 @@ public class ShopManager {
 				}
 			} else if (gun.getType() == UnlockType.BOTH) {
 				if (ProgressionManager.getInstance().getLevel(p) >= gun.getLevelUnlock() && gun.isShowInShop()) {
-					Main.sendMessage(p, Main.getPrefix() + Lang.WEAPON_PURCHASE_UNLOCKED.getMessage().replace("{gun-name}", gun.getName()), Main.getLang());
+					ComWarfare.sendMessage(p, ComWarfare.getPrefix() + Lang.WEAPON_PURCHASE_UNLOCKED.getMessage().replace("{gun-name}", gun.getName()), ComWarfare.getLang());
 				}
 			}
 

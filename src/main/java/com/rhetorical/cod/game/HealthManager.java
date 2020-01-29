@@ -1,6 +1,6 @@
 package com.rhetorical.cod.game;
 
-import com.rhetorical.cod.Main;
+import com.rhetorical.cod.ComWarfare;
 import org.bukkit.Effect;
 import org.bukkit.EntityEffect;
 import org.bukkit.GameMode;
@@ -103,7 +103,7 @@ public class HealthManager {
 	void update(Player p) {
 		double health = getHealth(p);
 
-		int desired = (int) Math.ceil((20d * health) / Main.getDefaultHealth());
+		int desired = (int) Math.ceil((20d * health) / ComWarfare.getDefaultHealth());
 		if (desired < 1)
 			desired = 1;
 		else if (desired > 20)
