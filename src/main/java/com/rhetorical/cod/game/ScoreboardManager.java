@@ -1,6 +1,5 @@
 package com.rhetorical.cod.game;
 
-import com.rhetorical.cod.Main;
 import com.rhetorical.cod.lang.Lang;
 import com.rhetorical.cod.progression.CreditManager;
 import com.rhetorical.cod.progression.ProgressionManager;

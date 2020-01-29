@@ -1,6 +1,6 @@
 package com.rhetorical.cod.streaks;
 
-import com.rhetorical.cod.Main;
+import com.rhetorical.cod.ComWarfare;
 import com.rhetorical.cod.files.KillstreaksFile;
 import com.rhetorical.cod.game.GameManager;
 import com.rhetorical.cod.lang.Lang;
@@ -105,7 +105,7 @@ public class KillStreakManager {
 			try {
 				ks = KillStreak.valueOf(s);
 			} catch (Exception e) {
-				Main.getConsole().sendMessage(Main.getPrefix() + Lang.ERROR_COULD_NOT_LOAD_KILL_STREAKS.getMessage().replace("{player}", p.getName()));
+				ComWarfare.getConsole().sendMessage(ComWarfare.getPrefix() + Lang.ERROR_COULD_NOT_LOAD_KILL_STREAKS.getMessage().replace("{player}", p.getName()));
 				continue;
 			}
 

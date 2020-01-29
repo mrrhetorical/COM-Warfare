@@ -1,6 +1,6 @@
 package com.rhetorical.cod.weapons;
 
-import com.rhetorical.cod.Main;
+import com.rhetorical.cod.ComWarfare;
 import com.rhetorical.cod.files.GunsFile;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -204,7 +204,7 @@ public class CodGun extends CodWeapon {
 	}
 
 	public ItemStack getAmmo() {
-		if (Main.hasQualityArms()) {
+		if (ComWarfare.hasQualityArms()) {
 			ItemStack ammo = QualityGun.getAmmoForName(getAmmoName());
 
 			if (ammo.getType() != Material.AIR) {

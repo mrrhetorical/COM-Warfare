@@ -1,13 +1,11 @@
 package com.rhetorical.cod.sounds;
 
-import com.rhetorical.cod.Main;
+import com.rhetorical.cod.ComWarfare;
 import com.rhetorical.cod.files.SoundFile;
 import com.rhetorical.cod.game.Gamemode;
 import org.bukkit.ChatColor;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 class SoundData {
@@ -92,7 +90,7 @@ class SoundData {
 			return null;
 		String[] contents = input.split("::");
 		if (contents.length != 3) {
-			Main.sendMessage(Main.getConsole(), ChatColor.RED + "Error deserializing sound!", Main.getLang());
+			ComWarfare.sendMessage(ComWarfare.getConsole(), ChatColor.RED + "Error deserializing sound!", ComWarfare.getLang());
 			return null;
 		}
 
@@ -105,7 +103,7 @@ class SoundData {
 			volume = Float.parseFloat(v);
 			pitch = Float.parseFloat(p);
 		} catch (Exception e) {
-			Main.sendMessage(Main.getConsole(), ChatColor.RED + "Error deserializing sound!", Main.getLang());
+			ComWarfare.sendMessage(ComWarfare.getConsole(), ChatColor.RED + "Error deserializing sound!", ComWarfare.getLang());
 			return null;
 		}
 

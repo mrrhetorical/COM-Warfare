@@ -1,6 +1,6 @@
 package com.rhetorical.cod.game;
 
-import com.rhetorical.cod.Main;
+import com.rhetorical.cod.ComWarfare;
 import com.rhetorical.cod.loadouts.Loadout;
 import com.rhetorical.cod.loadouts.LoadoutManager;
 import com.rhetorical.cod.perks.Perk;
@@ -73,7 +73,7 @@ public class HungerManager {
 			}
 		};
 
-		br.runTaskTimer(Main.getPlugin(), 20L, 20L);
+		br.runTaskTimer(ComWarfare.getPlugin(), 20L, 20L);
 	}
 
 	private void startHealthTask(Player p) {
@@ -111,7 +111,7 @@ public class HungerManager {
 			}
 		};
 
-		br.runTaskTimer(Main.getPlugin(), 0L, 5L);
+		br.runTaskTimer(ComWarfare.getPlugin(), 0L, 5L);
 	}
 
 

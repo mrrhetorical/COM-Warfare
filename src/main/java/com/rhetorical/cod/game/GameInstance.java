@@ -1,7 +1,7 @@
 package com.rhetorical.cod.game;
 
 import com.rhetorical.cod.ComVersion;
-import com.rhetorical.cod.Main;
+import com.rhetorical.cod.ComWarfare;
 import com.rhetorical.cod.assignments.AssignmentManager;
 import com.rhetorical.cod.inventories.InventoryManager;
 import com.rhetorical.cod.inventories.ShopManager;
@@ -127,7 +127,7 @@ public class GameInstance implements Listener {
 	GameInstance(ArrayList<Player> pls, CodMap map) {
 
 		try {
-			scoreBar = Bukkit.createBossBar(ChatColor.GRAY + "«" + ChatColor.WHITE + getFancyTime(Main.getPlugin().getConfig().getInt("lobbyTime")) + ChatColor.RESET + "" + ChatColor.GRAY + "»", org.bukkit.boss.BarColor.GREEN, org.bukkit.boss.BarStyle.SEGMENTED_10);
+			scoreBar = Bukkit.createBossBar(ChatColor.GRAY + "«" + ChatColor.WHITE + getFancyTime(ComWarfare.getPlugin().getConfig().getInt("lobbyTime")) + ChatColor.RESET + "" + ChatColor.GRAY + "»", org.bukkit.boss.BarColor.GREEN, org.bukkit.boss.BarStyle.SEGMENTED_10);
 		} catch(NoClassDefFoundError e) {
 			System.out.println();
 		} catch(Exception ignored) {}
@@ -136,24 +136,24 @@ public class GameInstance implements Listener {
 
 		players = pls;
 		currentMap = map;
-		Main.getPlugin().reloadConfig();
+		ComWarfare.getPlugin().reloadConfig();
 
 		updateTimeLeft();
 
-		lobbyTime = Main.getPlugin().getConfig().getInt("lobbyTime");
+		lobbyTime = ComWarfare.getPlugin().getConfig().getInt("lobbyTime");
 
 		if (ComVersion.getPurchased()) {
-			maxScore_TDM = Main.getPlugin().getConfig().getInt("maxScore.TDM");
-			maxScore_CTF = Main.getPlugin().getConfig().getInt("maxScore.CTF");
-			maxScore_DOM = Main.getPlugin().getConfig().getInt("maxScore.DOM");
-			maxScore_FFA = Main.getPlugin().getConfig().getInt("maxScore.FFA");
-			maxScore_RSB = Main.getPlugin().getConfig().getInt("maxScore.RSB");
-			maxScore_KC = Main.getPlugin().getConfig().getInt("maxScore.KC");
+			maxScore_TDM = ComWarfare.getPlugin().getConfig().getInt("maxScore.TDM");
+			maxScore_CTF = ComWarfare.getPlugin().getConfig().getInt("maxScore.CTF");
+			maxScore_DOM = ComWarfare.getPlugin().getConfig().getInt("maxScore.DOM");
+			maxScore_FFA = ComWarfare.getPlugin().getConfig().getInt("maxScore.FFA");
+			maxScore_RSB = ComWarfare.getPlugin().getConfig().getInt("maxScore.RSB");
+			maxScore_KC = ComWarfare.getPlugin().getConfig().getInt("maxScore.KC");
 			maxScore_GUN = GameManager.gunGameGuns.size();
-			maxScore_OITC = Main.getPlugin().getConfig().getInt("maxScore.OITC");
-			maxScore_RESCUE = Main.getPlugin().getConfig().getInt("maxScore.RESCUE");
-			maxScore_HARDPOINT = Main.getPlugin().getConfig().getInt("maxScore.HARDPOINT");
-			maxScore_GUNFIGHT = Main.getPlugin().getConfig().getInt("maxScore.GUNFIGHT");
+			maxScore_OITC = ComWarfare.getPlugin().getConfig().getInt("maxScore.OITC");
+			maxScore_RESCUE = ComWarfare.getPlugin().getConfig().getInt("maxScore.RESCUE");
+			maxScore_HARDPOINT = ComWarfare.getPlugin().getConfig().getInt("maxScore.HARDPOINT");
+			maxScore_GUNFIGHT = ComWarfare.getPlugin().getConfig().getInt("maxScore.GUNFIGHT");
 		} else {
 			maxScore_TDM = 75;
 			maxScore_RSB = 75;
@@ -170,10 +170,10 @@ public class GameInstance implements Listener {
 
 		setState(GameState.WAITING);
 
-		health = new HealthManager(pls, Main.getDefaultHealth());
+		health = new HealthManager(pls, ComWarfare.getDefaultHealth());
 		hungerManager = new HungerManager();
 
-		Bukkit.getServer().getPluginManager().registerEvents(this, Main.getPlugin());
+		Bukkit.getServer().getPluginManager().registerEvents(this, ComWarfare.getPlugin());
 
 		for (Player p : pls) {
 			health.update(p);
@@ -183,7 +183,7 @@ public class GameInstance implements Listener {
 
 		System.gc();
 
-		Main.getConsole().sendMessage(ChatColor.GRAY + "Game lobby with id " + getId() + " created with map " + getMap().getName() + " with gamemode " + getGamemode() + ".");
+		ComWarfare.getConsole().sendMessage(ChatColor.GRAY + "Game lobby with id " + getId() + " created with map " + getMap().getName() + " with gamemode " + getGamemode() + ".");
 
 		startLobbyTimer(lobbyTime);
 	}
@@ -225,7 +225,7 @@ public class GameInstance implements Listener {
 	 * */
 	public void addVote(int map, Player p) throws Exception {
 		if (map != 1 && map != 0)
-			throw new Exception(Main.getPrefix() + "Improper map selected!");
+			throw new Exception(ComWarfare.getPrefix() + "Improper map selected!");
 
 		mapVotes[0].remove(p);
 		mapVotes[1].remove(p);
@@ -249,13 +249,13 @@ public class GameInstance implements Listener {
 
 		changeMap(GameManager.pickRandomMap());
 
-		health = new HealthManager(players, Main.getDefaultHealth());
+		health = new HealthManager(players, ComWarfare.getDefaultHealth());
 
 		for (Player p : players) {
 			p.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
 			health.update(p);
 			p.getInventory().clear();
-			p.teleport(Main.getLobbyLocation());
+			p.teleport(ComWarfare.getLobbyLocation());
 
 			setTeamArmor(p);
 
@@ -330,7 +330,7 @@ public class GameInstance implements Listener {
 		if (p == null)
 			return false;
 
-		if (players.size() >= Main.getMaxPlayers())
+		if (players.size() >= ComWarfare.getMaxPlayers())
 			return false;
 
 		if (players.contains(p))
@@ -368,7 +368,7 @@ public class GameInstance implements Listener {
 			p.removePotionEffect(pe.getType());
 		}
 
-		p.teleport(Main.getLobbyLocation());
+		p.teleport(ComWarfare.getLobbyLocation());
 
 		playerScores.put(p, new CodScore(p));
 
@@ -423,7 +423,7 @@ public class GameInstance implements Listener {
 		}
 
 		for (Player pp : players) {
-			Main.sendMessage(pp, Lang.PLAYER_JOINED_LOBBY.getMessage().replace("{player}", p.getDisplayName()), Main.getLang());
+			ComWarfare.sendMessage(pp, Lang.PLAYER_JOINED_LOBBY.getMessage().replace("{player}", p.getDisplayName()), ComWarfare.getLang());
 		}
 
 		return true;
@@ -517,7 +517,7 @@ public class GameInstance implements Listener {
 				|| (blueTeam.size() > 0 && redTeam.size() == 0)
 				|| getPlayers().size() == 1) {
 			if (getState() == GameState.IN_GAME) {
-				if (!Main.isDisabling())
+				if (!ComWarfare.isDisabling())
 					stopGame();
 			}
 		}
@@ -789,7 +789,7 @@ public class GameInstance implements Listener {
 					team = "red";
 				}
 
-				Main.sendMessage(p, Lang.ASSIGNED_TO_TEAM.getMessage().replace("{team-color}", tColor + "").replace("{team}", team), Main.getLang());
+				ComWarfare.sendMessage(p, Lang.ASSIGNED_TO_TEAM.getMessage().replace("{team-color}", tColor + "").replace("{team}", team), ComWarfare.getLang());
 			}
 		} else if (getGamemode() == Gamemode.INFECT) {
 			Collections.shuffle(players);
@@ -806,7 +806,7 @@ public class GameInstance implements Listener {
 				if (ffaPlayerScores.containsKey(p))
 					continue;
 
-				Main.sendMessage(p, Lang.ASSIGNED_TO_TEAM.getMessage().replace("{team-color}", ChatColor.LIGHT_PURPLE + "").replace("{team}", "pink"), Main.getLang());
+				ComWarfare.sendMessage(p, Lang.ASSIGNED_TO_TEAM.getMessage().replace("{team-color}", ChatColor.LIGHT_PURPLE + "").replace("{team}", "pink"), ComWarfare.getLang());
 			}
 		}
 
@@ -846,14 +846,14 @@ public class GameInstance implements Listener {
 			}
 		}
 
-		if (!Main.getRewardHighestScore().equalsIgnoreCase("none") && highestScore != null) {
-			String cmd = Main.getRewardHighestScore().replace("{PLAYER}", highestScore.getOwner().getName());
-			Bukkit.getServer().dispatchCommand(Main.getConsole(), cmd);
+		if (!ComWarfare.getRewardHighestScore().equalsIgnoreCase("none") && highestScore != null) {
+			String cmd = ComWarfare.getRewardHighestScore().replace("{PLAYER}", highestScore.getOwner().getName());
+			Bukkit.getServer().dispatchCommand(ComWarfare.getConsole(), cmd);
 		}
 
-		if (!Main.getRewardHighestKD().equalsIgnoreCase("none") && highestKD != null) {
-			String cmd = Main.getRewardHighestKD().replace("{PLAYER}", highestScore.getOwner().getName());
-			Bukkit.getServer().dispatchCommand(Main.getConsole(), cmd);
+		if (!ComWarfare.getRewardHighestKD().equalsIgnoreCase("none") && highestKD != null) {
+			String cmd = ComWarfare.getRewardHighestKD().replace("{PLAYER}", highestScore.getOwner().getName());
+			Bukkit.getServer().dispatchCommand(ComWarfare.getConsole(), cmd);
 		}
 
 		for (Player p : getPlayers()) {
@@ -928,7 +928,7 @@ public class GameInstance implements Listener {
 							} else if (getWinningTeam().equalsIgnoreCase("blue")) {
 								teamFormat = ChatColor.BLUE + "BLUE";
 							} else if (getWinningTeam().equalsIgnoreCase("nobody") || getWinningTeam().equalsIgnoreCase("tie")) {
-								Main.sendMessage(p,  ChatColor.GRAY + Lang.NOBODY_WON_GAME.getMessage(), Main.getLang());
+								ComWarfare.sendMessage(p,  ChatColor.GRAY + Lang.NOBODY_WON_GAME.getMessage(), ComWarfare.getLang());
 								playerScores.computeIfAbsent(p, k -> new CodScore(p));
 								CodScore score = playerScores.get(p);
 
@@ -942,11 +942,11 @@ public class GameInstance implements Listener {
 								msg = msg.replace("{kills}", score.getKills() + "");
 								msg = msg.replace("{deaths}", score.getDeaths() + "");
 								msg = msg.replace("{kd}", kd + "");
-								Main.sendMessage(p, msg, Main.getLang());
+								ComWarfare.sendMessage(p, msg, ComWarfare.getLang());
 								continue;
 							}
 
-							Main.sendMessage(p, Lang.SOMEBODY_WON_GAME.getMessage().replace("{team}", teamFormat), Main.getLang());
+							ComWarfare.sendMessage(p, Lang.SOMEBODY_WON_GAME.getMessage().replace("{team}", teamFormat), ComWarfare.getLang());
 							CodScore score = playerScores.get(p);
 
 							float kd = ((float) score.getKills() / (float) score.getDeaths());
@@ -959,9 +959,9 @@ public class GameInstance implements Listener {
 							msg = msg.replace("{kills}", score.getKills() + "");
 							msg = msg.replace("{deaths}", score.getDeaths() + "");
 							msg = msg.replace("{kd}", kd + "");
-							Main.sendMessage(p, msg, Main.getLang());
+							ComWarfare.sendMessage(p, msg, ComWarfare.getLang());
 						} else {
-							Main.sendMessage(p, Lang.SOMEONE_WON_GAME.getMessage().replace("{player}", getWinningTeam()), Main.getLang());
+							ComWarfare.sendMessage(p, Lang.SOMEONE_WON_GAME.getMessage().replace("{player}", getWinningTeam()), ComWarfare.getLang());
 							CodScore score = playerScores.get(p);
 							float kd = ((float) score.getKills() / (float) score.getDeaths());
 
@@ -973,7 +973,7 @@ public class GameInstance implements Listener {
 							msg = msg.replace("{kills}", score.getKills() + "");
 							msg = msg.replace("{deaths}", score.getDeaths() + "");
 							msg = msg.replace("{kd}", kd + "");
-							Main.sendMessage(p, msg, Main.getLang());
+							ComWarfare.sendMessage(p, msg, ComWarfare.getLang());
 						}
 					}
 				}
@@ -981,14 +981,14 @@ public class GameInstance implements Listener {
 				t--;
 
 				for (Player p : getPlayers()) {
-					Main.sendActionBar(p, Lang.RETURNING_TO_LOBBY.getMessage().replace("{time}", t + ""));
+					ComWarfare.sendActionBar(p, Lang.RETURNING_TO_LOBBY.getMessage().replace("{time}", t + ""));
 				}
 
 			}
 		};
 
 		getRunnables().add(br);
-		br.runTaskTimer(Main.getPlugin(), 0L, 20L);
+		br.runTaskTimer(ComWarfare.getPlugin(), 0L, 20L);
 	}
 
 	/**
@@ -1041,7 +1041,7 @@ public class GameInstance implements Listener {
 
 					for (Player p : getPlayers()) {
 						if (t == 0) {
-							Main.sendMessage(p, Lang.GAME_STARTING.getMessage(), Main.getLang());
+							ComWarfare.sendMessage(p, Lang.GAME_STARTING.getMessage(), ComWarfare.getLang());
 						}
 					}
 
@@ -1082,7 +1082,7 @@ public class GameInstance implements Listener {
 					clearNextMaps();
 
 					for (Player p : game.players) {
-						Main.sendMessage(p, Lang.MAP_VOTING_NEXT_MAP.getMessage().replace("{map}", game.currentMap.getName()), Main.getLang());
+						ComWarfare.sendMessage(p, Lang.MAP_VOTING_NEXT_MAP.getMessage().replace("{map}", game.currentMap.getName()), ComWarfare.getLang());
 					}
 				}
 
@@ -1094,10 +1094,10 @@ public class GameInstance implements Listener {
 					for (Player p : game.players) {
 						sendNextMap(p, t);
 						if (t > 20 && canVote) {
-							Main.sendMessage(p, Lang.MAP_VOTING_HEADER.getMessage(), Main.getLang());
-							Main.sendMessage(p, ChatColor.GRAY + "===============", Main.getLang());
-							Main.sendMessage(p, Lang.MAP_VOTING_NAMES.getMessage().replace("{1}", nextMaps[0].getName() + " - " + nextModes[0].toString()).replace("{2}", nextMaps[1].getName() + " - " + nextModes	[1].toString()), Main.getLang());
-							Main.sendMessage(p, Lang.MAP_VOTING_VOTES.getMessage().replace("{1}", mapVotes[0].size() + "").replace("{2}", mapVotes[1].size() + ""), Main.getLang());
+							ComWarfare.sendMessage(p, Lang.MAP_VOTING_HEADER.getMessage(), ComWarfare.getLang());
+							ComWarfare.sendMessage(p, ChatColor.GRAY + "===============", ComWarfare.getLang());
+							ComWarfare.sendMessage(p, Lang.MAP_VOTING_NAMES.getMessage().replace("{1}", nextMaps[0].getName() + " - " + nextModes[0].toString()).replace("{2}", nextMaps[1].getName() + " - " + nextModes	[1].toString()), ComWarfare.getLang());
+							ComWarfare.sendMessage(p, Lang.MAP_VOTING_VOTES.getMessage().replace("{1}", mapVotes[0].size() + "").replace("{2}", mapVotes[1].size() + ""), ComWarfare.getLang());
 						}
 					}
 				}
@@ -1145,7 +1145,7 @@ public class GameInstance implements Listener {
 		};
 
 		getRunnables().add(br);
-		br.runTaskTimer(Main.getPlugin(), 0L, 20L);
+		br.runTaskTimer(ComWarfare.getPlugin(), 0L, 20L);
 	}
 
 
@@ -1187,7 +1187,7 @@ public class GameInstance implements Listener {
 		};
 
 		getRunnables().add(br);
-		br.runTaskTimer(Main.getPlugin(), 0L, 5L);
+		br.runTaskTimer(ComWarfare.getPlugin(), 0L, 5L);
 	}
 
 	private void startGameTimer(int time, boolean newRound) {
@@ -1562,7 +1562,7 @@ public class GameInstance implements Listener {
 
 		};
 		getRunnables().add(br);
-		br.runTaskTimer(Main.getPlugin(), 0L, 20L);
+		br.runTaskTimer(ComWarfare.getPlugin(), 0L, 20L);
 	}
 
 	private void startNewRound(int delay, List<Player> prevRWT) {
@@ -1590,7 +1590,7 @@ public class GameInstance implements Listener {
 					Bukkit.getPluginManager().callEvent(new RoundEndSoundEvent(p, false));
 			}
 
-			Main.sendTitle(p, Lang.TEAM_WON_ROUND.getMessage().replace("{team-color}", tColor + "").replace("{team}", team), Lang.NEXT_ROUND_STARTING.getMessage().replace("{time}", delay + ""), tColor);
+			ComWarfare.sendTitle(p, Lang.TEAM_WON_ROUND.getMessage().replace("{team-color}", tColor + "").replace("{team}", team), Lang.NEXT_ROUND_STARTING.getMessage().replace("{time}", delay + ""), tColor);
 
 		}
 
@@ -1602,7 +1602,7 @@ public class GameInstance implements Listener {
 		};
 
 		getRunnables().add(br);
-		br.runTaskLater(Main.getPlugin(), 20L * (long) delay);
+		br.runTaskLater(ComWarfare.getPlugin(), 20L * (long) delay);
 	}
 
 	private void endGameByScore(BukkitRunnable runnable) {
@@ -1750,12 +1750,12 @@ public class GameInstance implements Listener {
 			if (getGamemode() == Gamemode.RESCUE) {
 				dropDogTag(p);
 				if (isOnBlueTeam(p) && getAlivePlayers(blueTeam) > 0) {
-					Main.sendTitle(p, Lang.RESPAWN_IF_DOG_TAG_PICKED_UP.getMessage(), "");
+					ComWarfare.sendTitle(p, Lang.RESPAWN_IF_DOG_TAG_PICKED_UP.getMessage(), "");
 				} else if (isOnRedTeam(p) && getAlivePlayers(redTeam) > 0) {
-					Main.sendTitle(p, Lang.RESPAWN_IF_DOG_TAG_PICKED_UP.getMessage(), "");
+					ComWarfare.sendTitle(p, Lang.RESPAWN_IF_DOG_TAG_PICKED_UP.getMessage(), "");
 				}
 			} else {
-				Main.sendTitle(p, Lang.RESPAWN_NEXT_ROUND.getMessage(), "");
+				ComWarfare.sendTitle(p, Lang.RESPAWN_NEXT_ROUND.getMessage(), "");
 			}
 
 			return;
@@ -1803,7 +1803,7 @@ public class GameInstance implements Listener {
 					p.setSpectatorTarget(killer);
 
 					if (t == 3)
-						Main.sendTitle(p, Lang.YOU_WILL_RESPAWN.getMessage().replace("{time}", t + ""), "");
+						ComWarfare.sendTitle(p, Lang.YOU_WILL_RESPAWN.getMessage().replace("{time}", t + ""), "");
 				} else {
 					if (getState() == GameState.IN_GAME) {
 						if (getGamemode() != Gamemode.FFA && getGamemode() != Gamemode.OITC && getGamemode() != Gamemode.GUN) {
@@ -1826,7 +1826,7 @@ public class GameInstance implements Listener {
 						}
 					} else {
 						p.setGameMode(GameMode.ADVENTURE);
-						p.teleport(Main.getLobbyLocation());
+						p.teleport(ComWarfare.getLobbyLocation());
 						p.setHealth(20D);
 						p.setFoodLevel(20);
 						getRunnables().remove(this);
@@ -1840,7 +1840,7 @@ public class GameInstance implements Listener {
 		};
 
 		getRunnables().add(br);
-		br.runTaskTimer(Main.getPlugin(), 0L, 20L);
+		br.runTaskTimer(ComWarfare.getPlugin(), 0L, 20L);
 	}
 
 	private void updateTabList() {
@@ -1860,7 +1860,7 @@ public class GameInstance implements Listener {
 			CodScore score = playerScores.get(p);
 
 			try {
-				p.getClass().getMethod("setPlayerListHeader", String.class).invoke(p, Main.getHeader());
+				p.getClass().getMethod("setPlayerListHeader", String.class).invoke(p, ComWarfare.getHeader());
 				p.getClass().getMethod("setPlayerListFooter", String.class).invoke(p, ChatColor.WHITE + "Playing " + ChatColor.GOLD + getMap().getGamemode().toString() + ChatColor.WHITE + " on " + ChatColor.GOLD + getMap().getName() + ChatColor.WHITE + "!");
 			} catch(NoSuchMethodException ig) {} catch(Exception ignored) {}
 
@@ -1994,7 +1994,7 @@ public class GameInstance implements Listener {
 	 * */
 	private void handleDeath(Player killer, Player victim) {
 
-		RankPerks rank = Main.getRank(killer);
+		RankPerks rank = ComWarfare.getRank(killer);
 
 		if (getGamemode().equals(Gamemode.TDM) || getGamemode().equals(Gamemode.KC) || getGamemode().equals(Gamemode.RSB) || getGamemode().equals(Gamemode.DOM) || getGamemode().equals(Gamemode.RESCUE) || getGamemode().equals(Gamemode.GUNFIGHT) || getGamemode().equals(Gamemode.HARDPOINT)) {
 			if (isOnRedTeam(killer)) {
@@ -2005,8 +2005,8 @@ public class GameInstance implements Listener {
 					xp /= 2d;
 				}
 
-				Main.sendMessage(killer, "" + ChatColor.RED + ChatColor.BOLD + "YOU " + ChatColor.RESET + "" + ChatColor.WHITE + "[" + Lang.KILLED_TEXT.getMessage() +"] " + ChatColor.RESET + ChatColor.BLUE + ChatColor.BOLD + victim.getDisplayName(), Main.getLang());
-				Main.sendActionBar(killer, ChatColor.YELLOW + "+" + xp + "xp");
+				ComWarfare.sendMessage(killer, "" + ChatColor.RED + ChatColor.BOLD + "YOU " + ChatColor.RESET + "" + ChatColor.WHITE + "[" + Lang.KILLED_TEXT.getMessage() +"] " + ChatColor.RESET + ChatColor.BLUE + ChatColor.BOLD + victim.getDisplayName(), ComWarfare.getLang());
+				ComWarfare.sendActionBar(killer, ChatColor.YELLOW + "+" + xp + "xp");
 
 				ProgressionManager.getInstance().addExperience(killer, xp);
 				CreditManager.setCredits(killer, CreditManager.getCredits(killer) + rank.getKillCredits());
@@ -2027,8 +2027,8 @@ public class GameInstance implements Listener {
 					xp /= 2d;
 				}
 
-				Main.sendMessage(killer,  "" + ChatColor.BLUE + ChatColor.BOLD + "YOU " + ChatColor.RESET + ChatColor.WHITE + "[" + Lang.KILLED_TEXT.getMessage() + "] " + ChatColor.RESET + ChatColor.RED + ChatColor.BOLD + victim.getDisplayName(), Main.getLang());
-				Main.sendActionBar(killer, ChatColor.YELLOW + "+" + xp + "xp");
+				ComWarfare.sendMessage(killer,  "" + ChatColor.BLUE + ChatColor.BOLD + "YOU " + ChatColor.RESET + ChatColor.WHITE + "[" + Lang.KILLED_TEXT.getMessage() + "] " + ChatColor.RESET + ChatColor.RED + ChatColor.BOLD + victim.getDisplayName(), ComWarfare.getLang());
+				ComWarfare.sendActionBar(killer, ChatColor.YELLOW + "+" + xp + "xp");
 				ProgressionManager.getInstance().addExperience(killer, xp);
 				CreditManager.setCredits(killer, CreditManager.getCredits(killer) + rank.getKillCredits());
 				kill(victim, killer);
@@ -2050,16 +2050,16 @@ public class GameInstance implements Listener {
 
 		} else if (getGamemode().equals(Gamemode.CTF) || getGamemode().equals(Gamemode.INFECT)) {
 			if (redTeam.contains(killer)) {
-				Main.sendMessage(killer, "" + ChatColor.RED + ChatColor.BOLD + "YOU " + ChatColor.RESET + "" + ChatColor.WHITE + "[" + Lang.KILLED_TEXT.getMessage() + "] " + ChatColor.RESET + ChatColor.BLUE + ChatColor.BOLD + victim.getDisplayName(), Main.getLang());
-				Main.sendActionBar(killer, ChatColor.YELLOW + "+" + rank.getKillExperience() + "xp");
+				ComWarfare.sendMessage(killer, "" + ChatColor.RED + ChatColor.BOLD + "YOU " + ChatColor.RESET + "" + ChatColor.WHITE + "[" + Lang.KILLED_TEXT.getMessage() + "] " + ChatColor.RESET + ChatColor.BLUE + ChatColor.BOLD + victim.getDisplayName(), ComWarfare.getLang());
+				ComWarfare.sendActionBar(killer, ChatColor.YELLOW + "+" + rank.getKillExperience() + "xp");
 
 				ProgressionManager.getInstance().addExperience(killer, rank.getKillExperience());
 				CreditManager.setCredits(killer, CreditManager.getCredits(killer) + rank.getKillCredits());
 				kill(victim, killer);
 				updateScores(victim, killer, rank);
 			} else if (blueTeam.contains(killer)) {
-				Main.sendMessage(killer,  "" + ChatColor.BLUE + ChatColor.BOLD + "YOU " + ChatColor.RESET + ChatColor.WHITE + "[" + Lang.KILLED_TEXT.getMessage() + "] " + ChatColor.RESET + ChatColor.RED + ChatColor.BOLD + victim.getDisplayName(), Main.getLang());
-				Main.sendActionBar(killer,  ChatColor.YELLOW + "+" + rank.getKillExperience() + "xp");
+				ComWarfare.sendMessage(killer,  "" + ChatColor.BLUE + ChatColor.BOLD + "YOU " + ChatColor.RESET + ChatColor.WHITE + "[" + Lang.KILLED_TEXT.getMessage() + "] " + ChatColor.RESET + ChatColor.RED + ChatColor.BOLD + victim.getDisplayName(), ComWarfare.getLang());
+				ComWarfare.sendActionBar(killer,  ChatColor.YELLOW + "+" + rank.getKillExperience() + "xp");
 				CreditManager.setCredits(killer, CreditManager.getCredits(killer) + rank.getKillCredits());
 				ProgressionManager.getInstance().addExperience(killer, rank.getKillExperience());
 				kill(victim, killer);
@@ -2075,8 +2075,8 @@ public class GameInstance implements Listener {
 			}
 
 		} else if (getGamemode().equals(Gamemode.FFA) || getGamemode().equals(Gamemode.GUN) || getGamemode().equals(Gamemode.OITC)) {
-			Main.sendMessage(killer, "" + ChatColor.GREEN + ChatColor.BOLD + "YOU " + ChatColor.RESET + ChatColor.WHITE + "[" + Lang.KILLED_TEXT.getMessage() + "] " + ChatColor.RESET	 + ChatColor.GOLD + ChatColor.BOLD + victim.getDisplayName(), Main.getLang());
-			Main.sendActionBar(killer, ChatColor.YELLOW + "+" + rank.getKillExperience() + "xp");
+			ComWarfare.sendMessage(killer, "" + ChatColor.GREEN + ChatColor.BOLD + "YOU " + ChatColor.RESET + ChatColor.WHITE + "[" + Lang.KILLED_TEXT.getMessage() + "] " + ChatColor.RESET	 + ChatColor.GOLD + ChatColor.BOLD + victim.getDisplayName(), ComWarfare.getLang());
+			ComWarfare.sendActionBar(killer, ChatColor.YELLOW + "+" + rank.getKillExperience() + "xp");
 			ProgressionManager.getInstance().addExperience(killer, rank.getKillExperience());
 			CreditManager.setCredits(killer, CreditManager.getCredits(killer) + rank.getKillCredits());
 			kill(victim, killer);
@@ -2222,7 +2222,7 @@ public class GameInstance implements Listener {
 
 		if (heldWeapon.getType() == Material.DIAMOND_SWORD || heldWeapon.getType() == gSwordMat || heldWeapon.getType() == Material.IRON_SWORD || heldWeapon.getType() == Material.STONE_SWORD || heldWeapon.getType() == wSwordMat) {
 			e.setCancelled(true);
-			damage = Main.getDefaultHealth() * Main.getInstance().knifeDamage;
+			damage = ComWarfare.getDefaultHealth() * ComWarfare.getInstance().knifeDamage;
 		} else {
 			e.setDamage(0);
 			return;
@@ -2230,7 +2230,7 @@ public class GameInstance implements Listener {
 
 		if (getGamemode() != Gamemode.GUN && getGamemode() != Gamemode.OITC && getGamemode() != Gamemode.RSB && getGamemode() != Gamemode.GUNFIGHT && (getGamemode() != Gamemode.INFECT || isOnBlueTeam(attacker))) {
 			if (LoadoutManager.getInstance().getActiveLoadout(attacker).hasPerk(Perk.COMMANDO))
-				damage = 10 * Main.getDefaultHealth();
+				damage = 10 * ComWarfare.getDefaultHealth();
 		}
 
 		if (damage != 0)
@@ -2285,7 +2285,7 @@ public class GameInstance implements Listener {
 
 		e.setCancelled(true);
 
-		double scalar = (20d / Main.getDefaultHealth()) * 0.4d;
+		double scalar = (20d / ComWarfare.getDefaultHealth()) * 0.4d;
 		double damage = e.getDamage() * scalar;
 		damage /= 2;
 
@@ -2394,7 +2394,7 @@ public class GameInstance implements Listener {
 
 		if (LoadoutManager.getInstance().getActiveLoadout(victim).hasPerk(Perk.DANGER_CLOSE)) {
 			double cur = health.getHealth(victim);
-			if (cur == Main.getDefaultHealth() && cur - damage < 0) {
+			if (cur == ComWarfare.getDefaultHealth() && cur - damage < 0) {
 				health.setHealth(victim, 1);
 				return;
 			}
@@ -2416,7 +2416,7 @@ public class GameInstance implements Listener {
 		if (health.isDead(victim)) {
 			if (!LoadoutManager.getInstance().getActiveLoadout(victim).hasPerk(Perk.LAST_STAND) || !(getGamemode() != Gamemode.GUN && getGamemode() != Gamemode.GUNFIGHT && getGamemode() != Gamemode.OITC && getGamemode() != Gamemode.RSB && (getGamemode() != Gamemode.INFECT || isOnBlueTeam(victim)))) {
 				if (damagers.length < 1) {
-					Main.sendMessage(victim, "" + ChatColor.GREEN + ChatColor.BOLD + "YOU " + ChatColor.RESET + "" + ChatColor.WHITE + "[" + Lang.KILLED_TEXT.getMessage() + "] " + ChatColor.RESET + ChatColor.GREEN + ChatColor.BOLD + "YOURSELF", Main.getLang());
+					ComWarfare.sendMessage(victim, "" + ChatColor.GREEN + ChatColor.BOLD + "YOU " + ChatColor.RESET + "" + ChatColor.WHITE + "[" + Lang.KILLED_TEXT.getMessage() + "] " + ChatColor.RESET + ChatColor.GREEN + ChatColor.BOLD + "YOURSELF", ComWarfare.getLang());
 					kill(victim, victim);
 				} else {
 					handleDeath(damagers[0], victim);
@@ -2427,13 +2427,13 @@ public class GameInstance implements Listener {
 					PerkListener.getInstance().lastStand(victim, this);
 					if (damagers.length > 0) {
 						Player attacker = damagers[0];
-						double xp = Main.getRank(attacker).getKillExperience() / 2f;
+						double xp = ComWarfare.getRank(attacker).getKillExperience() / 2f;
 						ChatColor t1 = redTeam.contains(attacker) ? ChatColor.RED : blueTeam.contains(attacker) ? ChatColor.BLUE : ChatColor.LIGHT_PURPLE;
 						ChatColor t2 = t1 == ChatColor.RED ? ChatColor.BLUE : t1 == ChatColor.BLUE ? ChatColor.RED : ChatColor.LIGHT_PURPLE;
-						Main.sendMessage(attacker, "" + t1 + ChatColor.BOLD + "YOU " + ChatColor.RESET + ChatColor.WHITE + "[" + Lang.DOWNED_TEXT.getMessage() + "] " + ChatColor.RESET + t2 + ChatColor.BOLD + victim.getDisplayName(), Main.getLang());
-						Main.sendActionBar(attacker, ChatColor.YELLOW + "+" + xp + "xp");
+						ComWarfare.sendMessage(attacker, "" + t1 + ChatColor.BOLD + "YOU " + ChatColor.RESET + ChatColor.WHITE + "[" + Lang.DOWNED_TEXT.getMessage() + "] " + ChatColor.RESET + t2 + ChatColor.BOLD + victim.getDisplayName(), ComWarfare.getLang());
+						ComWarfare.sendActionBar(attacker, ChatColor.YELLOW + "+" + xp + "xp");
 						ProgressionManager.getInstance().addExperience(attacker, xp);
-						CreditManager.setCredits(attacker, CreditManager.getCredits(attacker) + Main.getRank(attacker).getKillCredits());
+						CreditManager.setCredits(attacker, CreditManager.getCredits(attacker) + ComWarfare.getRank(attacker).getKillCredits());
 					}
 				} else {
 					PerkListener.getInstance().getIsInLastStand().remove(victim);
@@ -2481,16 +2481,16 @@ public class GameInstance implements Listener {
 				}
 			} else if (getGamemode() == Gamemode.KC) {
 				p.sendMessage(Lang.KILL_DENIED.getMessage());
-				Main.sendActionBar(p, ChatColor.YELLOW + "+" + (Main.getRank(p).getKillExperience() / 2) + "xp!");
-				ProgressionManager.getInstance().addExperience(p, Main.getRank(p).getKillExperience() / 2);
+				ComWarfare.sendActionBar(p, ChatColor.YELLOW + "+" + (ComWarfare.getRank(p).getKillExperience() / 2) + "xp!");
+				ProgressionManager.getInstance().addExperience(p, ComWarfare.getRank(p).getKillExperience() / 2);
 			}
 		} else {
 			if (getGamemode() == Gamemode.RESCUE) {
 				p.sendMessage(Lang.SPAWN_DENIED.getMessage().replace("{player}", tagOwner.getName()));
 			} else if (getGamemode() == Gamemode.KC) {
 				p.sendMessage(Lang.KILL_CONFIRMED.getMessage());
-				Main.sendActionBar(p,ChatColor.YELLOW + "+" + Main.getRank(p).getKillExperience() + "xp!");
-				ProgressionManager.getInstance().addExperience(p, Main.getRank(p).getKillExperience());
+				ComWarfare.sendActionBar(p,ChatColor.YELLOW + "+" + ComWarfare.getRank(p).getKillExperience() + "xp!");
+				ProgressionManager.getInstance().addExperience(p, ComWarfare.getRank(p).getKillExperience());
 				if (isOnRedTeam(p)) {
 					addRedPoint();
 				} else if (isOnBlueTeam(p)) {
@@ -2516,7 +2516,7 @@ public class GameInstance implements Listener {
 		Location cLoc = getMap().getCFlagSpawn();
 
 		if(aLoc == null || bLoc == null || cLoc == null) {
-			Main.sendMessage(Main.getConsole(), Main.getPrefix() + ChatColor.RED + "The Alpdha, Beta, or Charlie flag spawns have not been set for the current map in arena id " + getId() + ". The game will likely not work properly.", Main.getLang());
+			ComWarfare.sendMessage(ComWarfare.getConsole(), ComWarfare.getPrefix() + ChatColor.RED + "The Alpdha, Beta, or Charlie flag spawns have not been set for the current map in arena id " + getId() + ". The game will likely not work properly.", ComWarfare.getLang());
 			return;
 		}
 
@@ -2606,7 +2606,7 @@ public class GameInstance implements Listener {
 		Location spawnLocation = null;
 
 		if (locs.size() == 0) {
-			Main.sendMessage(Main.getConsole(), Main.getPrefix() + ChatColor.RED + "No hardpoint locations set up, could not move hardpoint location!", Main.getLang());
+			ComWarfare.sendMessage(ComWarfare.getConsole(), ComWarfare.getPrefix() + ChatColor.RED + "No hardpoint locations set up, could not move hardpoint location!", ComWarfare.getLang());
 			for (Player p : getPlayers()) {
 				removePlayer(p);
 			}
@@ -2700,13 +2700,13 @@ public class GameInstance implements Listener {
 				if (!blueUavActive) {
 					startUav(p);
 				} else {
-					Main.sendMessage(p, Lang.KILLSTREAK_AIRSPACE_OCCUPIED.getMessage(), Main.getLang());
+					ComWarfare.sendMessage(p, Lang.KILLSTREAK_AIRSPACE_OCCUPIED.getMessage(), ComWarfare.getLang());
 				}
 			} else if (isOnRedTeam(p)) {
 				if (!redUavActive) {
 					startUav(p);
 				} else {
-					Main.sendMessage(p, Lang.KILLSTREAK_AIRSPACE_OCCUPIED.getMessage(), Main.getLang());
+					ComWarfare.sendMessage(p, Lang.KILLSTREAK_AIRSPACE_OCCUPIED.getMessage(), ComWarfare.getLang());
 				}
 
 			} else {
@@ -2717,13 +2717,13 @@ public class GameInstance implements Listener {
 				if (!blueVSATActive) {
 					startVSAT(p);
 				} else {
-					Main.sendMessage(p, Lang.KILLSTREAK_AIRSPACE_OCCUPIED.getMessage(), Main.getLang());
+					ComWarfare.sendMessage(p, Lang.KILLSTREAK_AIRSPACE_OCCUPIED.getMessage(), ComWarfare.getLang());
 				}
 			} else if (isOnRedTeam(p)) {
 				if (!redVSATActive) {
 					startVSAT(p);
 				} else {
-					Main.sendMessage(p, Lang.KILLSTREAK_AIRSPACE_OCCUPIED.getMessage(), Main.getLang());
+					ComWarfare.sendMessage(p, Lang.KILLSTREAK_AIRSPACE_OCCUPIED.getMessage(), ComWarfare.getLang());
 				}
 
 			} else {
@@ -2737,7 +2737,7 @@ public class GameInstance implements Listener {
 				if (!pinkCounterUavActive) {
 					startCounterUav(p);
 				} else {
-					Main.sendMessage(p, Lang.KILLSTREAK_AIRSPACE_OCCUPIED.getMessage(), Main.getLang());
+					ComWarfare.sendMessage(p, Lang.KILLSTREAK_AIRSPACE_OCCUPIED.getMessage(), ComWarfare.getLang());
 				}
 			}
 		} else if (p.getItemInHand().equals(KillStreak.DOGS.getKillStreakItem())) {
@@ -2790,7 +2790,7 @@ public class GameInstance implements Listener {
 						if (health.isDead(p))
 							continue;
 
-						if (Main.isLegacy()) {
+						if (ComWarfare.isLegacy()) {
 							Firework fw = p.getLocation().getWorld().spawn(p.getLocation(), Firework.class);
 							FireworkMeta fwm = fw.getFireworkMeta();
 							fwm.addEffect(FireworkEffect.builder()
@@ -2816,7 +2816,7 @@ public class GameInstance implements Listener {
 					for (Player p : blueTeam) {
 						if (health.isDead(p))
 							continue;
-						if (Main.isLegacy()) {
+						if (ComWarfare.isLegacy()) {
 							Firework fw = p.getLocation().getWorld().spawn(p.getLocation(), Firework.class);
 							FireworkMeta fwm = fw.getFireworkMeta();
 							fwm.addEffect(FireworkEffect.builder()
@@ -2846,7 +2846,7 @@ public class GameInstance implements Listener {
 						if (health.isDead(p))
 							continue;
 
-						if (Main.isLegacy()) {
+						if (ComWarfare.isLegacy()) {
 							Firework fw = p.getLocation().getWorld().spawn(p.getLocation(), Firework.class);
 							FireworkMeta fwm = fw.getFireworkMeta();
 							fwm.addEffect(FireworkEffect.builder()
@@ -2869,7 +2869,7 @@ public class GameInstance implements Listener {
 		};
 
 		getRunnables().add(br);
-		br.runTaskTimer(Main.getPlugin(), 3L, 60L);
+		br.runTaskTimer(ComWarfare.getPlugin(), 3L, 60L);
 	}
 
 	private void startVSAT(Player owner) {
@@ -2913,7 +2913,7 @@ public class GameInstance implements Listener {
 						if (health.isDead(p))
 							continue;
 
-						if (Main.isLegacy()) {
+						if (ComWarfare.isLegacy()) {
 							Firework fw = p.getLocation().getWorld().spawn(p.getLocation(), Firework.class);
 							FireworkMeta fwm = fw.getFireworkMeta();
 							fwm.addEffect(FireworkEffect.builder()
@@ -2939,7 +2939,7 @@ public class GameInstance implements Listener {
 					for (Player p : blueTeam) {
 						if (health.isDead(p))
 							continue;
-						if (Main.isLegacy()) {
+						if (ComWarfare.isLegacy()) {
 							Firework fw = p.getLocation().getWorld().spawn(p.getLocation(), Firework.class);
 							FireworkMeta fwm = fw.getFireworkMeta();
 							fwm.addEffect(FireworkEffect.builder()
@@ -2969,7 +2969,7 @@ public class GameInstance implements Listener {
 						if (health.isDead(p))
 							continue;
 
-						if (Main.isLegacy()) {
+						if (ComWarfare.isLegacy()) {
 							Firework fw = p.getLocation().getWorld().spawn(p.getLocation(), Firework.class);
 							FireworkMeta fwm = fw.getFireworkMeta();
 							fwm.addEffect(FireworkEffect.builder()
@@ -2992,7 +2992,7 @@ public class GameInstance implements Listener {
 		};
 
 		getRunnables().add(br);
-		br.runTaskTimer(Main.getPlugin(), 3L, 60L);
+		br.runTaskTimer(ComWarfare.getPlugin(), 3L, 60L);
 	}
 
 	private void startCounterUav(Player owner) {
@@ -3026,7 +3026,7 @@ public class GameInstance implements Listener {
 			}
 		};
 
-		br.runTaskLater(Main.getPlugin(), 20L * 20L);
+		br.runTaskLater(ComWarfare.getPlugin(), 20L * 20L);
 
 	}
 
@@ -3067,7 +3067,7 @@ public class GameInstance implements Listener {
 				int index = (int) Math.round(Math.random() * (targets.size() - 1));
 				Bukkit.getPluginManager().callEvent(new AirstrikeExplodeSoundEvent(targets.get(index)));
 				if (!isUnderRoof(targets.get(index)))
-					damagePlayer(targets.get(index), Main.getDefaultHealth() * 100, owner);
+					damagePlayer(targets.get(index), ComWarfare.getDefaultHealth() * 100, owner);
 				targets.remove(index);
 			}
 		}
@@ -3151,7 +3151,7 @@ public class GameInstance implements Listener {
 		};
 
 		getRunnables().add(br);
-		br.runTaskTimer(Main.getPlugin(), 0L, 20L);
+		br.runTaskTimer(ComWarfare.getPlugin(), 0L, 20L);
 	}
 
 	private void setNewDogsTarget(Wolf w, Player owner) {
@@ -3244,13 +3244,13 @@ public class GameInstance implements Listener {
 						String title = Lang.NUKE_LAUNCHED_TITLE.getMessage().replace("{team-color}", tColor + "").replace("{team}", launcher),
 								subtitle = Lang.NUKE_LAUNCHED_SUBTITLE.getMessage().replace("{time}", Integer.toString(t));
 
-						Main.sendTitle(p, title, subtitle, tColor, 1, 20, 1);
+						ComWarfare.sendTitle(p, title, subtitle, tColor, 1, 20, 1);
 					}
 				}
 			};
 
 			getRunnables().add(br);
-			br.runTaskTimer(Main.getPlugin(), 0L, 20L);
+			br.runTaskTimer(ComWarfare.getPlugin(), 0L, 20L);
 		}
 	}
 
@@ -3265,15 +3265,15 @@ public class GameInstance implements Listener {
 
 		health.setHealth(owner, health.defaultHealth * 5);
 
-		Main.sendTitle(owner, Lang.JUGGERNAUT_STARTED.getMessage(), "");
+		ComWarfare.sendTitle(owner, Lang.JUGGERNAUT_STARTED.getMessage(), "");
 	}
 
 	private void updateTimeLeft() {
 		if (getGamemode() != Gamemode.INFECT) {
-			gameTime = Main.getPlugin().getConfig().getInt("gameTime." + getGamemode().toString());
+			gameTime = ComWarfare.getPlugin().getConfig().getInt("gameTime." + getGamemode().toString());
 		} else {
 			if (ComVersion.getPurchased())
-				gameTime = Main.getPlugin().getConfig().getInt("maxScore.Gamemode.INFECT");
+				gameTime = ComWarfare.getPlugin().getConfig().getInt("maxScore.Gamemode.INFECT");
 			else
 				gameTime = 120;
 		}
@@ -3297,8 +3297,8 @@ public class GameInstance implements Listener {
 	}
 
 	void sendNextMap(Player p, int t) {
-		Main.sendMessage(p, Lang.GAME_STARTING_MESSAGE.getMessage().replace("{time}", getFancyTime(t)), Main.getLang());
-		Main.sendMessage(p, Lang.GAME_STARTING_MAP_MESSAGE.getMessage().replace("{map}", getMap().getName()).replace("{mode}", getMap().getGamemode().toString()), Main.getLang());
+		ComWarfare.sendMessage(p, Lang.GAME_STARTING_MESSAGE.getMessage().replace("{time}", getFancyTime(t)), ComWarfare.getLang());
+		ComWarfare.sendMessage(p, Lang.GAME_STARTING_MAP_MESSAGE.getMessage().replace("{map}", getMap().getName()).replace("{mode}", getMap().getGamemode().toString()), ComWarfare.getLang());
 	}
 
 	public List<BukkitRunnable> getRunnables() {

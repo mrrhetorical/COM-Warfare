@@ -1,6 +1,6 @@
 package com.rhetorical.cod.inventories;
 
-import com.rhetorical.cod.Main;
+import com.rhetorical.cod.ComWarfare;
 import com.rhetorical.cod.game.GameInstance;
 import com.rhetorical.cod.game.GameManager;
 import com.rhetorical.cod.game.Gamemode;
@@ -35,7 +35,7 @@ public class MatchBrowser implements Listener {
 
 		instance = this;
 
-		Bukkit.getServer().getPluginManager().registerEvents(this, Main.getPlugin());
+		Bukkit.getServer().getPluginManager().registerEvents(this, ComWarfare.getPlugin());
 
 		setupInventory();
 		updateInventory();
@@ -74,13 +74,13 @@ public class MatchBrowser implements Listener {
 			}
 		};
 
-		br.runTaskTimer(Main.getPlugin(), 0L, 50L);
+		br.runTaskTimer(ComWarfare.getPlugin(), 0L, 50L);
 	}
 
 	private ItemStack generateItem(GameInstance game) {
 		ItemStack item = new ItemStack(Material.EMERALD);
 		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName(String.format("Join game - %s/%s", game.getPlayers().size(), Main.getMaxPlayers()));
+		meta.setDisplayName(String.format("Join game - %s/%s", game.getPlayers().size(), ComWarfare.getMaxPlayers()));
 		List<String> lore = new ArrayList<>();
 		lore.add(String.format("%s", game.getId()));
 		lore.add(String.format("Map: %s%s", ChatColor.GOLD, game.getMap().getName()));

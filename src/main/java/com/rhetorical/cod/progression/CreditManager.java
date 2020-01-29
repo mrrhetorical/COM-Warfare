@@ -1,6 +1,6 @@
 package com.rhetorical.cod.progression;
 
-import com.rhetorical.cod.Main;
+import com.rhetorical.cod.ComWarfare;
 import com.rhetorical.cod.files.CreditsFile;
 import com.rhetorical.cod.lang.Lang;
 import org.bukkit.Bukkit;
@@ -101,10 +101,10 @@ public class CreditManager {
 				setCredits(p, getCredits(p) - cost);
 			}
 			saveCredits(p);
-			Main.sendMessage(p, Main.getPrefix() + Lang.PURCHASE_SUCCESSFUL.getMessage(), Main.getLang());
+			ComWarfare.sendMessage(p, ComWarfare.getPrefix() + Lang.PURCHASE_SUCCESSFUL.getMessage(), ComWarfare.getLang());
 			return true;
 		} else {
-			Main.sendMessage(p, Main.getPrefix() + Lang.INSUFFICIENT_FUNDS.getMessage(), Main.getLang());
+			ComWarfare.sendMessage(p, ComWarfare.getPrefix() + Lang.INSUFFICIENT_FUNDS.getMessage(), ComWarfare.getLang());
 			return false;
 		}
 	}

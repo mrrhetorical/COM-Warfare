@@ -1,6 +1,6 @@
 package com.rhetorical.cod.inventories;
 
-import com.rhetorical.cod.Main;
+import com.rhetorical.cod.ComWarfare;
 import com.rhetorical.cod.assignments.Assignment;
 import com.rhetorical.cod.assignments.AssignmentManager;
 import com.rhetorical.cod.assignments.AssignmentType;
@@ -116,7 +116,7 @@ public class InventoryManager implements Listener {
 		setupStaticItems();
 		setupMainInventories();
 
-		Bukkit.getServer().getPluginManager().registerEvents(this, Main.getPlugin());
+		Bukkit.getServer().getPluginManager().registerEvents(this, ComWarfare.getPlugin());
 	}
 
 	public static InventoryManager getInstance() {
@@ -169,7 +169,7 @@ public class InventoryManager implements Listener {
 		}
 	}
 
-	// Main Inventory
+	// ComWarfare Inventory
 
 	private void setupMainInventories() {
 		matchBrowser = new ItemStack(Material.EMERALD);
@@ -645,7 +645,7 @@ public class InventoryManager implements Listener {
 				try {
 					loadout = loadouts.get(i);
 				} catch(IndexOutOfBoundsException e1) {
-					Main.getConsole().sendMessage(ChatColor.RED + String.format("Could not create new loadout that should exist for player %s!", p.getName()));
+					ComWarfare.getConsole().sendMessage(ChatColor.RED + String.format("Could not create new loadout that should exist for player %s!", p.getName()));
 					e1.printStackTrace();
 					return;
 				}
@@ -736,7 +736,7 @@ public class InventoryManager implements Listener {
 
 	public boolean openSelectClassInventory(Player p) {
 		if (!GameManager.isInMatch(p)) {
-			Main.sendMessage(p,Main.getPrefix() + Lang.ERROR_CAN_NOT_CHANGE_CLASS.getMessage(), Main.getLang());
+			ComWarfare.sendMessage(p, ComWarfare.getPrefix() + Lang.ERROR_CAN_NOT_CHANGE_CLASS.getMessage(), ComWarfare.getLang());
 			return false;
 		}
 
@@ -942,7 +942,7 @@ public class InventoryManager implements Listener {
 				return;
 			}
 		} catch(Exception exception) {
-			Main.sendMessage(Main.getConsole(), Lang.ERROR_DEFAULT_WEAPONS_GUNS_NOT_SET.getMessage(), Main.getLang());
+			ComWarfare.sendMessage(ComWarfare.getConsole(), Lang.ERROR_DEFAULT_WEAPONS_GUNS_NOT_SET.getMessage(), ComWarfare.getLang());
 		}
 
 		if (e.getCurrentItem() == null || e.getCurrentItem().getType() == Material.AIR)
@@ -988,7 +988,7 @@ public class InventoryManager implements Listener {
 					ProgressionManager.getInstance().addPrestigeLevel(p);
 					p.closeInventory();
 				} else {
-					Main.sendMessage(p, Lang.ERROR_NOT_HIGH_ENOUGH_LEVEL.getMessage(), Main.getLang());
+					ComWarfare.sendMessage(p, Lang.ERROR_NOT_HIGH_ENOUGH_LEVEL.getMessage(), ComWarfare.getLang());
 				}
 			}
 		} else if (e.getInventory().equals(mainShopInventory)) {
@@ -1153,7 +1153,7 @@ public class InventoryManager implements Listener {
 				if (slot > LoadoutManager.getInstance().getAllowedClasses(p) - 1)
 					throw new NullPointerException();
 			} catch (NullPointerException exception) {
-				Main.sendMessage(Main.getConsole(), Lang.ERROR_SELECTING_CLASS.getMessage(), Main.getLang());
+				ComWarfare.sendMessage(ComWarfare.getConsole(), Lang.ERROR_SELECTING_CLASS.getMessage(), ComWarfare.getLang());
 				return;
 			}
 
@@ -1174,10 +1174,10 @@ public class InventoryManager implements Listener {
 			p.closeInventory();
 
 			if (!hasOneManArmy) {
-				Main.sendMessage(p, Main.getPrefix() + Lang.CHANGED_CLASS_MESSAGE.getMessage(), Main.getLang());
+				ComWarfare.sendMessage(p, ComWarfare.getPrefix() + Lang.CHANGED_CLASS_MESSAGE.getMessage(), ComWarfare.getLang());
 				PerkListener.getInstance().oneManArmy(p);
 			} else {
-				Main.sendMessage(p, Main.getPrefix() + Lang.CHANGED_CLASS_ONE_MAN_ARMY.getMessage(), Main.getLang());
+				ComWarfare.sendMessage(p, ComWarfare.getPrefix() + Lang.CHANGED_CLASS_ONE_MAN_ARMY.getMessage(), ComWarfare.getLang());
 			}
 
 		} else if (e.getInventory().equals(killStreakInventory1.get(p)) || e.getInventory().equals(killStreakInventory2.get(p)) || e.getInventory().equals(killStreakInventory3.get(p))) {
@@ -1201,7 +1201,7 @@ public class InventoryManager implements Listener {
 				if (e.getCurrentItem().equals(streak.getKillStreakItem())) {
 					KillStreakManager.getInstance().setStreak(p, streak, inv);
 					openKillStreaksInventory(p);
-					Main.sendMessage(p, Lang.CHANGE_STREAK_SUCCESS.getMessage(), Main.getLang());
+					ComWarfare.sendMessage(p, Lang.CHANGE_STREAK_SUCCESS.getMessage(), ComWarfare.getLang());
 					return;
 				}
 			}
@@ -1391,7 +1391,7 @@ public class InventoryManager implements Listener {
 				return;
 			}
 			if (item.equals(codItem) || altItem.equals(codItem)) {
-				Main.openMainMenu(e.getPlayer());
+				ComWarfare.openMainMenu(e.getPlayer());
 				e.setCancelled(true);
 //				return;
 			}
@@ -1404,7 +1404,7 @@ public class InventoryManager implements Listener {
 					return;
 				}
 
-				Main.sendMessage(e.getPlayer(), Main.getPrefix() + Lang.VOTE_REGISTERED.getMessage(), Main.getLang());
+				ComWarfare.sendMessage(e.getPlayer(), ComWarfare.getPrefix() + Lang.VOTE_REGISTERED.getMessage(), ComWarfare.getLang());
 			}
 
 			if ((item.getItemMeta() != null && item.getItemMeta().getDisplayName().equals(voteItemB.getItemMeta().getDisplayName()))
@@ -1415,7 +1415,7 @@ public class InventoryManager implements Listener {
 					return;
 				}
 
-				Main.sendMessage(e.getPlayer(), Main.getPrefix() + Lang.VOTE_REGISTERED.getMessage(), Main.getLang());
+				ComWarfare.sendMessage(e.getPlayer(), ComWarfare.getPrefix() + Lang.VOTE_REGISTERED.getMessage(), ComWarfare.getLang());
 			}
 		}
 	}

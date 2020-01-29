@@ -1,6 +1,6 @@
 package com.rhetorical.cod.loadouts;
 
-import com.rhetorical.cod.Main;
+import com.rhetorical.cod.ComWarfare;
 import com.rhetorical.cod.files.GunsFile;
 import com.rhetorical.cod.files.LoadoutsFile;
 import com.rhetorical.cod.inventories.ShopManager;
@@ -299,7 +299,7 @@ public class LoadoutManager {
 			try {
 				weaponMaterial = Material.valueOf(weaponMat);
 			} catch (Exception e) {
-				Main.sendMessage(Main.getConsole(), Main.getPrefix() + ChatColor.RED + "Could not load lethal " + weaponName + " because no material exits with name " + weaponMat + "!", Main.getLang());
+				ComWarfare.sendMessage(ComWarfare.getConsole(), ComWarfare.getPrefix() + ChatColor.RED + "Could not load lethal " + weaponName + " because no material exits with name " + weaponMat + "!", ComWarfare.getLang());
 				return blankLethal;
 			}
 			short weaponData = (short) GunsFile.getData().getInt("Weapons.LETHAL.default.data");
@@ -331,7 +331,7 @@ public class LoadoutManager {
 			try {
 				weaponMaterial = Material.valueOf(weaponMat);
 			} catch (Exception e) {
-				Main.sendMessage(Main.getConsole(), Main.getPrefix() + ChatColor.RED + "Could not load tactical " + weaponName + " because no material exits with name " + weaponMat + "!", Main.getLang());
+				ComWarfare.sendMessage(ComWarfare.getConsole(), ComWarfare.getPrefix() + ChatColor.RED + "Could not load tactical " + weaponName + " because no material exits with name " + weaponMat + "!", ComWarfare.getLang());
 				return blankTactical;
 			}
 			short weaponData = (short) GunsFile.getData().getInt("Weapons.TACTICAL.default.data");
@@ -449,7 +449,7 @@ public class LoadoutManager {
 				loadout = new Loadout(p, name, primary, secondary, lethal, tactical, perkOne, perkTwo, perkThree);
 				l.add(loadout);
 			} catch (Exception e) {
-				Main.sendMessage(Main.getConsole(),  Main.getPrefix() + Lang.ERROR_READING_PLAYER_LOADOUT.getMessage(), Main.getLang());
+				ComWarfare.sendMessage(ComWarfare.getConsole(),  ComWarfare.getPrefix() + Lang.ERROR_READING_PLAYER_LOADOUT.getMessage(), ComWarfare.getLang());
 			}
 
 			k++;

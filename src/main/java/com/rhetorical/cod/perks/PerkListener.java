@@ -1,6 +1,6 @@
 package com.rhetorical.cod.perks;
 
-import com.rhetorical.cod.Main;
+import com.rhetorical.cod.ComWarfare;
 import com.rhetorical.cod.game.GameInstance;
 import com.rhetorical.cod.game.GameManager;
 import com.rhetorical.cod.game.GameState;
@@ -38,7 +38,7 @@ public class PerkListener implements Listener {
 	private PerkListener() {
 		if (instance == null)
 			instance = this;
-		Bukkit.getServer().getPluginManager().registerEvents(this, Main.getPlugin());
+		Bukkit.getServer().getPluginManager().registerEvents(this, ComWarfare.getPlugin());
 	}
 
 	public static PerkListener getInstance() {
@@ -99,14 +99,14 @@ public class PerkListener implements Listener {
 
 						p.getInventory().setItem(19, primaryAmmo);
 					} else {
-						Main.sendMessage(p, Main.getPrefix() + Lang.PERK_ONE_MAN_ARMY_FAILED.getMessage(), Main.getLang());
+						ComWarfare.sendMessage(p, ComWarfare.getPrefix() + Lang.PERK_ONE_MAN_ARMY_FAILED.getMessage(), ComWarfare.getLang());
 					}
 					this.cancel();
 				}
 			}
 		};
 
-		br.runTaskLater(Main.getPlugin(), 200L);
+		br.runTaskLater(ComWarfare.getPlugin(), 200L);
 	}
 
 	/**
@@ -124,7 +124,7 @@ public class PerkListener implements Listener {
 				}
 			};
 
-			br.runTaskLater(Main.getPlugin(), 600L);
+			br.runTaskLater(ComWarfare.getPlugin(), 600L);
 			return i;
 		}
 
@@ -230,7 +230,7 @@ public class PerkListener implements Listener {
 		p.setWalkSpeed(0f);
 		p.setSneaking(true);
 		
-		Main.sendMessage(p, Lang.PERK_FINAL_STAND_NOTIFICATION.getMessage(), Main.getLang());
+		ComWarfare.sendMessage(p, Lang.PERK_FINAL_STAND_NOTIFICATION.getMessage(), ComWarfare.getLang());
 		BukkitRunnable br = new BukkitRunnable() {
 			
 			private int time = 40;
@@ -247,7 +247,7 @@ public class PerkListener implements Listener {
 				else {
 					p.setWalkSpeed(0.2f);
 					i.health.reset(p);
-				Main.sendMessage(p, Lang.PERK_FINAL_STAND_FINISHED.getMessage(), Main.getLang());
+				ComWarfare.sendMessage(p, Lang.PERK_FINAL_STAND_FINISHED.getMessage(), ComWarfare.getLang());
 					cancel();
 					cancelLastStand(p);
 					isInLastStand.remove(p);
@@ -259,7 +259,7 @@ public class PerkListener implements Listener {
 		};
 		
 		this.lastStandRunnables.put(p, br);
-		br.runTaskTimer(Main.getPlugin(), 0L, 10L);
+		br.runTaskTimer(ComWarfare.getPlugin(), 0L, 10L);
 	}
 	
 	private void cancelLastStand(Player p) {
