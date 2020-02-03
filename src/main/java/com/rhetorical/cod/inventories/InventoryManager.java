@@ -276,7 +276,7 @@ public class InventoryManager implements Listener {
 		grenadeMeta.setDisplayName(Lang.INVENTORY_GRENADE_SHOP_NAME.getMessage());
 		ArrayList<String> grenadeLore = new ArrayList<>();
 		grenadeLore.add(Lang.INVENTORY_GRENADE_SHOP_LORE.getMessage());
-		gunMeta.setLore(grenadeLore);
+		grenadeMeta.setLore(grenadeLore);
 		grenadeItem.setItemMeta(grenadeMeta);
 
 		grenadeShopItem = grenadeItem;
