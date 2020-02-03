@@ -192,8 +192,9 @@ public class ComWarfare extends JavaPlugin {
 				if (lang != com.rhetorical.tpp.McLang.EN)
 					lang = com.rhetorical.tpp.McLang.EN;
 			}
-		} catch(Exception|Error classException) {
-			ComWarfare.getConsole().sendMessage(codPrefix + ChatColor.RED + "McTranslate++ is not installed.");
+		} catch(Exception|Error ignored) {
+			//if mctranslate is not installed, it is no issue
+//			ComWarfare.getConsole().sendMessage(codPrefix + ChatColor.RED + "McTranslate++ is not installed.");
 		}
 
 		String version = getPlugin().getDescription().getVersion();
