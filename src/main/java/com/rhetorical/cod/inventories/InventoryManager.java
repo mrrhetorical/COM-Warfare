@@ -1376,10 +1376,7 @@ public class InventoryManager implements Listener {
 			try {
 				item = (ItemStack) e.getPlayer().getInventory().getClass().getMethod("getItemInMainHand").invoke(e.getPlayer().getInventory());
 				altItem = (ItemStack) e.getPlayer().getInventory().getClass().getMethod("getItemInOffHand").invoke(e.getPlayer().getInventory());
-			} catch(NoSuchMethodException er1) {
-				item = e.getPlayer().getInventory().getItemInHand();
-				altItem = item;
-			} catch (Exception er1) {
+			} catch(Exception er1) {
 				item = e.getPlayer().getInventory().getItemInHand();
 				altItem = item;
 			}
