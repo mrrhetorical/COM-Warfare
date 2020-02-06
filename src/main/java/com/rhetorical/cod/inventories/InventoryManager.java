@@ -1396,7 +1396,7 @@ public class InventoryManager implements Listener {
 //				return;
 			}
 
-			if ((item.getItemMeta() != null && item.getItemMeta().getDisplayName().equals(voteItemA.getItemMeta().getDisplayName()))
+			if (voteItemA != null && (item.getItemMeta() != null && item.getItemMeta().getDisplayName().equals(voteItemA.getItemMeta().getDisplayName()))
 					|| (altItem.getItemMeta() != null && altItem.getItemMeta().getDisplayName().equals(voteItemA.getItemMeta().getDisplayName()))) {
 				try {
 					Objects.requireNonNull(GameManager.getMatchWhichContains(e.getPlayer())).addVote(0, e.getPlayer());
@@ -1407,7 +1407,7 @@ public class InventoryManager implements Listener {
 				ComWarfare.sendMessage(e.getPlayer(), ComWarfare.getPrefix() + Lang.VOTE_REGISTERED.getMessage(), ComWarfare.getLang());
 			}
 
-			if ((item.getItemMeta() != null && item.getItemMeta().getDisplayName().equals(voteItemB.getItemMeta().getDisplayName()))
+			if (voteItemB != null && (item.getItemMeta() != null && item.getItemMeta().getDisplayName().equals(voteItemB.getItemMeta().getDisplayName()))
 					|| (altItem.getItemMeta() != null && altItem.getItemMeta().getDisplayName().equals(voteItemB.getItemMeta().getDisplayName()))) {
 				try {
 					Objects.requireNonNull(GameManager.getMatchWhichContains(e.getPlayer())).addVote(1, e.getPlayer());
