@@ -109,7 +109,7 @@ public class HealthManager {
 		else if (desired > 20)
 			desired = 20;
 
-		p.setLevel((int) health);
+		p.setLevel(health >= 0 ? (int) health : 0);
 		p.setHealth((double) desired);
 	}
 	
