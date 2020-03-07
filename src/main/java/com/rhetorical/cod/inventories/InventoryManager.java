@@ -1368,6 +1368,10 @@ public class InventoryManager implements Listener {
 
 	@EventHandler
 	public void itemUseListener(PlayerInteractEvent e) {
+
+		if (!GameManager.isInMatch(e.getPlayer()))
+			return;
+
 		if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK || e.getAction() == Action.LEFT_CLICK_AIR || e.getAction() == Action.LEFT_CLICK_BLOCK) {
 
 			ItemStack item;
