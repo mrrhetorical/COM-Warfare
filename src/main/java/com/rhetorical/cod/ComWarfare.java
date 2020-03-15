@@ -88,13 +88,13 @@ public class ComWarfare extends JavaPlugin {
 	private boolean hasCS = false;
 	private boolean hasProtocol = false;
 
-	private String reward_highestKD;
-	private String reward_highestScore;
-	public String reward_maxLevel;
-	public String reward_maxPrestige;
-	public String reward_maxPrestigeMaxLevel;
+	private String reward_highestKD =  "";
+	private String reward_highestScore = "";
+	public String reward_maxLevel = "";
+	public String reward_maxPrestige = "";
+	public String reward_maxPrestigeMaxLevel = "";
 
-	private String lobbyServer;
+	private String lobbyServer = "";
 
 	public double knifeDamage = 100d;
 
@@ -108,13 +108,6 @@ public class ComWarfare extends JavaPlugin {
 	final String rid = "%%__RESOURCE__%%";
 	final String nonce = "%%__NONCE__%%";
 
-	@Override
-	public void onLoad() {
-		hasQA = Bukkit.getServer().getPluginManager().getPlugin("QualityArmory") != null;
-		hasCS = Bukkit.getServer().getPluginManager().getPlugin("CrackShot") != null;
-		hasProtocol = Bukkit.getServer().getPluginManager().getPlugin("ProtocolLib") != null;
-	}
-
 	/**
 	 * Sets up the plugin and loads various information handlers such as the killstreak manager, loadout manager, etc.
 	 * */
@@ -125,6 +118,10 @@ public class ComWarfare extends JavaPlugin {
 			return;
 
 		instance = this;
+
+		hasQA = Bukkit.getServer().getPluginManager().getPlugin("QualityArmory") != null;
+		hasCS = Bukkit.getServer().getPluginManager().getPlugin("CrackShot") != null;
+		hasProtocol = Bukkit.getServer().getPluginManager().getPlugin("ProtocolLib") != null;
 
 		ComVersion.setup(true);
 
@@ -214,8 +211,11 @@ public class ComWarfare extends JavaPlugin {
 		AssignmentFile.setup(getPlugin());
 		SoundFile.setup(getPlugin());
 
-		QualityGun.setup();
-		CrackShotGun.setup();
+		if (hasQualityArms())
+			QualityGun.setup();
+
+		if (hasCrackShot())
+			CrackShotGun.setup();
 
 		ProgressionManager.getInstance();
 		PerkManager.getInstance();
