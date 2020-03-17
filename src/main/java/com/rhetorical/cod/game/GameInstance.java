@@ -2222,7 +2222,7 @@ public class GameInstance implements Listener {
 
 		if (heldWeapon.getType() == Material.DIAMOND_SWORD || heldWeapon.getType() == gSwordMat || heldWeapon.getType() == Material.IRON_SWORD || heldWeapon.getType() == Material.STONE_SWORD || heldWeapon.getType() == wSwordMat) {
 			e.setCancelled(true);
-			damage = ComWarfare.getDefaultHealth() * ComWarfare.getInstance().knifeDamage;
+			damage = ComWarfare.getInstance().knifeDamage;
 		} else {
 			e.setDamage(0);
 			return;
