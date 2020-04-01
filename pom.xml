@@ -4,7 +4,7 @@
 	<groupId>com.rhetorical</groupId>
 	<artifactId>com-warfare</artifactId>
 	<packaging>jar</packaging>
-	<version>2.13.9.${buildNumber}</version>
+	<version>2.13.10.${buildNumber}</version>
 	<name>COM-Warfare</name>
 	<properties>
 		<buildNumber>${env.BUILD_NUMBER}</buildNumber>
@@ -78,7 +78,7 @@
 		<dependency>
 			<groupId>me.zombie_striker</groupId>
 			<artifactId>QualityArmory</artifactId>
-			<version>1.1.154</version>
+			<version>1.1.162b</version>
 			<scope>provided</scope>
 		</dependency>
 

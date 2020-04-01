@@ -22,30 +22,19 @@ public class QualityGun implements Listener {
 	}
 
     static ItemStack getGunForName(String name) {
-        return getGunByName(name);
+        return getCustomItemByName(name);
     }
 
     static ItemStack getAmmoForName(String name) {
-        return getAmmoByName(name);
+        return getCustomItemByName(name);
     }
 
-    private static ItemStack getGunByName(String name) {
+    private static ItemStack getCustomItemByName(String name) {
 		ItemStack stack = null;
 
 		try {
-			stack = me.zombie_striker.qg.api.QualityArmory.getCustomItem(me.zombie_striker.qg.api.QualityArmory.getGunByName(name));
-
-		} catch(Error|Exception ignored) {
-		}
-
-		return stack != null ? stack : new ItemStack(Material.AIR);
-	}
-
-	private static ItemStack getAmmoByName(String name) {
-		ItemStack stack = null;
-
-		try {
-			stack = me.zombie_striker.qg.api.QualityArmory.getCustomItem(me.zombie_striker.qg.api.QualityArmory.getAmmoByName(name));
+//			stack = me.zombie_striker.qg.api.QualityArmory.getGunItemStack(me.zombie_striker.qg.api.QualityArmory.getCustomItemByName(name));
+			stack = me.zombie_striker.qg.api.QualityArmory.getCustomItemAsItemStack(name);
 
 		} catch(Error|Exception ignored) {
 		}

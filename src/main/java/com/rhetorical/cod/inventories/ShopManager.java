@@ -427,19 +427,17 @@ public class ShopManager {
 		return false;
 	}
 
-	private void unlockGun(HashMap<Player, ArrayList<CodGun>> purchased, Player p, CodGun gun) {
-		ArrayList<CodGun> guns = purchased.get(p);
+	private void unlockGun(Player p, CodGun gun, boolean showMessage) {
 
-		guns.add(gun);
+		HashMap<Player, ArrayList<CodGun>> purchased = ShopManager.getInstance().getPurchasedGuns();
 
-		purchased.put(p, guns);
+		purchased.get(p).add(gun);
 
-		ShopManager.getInstance().setPurchasedGuns(purchased);
-
-		ComWarfare.sendMessage(p, ComWarfare.getPrefix() + Lang.WEAPON_UNLOCKED.getMessage().replace("{gun-name}", gun.getName()), ComWarfare.getLang());
+		if (showMessage)
+			ComWarfare.sendMessage(p, ComWarfare.getPrefix() + Lang.WEAPON_UNLOCKED.getMessage().replace("{gun-name}", gun.getName()), ComWarfare.getLang());
 	}
 
-	private void unlockGrenade(Player p, CodWeapon grenade) {
+	private void unlockGrenade(Player p, CodWeapon grenade, boolean showMessage) {
 		if (grenade.getType() == UnlockType.LEVEL) {
 
 			HashMap<Player, ArrayList<CodWeapon>> purchased = ShopManager.getInstance().getPurchasedWeapons();
@@ -456,19 +454,19 @@ public class ShopManager {
 
 					ShopManager.getInstance().setPurchasedWeapons(purchased);
 
-					ComWarfare.sendMessage(p, ComWarfare.getPrefix() + Lang.WEAPON_UNLOCKED.getMessage().replace("{gun-name}", grenade.getName()), ComWarfare.getLang());
-
+					if (showMessage)
+						ComWarfare.sendMessage(p, ComWarfare.getPrefix() + Lang.WEAPON_UNLOCKED.getMessage().replace("{gun-name}", grenade.getName()), ComWarfare.getLang());
 				}
 			}
 		} else if (grenade.getType() == UnlockType.BOTH) {
-			if (ProgressionManager.getInstance().getLevel(p) == grenade.getLevelUnlock() && grenade.isShowInShop()) {
+			if (ProgressionManager.getInstance().getLevel(p) == grenade.getLevelUnlock() && grenade.isShowInShop() && showMessage) {
 				ComWarfare.sendMessage(p,
 						ComWarfare.getPrefix() + Lang.WEAPON_PURCHASE_UNLOCKED.getMessage().replace("{gun-name}", grenade.getName()), ComWarfare.getLang());
 			}
 		}
 	}
 
-	public void checkForNewGuns(Player p) {
+	public void checkForNewGuns(Player p, boolean showMessage) {
 
 		ShopManager.getInstance().loadPurchaseData(p);
 
@@ -482,11 +480,11 @@ public class ShopManager {
 
 					if (ProgressionManager.getInstance().getLevel(p) >= gun.getLevelUnlock()) {
 
-						unlockGun(purchased, p, gun);
+						unlockGun(p, gun, showMessage);
 					}
 				}
 			} else if (gun.getType() == UnlockType.BOTH) {
-				if (ProgressionManager.getInstance().getLevel(p) == gun.getLevelUnlock() && gun.isShowInShop()) {
+				if (ProgressionManager.getInstance().getLevel(p) == gun.getLevelUnlock() && gun.isShowInShop() && showMessage) {
 					ComWarfare.sendMessage(p, ComWarfare.getPrefix() + Lang.WEAPON_PURCHASE_UNLOCKED.getMessage().replace("{gun-name}", gun.getName()), ComWarfare.getLang());
 				}
 			}
@@ -502,11 +500,11 @@ public class ShopManager {
 				if (!purchased.get(p).contains(gun)) {
 
 					if (ProgressionManager.getInstance().getLevel(p) >= gun.getLevelUnlock()) {
-						unlockGun(purchased, p, gun);
+						unlockGun(p, gun, showMessage);
 					}
 				}
 			} else if (gun.getType() == UnlockType.BOTH) {
-				if (ProgressionManager.getInstance().getLevel(p) >= gun.getLevelUnlock() && gun.isShowInShop()) {
+				if (ProgressionManager.getInstance().getLevel(p) >= gun.getLevelUnlock() && gun.isShowInShop() && showMessage) {
 					ComWarfare.sendMessage(p, ComWarfare.getPrefix() + Lang.WEAPON_PURCHASE_UNLOCKED.getMessage().replace("{gun-name}", gun.getName()), ComWarfare.getLang());
 				}
 			}
@@ -515,12 +513,12 @@ public class ShopManager {
 
 		List<CodWeapon> lethalGrenades = new ArrayList<>(getLethalWeapons());
 		for (CodWeapon grenade : lethalGrenades) {
-			unlockGrenade(p, grenade);
+			unlockGrenade(p, grenade, showMessage);
 		}
 
 		List<CodWeapon> tacticalGrenades = getTacticalWeapons();
 		for (CodWeapon grenade : tacticalGrenades) {
-			unlockGrenade(p, grenade);
+			unlockGrenade(p, grenade, showMessage);
 		}
 
 		this.savePurchaseData(p);

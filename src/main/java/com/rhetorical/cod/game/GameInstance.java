@@ -465,8 +465,6 @@ public class GameInstance implements Listener {
 		if (!players.contains(p))
 			return;
 
-		ShopManager.getInstance().checkForNewGuns(p);
-
 //		if (isLegacy)
 		p.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
 
@@ -771,7 +769,7 @@ public class GameInstance implements Listener {
 	 * */
 	private void assignTeams() {
 
-		if (getGamemode() != Gamemode.FFA && getGamemode() != Gamemode.OITC && getGamemode() != Gamemode.GUN) {
+		if (getGamemode() != Gamemode.FFA && getGamemode() != Gamemode.OITC && getGamemode() != Gamemode.GUN && getGamemode() != Gamemode.INFECT) {
 			for (Player p : players) {
 				if (blueTeam.contains(p) || redTeam.contains(p))
 					continue;
@@ -792,14 +790,23 @@ public class GameInstance implements Listener {
 				ComWarfare.sendMessage(p, Lang.ASSIGNED_TO_TEAM.getMessage().replace("{team-color}", tColor + "").replace("{team}", team), ComWarfare.getLang());
 			}
 		} else if (getGamemode() == Gamemode.INFECT) {
-			Collections.shuffle(players);
-			for (Player p : players) {
-				if (redTeam.size() > 0) {
+			List<Player> pls = new ArrayList<>(getPlayers());
+			Collections.shuffle(pls);
+			for (Player p : pls) {
+				ChatColor tColor;
+				String team;
+				if (redTeam.isEmpty()) {
+					redTeam.add(p);
+					tColor = ChatColor.RED;
+					team = "red";
+				} else {
 					blueTeam.add(p);
-					continue;
+					tColor = ChatColor.BLUE;
+					team = "blue";
 				}
 
-				redTeam.add(p);
+
+				ComWarfare.sendMessage(p, Lang.ASSIGNED_TO_TEAM.getMessage().replace("{team-color}", tColor + "").replace("{team}", team), ComWarfare.getLang());
 			}
 		} else {
 			for (Player p : players) {
@@ -875,8 +882,6 @@ public class GameInstance implements Listener {
 			AssignmentManager.getInstance().updateAssignments(p, 0, getGamemode(), won);
 
 			AssignmentManager.getInstance().save(p);
-
-			ShopManager.getInstance().checkForNewGuns(p);
 
 			if (freeForAllBar.containsKey(p)) {
 				try {
@@ -1197,9 +1202,6 @@ public class GameInstance implements Listener {
 		entityManager.clearEntities();
 
 		if (!newRound) {
-			//todo: remove
-			Bukkit.getLogger().info(String.format("Starting game with mode %s on map %s!", getGamemode().toString(), getMap().getName()));
-
 			setState(GameState.IN_GAME);
 
 			try {
@@ -1380,14 +1382,9 @@ public class GameInstance implements Listener {
 						blueFlag.checkNearbyPlayers();
 				}
 
-				if (currentMap.getGamemode() == Gamemode.INFECT) {
+				if (getGamemode() == Gamemode.INFECT) {
 					blueTeamScore = blueTeam.size();
 					redTeamScore = redTeam.size();
-
-					if (blueTeam.size() == 0) {
-						endGameByScore(this);
-						return;
-					}
 				}
 
 				if (currentMap.getGamemode() != Gamemode.FFA && currentMap.getGamemode() != Gamemode.OITC && currentMap.getGamemode() != Gamemode.GUN) {
@@ -1522,7 +1519,14 @@ public class GameInstance implements Listener {
 					}
 				}
 
-				if (currentMap.getGamemode().equals(Gamemode.FFA)) {
+				if (getGamemode() == Gamemode.INFECT) {
+					if (blueTeamScore == 0 && t < time - 5) {
+						endGameByScore(this);
+						return;
+					}
+				}
+
+				if (getGamemode().equals(Gamemode.FFA)) {
 					for (Player p : players) {
 						if (ffaPlayerScores.get(p) >= maxScore_FFA) {
 							endGameByScore(this);
@@ -1531,7 +1535,7 @@ public class GameInstance implements Listener {
 					}
 				}
 
-				if(currentMap.getGamemode().equals(Gamemode.OITC)) {
+				if(getGamemode().equals(Gamemode.OITC)) {
 					for(Player p : getPlayers()) {
 						boolean lastManStanding = true;
 						for(Player other : getPlayers()) {
@@ -1549,7 +1553,7 @@ public class GameInstance implements Listener {
 					}
 				}
 
-				if (currentMap.getGamemode().equals(Gamemode.GUN)) {
+				if (getGamemode().equals(Gamemode.GUN)) {
 					for (Player p : players) {
 						if (ffaPlayerScores.get(p) >= maxScore_GUN) {
 							endGameByScore(this);
@@ -1654,8 +1658,8 @@ public class GameInstance implements Listener {
 			return highestScoringPlayer.getDisplayName();
 		}
 
-		if (getGamemode() == Gamemode.INFECT && blueTeamScore > 0) {
-			return "blue";
+		if (getGamemode() == Gamemode.INFECT) {
+			return blueTeamScore > 0 ? "blue" : "red";
 		}
 
 		if (redNukeActive)
@@ -3273,7 +3277,7 @@ public class GameInstance implements Listener {
 			gameTime = ComWarfare.getPlugin().getConfig().getInt("gameTime." + getGamemode().toString());
 		} else {
 			if (ComVersion.getPurchased())
-				gameTime = ComWarfare.getPlugin().getConfig().getInt("maxScore.Gamemode.INFECT");
+				gameTime = ComWarfare.getPlugin().getConfig().getInt("maxScore.INFECT");
 			else
 				gameTime = 120;
 		}
