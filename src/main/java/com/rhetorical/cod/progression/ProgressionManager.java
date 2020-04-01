@@ -69,7 +69,7 @@ public class ProgressionManager {
 		if (level > getLevel(p)) {
 			for (int i = getLevel(p) + 1; i <= level; i++) {
 				this.level.put(p, i);
-				ShopManager.getInstance().checkForNewGuns(p);
+				ShopManager.getInstance().checkForNewGuns(p, showMessage);
 			}
 		} else {
 			this.level.put(p, level);
@@ -95,7 +95,7 @@ public class ProgressionManager {
 			p.sendMessage(ComWarfare.getPrefix() + Lang.RANK_UP_READY_TO_PRESTIGE.getMessage());
 		}
 
-		ShopManager.getInstance().checkForNewGuns(p);
+		ShopManager.getInstance().checkForNewGuns(p, true);
 	}
 
 	public int getLevel(Player p) {

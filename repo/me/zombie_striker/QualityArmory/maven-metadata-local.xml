@@ -3,10 +3,11 @@
   <groupId>me.zombie_striker</groupId>
   <artifactId>QualityArmory</artifactId>
   <versioning>
-    <release>1.1.154</release>
+    <release>1.1.162b</release>
     <versions>
       <version>1.1.154</version>
+      <version>1.1.162b</version>
     </versions>
-    <lastUpdated>20200122182702</lastUpdated>
+    <lastUpdated>20200401210946</lastUpdated>
   </versioning>
 </metadata>

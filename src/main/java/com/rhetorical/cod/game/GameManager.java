@@ -230,7 +230,7 @@ public class GameManager {
 	 * Loads all data associated with the player relevant to playing a match of COM-Warfare.
 	 * */
 	private static void loadPlayerData(Player p) {
-		ShopManager.getInstance().checkForNewGuns(p);
+		ShopManager.getInstance().checkForNewGuns(p, false);
 
 		try  {
 			LoadoutManager.getInstance().load(p);
