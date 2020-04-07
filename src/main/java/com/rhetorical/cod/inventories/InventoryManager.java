@@ -43,6 +43,8 @@ public class InventoryManager implements Listener {
 
 	public ItemStack closeInv = new ItemStack(Material.BARRIER);
 	public ItemStack backInv = new ItemStack(Material.REDSTONE);
+	public ItemStack prevPage = new ItemStack(Material.ARROW);
+	public ItemStack nextPage = new ItemStack(Material.ARROW);
 
 	public Inventory mainInventory;
 	public Inventory mainShopInventory;
@@ -79,6 +81,10 @@ public class InventoryManager implements Listener {
 	public ItemStack selectClass = new ItemStack(Material.CHEST);
 
 	public boolean shouldCancelClick(Inventory i, Player p) {
+		if (i.getHolder() instanceof COMInventoryHolder)
+			if(((COMInventoryHolder) i.getHolder()).isCancelClick())
+				return true;
+
 		if (i.equals(mainInventory)) {
 			return true;
 		}
@@ -95,7 +101,7 @@ public class InventoryManager implements Listener {
 			}
 		}
 
-		return i.equals(this.selectClassInventory.get(p)) || i.equals(leaderboardInventory) || i.equals(personalStatistics.get(p)) || i.equals(mainShopInventory) || i.equals(ShopManager.getInstance().gunShop.get(p)) || i.equals(ShopManager.getInstance().weaponShop.get(p)) || i.equals(ShopManager.getInstance().perkShop.get(p))
+		return i.equals(this.selectClassInventory.get(p)) || i.equals(leaderboardInventory) || i.equals(personalStatistics.get(p)) || i.equals(mainShopInventory) || i.equals(ShopManager.getInstance().weaponShop.get(p)) || i.equals(ShopManager.getInstance().perkShop.get(p))
 				|| i.equals(this.mainKillStreakInventory.get(p))
 				|| i.equals(this.assignmentsInventory.get(p))
 				|| i.equals(this.killStreakInventory1.get(p)) || i.equals(this.killStreakInventory2.get(p)) || i.equals(this.killStreakInventory3.get(p));
@@ -124,6 +130,15 @@ public class InventoryManager implements Listener {
 	}
 
 	private void setupStaticItems() {
+
+		ItemMeta prevPageMeta = prevPage.getItemMeta();
+		prevPageMeta.setDisplayName(Lang.INVENTORY_PREV_PAGE_BUTTON_NAME.getMessage());
+		prevPage.setItemMeta(prevPageMeta);
+
+		ItemMeta nextPageMeta = nextPage.getItemMeta();
+		nextPageMeta.setDisplayName(Lang.INVENTORY_NEXT_PAGE_BUTTON_NAME.getMessage());
+		nextPage.setItemMeta(nextPageMeta);
+
 		ItemMeta closeInvMeta = closeInv.getItemMeta();
 		closeInvMeta.setDisplayName(Lang.INVENTORY_CLOSE_BUTTON_NAME.getMessage());
 		closeInv.setItemMeta(closeInvMeta);
@@ -408,38 +423,168 @@ public class InventoryManager implements Listener {
 	}
 
 	public void setupPlayerSelectionInventories(Player p) {
-		for (Loadout loadout : LoadoutManager.getInstance().getLoadouts(p)) {
+		List<Loadout> loadouts = LoadoutManager.getInstance().getLoadouts(p);
+		for (int k = 0; k < loadouts.size(); k++) {
+			Loadout loadout = loadouts.get(k);
 
 			ShopManager.getInstance().loadPurchaseData(p);
 
-			Inventory primary = Bukkit.createInventory(p, 36, "Primary Weapons");
-			Inventory secondary = Bukkit.createInventory(p, 36, "Secondary Weapons");
-			Inventory lethal = Bukkit.createInventory(p, 27, "Lethal Grenades");
-			Inventory tactical = Bukkit.createInventory(p, 27, "Tactical Grenades");
+			Inventory primary = null,
+					secondary = null,
+					lethal = null,
+					tactical = null;
+
+			List<CodGun> purchasedPrimaries = new ArrayList<>(),
+					purchasedSecondaries = new ArrayList<>();
+			List<CodWeapon> purchasedLethals = new ArrayList<>(),
+					purchasedTacticals = new ArrayList<>();
+
+			for (CodGun gun : ShopManager.getInstance().getPurchasedGuns().get(p))
+				if (gun.getGunType() == GunType.Primary)
+					purchasedPrimaries.add(gun);
+				else
+					purchasedSecondaries.add(gun);
+
+			for (CodWeapon weapon : ShopManager.getInstance().getPurchasedWeapons().get(p))
+				if (weapon.getWeaponType() == WeaponType.LETHAL)
+					purchasedLethals.add(weapon);
+				else
+					purchasedTacticals.add(weapon);
+
+			int primaryPages = (int) Math.ceil(((float) purchasedPrimaries.size()) / 27f),
+					secondaryPages = (int) Math.ceil(((float) purchasedSecondaries.size()) / 27f),
+					lethalPages = (int) Math.ceil(((float) purchasedLethals.size()) / 27f),
+					tacticalPages = (int) Math.ceil(((float) purchasedTacticals.size()) / 27f);
+
+			primaryPages = primaryPages == 0 ? 1 : primaryPages;
+			secondaryPages = secondaryPages == 0 ? 1 : secondaryPages;
+			lethalPages = lethalPages == 0 ? 1 : lethalPages;
+			tacticalPages = tacticalPages == 0 ? 1 : tacticalPages;
+
+			Inventory prevInventoryPage = null;
+
+			for (int page = 0; page < primaryPages; page++) {
+
+				Inventory inv = Bukkit.createInventory(new COMInventoryHolder(true, GUIGroup.PRIMARY_SELECTION, prevInventoryPage, null, k), 36, Lang.SELECT_PRIMARY_TITLE.getMessage().replace("{page}", Integer.toString(page + 1)));
+
+				if (prevInventoryPage != null)
+					if (prevInventoryPage.getHolder() instanceof COMInventoryHolder) {
+						((COMInventoryHolder) prevInventoryPage.getHolder()).setNext(inv);
+					}
+
+				prevInventoryPage = inv;
+
+				for (int i = 0; i < 27 && !purchasedPrimaries.isEmpty(); i++) {
+					CodGun gun = purchasedPrimaries.remove(0);
+					inv.addItem(gun.getMenuItem());
+				}
+
+				if (page != 0)
+					inv.setItem(30, prevPage);
+
+				if (page != primaryPages - 1)
+					inv.setItem(32, nextPage);
+
+				inv.setItem(31, backInv);
+
+				if (primary == null)
+					primary = inv;
+			}
+
+			prevInventoryPage = null;
+
+			for (int page = 0; page < secondaryPages; page++) {
+
+				Inventory inv = Bukkit.createInventory(new COMInventoryHolder(true, GUIGroup.SECONDARY_SELECTION, prevInventoryPage, null, k), 36, Lang.SELECT_SECONDARY_TITLE.getMessage().replace("{page}", Integer.toString(page + 1)));
+
+				if (prevInventoryPage != null)
+					if (prevInventoryPage.getHolder() instanceof COMInventoryHolder) {
+						((COMInventoryHolder) prevInventoryPage.getHolder()).setNext(inv);
+					}
+
+				prevInventoryPage = inv;
+
+				for (int i = 0; i < 27 && !purchasedSecondaries.isEmpty(); i++) {
+					CodGun gun = purchasedSecondaries.remove(0);
+					inv.addItem(gun.getMenuItem());
+				}
+
+				if (page != 0)
+					inv.setItem(30, prevPage);
+
+				if (page != secondaryPages - 1)
+					inv.setItem(32, nextPage);
+
+				inv.setItem(31, backInv);
+
+				if (secondary == null)
+					secondary = inv;
+			}
+
+			prevInventoryPage = null;
+
+			for (int page = 0; page < lethalPages; page++) {
+
+				Inventory inv = Bukkit.createInventory(new COMInventoryHolder(true, GUIGroup.LETHAL_SELECTION, prevInventoryPage, null, k), 36, Lang.SELECT_LETHAL_TITLE.getMessage().replace("{page}", Integer.toString(page + 1)));
+
+				if (prevInventoryPage != null)
+					if (prevInventoryPage.getHolder() instanceof COMInventoryHolder) {
+						((COMInventoryHolder) prevInventoryPage.getHolder()).setNext(inv);
+					}
+
+				prevInventoryPage = inv;
+
+				for (int i = 0; i < 27 && !purchasedLethals.isEmpty(); i++) {
+					CodWeapon gun = purchasedLethals.remove(0);
+					inv.addItem(gun.getMenuItem());
+				}
+
+				if (page != 0)
+					inv.setItem(30, prevPage);
+
+				if (page != lethalPages - 1)
+					inv.setItem(32, nextPage);
+
+				inv.setItem(31, backInv);
+
+				if (lethal == null)
+					lethal = inv;
+			}
+
+			prevInventoryPage = null;
+
+			for (int page = 0; page < tacticalPages; page++) {
+
+				Inventory inv = Bukkit.createInventory(new COMInventoryHolder(true, GUIGroup.TACTICAL_SELECTION, prevInventoryPage, null, k), 36, Lang.SELECT_TACTICAL_TITLE.getMessage().replace("{page}", Integer.toString(page + 1)));
+
+				if (prevInventoryPage != null)
+					if (prevInventoryPage.getHolder() instanceof COMInventoryHolder) {
+						((COMInventoryHolder) prevInventoryPage.getHolder()).setNext(inv);
+					}
+
+				prevInventoryPage = inv;
+
+				for (int i = 0; i < 27 && !purchasedTacticals.isEmpty(); i++) {
+					CodWeapon gun = purchasedTacticals.remove(0);
+					inv.addItem(gun.getMenuItem());
+				}
+
+				if (page != 0)
+					inv.setItem(30, prevPage);
+
+				if (page != tacticalPages - 1)
+					inv.setItem(32, nextPage);
+
+				inv.setItem(31, backInv);
+
+				if (tactical == null)
+					tactical = inv;
+			}
+
+
 			Inventory perk1 = Bukkit.createInventory(p, 27, "Perk One");
 			Inventory perk2 = Bukkit.createInventory(p, 27, "Perk Two");
 			Inventory perk3 = Bukkit.createInventory(p, 27, "Perk Three");
-
-			// primary.addItem(LoadoutManager.getInstance().getDefaultPrimary().getMenuItem());
-			// secondary.addItem(LoadoutManager.getInstance().getDefaultSecondary().getMenuItem());
-			// lethal.addItem(LoadoutManager.getInstance().getDefaultLethal().getMenuItem());
-			// tactical.addItem(LoadoutManager.getInstance().getDefaultTactical().getMenuItem());
-
-			for (CodGun gun : ShopManager.getInstance().getPurchasedGuns().get(p)) {
-				if (gun.getGunType() == GunType.Primary) {
-					primary.addItem(gun.getMenuItem());
-				} else {
-					secondary.addItem(gun.getMenuItem());
-				}
-			}
-
-			for (CodWeapon weapon : ShopManager.getInstance().getPurchasedWeapons().get(p)) {
-				if (weapon.getWeaponType() == WeaponType.LETHAL) {
-					lethal.addItem(weapon.getMenuItem());
-				} else {
-					tactical.addItem(weapon.getMenuItem());
-				}
-			}
 
 			for (CodPerk perk : ShopManager.getInstance().getPerks(p)) {
 				if (perk.getSlot().equals(PerkSlot.ONE)) {
@@ -451,10 +596,6 @@ public class InventoryManager implements Listener {
 				}
 			}
 
-			primary.setItem(35, backInv);
-			secondary.setItem(35, backInv);
-			lethal.setItem(26, backInv);
-			tactical.setItem(26, backInv);
 			perk1.setItem(26, backInv);
 			perk2.setItem(26, backInv);
 			perk3.setItem(26, backInv);
@@ -522,68 +663,127 @@ public class InventoryManager implements Listener {
 	}
 
 	private void setupShopInventories(Player p) {
-		Inventory gunShop = Bukkit.createInventory(p, 36, Lang.INVENTORY_GUN_SHOP_NAME.getMessage());
-		Inventory weaponShop = Bukkit.createInventory(p, 36, Lang.INVENTORY_GRENADE_SHOP_NAME.getMessage());
+		Inventory gunShop = null;
+//		Inventory gunShop = Bukkit.createInventory(p, 36, Lang.INVENTORY_GUN_SHOP_NAME.getMessage());
+//		Inventory weaponShop = Bukkit.createInventory(p, 36, Lang.INVENTORY_GRENADE_SHOP_NAME.getMessage());
+		Inventory weaponShop = null;
 		Inventory perkShop = Bukkit.createInventory(p, 36, Lang.INVENTORY_PERK_SHOP_NAME.getMessage());
+
+
 
 		List<CodGun> guns = new ArrayList<>(ShopManager.getInstance().getPrimaryGuns());
 		guns.addAll(ShopManager.getInstance().getSecondaryGuns());
 
-		for (CodGun gun : guns) {
-			if (gun.getType() == UnlockType.BOTH || gun.getType() == UnlockType.CREDITS) {
-				if (((gun.getType() == UnlockType.CREDITS || ProgressionManager.getInstance().getLevel(p) >= gun.getLevelUnlock())) && !ShopManager.getInstance().getPurchasedGuns().get(p).contains(gun)) {
+		int gunShopPages = (int) Math.ceil(((float) guns.size()) / 27f);
+		gunShopPages = gunShopPages == 0 ? 1 : gunShopPages;
 
-					if (!gun.isShowInShop())
-						continue;
+		Inventory gunShopPrev = null;
 
-					ItemStack item = gun.getMenuItem();
+		for (int page = 0; page < gunShopPages; page++) {
+			Inventory inv = Bukkit.createInventory(new COMInventoryHolder(true, GUIGroup.SHOP_GUN, gunShopPrev, null), 36, Lang.GUN_SHOP_TITLE.getMessage().replace("{page}", Integer.toString(page + 1)));
 
-					ItemMeta gunMeta = item.getItemMeta();
-
-					ArrayList<String> lore = new ArrayList<>();
-					lore.add(ChatColor.RESET + gun.getName());
-					lore.add(Lang.SHOP_COST.getMessage() + ": " + gun.getCreditUnlock());
-
-					gunMeta.setLore(lore);
-
-					item.setItemMeta(gunMeta);
-
-					gunShop.addItem(item);
-
+			if (gunShopPrev != null)
+				if (gunShopPrev.getHolder() instanceof COMInventoryHolder) {
+					((COMInventoryHolder) gunShopPrev.getHolder()).setNext(inv);
 				}
 
+			gunShopPrev = inv;
+
+			for (int i = 0; i < 27 && !guns.isEmpty(); i++) {
+				CodGun gun = guns.get(0);
+				if (gun.getType() == UnlockType.BOTH || gun.getType() == UnlockType.CREDITS) {
+					if (((gun.getType() == UnlockType.CREDITS || ProgressionManager.getInstance().getLevel(p) >= gun.getLevelUnlock())) && !ShopManager.getInstance().getPurchasedGuns().get(p).contains(gun)) {
+
+						if (!gun.isShowInShop())
+							continue;
+
+						ItemStack item = gun.getMenuItem();
+
+						ItemMeta gunMeta = item.getItemMeta();
+
+						ArrayList<String> lore = new ArrayList<>();
+						lore.add(ChatColor.RESET + gun.getName());
+						lore.add(Lang.SHOP_COST.getMessage() + ": " + gun.getCreditUnlock());
+
+						gunMeta.setLore(lore);
+
+						item.setItemMeta(gunMeta);
+
+						inv.addItem(item);
+
+					}
+				}
+				guns.remove(0);
 			}
 
+			if (page != 0)
+				inv.setItem(30, prevPage);
+
+			if (page != gunShopPages - 1)
+				inv.setItem(32, nextPage);
+
+			inv.setItem(31, backInv);
+
+			if (page == 0)
+				gunShop = inv;
 		}
 
 		List<CodWeapon> grenades = new ArrayList<>(ShopManager.getInstance().getLethalWeapons());
 		grenades.addAll(ShopManager.getInstance().getTacticalWeapons());
 
-		for (CodWeapon grenade : grenades) {
-			if (grenade.getType() == UnlockType.BOTH || grenade.getType() == UnlockType.CREDITS) {
-				if (((grenade.getType() == UnlockType.CREDITS || ProgressionManager.getInstance().getLevel(p) >= grenade.getLevelUnlock()) && !ShopManager.getInstance().getPurchasedWeapons().get(p).contains(grenade))) {
+		int grenadeShopPages = (int) Math.ceil(((float) grenades.size()) / 27f);
+		grenadeShopPages = grenadeShopPages == 0 ? 1 : grenadeShopPages;
 
-					if (!grenade.isShowInShop())
-						continue;
+		Inventory grenadeShopPrev = null;
 
-					ItemStack item = grenade.getMenuItem();
+		for (int page = 0; page < grenadeShopPages; page++) {
+			Inventory inv = Bukkit.createInventory(new COMInventoryHolder(true, GUIGroup.SHOP_GRENADE, grenadeShopPrev, null), 36, Lang.GRENADE_SHOP_TITLE.getMessage().replace("{page}", Integer.toString(page + 1)));
 
-					ItemMeta gunMeta = item.getItemMeta();
-
-					if (gunMeta != null) {
-						ArrayList<String> lore = new ArrayList<>();
-						lore.add(ChatColor.RESET + grenade.getName());
-						lore.add(Lang.SHOP_COST.getMessage() + ": " + grenade.getCreditUnlock());
-						gunMeta.setLore(lore);
-						item.setItemMeta(gunMeta);
-					}
-
-					if (!weaponShop.contains(item))
-						weaponShop.addItem(item);
+			if (grenadeShopPrev != null)
+				if (grenadeShopPrev.getHolder() instanceof COMInventoryHolder) {
+					((COMInventoryHolder) grenadeShopPrev.getHolder()).setNext(inv);
 				}
 
+			grenadeShopPrev = inv;
+
+			for (int i = 0; i < 27 && !grenades.isEmpty(); i++) {
+				CodWeapon grenade = grenades.get(0);
+				if (grenade.getType() == UnlockType.BOTH || grenade.getType() == UnlockType.CREDITS) {
+					if (((grenade.getType() == UnlockType.CREDITS || ProgressionManager.getInstance().getLevel(p) >= grenade.getLevelUnlock()) && !ShopManager.getInstance().getPurchasedWeapons().get(p).contains(grenade))) {
+
+						if (!grenade.isShowInShop())
+							continue;
+
+						ItemStack item = grenade.getMenuItem();
+
+						ItemMeta gunMeta = item.getItemMeta();
+
+						if (gunMeta != null) {
+							ArrayList<String> lore = new ArrayList<>();
+							lore.add(ChatColor.RESET + grenade.getName());
+							lore.add(Lang.SHOP_COST.getMessage() + ": " + grenade.getCreditUnlock());
+							gunMeta.setLore(lore);
+							item.setItemMeta(gunMeta);
+						}
+
+						if (!inv.contains(item))
+							inv.addItem(item);
+					}
+
+				}
+				grenades.remove(0);
 			}
 
+			if (page != 0)
+				inv.setItem(30, prevPage);
+
+			if (page != grenadeShopPages - 1)
+				inv.setItem(32, nextPage);
+
+			inv.setItem(31, backInv);
+
+			if (page == 0)
+				weaponShop = inv;
 		}
 
 		ArrayList<CodPerk> perks = PerkManager.getInstance().getAvailablePerks();
@@ -612,8 +812,6 @@ public class InventoryManager implements Listener {
 
 		}
 
-		gunShop.setItem(35, backInv);
-		weaponShop.setItem(35, backInv);
 		perkShop.setItem(35, backInv);
 
 		ShopManager.getInstance().gunShop.put(p, gunShop);
@@ -948,6 +1146,11 @@ public class InventoryManager implements Listener {
 		if (e.getCurrentItem() == null || e.getCurrentItem().getType() == Material.AIR)
 			return;
 
+		COMInventoryHolder holder = null;
+
+		if ((e.getInventory().getHolder() instanceof COMInventoryHolder))
+			holder = (COMInventoryHolder) e.getInventory().getHolder();
+
 		if (e.getCurrentItem().equals(closeInv)) {
 			p.closeInventory();
 			return;
@@ -1046,10 +1249,22 @@ public class InventoryManager implements Listener {
 				}
 			}
 
-		} else if (ShopManager.getInstance().gunShop.get(p) != null && e.getInventory().equals(ShopManager.getInstance().gunShop.get(p))) {
+		} else if (ShopManager.getInstance().gunShop.get(p) != null && holder != null && holder.getGroup() == GUIGroup.SHOP_GUN) {
 
 			if (e.getCurrentItem().equals(backInv)) {
 				p.openInventory(mainShopInventory);
+				return;
+			}
+
+			if (e.getCurrentItem().equals(prevPage)) {
+				if (holder.getPrev() != null)
+					p.openInventory(holder.getPrev());
+				return;
+			}
+
+			if (e.getCurrentItem().equals(nextPage)) {
+				if (holder.getNext() != null)
+					p.openInventory(holder.getNext());
 				return;
 			}
 
@@ -1082,10 +1297,22 @@ public class InventoryManager implements Listener {
 				}
 			}
 
-		} else if (e.getInventory().equals(ShopManager.getInstance().weaponShop.get(p))) {
+		} else if (ShopManager.getInstance().weaponShop.get(p) != null && holder != null && holder.getGroup() == GUIGroup.SHOP_GRENADE) {
 
 			if (e.getCurrentItem().equals(backInv)) {
 				p.openInventory(mainShopInventory);
+				return;
+			}
+
+			if (e.getCurrentItem().equals(prevPage)) {
+				if (holder.getPrev() != null)
+					p.openInventory(holder.getPrev());
+				return;
+			}
+
+			if (e.getCurrentItem().equals(nextPage)) {
+				if (holder.getNext() != null)
+					p.openInventory(holder.getNext());
 				return;
 			}
 
@@ -1209,109 +1436,163 @@ public class InventoryManager implements Listener {
 		} else {
 
 			ItemStack item = e.getCurrentItem();
-			for (Loadout loadout : LoadoutManager.getInstance().getLoadouts(p)) {
+			List<Loadout> loadouts = LoadoutManager.getInstance().getLoadouts(p);
+			for (int k = 0; k < loadouts.size(); k++) {
+				Loadout loadout = loadouts.get(k);
 
-				if (e.getInventory().equals(loadout.getPrimaryInventory())) {
+				if (holder != null) {
+					if (holder.getLoadout() != k) {
+						//do nothing
+					} else if (holder.getGroup() == GUIGroup.PRIMARY_SELECTION) {
 
-					if (e.getCurrentItem().equals(backInv)) {
-						p.openInventory(createClassInventory.get(p));
-						return;
-					}
+						if (e.getCurrentItem().equals(backInv)) {
+							p.openInventory(createClassInventory.get(p));
+							return;
+						}
 
-					for (CodGun gun : ShopManager.getInstance().getPurchasedGuns().get(p)) {
-						if (gun.getMenuItem().equals(item)) {
-							loadout.setPrimary(gun);
+						if (e.getCurrentItem().equals(prevPage)) {
+							if (holder.getPrev() != null)
+								p.openInventory(holder.getPrev());
+							return;
+						}
+
+						if (e.getCurrentItem().equals(nextPage)) {
+							if (holder.getNext() != null)
+								p.openInventory(holder.getNext());
+							return;
+						}
+
+						for (CodGun gun : ShopManager.getInstance().getPurchasedGuns().get(p)) {
+							if (gun.getMenuItem().equals(item)) {
+								loadout.setPrimary(gun);
+								InventoryManager.getInstance().setupCreateClassInventory(p);
+								p.openInventory(InventoryManager.getInstance().createClassInventory.get(p));
+								return;
+							}
+						}
+
+						if (LoadoutManager.getInstance().getDefaultPrimary().getMenuItem().equals(item)) {
+							loadout.setPrimary(LoadoutManager.getInstance().getDefaultPrimary());
 							InventoryManager.getInstance().setupCreateClassInventory(p);
 							p.openInventory(InventoryManager.getInstance().createClassInventory.get(p));
 							return;
 						}
-					}
 
-					if (LoadoutManager.getInstance().getDefaultPrimary().getMenuItem().equals(item)) {
-						loadout.setPrimary(LoadoutManager.getInstance().getDefaultPrimary());
-						InventoryManager.getInstance().setupCreateClassInventory(p);
-						p.openInventory(InventoryManager.getInstance().createClassInventory.get(p));
-						return;
-					}
+						break;
 
-					break;
+					} else if (holder.getGroup() == GUIGroup.SECONDARY_SELECTION) {
 
-				} else if (e.getInventory().equals(loadout.getSecondaryInventory())) {
+						if (e.getCurrentItem().equals(backInv)) {
+							p.openInventory(createClassInventory.get(p));
+							return;
+						}
 
-					if (e.getCurrentItem().equals(backInv)) {
-						p.openInventory(createClassInventory.get(p));
-						return;
-					}
+						if (e.getCurrentItem().equals(prevPage)) {
+							if (holder.getPrev() != null)
+								p.openInventory(holder.getPrev());
+							return;
+						}
 
-					for (CodGun gun : ShopManager.getInstance().getPurchasedGuns().get(p)) {
-						if (gun.getMenuItem().equals(item)) {
-							loadout.setSecondary(gun);
+						if (e.getCurrentItem().equals(nextPage)) {
+							if (holder.getNext() != null)
+								p.openInventory(holder.getNext());
+							return;
+						}
+
+						for (CodGun gun : ShopManager.getInstance().getPurchasedGuns().get(p)) {
+							if (gun.getMenuItem().equals(item)) {
+								loadout.setSecondary(gun);
+								InventoryManager.getInstance().setupCreateClassInventory(p);
+								p.openInventory(InventoryManager.getInstance().createClassInventory.get(p));
+								return;
+							}
+						}
+
+						if (LoadoutManager.getInstance().getDefaultSecondary().getMenuItem().equals(item)) {
+							loadout.setSecondary(LoadoutManager.getInstance().getDefaultSecondary());
 							InventoryManager.getInstance().setupCreateClassInventory(p);
 							p.openInventory(InventoryManager.getInstance().createClassInventory.get(p));
 							return;
 						}
-					}
 
-					if (LoadoutManager.getInstance().getDefaultSecondary().getMenuItem().equals(item)) {
-						loadout.setSecondary(LoadoutManager.getInstance().getDefaultSecondary());
-						InventoryManager.getInstance().setupCreateClassInventory(p);
-						p.openInventory(InventoryManager.getInstance().createClassInventory.get(p));
-						return;
-					}
+						break;
 
-					break;
+					} else if (holder.getGroup() == GUIGroup.LETHAL_SELECTION) {
 
-				} else if (e.getInventory().equals(loadout.getLethalInventory())) {
+						if (e.getCurrentItem().equals(backInv)) {
+							p.openInventory(createClassInventory.get(p));
+							return;
+						}
 
-					if (e.getCurrentItem().equals(backInv)) {
-						p.openInventory(createClassInventory.get(p));
-						return;
-					}
+						if (e.getCurrentItem().equals(prevPage)) {
+							if (holder.getPrev() != null)
+								p.openInventory(holder.getPrev());
+							return;
+						}
 
-					for (CodWeapon grenade : ShopManager.getInstance().getPurchasedWeapons().get(p)) {
-						if (grenade.getMenuItem().equals(item)) {
-							loadout.setLethal(grenade);
+						if (e.getCurrentItem().equals(nextPage)) {
+							if (holder.getNext() != null)
+								p.openInventory(holder.getNext());
+							return;
+						}
+
+						for (CodWeapon grenade : ShopManager.getInstance().getPurchasedWeapons().get(p)) {
+							if (grenade.getMenuItem().equals(item)) {
+								loadout.setLethal(grenade);
+								InventoryManager.getInstance().setupCreateClassInventory(p);
+								p.openInventory(InventoryManager.getInstance().createClassInventory.get(p));
+								return;
+							}
+						}
+
+						if (LoadoutManager.getInstance().getDefaultLethal().getMenuItem().equals(item)) {
+
+							loadout.setLethal(LoadoutManager.getInstance().getDefaultLethal());
 							InventoryManager.getInstance().setupCreateClassInventory(p);
 							p.openInventory(InventoryManager.getInstance().createClassInventory.get(p));
 							return;
 						}
-					}
 
-					if (LoadoutManager.getInstance().getDefaultLethal().getMenuItem().equals(item)) {
+						break;
 
-						loadout.setLethal(LoadoutManager.getInstance().getDefaultLethal());
-						InventoryManager.getInstance().setupCreateClassInventory(p);
-						p.openInventory(InventoryManager.getInstance().createClassInventory.get(p));
-						return;
-					}
+					} else if (holder.getGroup() == GUIGroup.TACTICAL_SELECTION) {
 
-					break;
+						if (e.getCurrentItem().equals(backInv)) {
+							p.openInventory(createClassInventory.get(p));
+							return;
+						}
 
-				} else if (e.getInventory().equals(loadout.getTacticalInventory())) {
+						if (e.getCurrentItem().equals(prevPage)) {
+							if (holder.getPrev() != null)
+								p.openInventory(holder.getPrev());
+							return;
+						}
 
-					if (e.getCurrentItem().equals(backInv)) {
-						p.openInventory(createClassInventory.get(p));
-						return;
-					}
+						if (e.getCurrentItem().equals(nextPage)) {
+							if (holder.getNext() != null)
+								p.openInventory(holder.getNext());
+							return;
+						}
 
-					for (CodWeapon grenade : ShopManager.getInstance().getPurchasedWeapons().get(p)) {
-						if (grenade.getMenuItem().equals(item)) {
-							loadout.setTactical(grenade);
+						for (CodWeapon grenade : ShopManager.getInstance().getPurchasedWeapons().get(p)) {
+							if (grenade.getMenuItem().equals(item)) {
+								loadout.setTactical(grenade);
+								InventoryManager.getInstance().setupCreateClassInventory(p);
+								p.openInventory(InventoryManager.getInstance().createClassInventory.get(p));
+								return;
+							}
+						}
+
+						if (LoadoutManager.getInstance().getDefaultTactical().getMenuItem().equals(item)) {
+							loadout.setTactical(LoadoutManager.getInstance().getDefaultTactical());
 							InventoryManager.getInstance().setupCreateClassInventory(p);
 							p.openInventory(InventoryManager.getInstance().createClassInventory.get(p));
 							return;
 						}
+
+						break;
+
 					}
-
-					if (LoadoutManager.getInstance().getDefaultTactical().getMenuItem().equals(item)) {
-						loadout.setTactical(LoadoutManager.getInstance().getDefaultTactical());
-						InventoryManager.getInstance().setupCreateClassInventory(p);
-						p.openInventory(InventoryManager.getInstance().createClassInventory.get(p));
-						return;
-					}
-
-					break;
-
 				} else if (e.getInventory().equals(loadout.getPerk1Inventory())) {
 
 					if (e.getCurrentItem().equals(backInv)) {
