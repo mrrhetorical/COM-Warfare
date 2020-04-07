@@ -2,6 +2,7 @@ package com.rhetorical.cod.game;
 
 import com.rhetorical.cod.ComWarfare;
 import com.rhetorical.cod.lang.Lang;
+import com.rhetorical.cod.util.MathUtil;
 import org.bukkit.*;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
@@ -81,7 +82,7 @@ class DomFlag {
 	List<Player> getNearbyPlayers() {
 		List<Player> pls = new ArrayList<>();
 
-		for (Entity e : name.getNearbyEntities(10, 5, 10)) {
+		for (Entity e : name.getNearbyEntities(5, 2.5, 5)) {
 			if (e instanceof Player) {
 				pls.add((Player) e);
 			}
@@ -94,8 +95,6 @@ class DomFlag {
 	 * @return The "score" of the flag (how many players are on the flag) based on the team of the players nearby.
 	 * */
 	int checkFlag(GameInstance game) {
-
-		int prevCaptureProgress = getCaptureProgress();
 
 		int blue = 0;
 		int red = 0;
@@ -179,6 +178,8 @@ class DomFlag {
 
 		secondsSinceLastNeutralized++;
 
+		playBorderEffect();
+
 		return flagOwner;
 	}
 
@@ -200,6 +201,26 @@ class DomFlag {
 
 	void updateName(String value) {
 		name.setCustomName(value);
+	}
+
+	void playBorderEffect() {
+
+		// 30 * 12
+
+		if (!ComWarfare.isLegacy()) {
+			Particle.DustOptions grayDust = new Particle.DustOptions(Color.GRAY, 2f),
+					teamColor = new Particle.DustOptions(getCaptureProgress() > 0 ? Color.BLUE : getCaptureProgress() < 0 ? Color.RED : Color.GRAY, 2f);
+
+			World world = getLocation().getWorld();
+
+			float progress = (getCaptureProgress() < 0 ? -1 * getCaptureProgress() : getCaptureProgress()) / 10f;
+
+			if (world != null)
+				for (int angle = 0; angle < 60; angle++) {
+					Particle.DustOptions dustOptions = (((float) angle) / 60f) <= progress ? teamColor : grayDust;
+					world.spawnParticle(Particle.REDSTONE, getLocation().add(6f * Math.cos(MathUtil.degToRad(angle * 6f)), 0f, 6f * Math.sin(MathUtil.degToRad(angle * 6f))), 1, dustOptions);
+				}
+		}
 	}
 
 	private int getSecondsToNextNeutralizedMessage() {
