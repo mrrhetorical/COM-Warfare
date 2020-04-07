@@ -13,6 +13,7 @@ public class COMInventoryHolder implements InventoryHolder {
 
 	private GUIGroup group;
 
+	private int loadout;
 
 	private Inventory prev;
 	private Inventory next;
@@ -32,6 +33,14 @@ public class COMInventoryHolder implements InventoryHolder {
 		setGroup(group);
 		setPrev(prev);
 		setNext(next);
+	}
+
+	public COMInventoryHolder(boolean cancelClick, GUIGroup group, Inventory prev, Inventory next, int loadout) {
+		setCancelClick(cancelClick);
+		setGroup(group);
+		setPrev(prev);
+		setNext(next);
+		setLoadout(loadout);
 	}
 
 	public boolean isCancelClick() {
@@ -69,5 +78,13 @@ public class COMInventoryHolder implements InventoryHolder {
 	@Override
 	public Inventory getInventory() {
 		return null;
+	}
+
+	public int getLoadout() {
+		return loadout;
+	}
+
+	public void setLoadout(int loadout) {
+		this.loadout = loadout;
 	}
 }
