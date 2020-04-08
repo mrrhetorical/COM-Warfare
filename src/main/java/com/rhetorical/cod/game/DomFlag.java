@@ -207,20 +207,22 @@ class DomFlag {
 
 		// 30 * 12
 
-		if (!ComWarfare.isLegacy()) {
-			Particle.DustOptions grayDust = new Particle.DustOptions(Color.GRAY, 2f),
-					teamColor = new Particle.DustOptions(getCaptureProgress() > 0 ? Color.BLUE : getCaptureProgress() < 0 ? Color.RED : Color.GRAY, 2f);
+		try {
+			if (!ComWarfare.isLegacy()) {
+				Particle.DustOptions grayDust = new Particle.DustOptions(Color.GRAY, 2f),
+						teamColor = new Particle.DustOptions(getCaptureProgress() > 0 ? Color.BLUE : getCaptureProgress() < 0 ? Color.RED : Color.GRAY, 2f);
 
-			World world = getLocation().getWorld();
+				World world = getLocation().getWorld();
 
-			float progress = (getCaptureProgress() < 0 ? -1 * getCaptureProgress() : getCaptureProgress()) / 10f;
+				float progress = (getCaptureProgress() < 0 ? -1 * getCaptureProgress() : getCaptureProgress()) / 10f;
 
-			if (world != null)
-				for (int angle = 0; angle < 60; angle++) {
-					Particle.DustOptions dustOptions = (((float) angle) / 60f) <= progress ? teamColor : grayDust;
-					world.spawnParticle(Particle.REDSTONE, getLocation().add(6f * Math.cos(MathUtil.degToRad(angle * 6f)), 0f, 6f * Math.sin(MathUtil.degToRad(angle * 6f))), 1, dustOptions);
-				}
-		}
+				if (world != null)
+					for (int angle = 0; angle < 60; angle++) {
+						Particle.DustOptions dustOptions = (((float) angle) / 60f) <= progress ? teamColor : grayDust;
+						world.spawnParticle(Particle.REDSTONE, getLocation().add(6f * Math.cos(MathUtil.degToRad(angle * 6f)), 0f, 6f * Math.sin(MathUtil.degToRad(angle * 6f))), 1, dustOptions);
+					}
+			}
+		} catch (Exception|Error ignored) {} //unsupported version
 	}
 
 	private int getSecondsToNextNeutralizedMessage() {
