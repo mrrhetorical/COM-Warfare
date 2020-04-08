@@ -2,6 +2,8 @@ package com.rhetorical.cod.assignments;
 
 import com.rhetorical.cod.ComWarfare;
 import com.rhetorical.cod.files.AssignmentFile;
+import com.rhetorical.cod.game.CodMap;
+import com.rhetorical.cod.game.GameManager;
 import com.rhetorical.cod.game.Gamemode;
 import com.rhetorical.cod.lang.Lang;
 import com.rhetorical.cod.progression.CreditManager;
@@ -84,12 +86,16 @@ public class AssignmentManager {
 
 	private Assignment generateAssignment(Player p) {
 		int index = (new Random()).nextInt(AssignmentType.values().length);
-		int mIndex = (new Random()).nextInt(Gamemode.values().length);
 		AssignmentType type = AssignmentType.values()[index];
+
+		Set<Gamemode> availableModes = new HashSet<>();
+		for (CodMap map : GameManager.getAddedMaps())
+			availableModes.addAll(map.getAvailableGamemodes());
+
 		Gamemode mode;
-		if (type == AssignmentType.PLAY_MODE || type == AssignmentType.WIN_GAME_MODE)
-			mode = Gamemode.values()[mIndex];
-		else
+		if (type == AssignmentType.PLAY_MODE || type == AssignmentType.WIN_GAME_MODE) {
+			mode = !availableModes.isEmpty() ? (Gamemode) availableModes.toArray()[(new Random()).nextInt(availableModes.size())] : Gamemode.ANY;
+		} else
 			mode = Gamemode.ANY;
 
 		int required;
