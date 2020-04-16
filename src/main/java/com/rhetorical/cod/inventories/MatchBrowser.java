@@ -4,6 +4,7 @@ import com.rhetorical.cod.ComWarfare;
 import com.rhetorical.cod.game.GameInstance;
 import com.rhetorical.cod.game.GameManager;
 import com.rhetorical.cod.game.Gamemode;
+import com.rhetorical.cod.util.MenuReplacementUtil;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -78,7 +79,7 @@ public class MatchBrowser implements Listener {
 	}
 
 	private ItemStack generateItem(GameInstance game) {
-		ItemStack item = new ItemStack(Material.EMERALD);
+		ItemStack item = new ItemStack(MenuReplacementUtil.getInstance().getMatchInfo());
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName(String.format("Join game - %s/%s", game.getPlayers().size(), ComWarfare.getMaxPlayers()));
 		List<String> lore = new ArrayList<>();

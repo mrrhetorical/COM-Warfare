@@ -1,6 +1,7 @@
 package com.rhetorical.cod.streaks;
 
 import com.rhetorical.cod.lang.Lang;
+import com.rhetorical.cod.util.MenuReplacementUtil;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -10,13 +11,13 @@ import java.util.List;
 
 public enum KillStreak {
 	
-	UAV(Lang.UAV_NAME.getMessage(), 3, new ItemStack(Material.SHEARS)),
-	COUNTER_UAV(Lang.COUNTER_UAV_NAME.getMessage(), 4, new ItemStack(Material.REDSTONE)),
-	DOGS(Lang.DOGS_NAME.getMessage(), 9, new ItemStack(Material.PAPER)),
-	NUKE(Lang.NUKE_NAME.getMessage(), 25, new ItemStack(Material.TNT)),
-	JUGGERNAUT(Lang.JUGGERNAUT_NAME.getMessage(), 12, new ItemStack(Material.BREAD)),
-	AIRSTRIKE(Lang.AIRSTRIKE_NAME.getMessage(), 7, new ItemStack(Material.GLASS_BOTTLE)),
-	VSAT(Lang.VSAT_NAME.getMessage(), 14, new ItemStack(Material.GOLD_NUGGET));
+	UAV(Lang.UAV_NAME.getMessage(), 3, new ItemStack(MenuReplacementUtil.getInstance().getUAV())),
+	COUNTER_UAV(Lang.COUNTER_UAV_NAME.getMessage(), 4, new ItemStack(MenuReplacementUtil.getInstance().getCounterUAV())),
+	DOGS(Lang.DOGS_NAME.getMessage(), 9, new ItemStack(MenuReplacementUtil.getInstance().getDogs())),
+	NUKE(Lang.NUKE_NAME.getMessage(), 25, new ItemStack(MenuReplacementUtil.getInstance().getNuke())),
+	JUGGERNAUT(Lang.JUGGERNAUT_NAME.getMessage(), 12, new ItemStack(MenuReplacementUtil.getInstance().getJuggernautSuit())),
+	AIRSTRIKE(Lang.AIRSTRIKE_NAME.getMessage(), 7, new ItemStack(MenuReplacementUtil.getInstance().getAirstrike())),
+	VSAT(Lang.VSAT_NAME.getMessage(), 14, new ItemStack(MenuReplacementUtil.getInstance().getVSAT()));
 
 	private int requiredKills;
 	private ItemStack item;

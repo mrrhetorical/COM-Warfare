@@ -97,6 +97,37 @@ Rewards:
   Highest_KD: 'none'
   #When a player earns the highest score in a match.
   Highest_Score: 'none'
+#Menu item changes.
+menu:
+  createAClass: CHEST
+  shop: EMERALD
+  combatRecord: PAPER
+  challenges: GOLD_INGOT
+  killstreaks: DIAMOND
+  UAV: SHEARS
+  counterUAV: REDSTONE
+  VSAT: GOLD_NUGGET
+  dogs: BONE
+  nuke: TNT
+  airstrike: GLASS_BOTTLE
+  juggernautSuit: BREAD
+  matchBrowser: EMERALD
+  matchInfo: PAPER
+  leaderboard: PAPER
+  prestige: ANVIL
+  primaryShop: IRON_HOE
+  grenadeShop: SLIME_BALL
+  perkShop: APPLE
+  voteA: PAPER
+  voteB: PAPER
+  openMenu: ENDER_PEARL
+  assignmentKills: GOLD_INGOT
+  assignmentWin: ARROW
+  assignmentWinGameMode: GOLDEN_APPLE
+  assignmentPlayMode: PAPER
+  statKills: ARROW
+  statDeaths: REDSTONE
+  statKDR: GLASS_BOTTLE
 
 #Level Names: The names for each level that will be shown next to players' levels on the scoreboard and chat.
 LevelNames:
