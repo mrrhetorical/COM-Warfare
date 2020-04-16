@@ -90,7 +90,7 @@ public class CrackShotGun implements Listener {
 
 		GameInstance match = GameManager.getMatchWhichContains(victim);
 		if (match != null) {
-			if (match.canDamage(e.getPlayer(), victim) || e.getPlayer().equals(victim))
+			if (match.canDamage(e.getPlayer(), victim) || e.getPlayer().equals(victim) && !match.isInvulnerable(victim))
 				match.damagePlayer(victim, damage, e.getPlayer());
 		}
 	}

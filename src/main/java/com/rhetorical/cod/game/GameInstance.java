@@ -2215,15 +2215,18 @@ public class GameInstance implements Listener {
 		if (!canDamage(attacker, victim))
 			return;
 
+		e.setCancelled(true);
+
+		if (isInvulnerable(victim))
+			return;
+
 		double damage;
 
 		ItemStack heldWeapon;
 
 		try {
 			heldWeapon = (ItemStack) attacker.getInventory().getClass().getMethod("getItemInMainHand").invoke(attacker.getInventory());
-		} catch(NoSuchMethodException e2) {
-			heldWeapon = attacker.getInventory().getItemInHand();
-		} catch(Exception e1) {
+		} catch(Exception|Error e1) {
 			heldWeapon = attacker.getInventory().getItemInHand();
 		}
 
@@ -2242,13 +2245,11 @@ public class GameInstance implements Listener {
 			wSwordMat = Material.valueOf("WOOD_SWORD");
 		}
 
-		if (heldWeapon.getType() == Material.DIAMOND_SWORD || heldWeapon.getType() == gSwordMat || heldWeapon.getType() == Material.IRON_SWORD || heldWeapon.getType() == Material.STONE_SWORD || heldWeapon.getType() == wSwordMat) {
-			e.setCancelled(true);
+		if (heldWeapon.getType() == Material.DIAMOND_SWORD || heldWeapon.getType() == gSwordMat || heldWeapon.getType() == Material.IRON_SWORD || heldWeapon.getType() == Material.STONE_SWORD || heldWeapon.getType() == wSwordMat)
 			damage = ComWarfare.getInstance().knifeDamage;
-		} else {
-			e.setDamage(0);
+		else
 			return;
-		}
+
 
 		if (getGamemode() != Gamemode.GUN && getGamemode() != Gamemode.OITC && getGamemode() != Gamemode.RSB && getGamemode() != Gamemode.GUNFIGHT && (getGamemode() != Gamemode.INFECT || isOnBlueTeam(attacker))) {
 			if (LoadoutManager.getInstance().getActiveLoadout(attacker).hasPerk(Perk.COMMANDO))
@@ -2361,6 +2362,9 @@ public class GameInstance implements Listener {
 
 		e.setCancelled(true);
 
+		if (isInvulnerable(victim))
+			return;
+
 		double damage = e.getDamage();
 
 		damagePlayer(victim, damage, shooter);
@@ -2383,11 +2387,11 @@ public class GameInstance implements Listener {
 
 		if (health.isDead(b))
 			return false;
-
-		if (b.hasPotionEffect(PotionEffectType.DAMAGE_RESISTANCE))
-			return false;
-
 		return true;
+	}
+
+	public boolean isInvulnerable(Player p) {
+		return p.hasPotionEffect(PotionEffectType.DAMAGE_RESISTANCE);
 	}
 
 	/**
