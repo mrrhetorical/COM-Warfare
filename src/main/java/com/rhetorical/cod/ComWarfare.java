@@ -102,6 +102,12 @@ public class ComWarfare extends JavaPlugin {
 
 	private static boolean legacy = false;
 
+	private static boolean debug = true;
+
+	private static boolean spawnProtection = true;
+
+	private static int spawnProtectionDuration = 3;
+
 	private Metrics bMetrics;
 
 	final String uid = "%%__USER__%%";
@@ -255,11 +261,17 @@ public class ComWarfare extends JavaPlugin {
 			reward_maxPrestigeMaxLevel = getPlugin().getConfig().getString("Rewards.Max_Prestige_Max_Level");
 			knifeDamage = getPlugin().getConfig().getDouble("knifeDamage");
 			lobbyServer = getPlugin().getConfig().getString("lobbyServer");
+			spawnProtection = getPlugin().getConfig().getBoolean("spawnProtection.enabled");
+			spawnProtectionDuration = getPlugin().getConfig().getInt("spawnProtection.duration");
 			if (knifeDamage < 1)
 				knifeDamage = 1;
 			else if (knifeDamage > 100)
 				knifeDamage = 100;
 		}
+
+		spawnProtectionDuration = spawnProtectionDuration >= 1 ? spawnProtectionDuration : 1;
+
+		debug = getPlugin().getConfig().getBoolean("debug");
 
 		if (ComVersion.getPurchased()) {
 			int i = 0;
@@ -1617,5 +1629,17 @@ public class ComWarfare extends JavaPlugin {
 
 	public static boolean isServerMode() {
 		return getInstance().serverMode;
+	}
+
+	public static boolean isDebug() {
+		return debug;
+	}
+
+	public static boolean isSpawnProtection() {
+		return spawnProtection;
+	}
+
+	public static int getSpawnProtectionDuration() {
+		return spawnProtectionDuration;
 	}
 }

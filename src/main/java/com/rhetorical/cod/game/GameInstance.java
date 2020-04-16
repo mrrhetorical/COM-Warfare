@@ -181,8 +181,6 @@ public class GameInstance implements Listener {
 
 		scoreboardManager = new ScoreboardManager(this);
 
-		System.gc();
-
 		ComWarfare.getConsole().sendMessage(ChatColor.GRAY + "Game lobby with id " + getId() + " created with map " + getMap().getName() + " with gamemode " + getGamemode() + ".");
 
 		startLobbyTimer(lobbyTime);
@@ -511,6 +509,7 @@ public class GameInstance implements Listener {
 			despawnDomFlags();
 			despawnHardpointFlag();
 			GameManager.removeInstance(this);
+			return;
 		} else if ((redTeam.size() > 0 && blueTeam.size() == 0)
 				|| (blueTeam.size() > 0 && redTeam.size() == 0)
 				|| getPlayers().size() == 1) {
@@ -522,7 +521,6 @@ public class GameInstance implements Listener {
 
 		if (PlayerSnapshot.hasSnapshot(p)) {
 			PlayerSnapshot.apply(p);
-			System.gc();
 		} else {
 			p.setPlayerListName(p.getDisplayName());
 			p.setFoodLevel(20);
@@ -538,7 +536,6 @@ public class GameInstance implements Listener {
 			p.getClass().getMethod("setPlayerListFooter", String.class).invoke(p, "");
 		} catch(NoSuchMethodException ignored) {} catch(Exception ignored) {}
 
-		System.gc();
 	}
 
 	/**
@@ -597,10 +594,10 @@ public class GameInstance implements Listener {
 	}
 
 	private void spawnCtfFlags() {
+		despawnCtfFlags();
+
 		if (getGamemode() != Gamemode.CTF)
 			return;
-
-		despawnCtfFlags();
 
 		redFlag = new CtfFlag(this, Team.RED, Lang.FLAG_RED, getMap().getRedFlagSpawn());
 		blueFlag = new CtfFlag(this, Team.BLUE, Lang.FLAG_BLUE, getMap().getBlueFlagSpawn());
@@ -700,6 +697,9 @@ public class GameInstance implements Listener {
 				p.getInventory().setItem(28, ammo);
 			}
 		}
+
+		if (ComWarfare.isSpawnProtection())
+			p.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, ComWarfare.getSpawnProtectionDuration() * 20, 1));
 
 		p.getInventory().setItem(32, InventoryManager.getInstance().selectClass);
 		p.getInventory().setItem(35, InventoryManager.getInstance().leaveItem);
@@ -915,10 +915,19 @@ public class GameInstance implements Listener {
 
 			public void run() {
 
+				if (cancelIfNotActive(this))
+					return;
+
 				if (t <= 0) {
-					game.reset();
-					cancel();
-					getRunnables().remove(this);
+					if (!getPlayers().isEmpty()) {
+						game.reset();
+						cancel();
+						getRunnables().remove(this);
+					} else {
+						getRunnables().remove(this);
+						cancel();
+						GameManager.removeInstance(GameInstance.this);
+					}
 					return;
 				}
 
@@ -1042,6 +1051,9 @@ public class GameInstance implements Listener {
 
 			@Override
 			public void run() {
+				if (cancelIfNotActive(this))
+					return;
+
 				if (t == 0 || forceStarted || getState() == GameState.IN_GAME || getState() == GameState.STOPPING) {
 
 					for (Player p : getPlayers()) {
@@ -1161,6 +1173,9 @@ public class GameInstance implements Listener {
 		BukkitRunnable br = new BukkitRunnable() {
 			@Override
 			public void run() {
+				if (cancelIfNotActive(this))
+					return;
+
 				if (getState() != GameState.IN_GAME) {
 					cancel();
 					getRunnables().remove(this);
@@ -1274,7 +1289,8 @@ public class GameInstance implements Listener {
 			int timeSinceLastHardpoint = 0;
 			@Override
 			public void run() {
-
+				if (cancelIfNotActive(this))
+					return;
 				if (t == 0) {
 
 					if (getGamemode() == Gamemode.RESCUE || getGamemode() == Gamemode.GUNFIGHT) {
@@ -1601,6 +1617,8 @@ public class GameInstance implements Listener {
 		BukkitRunnable br = new BukkitRunnable() {
 			@Override
 			public void run() {
+				if (cancelIfNotActive(this))
+					return;
 				startGameTimer(gameTime, true);
 			}
 		};
@@ -1794,10 +1812,10 @@ public class GameInstance implements Listener {
 			int t = 3;
 
 			public void run() {
-
+				if (cancelIfNotActive(this))
+					return;
 
 				p.getInventory().clear();
-				p.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 120, 1));
 				p.removePotionEffect(PotionEffectType.SPEED);
 
 				if (t > 0) {
@@ -2366,6 +2384,9 @@ public class GameInstance implements Listener {
 		if (health.isDead(b))
 			return false;
 
+		if (b.hasPotionEffect(PotionEffectType.DAMAGE_RESISTANCE))
+			return false;
+
 		return true;
 	}
 
@@ -2773,6 +2794,9 @@ public class GameInstance implements Listener {
 
 			@Override
 			public void run() {
+				if (cancelIfNotActive(this))
+					return;
+
 				t--;
 
 				if (t < 0) {
@@ -2895,6 +2919,8 @@ public class GameInstance implements Listener {
 
 			@Override
 			public void run() {
+				if (cancelIfNotActive(this))
+					return;
 
 				t--;
 
@@ -3019,7 +3045,8 @@ public class GameInstance implements Listener {
 		BukkitRunnable br = new BukkitRunnable() {
 			@Override
 			public void run() {
-
+				if (cancelIfNotActive(this))
+					return;
 				if (isOnBlueTeam(owner)) {
 					blueCounterUavActive = false;
 				} else if (isOnRedTeam(owner)) {
@@ -3122,7 +3149,8 @@ public class GameInstance implements Listener {
 
 			@Override
 			public void run() {
-
+				if (cancelIfNotActive(this))
+					return;
 				t--;
 
 				if (t < 0) {
@@ -3230,6 +3258,8 @@ public class GameInstance implements Listener {
 
 				@Override
 				public void run() {
+					if (cancelIfNotActive(this))
+						return;
 					t--;
 
 					if (t < 1 || getState() != GameState.IN_GAME) {
@@ -3311,15 +3341,22 @@ public class GameInstance implements Listener {
 
 	public void destroy() {
 		List<BukkitRunnable> r = new ArrayList<>(getRunnables());
-		for (BukkitRunnable runnable : r) {
-			runnable.cancel();
-			getRunnables().remove(runnable);
-		}
+		for (int i = r.size() - 1; i >= 0; i--)
+			getRunnables().remove(i).cancel();
 	}
 
 	@EventHandler
 	public void preventItemHandSwap(PlayerSwapHandItemsEvent e) {
 		if (getPlayers().contains(e.getPlayer()))
 			e.setCancelled(true);
+	}
+
+	private boolean cancelIfNotActive(BukkitRunnable runnable) {
+		if (!GameManager.getRunningGames().contains(this)) {
+			getRunnables().remove(runnable);
+			runnable.cancel();
+			return true;
+		}
+		return false;
 	}
 }

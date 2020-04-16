@@ -25,6 +25,13 @@ lobbyServer: 'none'
 players:
   min: 2
   max: 12
+
+#Spawn Protection: Should the player be temporarily invulnerable on spawning?
+spawnProtection:
+  enabled: true
+  #Duration (in seconds)
+  duration: 3
+
 #Game time: The amount of time (in seconds) players should spend inside of a match, separated by gamemode.
 gameTime:
   TDM: 600
