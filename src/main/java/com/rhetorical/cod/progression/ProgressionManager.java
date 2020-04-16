@@ -5,6 +5,7 @@ import com.rhetorical.cod.ComWarfare;
 import com.rhetorical.cod.files.ProgressionFile;
 import com.rhetorical.cod.inventories.ShopManager;
 import com.rhetorical.cod.lang.Lang;
+import com.rhetorical.cod.loadouts.LoadoutManager;
 import com.rhetorical.cod.sounds.events.PlayerLevelUpSoundEvent;
 import com.rhetorical.cod.sounds.events.PlayerPrestigeSoundEvent;
 import org.bukkit.Bukkit;
@@ -130,7 +131,7 @@ public class ProgressionManager {
 		setLevel(p, 1, false);
 
 		ShopManager.getInstance().prestigePlayer(p);
-
+		LoadoutManager.getInstance().prestigePlayer(p);
 
 		Bukkit.getPluginManager().callEvent(new PlayerPrestigeSoundEvent(p));
 		p.sendMessage(ComWarfare.getPrefix() + Lang.RANK_UP_PRESTIGE_MESSAGE.getMessage().replace("{level}", getPrestigeLevel(p) + ""));

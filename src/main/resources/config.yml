@@ -73,6 +73,9 @@ maxScore:
   #HARDPOINT: The amount of kills required while holding the point required to win.
   HARDPOINT: 75
 
+#Debug: Show debug messages in console
+debug: false
+
 #OITC Gun: The gun to be used in One In The Chamber.
 OITC_Gun: none
 
