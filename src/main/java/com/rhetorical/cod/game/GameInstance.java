@@ -1383,7 +1383,7 @@ public class GameInstance implements Listener {
 
 				String counter = getFancyTime(t);
 
-				if (getGamemode() == Gamemode.DOM) {
+				if (getGamemode() == Gamemode.DOM && t % 4 == 0) {
 					game.checkDomFlags();
 				}
 
@@ -2615,11 +2615,8 @@ public class GameInstance implements Listener {
 			}
 		}
 
-		if (blueFlags > redFlags) {
-			blueTeamScore++;
-		} else if (redFlags > blueFlags) {
-			redTeamScore++;
-		}
+		blueTeamScore += blueFlags;
+		redTeamScore += redFlags;
 	}
 
 	private void updateHardpointFlagLocation() {

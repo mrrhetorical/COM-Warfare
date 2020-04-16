@@ -126,7 +126,7 @@ class DomFlag {
 		} else {
 			int progress = blue - red;
 			if (getFlagName().equals(Lang.FLAG_HARDPOINT))
-				progress *= 2;
+				progress *= 5;
 
 			setCaptureProgress(getCaptureProgress() + progress);
 
