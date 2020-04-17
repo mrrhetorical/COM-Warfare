@@ -3,6 +3,7 @@ package com.rhetorical.cod.game;
 import com.rhetorical.cod.ComVersion;
 import com.rhetorical.cod.ComWarfare;
 import com.rhetorical.cod.assignments.AssignmentManager;
+import com.rhetorical.cod.game.events.KillFeedEvent;
 import com.rhetorical.cod.inventories.InventoryManager;
 import com.rhetorical.cod.inventories.ShopManager;
 import com.rhetorical.cod.lang.Lang;
@@ -504,6 +505,16 @@ public class GameInstance implements Listener {
 
 		AssignmentManager.getInstance().save(p);
 
+		if (PlayerSnapshot.hasSnapshot(p)) {
+			PlayerSnapshot.apply(p);
+		} else {
+			p.setPlayerListName(p.getDisplayName());
+			p.setFoodLevel(20);
+			p.setLevel(0);
+			p.setExp(0f);
+			p.setHealth(20d);
+		}
+
 		if (players.size() == 0) {
 			despawnCtfFlags();
 			despawnDomFlags();
@@ -517,16 +528,6 @@ public class GameInstance implements Listener {
 				if (!ComWarfare.isDisabling())
 					stopGame();
 			}
-		}
-
-		if (PlayerSnapshot.hasSnapshot(p)) {
-			PlayerSnapshot.apply(p);
-		} else {
-			p.setPlayerListName(p.getDisplayName());
-			p.setFoodLevel(20);
-			p.setLevel(0);
-			p.setExp(0f);
-			p.setHealth(20d);
 		}
 
 		getScoreboardManager().clearScoreboards(p);
@@ -2018,21 +2019,24 @@ public class GameInstance implements Listener {
 
 		RankPerks rank = ComWarfare.getRank(killer);
 
+		KillFeedEvent kfe = new KillFeedEvent(this, victim, killer);
+		Bukkit.getServer().getPluginManager().callEvent(kfe);
+
 		if (getGamemode().equals(Gamemode.TDM) || getGamemode().equals(Gamemode.KC) || getGamemode().equals(Gamemode.RSB) || getGamemode().equals(Gamemode.DOM) || getGamemode().equals(Gamemode.RESCUE) || getGamemode().equals(Gamemode.GUNFIGHT) || getGamemode().equals(Gamemode.HARDPOINT)) {
+			double xp = rank.getKillExperience();
+
+			if (getGamemode().equals(Gamemode.KC)) {
+				xp /= 2d;
+			}
+
+//			ComWarfare.sendMessage(killer,  "" + ChatColor.BLUE + ChatColor.BOLD + "YOU " + ChatColor.RESET + ChatColor.WHITE + "[" + Lang.KILLED_TEXT.getMessage() + "] " + ChatColor.RESET + ChatColor.RED + ChatColor.BOLD + victim.getDisplayName(), ComWarfare.getLang());
+
+			ComWarfare.sendActionBar(killer, ChatColor.YELLOW + "+" + xp + "xp");
+			ProgressionManager.getInstance().addExperience(killer, xp);
+			CreditManager.setCredits(killer, CreditManager.getCredits(killer) + rank.getKillCredits());
+			kill(victim, killer);
+
 			if (isOnRedTeam(killer)) {
-
-				double xp = rank.getKillExperience();
-
-				if (getGamemode().equals(Gamemode.KC)) {
-					xp /= 2d;
-				}
-
-				ComWarfare.sendMessage(killer, "" + ChatColor.RED + ChatColor.BOLD + "YOU " + ChatColor.RESET + "" + ChatColor.WHITE + "[" + Lang.KILLED_TEXT.getMessage() +"] " + ChatColor.RESET + ChatColor.BLUE + ChatColor.BOLD + victim.getDisplayName(), ComWarfare.getLang());
-				ComWarfare.sendActionBar(killer, ChatColor.YELLOW + "+" + xp + "xp");
-
-				ProgressionManager.getInstance().addExperience(killer, xp);
-				CreditManager.setCredits(killer, CreditManager.getCredits(killer) + rank.getKillCredits());
-				kill(victim, killer);
 				if (getGamemode() != Gamemode.RESCUE && getGamemode() != Gamemode.KC && getGamemode() != Gamemode.GUNFIGHT) {
 					if (getGamemode() != Gamemode.HARDPOINT) {
 						addRedPoint();
@@ -2042,18 +2046,6 @@ public class GameInstance implements Listener {
 				}
 				updateScores(victim, killer, rank);
 			} else if (isOnBlueTeam(killer)) {
-
-				double xp = rank.getKillExperience();
-
-				if (getGamemode().equals(Gamemode.KC)) {
-					xp /= 2d;
-				}
-
-				ComWarfare.sendMessage(killer,  "" + ChatColor.BLUE + ChatColor.BOLD + "YOU " + ChatColor.RESET + ChatColor.WHITE + "[" + Lang.KILLED_TEXT.getMessage() + "] " + ChatColor.RESET + ChatColor.RED + ChatColor.BOLD + victim.getDisplayName(), ComWarfare.getLang());
-				ComWarfare.sendActionBar(killer, ChatColor.YELLOW + "+" + xp + "xp");
-				ProgressionManager.getInstance().addExperience(killer, xp);
-				CreditManager.setCredits(killer, CreditManager.getCredits(killer) + rank.getKillCredits());
-				kill(victim, killer);
 				if (getGamemode() != Gamemode.RESCUE && getGamemode() != Gamemode.KC && getGamemode() != Gamemode.GUNFIGHT) {
 					if (getGamemode() != Gamemode.HARDPOINT) {
 						addBluePoint();
@@ -2072,7 +2064,7 @@ public class GameInstance implements Listener {
 
 		} else if (getGamemode().equals(Gamemode.CTF) || getGamemode().equals(Gamemode.INFECT)) {
 			if (redTeam.contains(killer)) {
-				ComWarfare.sendMessage(killer, "" + ChatColor.RED + ChatColor.BOLD + "YOU " + ChatColor.RESET + "" + ChatColor.WHITE + "[" + Lang.KILLED_TEXT.getMessage() + "] " + ChatColor.RESET + ChatColor.BLUE + ChatColor.BOLD + victim.getDisplayName(), ComWarfare.getLang());
+//				ComWarfare.sendMessage(killer, "" + ChatColor.RED + ChatColor.BOLD + "YOU " + ChatColor.RESET + "" + ChatColor.WHITE + "[" + Lang.KILLED_TEXT.getMessage() + "] " + ChatColor.RESET + ChatColor.BLUE + ChatColor.BOLD + victim.getDisplayName(), ComWarfare.getLang());
 				ComWarfare.sendActionBar(killer, ChatColor.YELLOW + "+" + rank.getKillExperience() + "xp");
 
 				ProgressionManager.getInstance().addExperience(killer, rank.getKillExperience());
@@ -2080,7 +2072,7 @@ public class GameInstance implements Listener {
 				kill(victim, killer);
 				updateScores(victim, killer, rank);
 			} else if (blueTeam.contains(killer)) {
-				ComWarfare.sendMessage(killer,  "" + ChatColor.BLUE + ChatColor.BOLD + "YOU " + ChatColor.RESET + ChatColor.WHITE + "[" + Lang.KILLED_TEXT.getMessage() + "] " + ChatColor.RESET + ChatColor.RED + ChatColor.BOLD + victim.getDisplayName(), ComWarfare.getLang());
+//				ComWarfare.sendMessage(killer,  "" + ChatColor.BLUE + ChatColor.BOLD + "YOU " + ChatColor.RESET + ChatColor.WHITE + "[" + Lang.KILLED_TEXT.getMessage() + "] " + ChatColor.RESET + ChatColor.RED + ChatColor.BOLD + victim.getDisplayName(), ComWarfare.getLang());
 				ComWarfare.sendActionBar(killer,  ChatColor.YELLOW + "+" + rank.getKillExperience() + "xp");
 				CreditManager.setCredits(killer, CreditManager.getCredits(killer) + rank.getKillCredits());
 				ProgressionManager.getInstance().addExperience(killer, rank.getKillExperience());
@@ -2097,7 +2089,7 @@ public class GameInstance implements Listener {
 			}
 
 		} else if (getGamemode().equals(Gamemode.FFA) || getGamemode().equals(Gamemode.GUN) || getGamemode().equals(Gamemode.OITC)) {
-			ComWarfare.sendMessage(killer, "" + ChatColor.GREEN + ChatColor.BOLD + "YOU " + ChatColor.RESET + ChatColor.WHITE + "[" + Lang.KILLED_TEXT.getMessage() + "] " + ChatColor.RESET	 + ChatColor.GOLD + ChatColor.BOLD + victim.getDisplayName(), ComWarfare.getLang());
+//			ComWarfare.sendMessage(killer, "" + ChatColor.GREEN + ChatColor.BOLD + "YOU " + ChatColor.RESET + ChatColor.WHITE + "[" + Lang.KILLED_TEXT.getMessage() + "] " + ChatColor.RESET	 + ChatColor.GOLD + ChatColor.BOLD + victim.getDisplayName(), ComWarfare.getLang());
 			ComWarfare.sendActionBar(killer, ChatColor.YELLOW + "+" + rank.getKillExperience() + "xp");
 			ProgressionManager.getInstance().addExperience(killer, rank.getKillExperience());
 			CreditManager.setCredits(killer, CreditManager.getCredits(killer) + rank.getKillCredits());
@@ -2445,7 +2437,7 @@ public class GameInstance implements Listener {
 		if (health.isDead(victim)) {
 			if (!LoadoutManager.getInstance().getActiveLoadout(victim).hasPerk(Perk.LAST_STAND) || !(getGamemode() != Gamemode.GUN && getGamemode() != Gamemode.GUNFIGHT && getGamemode() != Gamemode.OITC && getGamemode() != Gamemode.RSB && (getGamemode() != Gamemode.INFECT || isOnBlueTeam(victim)))) {
 				if (damagers.length < 1) {
-					ComWarfare.sendMessage(victim, "" + ChatColor.GREEN + ChatColor.BOLD + "YOU " + ChatColor.RESET + "" + ChatColor.WHITE + "[" + Lang.KILLED_TEXT.getMessage() + "] " + ChatColor.RESET + ChatColor.GREEN + ChatColor.BOLD + "YOURSELF", ComWarfare.getLang());
+//					ComWarfare.sendMessage(victim, "" + ChatColor.GREEN + ChatColor.BOLD + "YOU " + ChatColor.RESET + "" + ChatColor.WHITE + "[" + Lang.KILLED_TEXT.getMessage() + "] " + ChatColor.RESET + ChatColor.GREEN + ChatColor.BOLD + "YOURSELF", ComWarfare.getLang());
 					kill(victim, victim);
 				} else {
 					handleDeath(damagers[0], victim);
@@ -2457,9 +2449,9 @@ public class GameInstance implements Listener {
 					if (damagers.length > 0) {
 						Player attacker = damagers[0];
 						double xp = ComWarfare.getRank(attacker).getKillExperience() / 2f;
-						ChatColor t1 = redTeam.contains(attacker) ? ChatColor.RED : blueTeam.contains(attacker) ? ChatColor.BLUE : ChatColor.LIGHT_PURPLE;
-						ChatColor t2 = t1 == ChatColor.RED ? ChatColor.BLUE : t1 == ChatColor.BLUE ? ChatColor.RED : ChatColor.LIGHT_PURPLE;
-						ComWarfare.sendMessage(attacker, "" + t1 + ChatColor.BOLD + "YOU " + ChatColor.RESET + ChatColor.WHITE + "[" + Lang.DOWNED_TEXT.getMessage() + "] " + ChatColor.RESET + t2 + ChatColor.BOLD + victim.getDisplayName(), ComWarfare.getLang());
+//						ChatColor t1 = redTeam.contains(attacker) ? ChatColor.RED : blueTeam.contains(attacker) ? ChatColor.BLUE : ChatColor.LIGHT_PURPLE;
+//						ChatColor t2 = t1 == ChatColor.RED ? ChatColor.BLUE : t1 == ChatColor.BLUE ? ChatColor.RED : ChatColor.LIGHT_PURPLE;
+//						ComWarfare.sendMessage(attacker, "" + t1 + ChatColor.BOLD + "YOU " + ChatColor.RESET + ChatColor.WHITE + "[" + Lang.DOWNED_TEXT.getMessage() + "] " + ChatColor.RESET + t2 + ChatColor.BOLD + victim.getDisplayName(), ComWarfare.getLang());
 						ComWarfare.sendActionBar(attacker, ChatColor.YELLOW + "+" + xp + "xp");
 						ProgressionManager.getInstance().addExperience(attacker, xp);
 						CreditManager.setCredits(attacker, CreditManager.getCredits(attacker) + ComWarfare.getRank(attacker).getKillCredits());
@@ -3352,6 +3344,32 @@ public class GameInstance implements Listener {
 	public void preventItemHandSwap(PlayerSwapHandItemsEvent e) {
 		if (getPlayers().contains(e.getPlayer()))
 			e.setCancelled(true);
+	}
+
+	@EventHandler
+	public void killFeedEvent(KillFeedEvent e) {
+		if (e.isCancelled())
+			return;
+
+		if (e.getInstance() != this)
+			return;
+
+		Player victim = e.getVictim(),
+				killer = e.getKiller();
+
+		ChatColor vTeam = isOnBlueTeam(victim) ? ChatColor.BLUE : isOnRedTeam(victim) ? ChatColor.RED : ChatColor.LIGHT_PURPLE,
+				kTeam = isOnBlueTeam(killer) ? ChatColor.BLUE : isOnRedTeam(killer) ? ChatColor.RED : ChatColor.LIGHT_PURPLE;
+
+		victim.sendMessage("" + kTeam + ChatColor.BOLD + killer.getName() + ChatColor.RESET + ChatColor.WHITE + "[" + Lang.KILLED_TEXT.getMessage() + "] " + ChatColor.RESET + ChatColor.YELLOW + ChatColor.BOLD + victim.getName());
+		killer.sendMessage("" + ChatColor.YELLOW + ChatColor.BOLD + killer.getName() + ChatColor.RESET + ChatColor.WHITE + "[" + Lang.KILLED_TEXT.getMessage() + "] " + ChatColor.RESET + vTeam + ChatColor.BOLD + victim.getName());
+
+		if (ComWarfare.isKillFeedAll()) {
+			for (Player p : getPlayers()) {
+				if (p.equals(victim) || p.equals(killer))
+					continue;
+				p.sendMessage("" + kTeam + ChatColor.BOLD + killer.getName() + ChatColor.RESET + ChatColor.WHITE + "[" + Lang.KILLED_TEXT.getMessage() + "] " + ChatColor.RESET + vTeam + ChatColor.BOLD + victim.getName());
+			}
+		}
 	}
 
 	private boolean cancelIfNotActive(BukkitRunnable runnable) {

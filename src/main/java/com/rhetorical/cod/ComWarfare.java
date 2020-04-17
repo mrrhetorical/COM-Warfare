@@ -106,6 +106,8 @@ public class ComWarfare extends JavaPlugin {
 
 	private static boolean spawnProtection = true;
 
+	private static boolean killFeedAll = true;
+
 	private static int spawnProtectionDuration = 3;
 
 	private Metrics bMetrics;
@@ -263,6 +265,7 @@ public class ComWarfare extends JavaPlugin {
 			lobbyServer = getPlugin().getConfig().getString("lobbyServer");
 			spawnProtection = getPlugin().getConfig().getBoolean("spawnProtection.enabled");
 			spawnProtectionDuration = getPlugin().getConfig().getInt("spawnProtection.duration");
+			killFeedAll = getPlugin().getConfig().getBoolean("killFeedAll");
 			if (knifeDamage < 1)
 				knifeDamage = 1;
 			else if (knifeDamage > 100)
@@ -1430,14 +1433,17 @@ public class ComWarfare extends JavaPlugin {
 	/**
 	 * Sends a message to the target without translation.
 	 * */
-	private static void sendMessage(CommandSender target, String message) {
+	public static void sendMessage(CommandSender target, String message) {
 		target.sendMessage(message);
 	}
 
 	/**
 	 * Sends a message to the target and attempts to translate given the target lang with McTranslate++.
 	 * @param targetLang = The target language to attempt to translate the message to.
+	 *
+	 * @deprecated Deprecated because lang.yml more or less removed this as a need.
 	 * */
+	@Deprecated
 	public static void sendMessage(CommandSender target, String message, Object targetLang) {
 
 		try {
@@ -1637,6 +1643,10 @@ public class ComWarfare extends JavaPlugin {
 
 	public static boolean isSpawnProtection() {
 		return spawnProtection;
+	}
+
+	public static boolean isKillFeedAll() {
+		return killFeedAll;
 	}
 
 	public static int getSpawnProtectionDuration() {
