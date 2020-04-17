@@ -3397,15 +3397,15 @@ public class GameInstance implements Listener {
 			for (Player p : getPlayers()) {
 				if (ComWarfare.isKillFeedAll() || victim.equals(p) || killer.equals(p)) {
 					bar.addPlayer(p);
-					removeKillFeed(p, bar, 80L);
 				}
 			}
+			removeKillFeed(bar, 80L);
 		}
 	}
 
-	private void removeKillFeed(Player p, BossBar bar, long delay) {
+	private void removeKillFeed(BossBar bar, long delay) {
 		if (delay == 0) {
-			bar.removePlayer(p);
+			bar.removeAll();
 			return;
 		}
 
@@ -3413,13 +3413,13 @@ public class GameInstance implements Listener {
 			@Override
 			public void run() {
 				if (cancelIfNotActive(this)) {
-					bar.removePlayer(p);
+					bar.removeAll();
 					getRunnables().remove(this);
 					cancel();
 					return;
 				}
 
-				bar.removePlayer(p);
+				bar.removeAll();
 				getRunnables().remove(this);
 				cancel();
 			}
