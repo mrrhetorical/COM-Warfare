@@ -81,6 +81,11 @@ public class CrackShotGun implements Listener {
 
 		victim = (Player) e.getVictim();
 
+		GameInstance match = GameManager.getMatchWhichContains(victim);
+
+		if (match == null)
+			return;
+
 		double damage = e.getDamage();
 
 		if (!weapons.contains(e.getWeaponTitle()))
@@ -88,11 +93,9 @@ public class CrackShotGun implements Listener {
 		else
 			e.setDamage(0);
 
-		GameInstance match = GameManager.getMatchWhichContains(victim);
-		if (match != null) {
-			if (match.canDamage(e.getPlayer(), victim) || e.getPlayer().equals(victim) && !match.isInvulnerable(victim))
-				match.damagePlayer(victim, damage, e.getPlayer());
-		}
+
+		if (match.canDamage(e.getPlayer(), victim) || e.getPlayer().equals(victim) && !match.isInvulnerable(victim))
+			match.damagePlayer(victim, damage, e.getPlayer());
 	}
 
 }

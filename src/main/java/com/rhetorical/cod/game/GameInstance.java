@@ -24,6 +24,10 @@ import com.rhetorical.cod.weapons.CodWeapon;
 import com.rhetorical.cod.weapons.CrackShotGun;
 import org.bukkit.*;
 import org.bukkit.block.Block;
+import org.bukkit.boss.BarColor;
+import org.bukkit.boss.BarFlag;
+import org.bukkit.boss.BarStyle;
+import org.bukkit.boss.BossBar;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -3354,22 +3358,75 @@ public class GameInstance implements Listener {
 		if (e.getInstance() != this)
 			return;
 
+		showKillFeed(e);
+	}
+
+	private void showKillFeed(KillFeedEvent e) {
 		Player victim = e.getVictim(),
 				killer = e.getKiller();
 
 		ChatColor vTeam = isOnBlueTeam(victim) ? ChatColor.BLUE : isOnRedTeam(victim) ? ChatColor.RED : ChatColor.LIGHT_PURPLE,
 				kTeam = isOnBlueTeam(killer) ? ChatColor.BLUE : isOnRedTeam(killer) ? ChatColor.RED : ChatColor.LIGHT_PURPLE;
 
-		victim.sendMessage("" + kTeam + ChatColor.BOLD + killer.getName() + ChatColor.RESET + ChatColor.WHITE + " [" + Lang.KILLED_TEXT.getMessage() + "] " + ChatColor.RESET + ChatColor.YELLOW + ChatColor.BOLD + victim.getName());
-		killer.sendMessage("" + ChatColor.YELLOW + ChatColor.BOLD + killer.getName() + ChatColor.RESET + ChatColor.WHITE + " [" + Lang.KILLED_TEXT.getMessage() + "] " + ChatColor.RESET + vTeam + ChatColor.BOLD + victim.getName());
+		if (ComWarfare.isLegacy()) {
+			victim.sendMessage("" + kTeam + ChatColor.BOLD + killer.getName() + ChatColor.RESET + ChatColor.WHITE + Lang.KILLED_TEXT.getMessage() + ChatColor.RESET + ChatColor.YELLOW + ChatColor.BOLD + victim.getName());
+			killer.sendMessage("" + ChatColor.YELLOW + ChatColor.BOLD + killer.getName() + ChatColor.RESET + ChatColor.WHITE + Lang.KILLED_TEXT.getMessage() + ChatColor.RESET + vTeam + ChatColor.BOLD + victim.getName());
 
-		if (ComWarfare.isKillFeedAll()) {
+			if (ComWarfare.isKillFeedAll()) {
+				for (Player p : getPlayers()) {
+					if (p.equals(victim) || p.equals(killer))
+						continue;
+					p.sendMessage("" + kTeam + ChatColor.BOLD + killer.getName() + ChatColor.RESET + ChatColor.WHITE + Lang.KILLED_TEXT.getMessage() + ChatColor.RESET + vTeam + ChatColor.BOLD + victim.getName());
+				}
+			}
+		} else {
+			String title = "" + kTeam + ChatColor.BOLD + killer.getName() + ChatColor.RESET + ChatColor.WHITE + Lang.KILLED_TEXT.getMessage() + ChatColor.RESET + vTeam + ChatColor.BOLD + victim.getName();
+			if (title.length() > 64) {
+				ComWarfare.sendMessage(ComWarfare.getConsole(), ChatColor.RED + "The \"KILLED_TEXT\" value in the lang.yml is too long!");
+				title = title.replaceAll(Lang.KILLED_TEXT.getMessage(), " [killed] ");
+			}
+
+			int len = 64 - title.length();
+
+			StringBuilder titleBuilder = new StringBuilder(title);
+			for (int i = 0; i < len; i++) {
+				titleBuilder.insert(0, " ");
+			}
+			title = titleBuilder.toString();
+			BossBar bar = Bukkit.createBossBar(title, BarColor.WHITE, BarStyle.SEGMENTED_20);
 			for (Player p : getPlayers()) {
-				if (p.equals(victim) || p.equals(killer))
-					continue;
-				p.sendMessage("" + kTeam + ChatColor.BOLD + killer.getName() + ChatColor.RESET + ChatColor.WHITE + " [" + Lang.KILLED_TEXT.getMessage() + "] " + ChatColor.RESET + vTeam + ChatColor.BOLD + victim.getName());
+				if (ComWarfare.isKillFeedAll() || victim.equals(p) || killer.equals(p)) {
+					bar.addPlayer(p);
+					removeKillFeed(p, bar, 80L);
+				}
 			}
 		}
+	}
+
+	private void removeKillFeed(Player p, BossBar bar, long delay) {
+		if (delay == 0) {
+			bar.removePlayer(p);
+			return;
+		}
+
+		BukkitRunnable br = new BukkitRunnable() {
+			@Override
+			public void run() {
+				if (cancelIfNotActive(this)) {
+					bar.removePlayer(p);
+					getRunnables().remove(this);
+					cancel();
+					return;
+				}
+
+				bar.removePlayer(p);
+				getRunnables().remove(this);
+				cancel();
+			}
+		};
+
+		br.runTaskLater(ComWarfare.getPlugin(), delay); //4 seconds to go away
+		getRunnables().add(br);
 	}
 
 	private boolean cancelIfNotActive(BukkitRunnable runnable) {

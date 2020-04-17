@@ -120,7 +120,7 @@ public enum Lang {
 	RESPAWN_NEXT_ROUND("&cYou will respawn next round!"),
 	OITC_RAN_OUT_OF_LIVES("&cYou've ran out of lives!"),
 	YOU_WILL_RESPAWN("&cYou will respawn in {time} seconds!"),
-	KILLED_TEXT("killed"),
+	KILLED_TEXT(" [killed] "),
 	DOWNED_TEXT("downed"),
 	FLAG_DROPPED("&aThe {team-color}{team} &aflag has been dropped!"),
 	TEAM_SCORED("{team-color}The {team} team scored!"),
