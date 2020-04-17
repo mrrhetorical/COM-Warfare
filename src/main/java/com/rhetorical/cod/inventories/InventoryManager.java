@@ -695,7 +695,7 @@ public class InventoryManager implements Listener {
 			gunShopPrev = inv;
 
 			for (int i = 0; i < 27 && !guns.isEmpty(); i++) {
-				CodGun gun = guns.get(0);
+				CodGun gun = guns.remove(0);
 				if (gun.getType() == UnlockType.BOTH || gun.getType() == UnlockType.CREDITS) {
 					if (((gun.getType() == UnlockType.CREDITS || ProgressionManager.getInstance().getLevel(p) >= gun.getLevelUnlock())) && !ShopManager.getInstance().getPurchasedGuns().get(p).contains(gun)) {
 
@@ -718,7 +718,6 @@ public class InventoryManager implements Listener {
 
 					}
 				}
-				guns.remove(0);
 			}
 
 			if (page != 0)
@@ -752,7 +751,7 @@ public class InventoryManager implements Listener {
 			grenadeShopPrev = inv;
 
 			for (int i = 0; i < 27 && !grenades.isEmpty(); i++) {
-				CodWeapon grenade = grenades.get(0);
+				CodWeapon grenade = grenades.remove(0);
 				if (grenade.getType() == UnlockType.BOTH || grenade.getType() == UnlockType.CREDITS) {
 					if (((grenade.getType() == UnlockType.CREDITS || ProgressionManager.getInstance().getLevel(p) >= grenade.getLevelUnlock()) && !ShopManager.getInstance().getPurchasedWeapons().get(p).contains(grenade))) {
 
@@ -776,7 +775,6 @@ public class InventoryManager implements Listener {
 					}
 
 				}
-				grenades.remove(0);
 			}
 
 			if (page != 0)
