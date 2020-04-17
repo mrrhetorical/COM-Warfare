@@ -681,6 +681,10 @@ public class GameInstance implements Listener {
 			if (getGamemode() == Gamemode.INFECT && redTeam.contains(p)) {
 				p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 20 * gameTime, 1));
 			}
+
+			if (getGamemode() == Gamemode.RESCUE || getGamemode() == Gamemode.GUNFIGHT)
+				isAlive.put(p, true);
+
 		} else if (getGamemode() == Gamemode.OITC) {
 			p.getInventory().setItem(0, LoadoutManager.getInstance().knife);
 			p.getInventory().setItem(1, GameManager.oitcGun.getGunItem());
@@ -1775,11 +1779,12 @@ public class GameInstance implements Listener {
 			isAlive.put(p, false);
 
 			if (getGamemode() == Gamemode.RESCUE) {
-				dropDogTag(p);
 				if (isOnBlueTeam(p) && getAlivePlayers(blueTeam) > 0) {
 					ComWarfare.sendTitle(p, Lang.RESPAWN_IF_DOG_TAG_PICKED_UP.getMessage(), "");
+					dropDogTag(p);
 				} else if (isOnRedTeam(p) && getAlivePlayers(redTeam) > 0) {
 					ComWarfare.sendTitle(p, Lang.RESPAWN_IF_DOG_TAG_PICKED_UP.getMessage(), "");
+					dropDogTag(p);
 				}
 			} else {
 				ComWarfare.sendTitle(p, Lang.RESPAWN_NEXT_ROUND.getMessage(), "");
@@ -2193,7 +2198,6 @@ public class GameInstance implements Listener {
 	 * */
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onPlayerHit(EntityDamageByEntityEvent e) {
-
 		if (e.isCancelled())
 			return;
 
@@ -2208,8 +2212,12 @@ public class GameInstance implements Listener {
 			return;
 		}
 
-		if (!canDamage(attacker, victim))
+		if (!canDamage(attacker, victim)) {
+			if (!areEnemies(attacker, victim) && getPlayers().contains(attacker) && getPlayers().contains(victim))
+				e.setCancelled(true);
+
 			return;
+		}
 
 		e.setCancelled(true);
 
