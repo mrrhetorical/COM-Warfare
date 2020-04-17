@@ -3360,14 +3360,14 @@ public class GameInstance implements Listener {
 		ChatColor vTeam = isOnBlueTeam(victim) ? ChatColor.BLUE : isOnRedTeam(victim) ? ChatColor.RED : ChatColor.LIGHT_PURPLE,
 				kTeam = isOnBlueTeam(killer) ? ChatColor.BLUE : isOnRedTeam(killer) ? ChatColor.RED : ChatColor.LIGHT_PURPLE;
 
-		victim.sendMessage("" + kTeam + ChatColor.BOLD + killer.getName() + ChatColor.RESET + ChatColor.WHITE + "[" + Lang.KILLED_TEXT.getMessage() + "] " + ChatColor.RESET + ChatColor.YELLOW + ChatColor.BOLD + victim.getName());
-		killer.sendMessage("" + ChatColor.YELLOW + ChatColor.BOLD + killer.getName() + ChatColor.RESET + ChatColor.WHITE + "[" + Lang.KILLED_TEXT.getMessage() + "] " + ChatColor.RESET + vTeam + ChatColor.BOLD + victim.getName());
+		victim.sendMessage("" + kTeam + ChatColor.BOLD + killer.getName() + ChatColor.RESET + ChatColor.WHITE + " [" + Lang.KILLED_TEXT.getMessage() + "] " + ChatColor.RESET + ChatColor.YELLOW + ChatColor.BOLD + victim.getName());
+		killer.sendMessage("" + ChatColor.YELLOW + ChatColor.BOLD + killer.getName() + ChatColor.RESET + ChatColor.WHITE + " [" + Lang.KILLED_TEXT.getMessage() + "] " + ChatColor.RESET + vTeam + ChatColor.BOLD + victim.getName());
 
 		if (ComWarfare.isKillFeedAll()) {
 			for (Player p : getPlayers()) {
 				if (p.equals(victim) || p.equals(killer))
 					continue;
-				p.sendMessage("" + kTeam + ChatColor.BOLD + killer.getName() + ChatColor.RESET + ChatColor.WHITE + "[" + Lang.KILLED_TEXT.getMessage() + "] " + ChatColor.RESET + vTeam + ChatColor.BOLD + victim.getName());
+				p.sendMessage("" + kTeam + ChatColor.BOLD + killer.getName() + ChatColor.RESET + ChatColor.WHITE + " [" + Lang.KILLED_TEXT.getMessage() + "] " + ChatColor.RESET + vTeam + ChatColor.BOLD + victim.getName());
 			}
 		}
 	}

@@ -6,8 +6,6 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-import java.util.logging.Handler;
-
 public class KillFeedEvent extends Event implements Cancellable {
 
 	private static final HandlerList HANDLERS = new HandlerList();
