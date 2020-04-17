@@ -347,8 +347,14 @@ public class LoadoutManager {
 	}
 
 	public void prestigePlayer(Player p) {
-		ArrayList<Loadout> loadouts = new ArrayList<>();
+		List<Loadout> loadouts = new ArrayList<>();
+		for (int i = 0; i < getAllowedClasses(p); i++) {
+			Loadout loadout = getDefaultLoadout(p, i);
+			loadouts.add(loadout);
+		}
+
 		playerLoadouts.put(p, loadouts);
+
 		save(p);
 		load(p);
 	}

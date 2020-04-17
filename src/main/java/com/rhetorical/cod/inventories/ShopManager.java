@@ -67,6 +67,8 @@ public class ShopManager {
 		purchasedWeapons.put(p, grenades);
 		purchasedPerks.put(p, perks);
 
+		checkForNewGuns(p, false);
+
 		savePurchaseData(p);
 		loadPurchaseData(p);
 	}
