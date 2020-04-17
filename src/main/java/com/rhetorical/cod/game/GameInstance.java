@@ -2176,19 +2176,19 @@ public class GameInstance implements Listener {
 
 		CodScore killerScore = playerScores.get(killer);
 
-		killerScore.addScore(rank.getKillExperience());
+		if (!killer.equals(victim)) {
+			killerScore.addScore(rank.getKillExperience());
+			killerScore.addKillstreak();
+			if (getGamemode() != Gamemode.OITC && getGamemode() != Gamemode.GUN)
+				KillStreakManager.getInstance().checkStreaks(killer);
 
-		killerScore.addKillstreak();
+			killerScore.addKill();
 
-		if (getGamemode() != Gamemode.OITC && getGamemode() != Gamemode.GUN)
-			KillStreakManager.getInstance().checkStreaks(killer);
+			playerScores.put(killer, killerScore);
 
-		killerScore.addKill();
-
-		playerScores.put(killer, killerScore);
-
-		if (playerScores.get(victim) == null) {
-			playerScores.put(killer, new CodScore(victim));
+			if (playerScores.get(victim) == null) {
+				playerScores.put(killer, new CodScore(victim));
+			}
 		}
 
 		CodScore victimScore = playerScores.get(victim);
