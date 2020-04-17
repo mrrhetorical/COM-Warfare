@@ -88,10 +88,16 @@ public class CrackShotGun implements Listener {
 
 		double damage = e.getDamage();
 
-		if (!weapons.contains(e.getWeaponTitle()))
+		if (!match.canDamage(victim, e.getPlayer()))
 			e.setCancelled(true);
-		else
-			e.setDamage(0);
+
+		e.setDamage(0);
+
+
+//		if (!weapons.contains(e.getWeaponTitle()))
+//			e.setCancelled(true);
+//		else
+//			e.setDamage(0);
 
 		if (match.canDamage(e.getPlayer(), victim) || e.getPlayer().equals(victim) && !match.isInvulnerable(victim))
 			match.damagePlayer(victim, damage, e.getPlayer());

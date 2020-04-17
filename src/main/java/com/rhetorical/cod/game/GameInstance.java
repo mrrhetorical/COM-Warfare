@@ -392,6 +392,16 @@ public class GameInstance implements Listener {
 				ffaPlayerScores.put(p, maxScore_OITC);
 			}
 
+			if (getGamemode() == Gamemode.FFA || getGamemode() == Gamemode.OITC || getGamemode() == Gamemode.GUN) {
+				try {
+					Object bar = Bukkit.createBossBar(ChatColor.GRAY + "«" + ChatColor.WHITE + getFancyTime(gameTime) + ChatColor.RESET + ChatColor.WHITE + "»", org.bukkit.boss.BarColor.GREEN, org.bukkit.boss.BarStyle.SEGMENTED_10);
+					freeForAllBar.put(p, bar);
+					freeForAllBar.get(p).getClass().getMethod("addPlayer", Player.class).invoke(freeForAllBar.get(p), p);
+				} catch(NoClassDefFoundError e) {
+					System.out.println();
+				} catch(Exception ignored) {}
+			}
+
 			if (getGamemode() != Gamemode.RESCUE && getGamemode() != Gamemode.GUNFIGHT) {
 
 				Location spawn;
