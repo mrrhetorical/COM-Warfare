@@ -34,9 +34,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerPickupItemEvent;
-import org.bukkit.event.player.PlayerSwapHandItemsEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -2272,6 +2270,16 @@ public class GameInstance implements Listener {
 
 		if (damage != 0)
 			damagePlayer(victim, damage, attacker);
+	}
+
+	public void onPlayerInteractWithWolf(PlayerInteractEntityEvent e) {
+		if (!(e.getRightClicked() instanceof Wolf))
+			return;
+
+		if (!getPlayers().contains(e.getPlayer()))
+			return;
+
+		e.setCancelled(true);
 	}
 
 	@EventHandler
