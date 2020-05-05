@@ -8,6 +8,7 @@ import com.rhetorical.cod.game.Gamemode;
 import com.rhetorical.cod.lang.Lang;
 import com.rhetorical.cod.loadouts.Loadout;
 import com.rhetorical.cod.loadouts.LoadoutManager;
+import com.rhetorical.cod.weapons.CrackShotGun;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -83,10 +84,10 @@ public class PerkListener implements Listener {
 						Loadout loadout = LoadoutManager.getInstance().getActiveLoadout(p);
 						p.getInventory().clear();
 						p.getInventory().setItem(0, LoadoutManager.getInstance().knife);
-						p.getInventory().setItem(1, loadout.getPrimary().getMenuItem());
-						p.getInventory().setItem(2, loadout.getSecondary().getMenuItem());
-						p.getInventory().setItem(3, loadout.getLethal().getMenuItem());
-						p.getInventory().setItem(4, loadout.getTactical().getMenuItem());
+						p.getInventory().setItem(1, CrackShotGun.updateItem(loadout.getPrimary().getName(), loadout.getPrimary().getGunItem(), p));
+						p.getInventory().setItem(2, CrackShotGun.updateItem(loadout.getSecondary().getName(), loadout.getSecondary().getGunItem(), p));
+						p.getInventory().setItem(3, loadout.getLethal().getWeaponItem());
+						p.getInventory().setItem(4, loadout.getTactical().getWeaponItem());
 
 						ItemStack primaryAmmo = loadout.getPrimary().getAmmo();
 						primaryAmmo.setAmount(loadout.getPrimary().getAmmoCount());
