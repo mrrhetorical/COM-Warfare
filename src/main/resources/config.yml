@@ -139,9 +139,8 @@ killFeedAll: true
 
 #Rank Tiers: The tiers at which players can receive different rewards. All players can get the default one. The permission for each tier are 'com.[tier]' Default: default rank {PREMIUM-ONLY}
 RankTiers:
-  0:
-    #The name of the tier.
-    name: 'default'
+  #The name of the tier
+  default:
     #The amounts for kill rewards.
     kill:
       #Amount of xp rewarded when a player kills another player.
@@ -150,9 +149,8 @@ RankTiers:
       credits: 1
     #Amount of credits rewarded when a player levels up.
     levelCredits: 0
-  1:
-    name: 'donator'
+  donator:
     kill:
-      xp: 100
-      credits: 1
-    levelCredits: 1
+      xp: 200
+      credits: 5
+    levelCredits: 10

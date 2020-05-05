@@ -90,6 +90,8 @@ public class ProgressionManager {
 		this.level.put(p, this.level.get(p) + 1);
 		p.sendMessage(ComWarfare.getPrefix() + Lang.RANK_UP_MESSAGE.getMessage().replace("{level}", getLevel(p) + ""));
 
+		CreditManager.setCredits(p, CreditManager.getCredits(p) + ComWarfare.getRank(p).getLevelCredits());
+
 		Bukkit.getServer().getPluginManager().callEvent(new PlayerLevelUpSoundEvent(p)); //testing event
 
 		if (this.getLevel(p) == this.maxLevel) {
