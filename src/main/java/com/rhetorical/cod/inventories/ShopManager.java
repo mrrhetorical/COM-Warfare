@@ -207,10 +207,10 @@ public class ShopManager {
 	public void savePurchaseData(Player p) {
 
 		ArrayList<String> guns = new ArrayList<>();
-		if (this.purchasedGuns == null) {
-			this.purchasedGuns = new HashMap<>();
-		}
-		this.purchasedGuns.computeIfAbsent(p, k -> new ArrayList<>());
+		if (purchasedGuns == null)
+			purchasedGuns = new HashMap<>();
+
+		purchasedGuns.computeIfAbsent(p, k -> new ArrayList<>());
 		if (purchasedGuns.get(p) != null) {
 			for (CodGun gun : this.purchasedGuns.get(p)) {
 				if (!guns.contains(gun.getName())) {
@@ -223,14 +223,13 @@ public class ShopManager {
 		ShopFile.getData().set("Purchased.Guns." + p.getName(), guns);
 
 		ArrayList<String> weapons = new ArrayList<>();
-		if (this.purchasedWeapons == null) {
-			this.purchasedWeapons = new HashMap<>();
-		}
+		if (purchasedWeapons == null)
+			purchasedWeapons = new HashMap<>();
 
-		this.purchasedWeapons.computeIfAbsent(p, k -> new ArrayList<>());
+		purchasedWeapons.computeIfAbsent(p, k -> new ArrayList<>());
 
 		if (purchasedWeapons.get(p) != null) {
-			for (CodWeapon grenade : this.purchasedWeapons.get(p)) {
+			for (CodWeapon grenade : purchasedWeapons.get(p)) {
 				if (!weapons.contains(grenade.getName())) {
 					if (grenade != LoadoutManager.getInstance().blankLethal && grenade != LoadoutManager.getInstance().blankTactical)
 						weapons.add(grenade.getName());
@@ -241,10 +240,14 @@ public class ShopManager {
 		ShopFile.getData().set("Purchased.Weapons." + p.getName(), weapons);
 
 		ArrayList<String> perks = new ArrayList<>();
-		this.purchasedPerks.computeIfAbsent(p, k -> new ArrayList<>());
+
+		if (purchasedPerks == null)
+			purchasedPerks = new HashMap<>();
+
+		purchasedPerks.computeIfAbsent(p, k -> new ArrayList<>());
 
 		if (purchasedPerks.get(p) != null) {
-			for (CodPerk perk : this.purchasedPerks.get(p)) {
+			for (CodPerk perk : purchasedPerks.get(p)) {
 				if (!perks.contains(perk.getPerk().getName())) {
 					perks.add(perk.getPerk().getName());
 				}
