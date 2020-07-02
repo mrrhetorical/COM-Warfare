@@ -105,7 +105,8 @@ public class ComWarfare extends JavaPlugin {
 
 	private static boolean spawnProtection = true;
 
-	private static boolean killFeedAll = true;
+	private static boolean killFeedShowAll = true;
+	private static boolean killFeedUseBossBar = true;
 
 	private static int spawnProtectionDuration = 3;
 
@@ -263,7 +264,8 @@ public class ComWarfare extends JavaPlugin {
 			lobbyServer = getPlugin().getConfig().getString("lobbyServer");
 			spawnProtection = getPlugin().getConfig().getBoolean("spawnProtection.enabled");
 			spawnProtectionDuration = getPlugin().getConfig().getInt("spawnProtection.duration");
-			killFeedAll = getPlugin().getConfig().getBoolean("killFeedAll");
+			killFeedShowAll = getPlugin().getConfig().getBoolean("killfeed.showForAll");
+			killFeedUseBossBar = getPlugin().getConfig().getBoolean("killfeed.useBossBar");
 			if (knifeDamage < 1)
 				knifeDamage = 1;
 			else if (knifeDamage > 100)
@@ -1642,8 +1644,12 @@ public class ComWarfare extends JavaPlugin {
 		return spawnProtection;
 	}
 
-	public static boolean isKillFeedAll() {
-		return killFeedAll;
+	public static boolean isKillFeedShowAll() {
+		return killFeedShowAll;
+	}
+
+	public static boolean isKillFeedUseBossBar() {
+		return killFeedUseBossBar;
 	}
 
 	public static int getSpawnProtectionDuration() {

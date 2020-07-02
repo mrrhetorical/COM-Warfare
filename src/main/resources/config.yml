@@ -134,8 +134,11 @@ LevelNames:
   1: 'PVT'
   2: 'PFC'
 
-#Kill feed all: Show all kills and deaths (not just own) in chat.
-killFeedAll: true
+killfeed:
+  # Show for all: Show all kills and deaths (not just own) in chat.
+  showForAll: true
+  # Use Boss Bar: Use the boss bar for showing kill feed.
+  useBossBar: true
 
 #Rank Tiers: The tiers at which players can receive different rewards. All players can get the default one. The permission for each tier are 'com.[tier]' Default: default rank {PREMIUM-ONLY}
 RankTiers:

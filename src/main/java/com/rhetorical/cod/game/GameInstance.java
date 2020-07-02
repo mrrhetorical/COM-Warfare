@@ -5,7 +5,6 @@ import com.rhetorical.cod.ComWarfare;
 import com.rhetorical.cod.assignments.AssignmentManager;
 import com.rhetorical.cod.game.events.KillFeedEvent;
 import com.rhetorical.cod.inventories.InventoryManager;
-import com.rhetorical.cod.inventories.ShopManager;
 import com.rhetorical.cod.lang.Lang;
 import com.rhetorical.cod.lang.LevelNames;
 import com.rhetorical.cod.loadouts.Loadout;
@@ -25,7 +24,6 @@ import com.rhetorical.cod.weapons.CrackShotGun;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.boss.BarColor;
-import org.bukkit.boss.BarFlag;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
 import org.bukkit.entity.*;
@@ -3394,11 +3392,11 @@ public class GameInstance implements Listener {
 		ChatColor vTeam = isOnBlueTeam(victim) ? ChatColor.BLUE : isOnRedTeam(victim) ? ChatColor.RED : ChatColor.LIGHT_PURPLE,
 				kTeam = isOnBlueTeam(killer) ? ChatColor.BLUE : isOnRedTeam(killer) ? ChatColor.RED : ChatColor.LIGHT_PURPLE;
 
-		if (ComWarfare.isLegacy()) {
+		if (ComWarfare.isLegacy() || !ComWarfare.isKillFeedUseBossBar()) {
 			victim.sendMessage("" + kTeam + ChatColor.BOLD + killer.getName() + ChatColor.RESET + ChatColor.WHITE + Lang.KILLED_TEXT.getMessage() + ChatColor.RESET + ChatColor.YELLOW + ChatColor.BOLD + victim.getName());
 			killer.sendMessage("" + ChatColor.YELLOW + ChatColor.BOLD + killer.getName() + ChatColor.RESET + ChatColor.WHITE + Lang.KILLED_TEXT.getMessage() + ChatColor.RESET + vTeam + ChatColor.BOLD + victim.getName());
 
-			if (ComWarfare.isKillFeedAll()) {
+			if (ComWarfare.isKillFeedShowAll()) {
 				for (Player p : getPlayers()) {
 					if (p.equals(victim) || p.equals(killer))
 						continue;
@@ -3421,7 +3419,7 @@ public class GameInstance implements Listener {
 			title = titleBuilder.toString();
 			BossBar bar = Bukkit.createBossBar(title, BarColor.WHITE, BarStyle.SEGMENTED_20);
 			for (Player p : getPlayers()) {
-				if (ComWarfare.isKillFeedAll() || victim.equals(p) || killer.equals(p)) {
+				if (ComWarfare.isKillFeedShowAll() || victim.equals(p) || killer.equals(p)) {
 					bar.addPlayer(p);
 				}
 			}
