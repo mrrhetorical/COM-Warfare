@@ -82,7 +82,7 @@ public class Listeners implements Listener {
 				ChatColor tColor = ChatColor.GRAY;
 
 				if (receiver.equals(sender)) {
-					tColor = ChatColor.GREEN;
+					tColor = ChatColor.YELLOW;
 				} else if (match.isOnBlueTeam(sender)) {
 					tColor = ChatColor.BLUE;
 				} else if (match.isOnRedTeam(sender)) {

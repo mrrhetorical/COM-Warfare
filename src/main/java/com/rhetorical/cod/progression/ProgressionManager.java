@@ -5,6 +5,7 @@ import com.rhetorical.cod.ComWarfare;
 import com.rhetorical.cod.files.ProgressionFile;
 import com.rhetorical.cod.inventories.ShopManager;
 import com.rhetorical.cod.lang.Lang;
+import com.rhetorical.cod.loadouts.LoadoutManager;
 import com.rhetorical.cod.sounds.events.PlayerLevelUpSoundEvent;
 import com.rhetorical.cod.sounds.events.PlayerPrestigeSoundEvent;
 import org.bukkit.Bukkit;
@@ -89,6 +90,8 @@ public class ProgressionManager {
 		this.level.put(p, this.level.get(p) + 1);
 		p.sendMessage(ComWarfare.getPrefix() + Lang.RANK_UP_MESSAGE.getMessage().replace("{level}", getLevel(p) + ""));
 
+		CreditManager.setCredits(p, CreditManager.getCredits(p) + ComWarfare.getRank(p).getLevelCredits());
+
 		Bukkit.getServer().getPluginManager().callEvent(new PlayerLevelUpSoundEvent(p)); //testing event
 
 		if (this.getLevel(p) == this.maxLevel) {
@@ -130,7 +133,7 @@ public class ProgressionManager {
 		setLevel(p, 1, false);
 
 		ShopManager.getInstance().prestigePlayer(p);
-
+		LoadoutManager.getInstance().prestigePlayer(p);
 
 		Bukkit.getPluginManager().callEvent(new PlayerPrestigeSoundEvent(p));
 		p.sendMessage(ComWarfare.getPrefix() + Lang.RANK_UP_PRESTIGE_MESSAGE.getMessage().replace("{level}", getPrestigeLevel(p) + ""));

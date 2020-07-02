@@ -8,9 +8,9 @@ public class RankPerks {
 
 	public RankPerks(String name, int killCredits, double killExperience, int levelCredits) {
 		this.name = name;
-		this.killCredits = killCredits;
-		this.killExperience = killExperience;
-		this.levelCredits = levelCredits;
+		setKillCredits(killCredits);
+		setKillExperience(killExperience);
+		setLevelCredits(levelCredits);
 	}
 
 	public String getName() {
@@ -27,5 +27,17 @@ public class RankPerks {
 
 	public int getLevelCredits() {
 		return this.levelCredits;
+	}
+
+	public void setKillCredits(int value) {
+		killCredits = value;
+	}
+
+	public void setKillExperience(double value) {
+		killExperience = value;
+	}
+
+	public void setLevelCredits(int value) {
+		levelCredits = value;
 	}
 }

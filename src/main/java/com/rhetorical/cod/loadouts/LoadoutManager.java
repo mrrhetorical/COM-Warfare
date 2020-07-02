@@ -20,9 +20,9 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
 
 /**
  * Manages and manipulates data regarding loadouts.
@@ -34,7 +34,7 @@ public class LoadoutManager {
 
 	private Map<Player, Integer> allowedClasses = new HashMap<>();
 	private Map<Player, List<Loadout>> playerLoadouts = new HashMap<>();
-	private Map<Player, Loadout> activeLoadouts = new HashMap<>();
+	private Map<Player, Integer> activeLoadouts = new HashMap<>();
 
 	public ItemStack knife;
 
@@ -347,8 +347,14 @@ public class LoadoutManager {
 	}
 
 	public void prestigePlayer(Player p) {
-		ArrayList<Loadout> loadouts = new ArrayList<>();
+		List<Loadout> loadouts = new ArrayList<>();
+		for (int i = 0; i < getAllowedClasses(p); i++) {
+			Loadout loadout = getDefaultLoadout(p, i);
+			loadouts.add(loadout);
+		}
+
 		playerLoadouts.put(p, loadouts);
+
 		save(p);
 		load(p);
 	}
@@ -513,24 +519,24 @@ public class LoadoutManager {
 
 	public List<Loadout> getLoadouts(Player p) {
 		if (!playerLoadouts.containsKey(p)) {
-			this.load(p);
+			load(p);
 		}
 
 		return playerLoadouts.get(p);
 	}
 
 	public Loadout getActiveLoadout(Player p) {
-		this.activeLoadouts.computeIfAbsent(p, k -> this.getLoadouts(p).get(0));
+		getActiveLoadouts().putIfAbsent(p, 0);
 
-		return this.activeLoadouts.get(p);
+		return getLoadouts(p).get(getActiveLoadouts().get(p));
 	}
 
-	public Map<Player, Loadout> getActiveLoadouts() {
+	public Map<Player, Integer> getActiveLoadouts() {
 		return activeLoadouts;
 	}
 
 	public void setActiveLoadout(Player p, Loadout loadout) {
-		this.activeLoadouts.put(p, loadout);
+		this.activeLoadouts.put(p, getLoadouts(p).indexOf(loadout));
 	}
 
 	public CodGun getRandomPrimary() {

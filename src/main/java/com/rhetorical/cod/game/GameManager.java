@@ -249,6 +249,8 @@ public class GameManager {
 	@SuppressWarnings("UnstableApiUsage")
 	public static void leaveMatch(Player p) {
 		if (!isInMatch(p) || getMatchWhichContains(p) == null) {
+			if (ComWarfare.isDebug())
+				ComWarfare.sendMessage(ComWarfare.getConsole(), ChatColor.RED + "Could not remove player from match! Player: " + p.getName(), ComWarfare.getLang());
 			ComWarfare.sendMessage(p, Lang.PLAYER_NOT_IN_GAME.getMessage(), ComWarfare.getLang());
 			return;
 		}
@@ -343,14 +345,13 @@ public class GameManager {
 		}
 
 		i.destroy();
-		
-		ComWarfare.sendMessage(ComWarfare.getConsole(), ComWarfare.getPrefix() + ChatColor.GRAY + "Game instance id " + i.getId() + " has been removed!", ComWarfare.getLang());
+
+		if (ComWarfare.isDebug())
+			ComWarfare.sendMessage(ComWarfare.getConsole(), ComWarfare.getPrefix() + ChatColor.GRAY + "Game instance id " + i.getId() + " has been removed!", ComWarfare.getLang());
 
 		usedMaps.remove(i.getMap());
 
 		runningGames.remove(i);
-
-		System.gc();
 	}
 
 	public static ArrayList<CodMap> getAddedMaps() {

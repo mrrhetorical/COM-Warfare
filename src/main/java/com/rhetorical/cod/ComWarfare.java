@@ -27,15 +27,14 @@ import org.bukkit.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 /**
  *  COM-Warfare is a plugin that completely changes Minecraft servers to give its players an experience similar to that of Call of Duty!
@@ -102,6 +101,14 @@ public class ComWarfare extends JavaPlugin {
 
 	private static boolean legacy = false;
 
+	private static boolean debug = true;
+
+	private static boolean spawnProtection = true;
+
+	private static boolean killFeedAll = true;
+
+	private static int spawnProtectionDuration = 3;
+
 	private Metrics bMetrics;
 
 	final String uid = "%%__USER__%%";
@@ -146,7 +153,7 @@ public class ComWarfare extends JavaPlugin {
 			v = Integer.parseInt(bukkitVersion.split("\\.")[1]);
 		} catch(Exception ignored) {}
 
-		if (v <= 8 ) {
+		if (v <= 8) {
 			ComWarfare.getConsole().sendMessage(ComWarfare.getPrefix() + "You are not on the most recent version of Spigot/Bukkit, so COM-Warfare will have some features limited. To ensure the plugin will work as intended, please use version 1.9+!");
 			legacy = true;
 		}
@@ -171,9 +178,11 @@ public class ComWarfare extends JavaPlugin {
 
 		if (getPlugin().getConfig().getBoolean("check-for-updates")) {
 			ComWarfare.getConsole().sendMessage(ComWarfare.getPrefix() + "Check for updates is enabled, checking for updates...");
-			UpdateChecker updateChecker = new UpdateChecker();
+			new UpdateChecker();
 		}
 
+
+		//check if McTranslate++ is installed and language is set
 		try {
 			if (getPlugin().getConfig().getString("lang").equalsIgnoreCase("none")) {
 				lang = com.rhetorical.tpp.McLang.EN;
@@ -189,10 +198,7 @@ public class ComWarfare extends JavaPlugin {
 				if (lang != com.rhetorical.tpp.McLang.EN)
 					lang = com.rhetorical.tpp.McLang.EN;
 			}
-		} catch(Exception|Error ignored) {
-			//if mctranslate is not installed, it is no issue
-//			ComWarfare.getConsole().sendMessage(codPrefix + ChatColor.RED + "McTranslate++ is not installed.");
-		}
+		} catch(Exception|Error ignored) {}
 
 		String version = getPlugin().getDescription().getVersion();
 
@@ -255,40 +261,46 @@ public class ComWarfare extends JavaPlugin {
 			reward_maxPrestigeMaxLevel = getPlugin().getConfig().getString("Rewards.Max_Prestige_Max_Level");
 			knifeDamage = getPlugin().getConfig().getDouble("knifeDamage");
 			lobbyServer = getPlugin().getConfig().getString("lobbyServer");
+			spawnProtection = getPlugin().getConfig().getBoolean("spawnProtection.enabled");
+			spawnProtectionDuration = getPlugin().getConfig().getInt("spawnProtection.duration");
+			killFeedAll = getPlugin().getConfig().getBoolean("killFeedAll");
 			if (knifeDamage < 1)
 				knifeDamage = 1;
 			else if (knifeDamage > 100)
 				knifeDamage = 100;
 		}
 
+		spawnProtectionDuration = spawnProtectionDuration >= 1 ? spawnProtectionDuration : 1;
+
+		debug = getPlugin().getConfig().getBoolean("debug");
+
+
+		RankPerks defaultRank = new RankPerks("default", 1, 100, 0);
+
 		if (ComVersion.getPurchased()) {
-			int i = 0;
+			ConfigurationSection section = getPlugin().getConfig().getConfigurationSection("RankTiers");
+			if (section != null) {
+				Set<String> keySet = section.getKeys(false);
 
-			while (getPlugin().getConfig().contains("RankTiers." + i)) {
-				String name = getPlugin().getConfig().getString("RankTiers." + i + ".name");
-				int killCredits = getPlugin().getConfig().getInt("RankTiers." + i + ".kill.credits");
-				double killExperience = getPlugin().getConfig().getDouble("RankTiers." + i + ".kill.xp");
-				int levelCredits = getPlugin().getConfig().getInt("RankTiers." + i + ".levelCredits");
+				for (String key : keySet) {
+					int killCredits = getPlugin().getConfig().getInt("RankTiers." + key + ".kill.credits");
+					double killExperience = getPlugin().getConfig().getDouble("RankTiers." + key + ".kill.xp");
+					int levelCredits = getPlugin().getConfig().getInt("RankTiers." + key + ".levelCredits");
 
-				RankPerks rank = new RankPerks(name, killCredits, killExperience, levelCredits);
-
-				ComWarfare.getServerRanks().add(rank);
-
-				i++;
+					if (!key.equalsIgnoreCase("default")) {
+						RankPerks rank = new RankPerks(key, killCredits, killExperience, levelCredits);
+						ComWarfare.getServerRanks().add(rank);
+					} else {
+						defaultRank.setKillCredits(killCredits);
+						defaultRank.setKillExperience(killExperience);
+						defaultRank.setLevelCredits(levelCredits);
+					}
+				}
 			}
-
-			if (i == 0) {
-				getPlugin().getConfig().set("RankTiers.0.name", "default");
-				getPlugin().getConfig().set("RankTiers.0.kill.credits", 1);
-				getPlugin().getConfig().set("RankTiers.0.kill.xp", 100);
-				getPlugin().getConfig().set("RankTiers.0.levelCredits", 10);
-				getPlugin().saveConfig();
-				getPlugin().reloadConfig();
-			}
-		} else {
-			RankPerks rank = new RankPerks("default", 1, 100, 0);
-			ComWarfare.getServerRanks().add(rank);
 		}
+
+		ComWarfare.getServerRanks().add(defaultRank);
+
 
 		ComWarfare.getConsole().sendMessage(ComWarfare.getPrefix() + ChatColor.GREEN + ChatColor.BOLD + "COM-Warfare version " + ChatColor.RESET + ChatColor.WHITE + version + ChatColor.RESET + ChatColor.GREEN + ChatColor.BOLD + " is now up and running!");
 
@@ -1418,14 +1430,17 @@ public class ComWarfare extends JavaPlugin {
 	/**
 	 * Sends a message to the target without translation.
 	 * */
-	private static void sendMessage(CommandSender target, String message) {
+	public static void sendMessage(CommandSender target, String message) {
 		target.sendMessage(message);
 	}
 
 	/**
 	 * Sends a message to the target and attempts to translate given the target lang with McTranslate++.
 	 * @param targetLang = The target language to attempt to translate the message to.
+	 *
+	 * @deprecated Deprecated because lang.yml more or less removed this as a need.
 	 * */
+	@Deprecated
 	public static void sendMessage(CommandSender target, String message, Object targetLang) {
 
 		try {
@@ -1617,5 +1632,21 @@ public class ComWarfare extends JavaPlugin {
 
 	public static boolean isServerMode() {
 		return getInstance().serverMode;
+	}
+
+	public static boolean isDebug() {
+		return debug;
+	}
+
+	public static boolean isSpawnProtection() {
+		return spawnProtection;
+	}
+
+	public static boolean isKillFeedAll() {
+		return killFeedAll;
+	}
+
+	public static int getSpawnProtectionDuration() {
+		return spawnProtectionDuration;
 	}
 }

@@ -74,25 +74,36 @@ public class CrackShotGun implements Listener {
 	 * */
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onCrackShot(com.shampaggon.crackshot.events.WeaponDamageEntityEvent e) {
-
-		Player victim;
 		if (!(e.getVictim() instanceof Player))
 			return;
 
-		victim = (Player) e.getVictim();
+		Player victim = (Player) e.getVictim();
+
+		GameInstance match = GameManager.getMatchWhichContains(victim);
+
+		if (match == null)
+			return;
 
 		double damage = e.getDamage();
 
-		if (!weapons.contains(e.getWeaponTitle()))
-			e.setCancelled(true);
-		else
-			e.setDamage(0);
+		if (e.getDamage() == 0)
+			return;
 
-		GameInstance match = GameManager.getMatchWhichContains(victim);
-		if (match != null) {
-			if (match.canDamage(e.getPlayer(), victim) || e.getPlayer().equals(victim))
-				match.damagePlayer(victim, damage, e.getPlayer());
+		if (!match.canDamage(e.getPlayer(), victim)) {
+			e.setCancelled(true);
+			return;
 		}
+
+		e.setDamage(0);
+
+
+//		if (!weapons.contains(e.getWeaponTitle()))
+//			e.setCancelled(true);
+//		else
+//			e.setDamage(0);
+
+		if (match.canDamage(e.getPlayer(), victim) || e.getPlayer().equals(victim) && !match.isInvulnerable(victim))
+			match.damagePlayer(victim, damage, e.getPlayer());
 	}
 
 }
