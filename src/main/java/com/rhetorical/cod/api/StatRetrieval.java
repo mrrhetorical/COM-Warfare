@@ -53,7 +53,7 @@ public class StatRetrieval<Data> {
 			return new StatRetrieval<>(0, 2);
 		
 		return new StatRetrieval<>(StatsFile.getData().getInt(playerName + ".kills"), 0);
-		
+
 	}
 	
 	

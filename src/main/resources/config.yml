@@ -140,6 +140,17 @@ killfeed:
   # Use Boss Bar: Use the boss bar for showing kill feed.
   useBossBar: true
 
+# MySQL Database stuff
+mySql:
+  enabled: false
+  # The ip of the mysql server
+  ip: none
+  # Username ('none' for blank)
+  user: none
+  # Password ('none' for blank)
+  pass: none
+
+
 #Rank Tiers: The tiers at which players can receive different rewards. All players can get the default one. The permission for each tier are 'com.[tier]' Default: default rank {PREMIUM-ONLY}
 RankTiers:
   #The name of the tier
