@@ -24,6 +24,7 @@ import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.*;
+import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
@@ -34,7 +35,10 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 
 /**
  *  COM-Warfare is a plugin that completely changes Minecraft servers to give its players an experience similar to that of Call of Duty!
@@ -451,6 +455,7 @@ public class ComWarfare extends JavaPlugin {
 						case 5:
 							sendMessage(sender, cColor + "/cod blacklist (map) (mode) | " + dColor + "Prevents a mode from being played on the map.");
 							sendMessage(sender, cColor + "/cod version | " + dColor + "Displays the running version of COM-Warfare.");
+							sendMessage(sender, cColor + "/cod removeSpawns (map name) | " + dColor + "Shows spawn points so they may be removed.");
 							break;
 						default:
 							break;
@@ -689,6 +694,18 @@ public class ComWarfare extends JavaPlugin {
 						return true;
 					}
 
+					Block block = p.getLocation().getBlock();
+					List<Location> blocks = new ArrayList<>(map.getRedSpawns());
+					blocks.addAll(map.getBlueSpawns());
+					blocks.addAll(map.getPinkSpawns());
+
+					for (Location loc : blocks) {
+						if (loc.getBlock().equals(block)) {
+							sendMessage(p, Lang.SPAWN_ALREADY_EXISTS.getMessage());
+							return true;
+						}
+					}
+
 					String spawnTeam = args[3];
 					String team;
 					switch (spawnTeam.toUpperCase()) {
@@ -711,7 +728,6 @@ public class ComWarfare extends JavaPlugin {
 
 					String msg = Lang.SET_SPAWN_SUCCESS.getMessage().replace("{team}", team).replace("{map-name}", map.getName());
 					sendMessage(p, ComWarfare.getPrefix() + msg);
-
 				} else if (args[1].equalsIgnoreCase("flag")) {
 
 					if (!hasPerm(p, "com.map.modify"))
@@ -1138,6 +1154,34 @@ public class ComWarfare extends JavaPlugin {
 				ProgressionManager.getInstance().setLevel(player, level, true);
 				ProgressionManager.getInstance().saveData(player);
 				sendMessage(sender, Lang.SET_LEVEL_SUCCESS.getMessage().replace("{player}", player.getDisplayName()).replace("{level}", level + ""));
+				return true;
+			} else if (args[0].equalsIgnoreCase("removeSpawns")) {
+				if (!hasPerm(sender, "com.removeSpawns"))
+					return true;
+
+				if (args.length < 2) {
+					sendMessage(sender, codPrefix + Lang.INCORRECT_USAGE.getMessage().replace("{command}", "/cod removeSpawns (map name)"));
+					return true;
+				}
+
+				String mapName = args[1];
+				CodMap map = GameManager.getMapForName(mapName);
+
+				if (map == null) {
+					sendMessage(sender, codPrefix + Lang.MAP_NOT_EXISTS_WITH_NAME.getMessage());
+					return true;
+				}
+
+				if (SpawnRemover.isShowingSpawns(map)) {
+					SpawnRemover.clearSpawns(map);
+					sendMessage(sender, codPrefix + Lang.SPAWN_REMOVER_DEACTIVATED.getMessage());
+				} else {
+					if (SpawnRemover.showSpawns(map))
+						sendMessage(sender, codPrefix + Lang.SPAWN_REMOVER_ACTIVATED.getMessage());
+					else
+						sendMessage(sender, codPrefix + Lang.MAP_IN_USE.getMessage());
+				}
+
 				return true;
 			} else {
 				sender.sendMessage(ComWarfare.getPrefix() + Lang.UNKNOWN_COMMAND.getMessage());

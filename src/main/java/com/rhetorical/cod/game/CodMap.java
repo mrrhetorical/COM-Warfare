@@ -201,7 +201,7 @@ public class CodMap {
 		this.enabled = enabled;
 	}
 
-	private ArrayList<Location> getBlueSpawns() {
+	public ArrayList<Location> getBlueSpawns() {
 		return blueSpawns;
 	}
 
@@ -222,7 +222,7 @@ public class CodMap {
 		this.blueFlagSpawn = blueFlagSpawn;
 	}
 
-	private ArrayList<Location> getPinkSpawns() {
+	public ArrayList<Location> getPinkSpawns() {
 		return pinkSpawns;
 	}
 
@@ -248,7 +248,7 @@ public class CodMap {
 	}
 
 
-	private ArrayList<Location> getRedSpawns() {
+	public ArrayList<Location> getRedSpawns() {
 		return redSpawns;
 	}
 
