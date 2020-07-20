@@ -143,7 +143,7 @@ public class ComWarfare extends JavaPlugin {
 		if (ComVersion.getPurchased()) {
 			codPrefix = getPlugin().getConfig().getString("prefix").replace("&", "\u00A7") + " ";
 
-			if (codPrefix.equalsIgnoreCase("")) {
+			if (ComWarfare.getPrefix().equalsIgnoreCase("")) {
 				codPrefix = "[COD] ";
 			}
 		}
@@ -197,7 +197,7 @@ public class ComWarfare extends JavaPlugin {
 					connectToTranslationService();
 				} catch (Exception e) {
 					lang = com.rhetorical.tpp.McLang.EN;
-					cs.sendMessage(codPrefix + ChatColor.RED + "Could not get the language from the config! Make sure you're using the right two letter abbreviation!");
+					cs.sendMessage(ComWarfare.getPrefix() + ChatColor.RED + "Could not get the language from the config! Make sure you're using the right two letter abbreviation!");
 				}
 
 				if (lang != com.rhetorical.tpp.McLang.EN)
@@ -455,7 +455,8 @@ public class ComWarfare extends JavaPlugin {
 						case 5:
 							sendMessage(sender, cColor + "/cod blacklist (map) (mode) | " + dColor + "Prevents a mode from being played on the map.");
 							sendMessage(sender, cColor + "/cod version | " + dColor + "Displays the running version of COM-Warfare.");
-							sendMessage(sender, cColor + "/cod removeSpawns (map name) | " + dColor + "Shows spawn points so they may be removed.");
+							sendMessage(sender, cColor + "/cod removeSpawns (map) | " + dColor + "Shows spawn points so they may be removed.");
+							sendMessage(sender, cColor + "/cod reload (map) | " + dColor + "Reloads a map's data and enables it if able to.");
 							break;
 						default:
 							break;
@@ -834,7 +835,7 @@ public class ComWarfare extends JavaPlugin {
 
 				Player p = (Player) sender;
 				int credits = CreditManager.getCredits(p);
-				sendMessage(p, codPrefix + Lang.BALANCE_COMMAND.getMessage().replace("{credits}", credits + ""), lang);
+				sendMessage(p, Lang.BALANCE_COMMAND.getMessage().replace("{credits}", credits + ""), lang);
 			} else if (args[0].equalsIgnoreCase("credits")) {
 				if (args.length < 3) {
 					if (hasPerm(sender, "com.credits.give"))
@@ -919,7 +920,7 @@ public class ComWarfare extends JavaPlugin {
 							if (game != null) {
 								game.forceStart(true);
 							} else {
-								p.sendMessage(codPrefix + Lang.FORCE_START_FAIL.getMessage());
+								p.sendMessage(Lang.FORCE_START_FAIL.getMessage());
 							}
 						}
 					} catch(Exception e) {
@@ -1019,12 +1020,12 @@ public class ComWarfare extends JavaPlugin {
 				Player p = (Player) sender;
 
 				if (args.length < 2) {
-					sendMessage(p, codPrefix + Lang.INCORRECT_USAGE.getMessage().replace("{command}", "/cod changeMap (name)"));
+					sendMessage(p, ComWarfare.getPrefix() + Lang.INCORRECT_USAGE.getMessage().replace("{command}", "/cod changeMap (name)"));
 					return true;
 				}
 
 				if (!GameManager.isInMatch(p)) {
-					sendMessage(p, codPrefix + Lang.MUST_BE_IN_GAME.getMessage());
+					sendMessage(p, Lang.MUST_BE_IN_GAME.getMessage());
 					return true;
 				}
 
@@ -1033,7 +1034,7 @@ public class ComWarfare extends JavaPlugin {
 					return true;
 
 				if (game.getState() != GameState.WAITING && game.getState() != GameState.STARTING) {
-					sendMessage(p, codPrefix + Lang.MUST_NOT_BE_IN_GAME.getMessage());
+					sendMessage(p, Lang.MUST_NOT_BE_IN_GAME.getMessage());
 					return true;
 				}
 
@@ -1041,12 +1042,12 @@ public class ComWarfare extends JavaPlugin {
 				CodMap map = GameManager.getMapForName(args[1]);
 
 				if (map == null) {
-					sendMessage(p, codPrefix + Lang.MAP_NOT_EXISTS_WITH_NAME.getMessage());
+					sendMessage(p, Lang.MAP_NOT_EXISTS_WITH_NAME.getMessage());
 					return true;
 				}
 
 				GameManager.changeMap(game, map);
-				sendMessage(p, codPrefix + Lang.MAP_CHANGE_SUCCESS.getMessage().replace("{map-name}", map.getName()));
+				sendMessage(p, Lang.MAP_CHANGE_SUCCESS.getMessage().replace("{map-name}", map.getName()));
 				return true;
 			} else if (args[0].equalsIgnoreCase("changeMode")) {
 				if (!(sender instanceof Player)) {
@@ -1059,12 +1060,12 @@ public class ComWarfare extends JavaPlugin {
 
 				Player p = (Player) sender;
 				if (args.length < 2) {
-					sendMessage(p, codPrefix + Lang.INCORRECT_USAGE.getMessage().replace("{command}", "/cod changeMode (name)"));
+					sendMessage(p, ComWarfare.getPrefix() + Lang.INCORRECT_USAGE.getMessage().replace("{command}", "/cod changeMode (name)"));
 					return true;
 				}
 
 				if (!GameManager.isInMatch(p)) {
-					sendMessage(p, codPrefix + Lang.MUST_BE_IN_GAME.getMessage());
+					sendMessage(p, Lang.MUST_BE_IN_GAME.getMessage());
 					return true;
 				}
 
@@ -1073,7 +1074,7 @@ public class ComWarfare extends JavaPlugin {
 					return true;
 
 				if (game.getState() != GameState.WAITING && game.getState() != GameState.STARTING) {
-					sendMessage(p, codPrefix + Lang.MUST_NOT_BE_IN_GAME.getMessage());
+					sendMessage(p, Lang.MUST_NOT_BE_IN_GAME.getMessage());
 					return true;
 				}
 
@@ -1082,17 +1083,17 @@ public class ComWarfare extends JavaPlugin {
 				try {
 					mode = Gamemode.valueOf(args[1].toUpperCase());
 				} catch(Exception e) {
-					sendMessage(p, codPrefix + Lang.GAME_MODE_NOT_EXISTS_WITH_NAME.getMessage());
+					sendMessage(p, Lang.GAME_MODE_NOT_EXISTS_WITH_NAME.getMessage());
 					return true;
 				}
 
 				if (!game.getMap().getAvailableGamemodes().contains(mode)) {
-					sendMessage(p, codPrefix + Lang.GAME_MODE_NOT_SET_UP_ON_MAP.getMessage());
+					sendMessage(p, Lang.GAME_MODE_NOT_SET_UP_ON_MAP.getMessage());
 					return true;
 				}
 
 				Objects.requireNonNull(GameManager.getMatchWhichContains(p)).changeGamemode(mode);
-				sendMessage(p, codPrefix + Lang.GAME_MODE_CHANGE_SUCCESS.getMessage().replace("{game-mode}", mode.toString()));
+				sendMessage(p, Lang.GAME_MODE_CHANGE_SUCCESS.getMessage().replace("{game-mode}", mode.toString()));
 				return true;
 			} else if (args[0].equalsIgnoreCase("blacklist")) {
 
@@ -1100,7 +1101,7 @@ public class ComWarfare extends JavaPlugin {
 					return true;
 
 				if (args.length	< 3) {
-					sendMessage(sender, codPrefix + Lang.INCORRECT_USAGE.getMessage().replace("{command}", "/cod blacklist (map) (mode)"));
+					sendMessage(sender, ComWarfare.getPrefix() + Lang.INCORRECT_USAGE.getMessage().replace("{command}", "/cod blacklist (map) (mode)"));
 					return true;
 				}
 
@@ -1109,20 +1110,20 @@ public class ComWarfare extends JavaPlugin {
 				try {
 					mode = Gamemode.valueOf(args[2].toUpperCase());
 				} catch(Exception e) {
-					sendMessage(sender, codPrefix + Lang.GAME_MODE_NOT_EXISTS_WITH_NAME.getMessage());
+					sendMessage(sender, Lang.GAME_MODE_NOT_EXISTS_WITH_NAME.getMessage());
 					return true;
 				}
 
 				CodMap map = GameManager.getMapForName(args[1]);
 
 				if (map == null) {
-					sendMessage(sender, codPrefix + Lang.MAP_NOT_EXISTS_WITH_NAME.getMessage());
+					sendMessage(sender, Lang.MAP_NOT_EXISTS_WITH_NAME.getMessage());
 					return true;
 				}
 
 				map.addToBlacklist(mode);
 
-				sendMessage(sender, ComWarfare.getPrefix() + Lang.BLACKLIST_SUCCESS.getMessage().replace("{mode}", mode.toString()).replace("{map-name}", map.getName()));
+				sendMessage(sender, Lang.BLACKLIST_SUCCESS.getMessage().replace("{mode}", mode.toString()).replace("{map-name}", map.getName()));
 				return true;
 			} else if (args[0].equalsIgnoreCase("setLevel")) {
 
@@ -1130,7 +1131,7 @@ public class ComWarfare extends JavaPlugin {
 					return true;
 
 				if (args.length < 3) {
-					sendMessage(sender, codPrefix + Lang.INCORRECT_USAGE.getMessage().replace("{command}", "/cod setLevel (player) (level)"));
+					sendMessage(sender, ComWarfare.getPrefix() + Lang.INCORRECT_USAGE.getMessage().replace("{command}", "/cod setLevel (player) (level)"));
 					return true;
 				}
 
@@ -1138,7 +1139,7 @@ public class ComWarfare extends JavaPlugin {
 				Player player = Bukkit.getPlayer(args[1]);
 
 				if(player == null) {
-					sendMessage(sender, codPrefix + Lang.ERROR_PLAYER_NOT_EXISTS.getMessage());
+					sendMessage(sender, Lang.ERROR_PLAYER_NOT_EXISTS.getMessage());
 					return true;
 				}
 
@@ -1147,7 +1148,7 @@ public class ComWarfare extends JavaPlugin {
 					if (level > ProgressionManager.getInstance().maxLevel)
 						throw new NumberFormatException();
 				} catch(NumberFormatException e) {
-					sendMessage(sender, codPrefix + Lang.INCORRECT_USAGE.getMessage().replace("{command}", "/cod setLevel (player) (level)"));
+					sendMessage(sender, ComWarfare.getPrefix() + Lang.INCORRECT_USAGE.getMessage().replace("{command}", "/cod setLevel (player) (level)"));
 					return true;
 				}
 
@@ -1160,7 +1161,7 @@ public class ComWarfare extends JavaPlugin {
 					return true;
 
 				if (args.length < 2) {
-					sendMessage(sender, codPrefix + Lang.INCORRECT_USAGE.getMessage().replace("{command}", "/cod removeSpawns (map name)"));
+					sendMessage(sender, ComWarfare.getPrefix() + Lang.INCORRECT_USAGE.getMessage().replace("{command}", "/cod removeSpawns (map)"));
 					return true;
 				}
 
@@ -1168,19 +1169,45 @@ public class ComWarfare extends JavaPlugin {
 				CodMap map = GameManager.getMapForName(mapName);
 
 				if (map == null) {
-					sendMessage(sender, codPrefix + Lang.MAP_NOT_EXISTS_WITH_NAME.getMessage());
+					sendMessage(sender, Lang.MAP_NOT_EXISTS_WITH_NAME.getMessage());
 					return true;
 				}
 
 				if (SpawnRemover.isShowingSpawns(map)) {
 					SpawnRemover.clearSpawns(map);
-					sendMessage(sender, codPrefix + Lang.SPAWN_REMOVER_DEACTIVATED.getMessage());
+					sendMessage(sender, Lang.SPAWN_REMOVER_DEACTIVATED.getMessage());
 				} else {
 					if (SpawnRemover.showSpawns(map))
-						sendMessage(sender, codPrefix + Lang.SPAWN_REMOVER_ACTIVATED.getMessage());
+						sendMessage(sender, Lang.SPAWN_REMOVER_ACTIVATED.getMessage());
 					else
-						sendMessage(sender, codPrefix + Lang.MAP_IN_USE.getMessage());
+						sendMessage(sender, Lang.MAP_IN_USE.getMessage());
 				}
+
+				return true;
+			} else if (args[0].equalsIgnoreCase("reload")) {
+				if (!hasPerm(sender, "com.map.modify"))
+					return true;
+
+				if (args.length < 2) {
+					sendMessage(sender, ComWarfare.getPrefix() + Lang.INCORRECT_USAGE.getMessage().replace("{command}", "/cod reload (map)"));
+					return true;
+				}
+
+				CodMap map = GameManager.getMapForName(args[1]);
+
+				if (map == null) {
+					sendMessage(sender, Lang.MAP_NOT_EXISTS_WITH_NAME.getMessage());
+					return true;
+				}
+
+				if (GameManager.usedMaps.contains(map)) {
+					sendMessage(sender, Lang.MAP_IN_USE.getMessage());
+					return true;
+				}
+
+				map.setEnable();
+
+				sendMessage(sender, Lang.MAP_RELOADED.getMessage());
 
 				return true;
 			} else {
@@ -1311,7 +1338,7 @@ public class ComWarfare extends JavaPlugin {
 
 			grenadeWeapon.save();
 
-			sendMessage(p, codPrefix + Lang.WEAPON_CREATED_SUCCESS.getMessage().replace("{weapon-name}", name).replace("{weapon-type}", grenadeType.toString()), lang);
+			sendMessage(p, Lang.WEAPON_CREATED_SUCCESS.getMessage().replace("{weapon-name}", name).replace("{weapon-type}", grenadeType.toString()), lang);
 
 			ShopManager sm = ShopManager.getInstance();
 
@@ -1429,7 +1456,7 @@ public class ComWarfare extends JavaPlugin {
 
 			gun.save();
 
-			sendMessage(p, codPrefix + Lang.GUN_CREATED_SUCCESS.getMessage().replace("{gun-name}", name).replace("{gun-type}", gunType.toString()), lang);
+			sendMessage(p, Lang.GUN_CREATED_SUCCESS.getMessage().replace("{gun-name}", name).replace("{gun-type}", gunType.toString()), lang);
 
 			ShopManager sm = ShopManager.getInstance();
 
