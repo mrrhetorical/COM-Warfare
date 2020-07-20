@@ -1,13 +1,14 @@
 package com.rhetorical.cod;
 
-import com.rhetorical.cod.game.GameInstance;
-import com.rhetorical.cod.game.GameManager;
-import com.rhetorical.cod.game.GameState;
+import com.rhetorical.cod.game.*;
 import com.rhetorical.cod.lang.Lang;
 import com.rhetorical.cod.lang.LevelNames;
 import com.rhetorical.cod.progression.CreditManager;
 import com.rhetorical.cod.progression.ProgressionManager;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Wolf;
 import org.bukkit.event.EventHandler;
@@ -22,6 +23,8 @@ import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -195,7 +198,60 @@ public class Listeners implements Listener {
 				}
 			}
 		}
-		
+	}
 
+	@EventHandler
+	public void onSpawnPointBlockBreak(BlockBreakEvent e) {
+		if (GameManager.isInMatch(e.getPlayer()))
+			return;
+
+		Block b = e.getBlock();
+
+		if (!SpawnRemover.getShownBlocks().contains(b))
+			return;
+
+		if (!ComWarfare.hasPerm(e.getPlayer(), "com.removeSpawns"))
+			return;
+
+
+		if (b.getType() != Material.BLUE_GLAZED_TERRACOTTA
+				&& b.getType() != Material.RED_GLAZED_TERRACOTTA
+				&& b.getType() != Material.PINK_GLAZED_TERRACOTTA)
+			return;
+
+		CodMap map = SpawnRemover.getMapWithSpawnBlock(b);
+
+		if (map == null)
+			return;
+
+		List<Location> spawns = new ArrayList<>(map.getBlueSpawns());
+		for (Location loc : spawns) {
+			if (loc.getBlock().equals(b)) {
+				ComWarfare.sendMessage(e.getPlayer(), Lang.SPAWN_REMOVED.getMessage().replace("{team}", ChatColor.BLUE + "Blue"));
+				map.getBlueSpawns().remove(loc);
+				map.save();
+				return;
+			}
+		}
+
+		spawns = new ArrayList<>(map.getRedSpawns());
+		for (Location loc : spawns) {
+			if (loc.getBlock().equals(b)) {
+				ComWarfare.sendMessage(e.getPlayer(), Lang.SPAWN_REMOVED.getMessage().replace("{team}", ChatColor.RED + "Red"));
+				map.getRedSpawns().remove(loc);
+				map.save();
+				return;
+			}
+		}
+
+		spawns = new ArrayList<>(map.getPinkSpawns());
+		for (Location loc : spawns) {
+			if (loc.getBlock().equals(b)) {
+				ComWarfare.sendMessage(e.getPlayer(), Lang.SPAWN_REMOVED.getMessage().replace("{team}", ChatColor.LIGHT_PURPLE + "Pink"));
+				map.getPinkSpawns().remove(loc);
+				map.save();
+				return;
+			}
+		}
 	}
 }

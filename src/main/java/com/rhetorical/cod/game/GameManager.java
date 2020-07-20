@@ -127,6 +127,8 @@ public class GameManager {
 			if (!contains) {
 				addedMaps.add(m);
 			}
+
+			SpawnRemover.clearSpawns(m);
 			k++;
 		}
 	}
