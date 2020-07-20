@@ -1176,8 +1176,10 @@ public class ComWarfare extends JavaPlugin {
 					SpawnRemover.clearSpawns(map);
 					sendMessage(sender, codPrefix + Lang.SPAWN_REMOVER_DEACTIVATED.getMessage());
 				} else {
-					SpawnRemover.showSpawns(map);
-					sendMessage(sender, codPrefix + Lang.SPAWN_REMOVER_ACTIVATED.getMessage());
+					if (SpawnRemover.showSpawns(map))
+						sendMessage(sender, codPrefix + Lang.SPAWN_REMOVER_ACTIVATED.getMessage());
+					else
+						sendMessage(sender, codPrefix + Lang.MAP_IN_USE.getMessage());
 				}
 
 				return true;

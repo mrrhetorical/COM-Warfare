@@ -13,7 +13,12 @@ public class SpawnRemover {
 
 	private static List<Block> shownBlocks = new ArrayList<>();
 
-	public static void showSpawns(CodMap map) {
+	public static boolean showSpawns(CodMap map) {
+		if (GameManager.usedMaps.contains(map))
+			return false;
+
+		map.setEnabled(false);
+
 		List<Location> spawns = new ArrayList<>(map.getBlueSpawns());
 		spawns.addAll(map.getRedSpawns());
 		spawns.addAll(map.getPinkSpawns());
@@ -32,6 +37,8 @@ public class SpawnRemover {
 		}
 
 		mapsShowingSpawns.add(map.getName());
+
+		return true;
 	}
 
 	public static void clearSpawns(CodMap map) {
@@ -45,6 +52,8 @@ public class SpawnRemover {
 		}
 
 		mapsShowingSpawns.remove(map.getName());
+
+		map.setEnable();
 	}
 
 	public static List<Block> getShownBlocks() {
