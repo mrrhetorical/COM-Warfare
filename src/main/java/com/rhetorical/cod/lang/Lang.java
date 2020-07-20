@@ -249,7 +249,8 @@ public enum Lang {
 	CLOSEST_OBJECTIVE("&eClosest Objective: {distance}m"),
 	SPAWN_ALREADY_EXISTS("&cA spawnpoint already exists here!"),
 	SPAWN_REMOVER_ACTIVATED("&aSpawnpoint visualization enabled."),
-	SPAWN_REMOVER_DEACTIVATED("&cSpawnpoint visualization disabled.");
+	SPAWN_REMOVER_DEACTIVATED("&cSpawnpoint visualization disabled."),
+	SPAWN_REMOVED("{team} &7spawn removed!");
 
 
 	private String message;

@@ -26,6 +26,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -1671,10 +1672,12 @@ public class InventoryManager implements Listener {
 				e.setCancelled(true);
 				return;
 			}
+
 			if (item.equals(codItem) || altItem.equals(codItem)) {
-				ComWarfare.openMainMenu(e.getPlayer());
 				e.setCancelled(true);
-//				return;
+				if (e.getPlayer().getOpenInventory().getType().equals(InventoryType.CRAFTING))
+					ComWarfare.openMainMenu(e.getPlayer());
+				//				return;
 			}
 
 			if (voteItemA != null && (item.getItemMeta() != null && item.getItemMeta().getDisplayName().equals(voteItemA.getItemMeta().getDisplayName()))

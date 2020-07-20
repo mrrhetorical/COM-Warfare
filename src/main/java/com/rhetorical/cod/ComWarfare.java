@@ -20,7 +20,6 @@ import com.rhetorical.cod.util.LegacyTitle;
 import com.rhetorical.cod.util.UpdateChecker;
 import com.rhetorical.cod.weapons.*;
 import com.rhetorical.tpp.api.McTranslate;
-import com.sun.xml.internal.ws.encoding.policy.EncodingPrefixMapper;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bstats.bukkit.Metrics;
@@ -36,7 +35,10 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 
 /**
  *  COM-Warfare is a plugin that completely changes Minecraft servers to give its players an experience similar to that of Call of Duty!
@@ -1159,6 +1161,7 @@ public class ComWarfare extends JavaPlugin {
 
 				if (args.length < 2) {
 					sendMessage(sender, codPrefix + Lang.INCORRECT_USAGE.getMessage().replace("{command}", "/cod removeSpawns (map name)"));
+					return true;
 				}
 
 				String mapName = args[1];

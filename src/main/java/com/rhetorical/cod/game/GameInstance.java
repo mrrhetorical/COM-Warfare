@@ -845,6 +845,8 @@ public class GameInstance implements Listener {
 		despawnCtfFlags();
 		despawnHardpointFlag();
 
+		resetKillstreakData();
+
 		entityManager.clearEntities();
 
 		CodScore highestScore = null;
@@ -1225,11 +1227,29 @@ public class GameInstance implements Listener {
 		br.runTaskTimer(ComWarfare.getPlugin(), 0L, 5L);
 	}
 
+	private void resetKillstreakData() {
+		redUavActive = false;
+		blueUavActive = false;
+
+		redVSATActive = false;
+		blueVSATActive = false;
+
+		pinkCounterUavActive = false;
+		redCounterUavActive = false;
+		blueCounterUavActive = false;
+
+		redNukeActive = false;
+		blueNukeActive = false;
+		pinkNukeActive = null;
+	}
+
 	private void startGameTimer(int time, boolean newRound) {
 
 		pastClassChange = false;
 
 		entityManager.clearEntities();
+
+		resetKillstreakData();
 
 		if (!newRound) {
 			setState(GameState.IN_GAME);
@@ -2649,7 +2669,9 @@ public class GameInstance implements Listener {
 			despawnHardpointFlag();
 		}
 
-		final List<Location> locs = new ArrayList<>(getMap().getHardpointFlags());
+		List<Location> locs = new ArrayList<>(getMap().getHardpointFlags());
+
+		Collections.shuffle(locs);
 
 		Location spawnLocation = null;
 
@@ -3079,7 +3101,7 @@ public class GameInstance implements Listener {
 				}
 			}
 		};
-
+		getRunnables().add(br);
 		br.runTaskLater(ComWarfare.getPlugin(), 20L * 20L);
 
 	}

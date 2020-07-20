@@ -227,6 +227,7 @@ public class Listeners implements Listener {
 		List<Location> spawns = new ArrayList<>(map.getBlueSpawns());
 		for (Location loc : spawns) {
 			if (loc.getBlock().equals(b)) {
+				ComWarfare.sendMessage(e.getPlayer(), Lang.SPAWN_REMOVED.getMessage().replace("{team}", ChatColor.BLUE + "Blue"));
 				map.getBlueSpawns().remove(loc);
 				map.save();
 				return;
@@ -236,6 +237,7 @@ public class Listeners implements Listener {
 		spawns = new ArrayList<>(map.getRedSpawns());
 		for (Location loc : spawns) {
 			if (loc.getBlock().equals(b)) {
+				ComWarfare.sendMessage(e.getPlayer(), Lang.SPAWN_REMOVED.getMessage().replace("{team}", ChatColor.RED + "Red"));
 				map.getRedSpawns().remove(loc);
 				map.save();
 				return;
@@ -245,6 +247,7 @@ public class Listeners implements Listener {
 		spawns = new ArrayList<>(map.getPinkSpawns());
 		for (Location loc : spawns) {
 			if (loc.getBlock().equals(b)) {
+				ComWarfare.sendMessage(e.getPlayer(), Lang.SPAWN_REMOVED.getMessage().replace("{team}", ChatColor.LIGHT_PURPLE + "Pink"));
 				map.getPinkSpawns().remove(loc);
 				map.save();
 				return;
