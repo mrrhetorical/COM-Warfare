@@ -141,15 +141,31 @@ killfeed:
   useBossBar: true
 
 # MySQL Database stuff
-mySql:
-  enabled: false
-  # The ip of the mysql server
-  ip: none
-  # Username ('none' for blank)
-  user: none
-  # Password ('none' for blank)
-  pass: none
+MySQL:
+  Enabled: false
+  Host: "localhost"
+  Port: "3306"
+  Database: "com-warfare"
+  Username: "root"
+  Password: ""
+  autoReconnect: true
+  #
+  # ADVANCED SETTINGS
+  # if you don't know what these do, DO NOT TOUCH THEM!
+  #
+  # Use SSL when communicating with the server (true/false).
+  useSSL: true
+  # If "useSSL" is set to "true", should the driver verify the server's certificate?
+  verifyServerCertificate: false
+  # Maximum number of reconnects to attempt if autoReconnect is true, default is '5'.
+  maxReconnects: 5
+  # If autoReconnect is enabled, the initial time to wait between re-connect attempts (in seconds, defaults to '3').
+  initialTimeout: 3
 
+# Set to false to use player names instead of UUIDs for storing stuff in YML files.
+# Only useful for offline servers that aren't running behind an online Bungeecord proxy.
+# If you set this to true with regular names already in the config, it will simply fetch those players UUIDs
+Use-UUIDs-For-YML-Storage: true
 
 #Rank Tiers: The tiers at which players can receive different rewards. All players can get the default one. The permission for each tier are 'com.[tier]' Default: default rank {PREMIUM-ONLY}
 RankTiers:

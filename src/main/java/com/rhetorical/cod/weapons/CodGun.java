@@ -15,7 +15,7 @@ public class CodGun extends CodWeapon {
 	private final ItemStack gunItem;
 	private final ItemStack menuItem;
 	private ItemStack ammoItem;
-	
+
 	private GunType gunType;
 
 	private int levelUnlock;
@@ -86,9 +86,9 @@ public class CodGun extends CodWeapon {
 	}
 
 	public void save() {
-		
+
 		GunsFile.reloadData();
-		
+
 		if (this.levelUnlock <= 1 & creditUnlock <= 0 && !GunsFile.getData().contains("Guns." + gunType.toString() + ".default.name")) {
 			GunsFile.getData().set("Guns." + gunType.toString() + ".default.name", name);
 			GunsFile.getData().set("Guns." + gunType.toString() + ".default.ammoName", ammoName);
@@ -105,16 +105,16 @@ public class CodGun extends CodWeapon {
 			GunsFile.reloadData();
 			return;
 		}
-		
+
 		int k = 0;
 		while (GunsFile.getData().contains("Guns." + gunType.toString() + "." + k)) {
 			if (GunsFile.getData().getString("Guns." + gunType.toString() + "." + k + ".name").equals(name)) {
 				break;
 			}
-			
+
 			k++;
 		}
-		
+
 		GunsFile.getData().set("Guns." + gunType.toString() + "." + k + ".name", name);
 		GunsFile.getData().set("Guns." + gunType.toString() + "." + k + ".ammoCount", ammo);
 		GunsFile.getData().set("Guns." + gunType.toString() + "." + k + ".ammoName", ammoName);

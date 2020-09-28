@@ -3,6 +3,7 @@ package com.rhetorical.cod.progression;
 import com.rhetorical.cod.ComWarfare;
 import com.rhetorical.cod.files.CreditsFile;
 import com.rhetorical.cod.lang.Lang;
+import com.rhetorical.cod.sql.SQLDriver;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -10,102 +11,105 @@ import java.util.HashMap;
 
 public class CreditManager {
 
-	private static CreditManager instance;
+    private static CreditManager instance;
 
-	private HashMap<Player, Integer> creditMap = new HashMap<>();
+    private final HashMap<Player, Integer> creditMap = new HashMap<>();
 
-	private static CreditManager getInstance() {
-		if (instance == null)
-			instance = new CreditManager();
-		return instance;
-	}
+    private static CreditManager getInstance() {
+        if (instance == null)
+            instance = new CreditManager();
+        return instance;
+    }
 
-	public static void loadCredits(Player p) {
-		for (int k = 0; CreditsFile.getData().contains("Credits.players." + k); k++) {
-			if (p.getName().equals(CreditsFile.getData().get("Credits.players." + k + ".player"))) {
+    public static void loadCredits(Player p) {
+        if (ComWarfare.MySQL) {
+            getInstance().creditMap.put(p, SQLDriver.getInstance().getCredits(p.getUniqueId()));
+        } else {
+            String playerName = ComWarfare.setName(p);
 
-				int credits = CreditsFile.getData().getInt("Credits.players." + k + ".amount");
+            int credits = CreditsFile.getData().getInt("Credits.Players." + playerName + ".Amount");
+            getInstance().creditMap.put(p, credits);
+        }
+    }
 
-				getInstance().creditMap.put(p, credits);
-				return;
-			}
-		}
-	}
+    private static void saveCredits(Player p) {
+        if (ComWarfare.MySQL) {
+            SQLDriver.getInstance().setCredits(p.getUniqueId(), getCredits(p));
+        } else {
+            // Use name or uuid depending on settings
+            String playerName = ComWarfare.setName(p);
 
-	private static void saveCredits(Player p) {
-		int k;
-		for (k = 0; CreditsFile.getData().contains("Credits.players." + k); k++) {
-			if (p.getName().equals(CreditsFile.getData().get("Credits.players." + k + ".player"))) {
-				CreditsFile.getData().set("Credits.players." + k + ".amount", getCredits(p));
-				CreditsFile.saveData();
-				CreditsFile.reloadData();
-				return;
-			}
-		}
+            // Loop through all names/uuids until a match is found
+            for (String name : CreditsFile.getData().getConfigurationSection("Credits.Players").getKeys(false)) {
+                if (!name.equals(playerName)) return;
+                // Set credits when a match is founds
+                CreditsFile.getData().set(name + ".Amount", getCredits(p));
+            }
+            // Save & reload
+            CreditsFile.saveData();
+            CreditsFile.reloadData();
+        }
 
-		CreditsFile.getData().set("Credits.players." + k + ".player", p.getName());
-		CreditsFile.getData().set("Credits.players." + k + ".amount", getCredits(p));
-		CreditsFile.saveData();
-		CreditsFile.reloadData();
+    }
 
-	}
+    public static int getCredits(Player p) {
+        if (!getInstance().creditMap.containsKey(p)) {
+            getInstance().creditMap.put(p, 0);
+            return 0;
+        } else {
+            return getInstance().creditMap.get(p);
+        }
+    }
 
-	public static int getCredits(Player p) {
-		if (!getInstance().creditMap.containsKey(p)) {
-			getInstance().creditMap.put(p, 0);
-			return 0;
-		} else {
-			return getInstance().creditMap.get(p);
-		}
-	}
-	
-	public static int getCredits(String name) {
-		
-		if (Bukkit.getPlayer(name) == null) {
-			return -1;
-		}
-		
-		Player p = Bukkit.getPlayer(name);
+    public static int getCredits(String name) {
 
-		if (!getInstance().creditMap.containsKey(p)) {
-			getInstance().creditMap.put(p, 0);
-			saveCredits(p);
-			return 0;
-		} else {
-			return getInstance().creditMap.get(p);
-		}
-	}
+        if (Bukkit.getPlayer(name) == null) {
+            return -1;
+        }
 
-	public static void setCredits(Player p, int amt) {
-		getInstance().creditMap.put(p, amt);
-		saveCredits(p);
-	}
-	
-	public static void setCredits(String name, int amt) {
-		if (Bukkit.getPlayer(name) == null) {
-			return;
-		}
-		
-		getInstance().creditMap.put(Bukkit.getPlayer(name), amt);
-		saveCredits(Bukkit.getPlayer(name));
-	}
-	
+        Player p = Bukkit.getPlayer(name);
 
-	/**
-	 * @return Returns if the target player has enough money (credits) to cover the cost of the purchase.
-	 * */
-	public static boolean purchase(Player p, int cost) {
+        if (!getInstance().creditMap.containsKey(p)) {
+            getInstance().creditMap.put(p, 0);
+            saveCredits(p);
+            return 0;
+        } else {
+            return getInstance().creditMap.get(p);
+        }
+    }
 
-		if (getCredits(p) >= cost) {
-			if (cost > 0) {
-				setCredits(p, getCredits(p) - cost);
-			}
-			saveCredits(p);
-			ComWarfare.sendMessage(p, ComWarfare.getPrefix() + Lang.PURCHASE_SUCCESSFUL.getMessage(), ComWarfare.getLang());
-			return true;
-		} else {
-			ComWarfare.sendMessage(p, ComWarfare.getPrefix() + Lang.INSUFFICIENT_FUNDS.getMessage(), ComWarfare.getLang());
-			return false;
-		}
-	}
+    public static void setCredits(Player p, int amt) {
+        getInstance().creditMap.put(p, amt);
+        saveCredits(p);
+    }
+
+    public static void setCredits(String name, int amt) {
+        Player player = Bukkit.getPlayer(name);
+        if (player == null) {
+            return;
+        }
+
+        getInstance().creditMap.put(player, amt);
+        saveCredits(player);
+    }
+
+
+    /**
+     * @return Returns if the target player has enough money (credits) to cover the cost of the purchase.
+     */
+    public static boolean purchase(Player p, int cost) {
+
+        if (getCredits(p) >= cost) {
+            if (cost > 0) {
+                setCredits(p, getCredits(p) - cost);
+            }
+            saveCredits(p);
+            ComWarfare.sendMessage(p, ComWarfare.getPrefix() + Lang.PURCHASE_SUCCESSFUL.getMessage(), ComWarfare.getLang());
+            return true;
+        } else {
+            ComWarfare.sendMessage(p, ComWarfare.getPrefix() + Lang.INSUFFICIENT_FUNDS.getMessage(), ComWarfare.getLang());
+            return false;
+        }
+    }
+
 }
