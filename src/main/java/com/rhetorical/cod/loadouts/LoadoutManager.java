@@ -128,7 +128,7 @@ public class LoadoutManager {
 					pm.getDefaultPerk(PerkSlot.ONE), pm.getDefaultPerk(PerkSlot.TWO),
 					pm.getDefaultPerk(PerkSlot.THREE));
 			currentLoadouts.add(defaultLoadout);
-			String playerName = ComWarfare.setName(p);
+			String playerName = ComWarfare.setName(p.getName());
 			int next = 0;
 			if (ComWarfare.MySQL) {
 				JsonObject jo = SQLDriver.getInstance().getLoadout(p.getUniqueId());
@@ -380,7 +380,7 @@ public class LoadoutManager {
 	public boolean load(Player p) {
 
 		ArrayList<Loadout> l = new ArrayList<>();
-		String playerName = ComWarfare.setName(p);
+		String playerName = ComWarfare.setName(p.getName());
 
 		String name = null;
 		Loadout loadout;
@@ -438,9 +438,45 @@ public class LoadoutManager {
 							perkOne = perk;
 						}
 					}
-
-					k++;
 				}
+
+				if (primary == null) {
+					primary = LoadoutManager.getInstance().getDefaultPrimary();
+				}
+
+				if (secondary == null) {
+					secondary = LoadoutManager.getInstance().getDefaultSecondary();
+				}
+
+				if (lethal == null) {
+					lethal = LoadoutManager.getInstance().getDefaultLethal();
+				}
+
+				if (tactical == null) {
+					tactical = LoadoutManager.getInstance().getDefaultTactical();
+				}
+
+				if (perkOne == null) {
+					perkOne = PerkManager.getInstance().getDefaultPerk(PerkSlot.ONE);
+				}
+
+				if (perkTwo == null) {
+					perkTwo = PerkManager.getInstance().getDefaultPerk(PerkSlot.TWO);
+				}
+
+				if (perkThree == null) {
+					perkThree = PerkManager.getInstance().getDefaultPerk(PerkSlot.THREE);
+				}
+
+				try {
+					loadout = new Loadout(p, name, primary, secondary, lethal, tactical, perkOne, perkTwo, perkThree);
+					l.add(loadout);
+				} catch (Exception e) {
+					ComWarfare.sendMessage(ComWarfare.getConsole(), ComWarfare.getPrefix() + Lang.ERROR_READING_PLAYER_LOADOUT.getMessage(), ComWarfare.getLang());
+				}
+
+
+				k++;
 			}
 
 
@@ -489,45 +525,45 @@ public class LoadoutManager {
 					}
 				}
 
+				if (primary == null) {
+					primary = LoadoutManager.getInstance().getDefaultPrimary();
+				}
+
+				if (secondary == null) {
+					secondary = LoadoutManager.getInstance().getDefaultSecondary();
+				}
+
+				if (lethal == null) {
+					lethal = LoadoutManager.getInstance().getDefaultLethal();
+				}
+
+				if (tactical == null) {
+					tactical = LoadoutManager.getInstance().getDefaultTactical();
+				}
+
+				if (perkOne == null) {
+					perkOne = PerkManager.getInstance().getDefaultPerk(PerkSlot.ONE);
+				}
+
+				if (perkTwo == null) {
+					perkTwo = PerkManager.getInstance().getDefaultPerk(PerkSlot.TWO);
+				}
+
+				if (perkThree == null) {
+					perkThree = PerkManager.getInstance().getDefaultPerk(PerkSlot.THREE);
+				}
+
+				try {
+					loadout = new Loadout(p, name, primary, secondary, lethal, tactical, perkOne, perkTwo, perkThree);
+					l.add(loadout);
+				} catch (Exception e) {
+					ComWarfare.sendMessage(ComWarfare.getConsole(), ComWarfare.getPrefix() + Lang.ERROR_READING_PLAYER_LOADOUT.getMessage(), ComWarfare.getLang());
+				}
+
 				k++;
 			}
 		}
 
-
-		if (primary == null) {
-			primary = LoadoutManager.getInstance().getDefaultPrimary();
-		}
-
-		if (secondary == null) {
-			secondary = LoadoutManager.getInstance().getDefaultSecondary();
-		}
-
-		if (lethal == null) {
-			lethal = LoadoutManager.getInstance().getDefaultLethal();
-		}
-
-		if (tactical == null) {
-			tactical = LoadoutManager.getInstance().getDefaultTactical();
-		}
-
-		if (perkOne == null) {
-			perkOne = PerkManager.getInstance().getDefaultPerk(PerkSlot.ONE);
-		}
-
-		if (perkTwo == null) {
-			perkTwo = PerkManager.getInstance().getDefaultPerk(PerkSlot.TWO);
-		}
-
-		if (perkThree == null) {
-			perkThree = PerkManager.getInstance().getDefaultPerk(PerkSlot.THREE);
-		}
-
-		try {
-			loadout = new Loadout(p, name, primary, secondary, lethal, tactical, perkOne, perkTwo, perkThree);
-			l.add(loadout);
-		} catch (Exception e) {
-			ComWarfare.sendMessage(ComWarfare.getConsole(), ComWarfare.getPrefix() + Lang.ERROR_READING_PLAYER_LOADOUT.getMessage(), ComWarfare.getLang());
-		}
 
 		if (k < getAllowedClasses(p)) {
 			for (int i = k; i < getAllowedClasses(p); i++) {
@@ -566,20 +602,20 @@ public class LoadoutManager {
 			int i = 0;
 			for (Loadout l : getLoadouts(p)) {
 				jo.addProperty(i + ".Name", l.getName());
-				jo.addProperty(i + ".Primary", l.getName());
-				jo.addProperty(i + ".Secondary", l.getName());
-				jo.addProperty(i + ".Lethal", l.getName());
-				jo.addProperty(i + ".Tactical", l.getName());
-				jo.addProperty(i + ".Perk1", l.getName());
-				jo.addProperty(i + ".Perk2", l.getName());
-				jo.addProperty(i + ".Perk3", l.getName());
+				jo.addProperty(i + ".Primary", l.getPrimary().getName());
+				jo.addProperty(i + ".Secondary", l.getSecondary().getName());
+				jo.addProperty(i + ".Lethal", l.getLethal().getName());
+				jo.addProperty(i + ".Tactical", l.getTactical().getName());
+				jo.addProperty(i + ".Perk1", l.getPerk1().getPerk().getName());
+				jo.addProperty(i + ".Perk2", l.getPerk2().getPerk().getName());
+				jo.addProperty(i + ".Perk3", l.getPerk3().getPerk().getName());
 				i++;
 			}
 			SQLDriver.getInstance().setLoadouts(p.getUniqueId(), jo);
 
 		} else {
 
-			String playerName = ComWarfare.setName(p);
+			String playerName = ComWarfare.setName(p.getName());
 
 			int i = 0;
 			for (Loadout l : getLoadouts(p)) {

@@ -25,7 +25,7 @@ public class CreditManager {
 		if (ComWarfare.MySQL) {
 			getInstance().creditMap.put(p, SQLDriver.getInstance().getCredits(p.getUniqueId()));
 		} else {
-			String playerName = ComWarfare.setName(p);
+			String playerName = ComWarfare.setName(p.getName());
 
 			int credits = CreditsFile.getData().getInt("Credits.Players." + playerName + ".Amount");
 			getInstance().creditMap.put(p, credits);
@@ -37,7 +37,7 @@ public class CreditManager {
 			SQLDriver.getInstance().setCredits(p.getUniqueId(), getCredits(p));
 		} else {
 			// Use name or uuid depending on settings
-			String playerName = ComWarfare.setName(p);
+			String playerName = ComWarfare.setName(p.getName());
 
 			// Loop through all names/uuids until a match is found
 			for (String name : CreditsFile.getData().getConfigurationSection("Credits.Players").getKeys(false)) {

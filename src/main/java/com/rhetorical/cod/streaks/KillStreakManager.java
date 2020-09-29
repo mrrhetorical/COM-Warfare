@@ -83,7 +83,7 @@ public class KillStreakManager {
 	}
 
 	public void loadStreaks(Player p) {
-		String playerName = ComWarfare.setName(p);
+		String playerName = ComWarfare.setName(p.getName());
 		List<String> streaks;
 		if (ComWarfare.MySQL) {
 			if (SQLDriver.getInstance().getKillstreaks(p.getUniqueId()).isEmpty()) {
@@ -133,7 +133,7 @@ public class KillStreakManager {
 			if (ComWarfare.MySQL) {
 				SQLDriver.getInstance().setKillstreaks(p.getUniqueId(), Arrays.asList(streaks));
 			} else {
-				String playerName = ComWarfare.setName(p);
+				String playerName = ComWarfare.setName(p.getName());
 				KillstreaksFile.getData().set("Killstreaks." + playerName + ".streaks", streaks);
 				KillstreaksFile.saveData();
 				KillstreaksFile.reloadData();
@@ -151,7 +151,7 @@ public class KillStreakManager {
 		if (ComWarfare.MySQL) {
 			SQLDriver.getInstance().setKillstreaks(p.getUniqueId(), killStreakStrings);
 		} else {
-			String playerName = ComWarfare.setName(p);
+			String playerName = ComWarfare.setName(p.getName());
 			KillstreaksFile.getData().set("Killstreaks." + playerName + ".streaks", killStreakStrings);
 			KillstreaksFile.saveData();
 			KillstreaksFile.reloadData();

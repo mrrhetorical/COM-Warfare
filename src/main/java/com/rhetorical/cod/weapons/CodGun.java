@@ -3,6 +3,7 @@ package com.rhetorical.cod.weapons;
 import com.rhetorical.cod.ComWarfare;
 import com.rhetorical.cod.files.GunsFile;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 public class CodGun extends CodWeapon {
@@ -13,7 +14,6 @@ public class CodGun extends CodWeapon {
 	private UnlockType unlockType;
 	private int ammo;
 	private final ItemStack gunItem;
-	private final ItemStack menuItem;
 	private ItemStack ammoItem;
 
 	private GunType gunType;
@@ -38,7 +38,6 @@ public class CodGun extends CodWeapon {
 		this.ammoItem = ammoI;
 
 		gunItem = setupWeaponItem(gunI);
-		menuItem = setupMenuItem(gunI);
 	}
 
 	/**
@@ -58,7 +57,6 @@ public class CodGun extends CodWeapon {
 		this.ammoItem = ammoI;
 
 		gunItem = setupWeaponItem(gunI);
-		menuItem = setupMenuItem(gunI);
 	}
 
 	/**
@@ -78,10 +76,8 @@ public class CodGun extends CodWeapon {
 
 		if (!isBlank) {
 			gunItem = setupWeaponItem(gunI);
-			menuItem = setupMenuItem(gunI);
 		} else {
 			gunItem = gunI;
-			menuItem = gunI;
 		}
 	}
 
@@ -143,10 +139,6 @@ public class CodGun extends CodWeapon {
 	}
 
 	public ItemStack getGunItem() {
-		return gunItem.clone();
-	}
-
-	public ItemStack getMenuItem() {
 		return gunItem.clone();
 	}
 

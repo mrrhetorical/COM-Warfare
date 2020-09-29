@@ -43,7 +43,7 @@ import java.util.*;
  *  COM-Warfare is a plugin that completely changes Minecraft servers to give its players an experience similar to that of Call of Duty!
  *
  * @author Caleb Brock
- * @version 2.12.15
+ * @version 2.15.0
  * */
 
 public class ComWarfare extends JavaPlugin {
@@ -152,7 +152,7 @@ public class ComWarfare extends JavaPlugin {
 			}
 		}
 
-		//bMetrics = new Metrics(this);
+		bMetrics = new Metrics(this);
 
 		String bukkitVersion = Bukkit.getServer().getBukkitVersion();
 
@@ -216,7 +216,10 @@ public class ComWarfare extends JavaPlugin {
 		Lang.load();
 
 
-        if (MySQL == false) {
+		if (getConfig().getBoolean("MySQL.Enabled", false))
+			SQLDriver.getInstance();
+
+        if (!MySQL) {
             ShopFile.setup(getPlugin());
             LoadoutsFile.setup(getPlugin());
             KillstreaksFile.setup(getPlugin());
@@ -245,13 +248,6 @@ public class ComWarfare extends JavaPlugin {
 			CrackShotGun.setup();
 
 		ProgressionManager.getInstance();
-		PerkManager.getInstance();
-		LoadoutManager.getInstance();
-		ShopManager.getInstance();
-		PerkListener.getInstance();
-		KillStreakManager.getInstance();
-		InventoryManager.getInstance();
-		AssignmentManager.getInstance();
 		SoundManager.getInstance();
 
 		GameManager.setupOITC();
@@ -1863,10 +1859,25 @@ public class ComWarfare extends JavaPlugin {
 	}
 
     // Set name to players name or UUID
-    public static String setName(Player player) {
+    public static String setName(String playerName) {
         // Use name or uuid depending on settings
-        String playerName = player.getName();
-        if (ComWarfare.useUuidForYml) playerName = Bukkit.getPlayer(playerName).getUniqueId().toString();
+        if (ComWarfare.useUuidForYml) {
+        	UUID id = null;
+
+        	try {
+        		id = UUID.fromString(playerName);
+			} catch (Exception ignored) {}
+
+        	if (id != null)
+        		return playerName;
+
+			OfflinePlayer op = Bukkit.getOfflinePlayer(playerName);
+			if (!op.hasPlayedBefore()) {
+				Bukkit.getLogger().severe("COM-Warfare save files are corrupted. Please delete them and create new ones.");
+				return null;
+			}
+        	playerName = op.getUniqueId().toString();
+		}
         return playerName;
     }
 }

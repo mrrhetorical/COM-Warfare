@@ -266,7 +266,7 @@ public class ShopManager {
 			if (!weapons.isEmpty()) SQLDriver.getInstance().setPurchasedPerks(p.getUniqueId(), weapons);
 			if (!perks.isEmpty()) SQLDriver.getInstance().setPurchasedWeapons(p.getUniqueId(), perks);
 		} else {
-			String playerName = ComWarfare.setName(p);
+			String playerName = ComWarfare.setName(p.getName());
 			ShopFile.getData().set("Purchased.Perks." + playerName, perks);
 			ShopFile.getData().set("Purchased.Weapons." + playerName, weapons);
 			ShopFile.getData().set("Purchased.Guns." + playerName, guns);
@@ -286,7 +286,7 @@ public class ShopManager {
 		if (ComWarfare.MySQL) {
 			gunList = SQLDriver.getInstance().getPurchasedGuns(p.getUniqueId());
 		} else {
-			gunList = ShopFile.getData().getStringList("Purchased.Guns." + ComWarfare.setName(p));
+			gunList = ShopFile.getData().getStringList("Purchased.Guns." + ComWarfare.setName(p.getName()));
 		}
 
 		if (gunList != null) {
@@ -321,7 +321,7 @@ public class ShopManager {
 		if (ComWarfare.MySQL) {
 			weaponList = SQLDriver.getInstance().getPurchasedWeapons(p.getUniqueId());
 		} else {
-			weaponList = ShopFile.getData().getStringList("Purchased.Weapons." + ComWarfare.setName(p));
+			weaponList = ShopFile.getData().getStringList("Purchased.Weapons." + ComWarfare.setName(p.getName()));
 		}
 
 		if (weaponList != null) {
@@ -354,7 +354,7 @@ public class ShopManager {
 		if (ComWarfare.MySQL) {
 			perkList = SQLDriver.getInstance().getPurchasedPerks(p.getUniqueId());
 		} else {
-			perkList = ShopFile.getData().getStringList("Purchased.Perks." + ComWarfare.setName(p));
+			perkList = ShopFile.getData().getStringList("Purchased.Perks." + ComWarfare.setName(p.getName()));
 		}
 
 		if (perkList != null) {

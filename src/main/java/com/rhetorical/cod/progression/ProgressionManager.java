@@ -215,7 +215,7 @@ public class ProgressionManager {
 			experience.put(p, playerExperience);
 			prestigeLevel.put(p, playerPrestigeLevel);
 		} else {
-			String playerName = ComWarfare.setName(p);
+			String playerName = ComWarfare.setName(p.getName());
 			int k = 0;
 			while (ProgressionFile.getData().contains("Players." + k)) {
 				if (playerName.equalsIgnoreCase(ProgressionFile.getData().getString("Players." + k + ".name"))) {
@@ -241,7 +241,7 @@ public class ProgressionManager {
 			SQLDriver.getInstance().setExperience(p.getUniqueId(), getExperience(p));
 			SQLDriver.getInstance().setPrestige(p.getUniqueId(), getPrestigeLevel(p));
 		} else {
-			String playerName = ComWarfare.setName(p);
+			String playerName = ComWarfare.setName(p.getName());
 			for (String key : ProgressionFile.getData().getConfigurationSection("Players").getKeys(false)) {
 				if (playerName.equals(key)) {
 					ProgressionFile.getData().set("Players." + key + ".Level", getLevel(p));

@@ -49,8 +49,8 @@ public class AssignmentManager {
 		}
 
 		while (assignments.size() < 3) {
-				Assignment assignment = generateAssignment(p);
-				assignments.add(assignment);
+			Assignment assignment = generateAssignment(p);
+			assignments.add(assignment);
 		}
 
 		playerAssignments.put(p, assignments);
