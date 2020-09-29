@@ -1,7 +1,8 @@
 package com.rhetorical.cod.util;
 
 import com.rhetorical.cod.ComWarfare;
-import com.rhetorical.cod.files.ArenasFile;
+import com.rhetorical.cod.game.CodMap;
+import com.rhetorical.cod.game.GameManager;
 import com.rhetorical.cod.game.Gamemode;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -24,34 +25,34 @@ public class Tabcomplete implements TabCompleter {
         if (ComWarfare.hasPerm(sender, "com.help")) {
             Args.add("help");
         }
-        if (ComWarfare.hasPerm(sender, "com.join")) {
+        if (ComWarfare.hasPerm(sender, "com.join") && sender instanceof Player) {
             Args.add("menu");
             Args.add("join");
             Args.add("browser");
             Args.add("balance");
         }
-        if (ComWarfare.hasPerm(sender, "com.leave")) {
+        if (ComWarfare.hasPerm(sender, "com.leave") && sender instanceof Player) {
             Args.add("leave");
         }
-        if (ComWarfare.hasPerm(sender, "com.lobby")) {
+        if (ComWarfare.hasPerm(sender, "com.lobby")  && sender instanceof Player) {
             Args.add("lobby");
         }
-        if (ComWarfare.hasPerm(sender, "com.openShop")) {
+        if (ComWarfare.hasPerm(sender, "com.openShop") && sender instanceof Player) {
             Args.add("shop");
         }
-        if (ComWarfare.hasPerm(sender, "com.selectClass")) {
+        if (ComWarfare.hasPerm(sender, "com.selectClass") && sender instanceof Player) {
             Args.add("class");
         }
         if (ComWarfare.hasPerm(sender, "com.map.list")) {
             Args.add("listMaps");
         }
-        if (ComWarfare.hasPerm(sender, "com.forceStart")) {
+        if (ComWarfare.hasPerm(sender, "com.forceStart") && sender instanceof Player) {
             Args.add("start");
         }
         if (ComWarfare.hasPerm(sender, "com.bootAll")) {
             Args.add("boot");
         }
-        if (ComWarfare.hasPerm(sender, "com.changeMap")) {
+        if (ComWarfare.hasPerm(sender, "com.changeMap") && sender instanceof Player) {
             Args.add("changeMap");
         }
         if (ComWarfare.hasPerm(sender, "com.modifyLevel")) {
@@ -73,8 +74,10 @@ public class Tabcomplete implements TabCompleter {
         if (ComWarfare.hasPerm(sender, "com.map.remove")) {
             Args.add("removeMap");
         }
-        if (ComWarfare.hasPerm(sender, "com.map.modify")) {
+        if (ComWarfare.hasPerm(sender, "com.map.modify") && sender instanceof Player) {
             Args.add("set");
+        }
+        if (ComWarfare.hasPerm(sender, "com.map.modify")) {
             Args.add("reload");
         }
         if (ComWarfare.hasPerm(sender, "com.add")) {
@@ -89,7 +92,7 @@ public class Tabcomplete implements TabCompleter {
         if (ComWarfare.hasPerm(sender, "com.removeSpawns")) {
             Args.add("removeSpawns");
         }
-        if (ComWarfare.hasPerm(sender, "com.changeMode")) {
+        if (ComWarfare.hasPerm(sender, "com.changeMode") && sender instanceof Player) {
             Args.add("changeMode");
         }
         if (ComWarfare.hasPerm(sender, "com.convertdata")) {
@@ -141,8 +144,8 @@ public class Tabcomplete implements TabCompleter {
                 case "blacklist":
                 case "reload":
                     Args.clear();
-                    for (int k = 0; ArenasFile.getData().contains("Maps." + k); k++) {
-                        Args.add(ArenasFile.getData().getString("Maps." + k + ".name"));
+                    for (CodMap map : GameManager.getAddedMaps()) {
+                        Args.add(map.getName());
                     }
                     break;
             }
