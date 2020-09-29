@@ -484,7 +484,6 @@ public class SQLDriver {
             Thread.currentThread().setName("COM-Warfare SQL - Set JsonObject");
             try {
                 PreparedStatement ps = getConnection().prepareStatement("INSERT INTO " + table + " (" + primaryKey + "," + dataType + ") VALUES(?,?) ON DUPLICATE KEY UPDATE " + dataType + "=?");
-                System.out.println("INSERT INTO " + table + " (" + primaryKey + "," + dataType + ") VALUES(?,?) ON DUPLICATE KEY UPDATE " + dataType + "=?");
                 ps.setString(1, uuid.toString());
                 ps.setString(2, jsonObject.toString());
                 ps.setString(3, jsonObject.toString());
