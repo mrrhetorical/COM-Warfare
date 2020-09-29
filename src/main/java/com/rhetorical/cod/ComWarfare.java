@@ -152,7 +152,7 @@ public class ComWarfare extends JavaPlugin {
 			}
 		}
 
-		bMetrics = new Metrics(this);
+		//bMetrics = new Metrics(this);
 
 		String bukkitVersion = Bukkit.getServer().getBukkitVersion();
 
@@ -225,6 +225,7 @@ public class ComWarfare extends JavaPlugin {
             ProgressionManager.getInstance();
             StatsFile.setup(getPlugin());
         }
+		ArenasFile.setup(getPlugin());
         GunsFile.setup(getPlugin());
         AssignmentFile.setup(getPlugin());
         PerkManager.getInstance();
@@ -234,6 +235,7 @@ public class ComWarfare extends JavaPlugin {
         KillStreakManager.getInstance();
         InventoryManager.getInstance();
         AssignmentManager.getInstance();
+        SoundFile.setup(getPlugin());
         SoundManager.getInstance();
 
 		if (hasQualityArms())
