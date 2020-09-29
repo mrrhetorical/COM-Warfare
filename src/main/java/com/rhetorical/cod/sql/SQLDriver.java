@@ -150,7 +150,7 @@ public class SQLDriver {
                 "PRIMARY KEY(type));")
                 .executeUpdate();
 
-       setDefaults();
+        setDefaults();
 
     }
 
@@ -224,7 +224,7 @@ public class SQLDriver {
     }
 
     public int getAssignmentTypes(String type) {
-        return getInt(type, "assignmentTypes","baseReward", "type");
+        return getInt(type, "assignmentTypes", "baseReward", "type");
     }
 
 
@@ -358,9 +358,7 @@ public class SQLDriver {
                 }
                 // set list to the result of the dataType
                 List<String> tempList = new ArrayList<>();
-                for (String str : rs.getString(dataType).split("::")){
-                    tempList.add(str);
-                }
+                Collections.addAll(tempList, rs.getString(dataType).split("::"));
                 list.set(tempList);
                 // Close Result Set to free up its resources and prevent memory leakage
                 rs.close();
