@@ -1257,21 +1257,20 @@ public class ComWarfare extends JavaPlugin {
                                 if (!key.equals("Leaderboard")) {
                                     SQLDriver.getInstance().setKills(UUID.fromString(key), StatsFile.getData().getInt(key + ".kills"));
                                     SQLDriver.getInstance().setDeaths(UUID.fromString(key), StatsFile.getData().getInt(key + ".deaths"));
-                                    //SQLDriver.getInstance().setExperience(UUID.fromString(key), StatsFile.getData().getDouble(key + ".experience"));
                                 }
                             }
                         }
 
                         // Credits
                         if (CreditsFile.getData().getConfigurationSection("Credits.Players") != null) {
-                            for (String key : StatsFile.getData().getConfigurationSection("Credits.Players").getKeys(false)) {
-                                SQLDriver.getInstance().setCredits(UUID.fromString("Credits.Players." + key), StatsFile.getData().getInt("Credits.Players" + key + ".Amount"));
+                            for (String key : CreditsFile.getData().getConfigurationSection("Credits.Players").getKeys(false)) {
+                                SQLDriver.getInstance().setCredits(UUID.fromString("Credits.Players." + key), CreditsFile.getData().getInt("Credits.Players" + key + ".Amount"));
                             }
                         }
 
                         // Player level, prestige level, and experience.
                         if (ProgressionFile.getData().getConfigurationSection("Players") != null) {
-                            for (String key : StatsFile.getData().getConfigurationSection("Players").getKeys(false)) {
+                            for (String key : ProgressionFile.getData().getConfigurationSection("Players").getKeys(false)) {
                                 String uuid = ProgressionFile.getData().getString("Players." + key);
                                 SQLDriver.getInstance().setCredits(UUID.fromString(uuid), ProgressionFile.getData().getInt("Players" + key + ".Level"));
                                 SQLDriver.getInstance().setPrestige(UUID.fromString(uuid), ProgressionFile.getData().getInt("Players" + key + ".PrestigeLevel"));
@@ -1296,14 +1295,14 @@ public class ComWarfare extends JavaPlugin {
 
                         // Killstreaks
                         if (KillstreaksFile.getData().getConfigurationSection("Killstreaks") != null) {
-                            for (String key : StatsFile.getData().getConfigurationSection("Killstreaks").getKeys(false)) {
+                            for (String key : KillstreaksFile.getData().getConfigurationSection("Killstreaks").getKeys(false)) {
                                 SQLDriver.getInstance().setKillstreaks(UUID.fromString(ProgressionFile.getData().getString("Killstreaks." + key)), KillstreaksFile.getData().getStringList("Killstreaks." + key + ".streaks"));
                             }
                         }
 
-                        // Killstreaks
+                        // Loadouts
                         if (LoadoutsFile.getData().getConfigurationSection("Loadouts") != null) {
-                            for (String key : StatsFile.getData().getConfigurationSection("Loadouts").getKeys(false)) {
+                            for (String key : LoadoutsFile.getData().getConfigurationSection("Loadouts").getKeys(false)) {
                                 String uuid = LoadoutsFile.getData().getString("Loadouts." + key);
                                 JsonObject jo = new JsonObject();
                                 int k = 0;
@@ -1322,24 +1321,20 @@ public class ComWarfare extends JavaPlugin {
                             }
                         }
 
-                        // Killstreaks
-                        if (GunsFile.getData().getConfigurationSection("Loadouts") != null) {
-                            for (String key : StatsFile.getData().getConfigurationSection("Loadouts").getKeys(false)) {
-                                String uuid = GunsFile.getData().getString("Loadouts." + key);
+                        // Assignments
+                        if (AssignmentFile.getData().getConfigurationSection("Players") != null) {
+                            for (String key : AssignmentFile.getData().getConfigurationSection("Players").getKeys(false)) {
+                                String base = AssignmentFile.getData().getString("Players." + key + ".Assignments.");
                                 JsonObject jo = new JsonObject();
                                 int k = 0;
-                                while (LoadoutsFile.getData().contains("Loadouts." + key + k)) {
-                                    jo.addProperty(k + "::Name", GunsFile.getData().getString(uuid + k + ".Name"));
-                                    jo.addProperty(k + "::Primary", GunsFile.getData().getString(uuid + k + ".Primary"));
-                                    jo.addProperty(k + "::Secondary", GunsFile.getData().getString(uuid + k + ".Secondary"));
-                                    jo.addProperty(k + "::Lethal", GunsFile.getData().getString(uuid + k + ".Lethal"));
-                                    jo.addProperty(k + "::Tactical", GunsFile.getData().getString(uuid + k + ".Tactical"));
-                                    jo.addProperty(k + "::Perk1", GunsFile.getData().getString(uuid + k + ".Perk1"));
-                                    jo.addProperty(k + "::Perk2", GunsFile.getData().getString(uuid + k + ".Perk2"));
-                                    jo.addProperty(k + "::Perk3", GunsFile.getData().getString(uuid + k + ".Perk3"));
+                                while (AssignmentFile.getData().contains("Players." + key + "Assignments" + k)) {
+                                    jo.addProperty("assignmentType", AssignmentFile.getData().getString(base + k + ".assignmentType"));
+                                    jo.addProperty("requiredMode", AssignmentFile.getData().getString(base + k + ".requiredMode"));
+                                    jo.addProperty("amount", AssignmentFile.getData().getInt(base + k + ".amount"));
+                                    jo.addProperty("progress", AssignmentFile.getData().getInt(base + k + ".progress"));
+									SQLDriver.getInstance().setAssignments(UUID.fromString(AssignmentFile.getData().getString("Players." + key)), jo, k);
                                     k++;
                                 }
-                                SQLDriver.getInstance().setLoadouts(UUID.fromString(uuid), jo);
                             }
                         }
                     }
