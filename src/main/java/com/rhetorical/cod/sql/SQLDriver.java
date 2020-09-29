@@ -6,6 +6,7 @@ import com.rhetorical.cod.ComWarfare;
 import net.md_5.bungee.api.ChatColor;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
@@ -128,36 +129,70 @@ public class SQLDriver {
 				"PRIMARY KEY(uuid));")
 				.executeUpdate();
 
-		getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS loadouts (" +
-				"uuid VARCHAR(36),\n" +
-				"loadouts LONGTEXT,\n" +
-				"PRIMARY KEY(uuid));")
-				.executeUpdate();
-	}
+        getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS loadouts (" +
+                "uuid VARCHAR(36),\n" +
+                "loadouts LONGTEXT,\n" +
+                "PRIMARY KEY(uuid));")
+                .executeUpdate();
+
+        getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS assignments (" +
+                "uuid VARCHAR(36),\n" +
+                "assignment1 LONGTEXT,\n" +
+                "assignment2 LONGTEXT,\n" +
+                "assignment3 LONGTEXT,\n" +
+                "PRIMARY KEY(uuid));")
+                .executeUpdate();
+
+        getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS assignmentTypes (" +
+                "type VARCHAR(100),\n" +
+                "baseReward BIGINT,\n" +
+                "PRIMARY KEY(type));")
+                .executeUpdate();
+
+        setDefaults();
+
+    }
+
+    public void setDefaults() throws SQLException {
+        PreparedStatement ps = getConnection().prepareStatement("INSERT IGNORE assignmentTypes (type,baseReward) VALUES(?,?)");
+        ps.setString(1, "KILLS");
+        ps.setInt(2, 1);
+        ps.executeUpdate();
+        ps.setString(1, "PLAY_MODE");
+        ps.setInt(2, 20);
+        ps.executeUpdate();
+        ps.setString(1, "WIN_GAME");
+        ps.setInt(2, 50);
+        ps.executeUpdate();
+        ps.setString(1, "WIN_GAME_MODE");
+        ps.setInt(2, 75);
+        ps.executeUpdate();
+
+    }
 
 
 //------------------------------------------------------------ Getters ------------------------------------------------------------\\
 
 
-	public int getKills(UUID uuid) {
-		return getInt(uuid, "stats", "kills");
-	}
+    public int getKills(UUID uuid) {
+        return getInt(uuid.toString(), "stats", "kills", "uuid");
+    }
 
-	public int getDeaths(UUID uuid) {
-		return getInt(uuid, "stats", "deaths");
-	}
+    public int getDeaths(UUID uuid) {
+        return getInt(uuid.toString(), "stats", "deaths", "uuid");
+    }
 
-	public int getLevel(UUID uuid) {
-		return getInt(uuid, "stats", "level");
-	}
+    public int getLevel(UUID uuid) {
+        return getInt(uuid.toString(), "stats", "level", "uuid");
+    }
 
-	public int getPrestige(UUID uuid) {
-		return getInt(uuid, "stats", "prestige");
-	}
+    public int getPrestige(UUID uuid) {
+        return getInt(uuid.toString(), "stats", "prestige", "uuid");
+    }
 
-	public int getCredits(UUID uuid) {
-		return getInt(uuid, "stats", "credits");
-	}
+    public int getCredits(UUID uuid) {
+        return getInt(uuid.toString(), "stats", "credits", "uuid");
+    }
 
 	public double getExperience(UUID uuid) {
 		return getDouble(uuid, "stats", "experience");
@@ -179,9 +214,17 @@ public class SQLDriver {
 		return getList(uuid, "killstreaks", "killstreaks");
 	}
 
-	public JsonObject getLoadout(UUID uuid) {
-		return getJsonObject(uuid, "loadouts", "loadouts", "uuid", uuid.toString());
-	}
+    public JsonObject getLoadout(UUID uuid) {
+        return getJsonObject(uuid, "loadouts", "loadouts", "uuid");
+    }
+
+    public JsonObject getAssignments(UUID uuid, int assignment) {
+        return getJsonObject(uuid, "assignments", "assignment" + assignment, "uuid");
+    }
+
+    public int getAssignmentTypes(String type) {
+        return getInt(type, "assignmentTypes", "baseReward", "type");
+    }
 
 
 //------------------------------------------------------------ Setters ------------------------------------------------------------\\
@@ -231,37 +274,41 @@ public class SQLDriver {
 		setJsonObject(uuid, "loadouts", jsonObject, "loadouts", "uuid");
 	}
 
+    public void setAssignments(UUID uuid, JsonObject jsonObject, int assignment) {
+        setJsonObject(uuid, "assignments", jsonObject, "assignment" + assignment, "uuid");
+    }
+
 
 //------------------------------------------------------------ Getter Methods ------------------------------------------------------------\\
 
-	// To get integers
-	public int getInt(UUID uuid, String table, String dataType) {
-		int[] number = new int[1];
-		Thread thread = new Thread(() -> {
-			try {
-				PreparedStatement ps = getConnection().prepareStatement("SELECT " + dataType + " FROM " + table + " WHERE uuid=?");
-				ps.setString(1, uuid.toString());
-				ResultSet rs = ps.executeQuery();
-				if (!rs.next() || rs.getString(dataType) == null) {
-					number[0] = 0;
-					return;
-				}
-				number[0] = rs.getInt(dataType);
-				rs.close();
-				ps.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-				ComWarfare.sendMessage(ComWarfare.getConsole(), ComWarfare.getPrefix() + ChatColor.RED + "An error has occurred while loading MySQL data!");
-			}
-		});
-		thread.setName("COM-Warfare SQL - Get Int");
-		thread.start();
-		try {
-			thread.join();
-		} catch (InterruptedException ignored) {
-		}
-		return number[0];
-	}
+    // To get integers
+    public int getInt(String primaryKeyValue, String table, String dataType, String primaryKey) {
+        int[] number = new int[1];
+        Thread thread = new Thread(() -> {
+            try {
+                PreparedStatement ps = getConnection().prepareStatement("SELECT " + dataType + " FROM " + table + " WHERE " + primaryKey + "=?");
+                ps.setString(1, primaryKeyValue);
+                ResultSet rs = ps.executeQuery();
+                if (!rs.next() || rs.getString(dataType) == null) {
+                    number[0] = 0;
+                    return;
+                }
+                number[0] = rs.getInt(dataType);
+                rs.close();
+                ps.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+                ComWarfare.sendMessage(ComWarfare.getConsole(), ComWarfare.getPrefix() + ChatColor.RED + "An error has occurred while loading MySQL data!");
+            }
+        });
+        thread.setName("COM-Warfare SQL - Get Int");
+        thread.start();
+        try {
+            thread.join();
+        } catch (InterruptedException ignored) {
+        }
+        return number[0];
+    }
 
 	// To get doubles
 	public double getDouble(UUID uuid, String table, String dataType) {
@@ -292,49 +339,51 @@ public class SQLDriver {
 		return amount[0];
 	}
 
-	// To get lists
-	public List<String> getList(UUID uuid, String table, String dataType) {
-		// AtomicReferenced list so it can be accessed in the async thread
-		AtomicReference<List<String>> list = new AtomicReference<>();
-		Thread thread = new Thread(() -> {
-			try {
-				PreparedStatement ps = getConnection().prepareStatement("SELECT " + dataType + " FROM " + table + " WHERE uuid=?");
-				// Set uuid in PreparedStatement to the actual uuid
-				ps.setString(1, uuid.toString());
-				// Set ResultSet to the result of the query
-				ResultSet rs = ps.executeQuery();
-				// return an empty list if the ResultSet is empty, or if the result of the dataType is null
-				if (!rs.next() || rs.getString(dataType) == null) {
-					list.set(Collections.emptyList());
-					return;
-				}
-				// set list to the result of the dataType
-				list.set(Collections.singletonList(rs.getString(dataType)));
-				// Close Result Set to free up its resources and prevent memory leakage
-				rs.close();
-				// Close Prepared Statement to free up its resources and prevent memory leakage
-				ps.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-				ComWarfare.sendMessage(ComWarfare.getConsole(), ComWarfare.getPrefix() + ChatColor.RED + "An error has occurred while loading MySQL data!");
-			}
-		});
-		thread.setName("COM-Warfare SQL - Get List");
-		thread.start();
-		try {
-			thread.join();
-		} catch (InterruptedException ignored) {
-		}
-		return list.get();
-	}
+    // To get lists
+    public List<String> getList(UUID uuid, String table, String dataType) {
+        // AtomicReferenced list so it can be accessed in the async thread
+        AtomicReference<List<String>> list = new AtomicReference<>();
+        Thread thread = new Thread(() -> {
+            try {
+                PreparedStatement ps = getConnection().prepareStatement("SELECT " + dataType + " FROM " + table + " WHERE uuid=?");
+                // Set uuid in PreparedStatement to the actual uuid
+                ps.setString(1, uuid.toString());
+                // Set ResultSet to the result of the query
+                ResultSet rs = ps.executeQuery();
+                // return an empty list if the ResultSet is empty, or if the result of the dataType is null
+                if (!rs.next() || rs.getString(dataType) == null) {
+                    list.set(Collections.emptyList());
+                    return;
+                }
+                // set list to the result of the dataType
+                List<String> tempList = new ArrayList<>();
+                Collections.addAll(tempList, rs.getString(dataType).split("::"));
+                list.set(tempList);
+                // Close Result Set to free up its resources and prevent memory leakage
+                rs.close();
+                // Close Prepared Statement to free up its resources and prevent memory leakage
+                ps.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+                ComWarfare.sendMessage(ComWarfare.getConsole(), ComWarfare.getPrefix() + ChatColor.RED + "An error has occurred while loading MySQL data!");
+            }
+        });
+        thread.setName("COM-Warfare SQL - Get List");
+        thread.start();
+        try {
+            thread.join();
+        } catch (InterruptedException ignored) {
+        }
+        return list.get();
+    }
 
-	// To get JSON objects
-	public JsonObject getJsonObject(UUID uuid, String table, String dataType, String primaryKey, String primaryKeyValue) {
-		AtomicReference<JsonObject> jsonObject = new AtomicReference<>(new JsonObject());
-		Thread thread = new Thread(() -> {
-			try {
-				PreparedStatement ps = getConnection().prepareStatement("SELECT " + dataType + " FROM " + table + " WHERE " + primaryKey + "=?;");
-				ps.setString(1, primaryKeyValue);
+    // To get JSON objects
+    public JsonObject getJsonObject(UUID uuid, String table, String dataType, String primaryKey) {
+        AtomicReference<JsonObject> jsonObject = new AtomicReference<>(new JsonObject());
+        Thread thread = new Thread(() -> {
+            try {
+                PreparedStatement ps = getConnection().prepareStatement("SELECT " + dataType + " FROM " + table + " WHERE " + primaryKey + "=?;");
+                ps.setString(1, uuid.toString());
                                 /*
                 Hello :)
                 - Insprill

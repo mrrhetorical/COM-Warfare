@@ -1,5 +1,6 @@
 package com.rhetorical.cod.assignments;
 
+import com.google.gson.JsonObject;
 import com.rhetorical.cod.ComWarfare;
 import com.rhetorical.cod.files.AssignmentFile;
 import com.rhetorical.cod.game.CodMap;
@@ -7,6 +8,7 @@ import com.rhetorical.cod.game.GameManager;
 import com.rhetorical.cod.game.Gamemode;
 import com.rhetorical.cod.lang.Lang;
 import com.rhetorical.cod.progression.CreditManager;
+import com.rhetorical.cod.sql.SQLDriver;
 import org.bukkit.entity.Player;
 
 import java.util.*;
@@ -31,20 +33,40 @@ public class AssignmentManager {
 
 	public void load(Player p) {
 		List<Assignment> assignments = new ArrayList<>();
-		for (int i = 0; AssignmentFile.getData().contains("Players." + p.getName() + ".Assignments." + i); i++) {
-			String base = "Players." + p.getName() + ".Assignments." + i + ".";
 
-			AssignmentType type = AssignmentType.valueOf(AssignmentFile.getData().getString(base + "assignmentType"));
-			Gamemode mode = Gamemode.valueOf(AssignmentFile.getData().getString(base + "requiredMode"));
-			int amt = AssignmentFile.getData().getInt(base + "amount");
+		if (ComWarfare.MySQL) {
 
-			int progress = AssignmentFile.getData().getInt(base + "progress");
+			for (int i = 1; i <= 3; i++) {
+				JsonObject jo = SQLDriver.getInstance().getAssignments(p.getUniqueId(), i);
+				if (jo.get("assignmentType") != null) {
+					AssignmentType type = AssignmentType.valueOf(jo.get("assignmentType").getAsString());
+					Gamemode mode = Gamemode.valueOf(jo.get("requiredMode").getAsString());
+					int amt = jo.get("amount").getAsInt();
+					int progress = jo.get("progress").getAsInt();
+					AssignmentRequirement requirement = new AssignmentRequirement(type, amt, mode);
+					Assignment assignment = new Assignment(p, requirement, progress, requirement.getAssignmentType().getBaseReward() * requirement.getRequired());
+					if (!assignments.contains(assignment)) {
+						assignments.add(assignment);
+					}
+				}
+			}
 
-			AssignmentRequirement requirement = new AssignmentRequirement(type, amt, mode);
+		} else {
+			for (int i = 0; AssignmentFile.getData().contains("Players." + p.getName() + ".Assignments." + i); i++) {
+				String base = "Players." + p.getName() + ".Assignments." + i + ".";
 
-			Assignment assignment = new Assignment(p, requirement, progress,requirement.getAssignmentType().getBaseReward() * requirement.getRequired());
-			if (!assignments.contains(assignment)) {
-				assignments.add(assignment);
+				AssignmentType type = AssignmentType.valueOf(AssignmentFile.getData().getString(base + "assignmentType"));
+				Gamemode mode = Gamemode.valueOf(AssignmentFile.getData().getString(base + "requiredMode"));
+				int amt = AssignmentFile.getData().getInt(base + "amount");
+
+				int progress = AssignmentFile.getData().getInt(base + "progress");
+
+				AssignmentRequirement requirement = new AssignmentRequirement(type, amt, mode);
+
+				Assignment assignment = new Assignment(p, requirement, progress, requirement.getAssignmentType().getBaseReward() * requirement.getRequired());
+				if (!assignments.contains(assignment)) {
+					assignments.add(assignment);
+				}
 			}
 		}
 
@@ -70,18 +92,29 @@ public class AssignmentManager {
 
 	public void save(Player p) {
 		List<Assignment> assignments = playerAssignments.get(p);
-		for (int i = 0; i < assignments.size(); i++) {
-			String base = "Players." + p.getName() + ".Assignments." + i + ".";
+		if (ComWarfare.MySQL) {
+			for (int i = 1; i <= 3; i++) {
+				JsonObject jo = new JsonObject();
+				Assignment assignment = assignments.get(i);
+				jo.addProperty("assignmentType", assignment.getRequirement().getAssignmentType().toString());
+				jo.addProperty("requiredMode", assignment.getRequirement().getReqMode().toString());
+				jo.addProperty("amount", assignment.getRequirement().getRequired());
+				jo.addProperty("progress", assignment.getProgress());
+				SQLDriver.getInstance().setAssignments(p.getUniqueId(), jo, i);
+			}
+		} else {
+			for (int i = 0; i < assignments.size(); i++) {
+				String base = "Players." + p.getName() + ".Assignments." + i + ".";
 
-			Assignment assignment = assignments.get(i);
+				Assignment assignment = assignments.get(i);
 
-			AssignmentFile.getData().set(base + "assignmentType", assignment.getRequirement().getAssignmentType().toString());
-			AssignmentFile.getData().set(base + "requiredMode", assignment.getRequirement().getReqMode().toString());
-			AssignmentFile.getData().set(base + "amount", assignment.getRequirement().getRequired());
-			AssignmentFile.getData().set(base + "progress", assignment.getProgress());
+				AssignmentFile.getData().set(base + "assignmentType", assignment.getRequirement().getAssignmentType().toString());
+				AssignmentFile.getData().set(base + "requiredMode", assignment.getRequirement().getReqMode().toString());
+				AssignmentFile.getData().set(base + "amount", assignment.getRequirement().getRequired());
+				AssignmentFile.getData().set(base + "progress", assignment.getProgress());
+			}
+			AssignmentFile.saveData();
 		}
-
-		AssignmentFile.saveData();
 	}
 
 	private Assignment generateAssignment(Player p) {
