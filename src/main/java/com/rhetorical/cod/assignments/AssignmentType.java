@@ -1,7 +1,9 @@
 package com.rhetorical.cod.assignments;
 
+import com.rhetorical.cod.ComWarfare;
 import com.rhetorical.cod.files.AssignmentFile;
 import com.rhetorical.cod.lang.Lang;
+import com.rhetorical.cod.sql.SQLDriver;
 
 public enum AssignmentType {
 
@@ -21,11 +23,18 @@ public enum AssignmentType {
 
 	static void loadBaseRewards() {
 		for (AssignmentType obj : AssignmentType.values()) {
-			if (AssignmentFile.getData().contains("Assignment.Type." + obj.toString())) {
-				obj.baseReward = AssignmentFile.getData().getInt("Assignment.Type." + obj.toString() + ".baseReward");
+			if (ComWarfare.MySQL) {
+				obj.baseReward = SQLDriver.getInstance().getAssignmentTypes("KILLS");
+				obj.baseReward = SQLDriver.getInstance().getAssignmentTypes("PLAY_MODE");
+				obj.baseReward = SQLDriver.getInstance().getAssignmentTypes("WIN_GAME");
+				obj.baseReward = SQLDriver.getInstance().getAssignmentTypes("WIN_GAME_MODE");
 			} else {
-				AssignmentFile.getData().set("Assignment.Type." + obj.toString() + ".baseReward", obj.baseReward);
-				AssignmentFile.saveData();
+				if (AssignmentFile.getData().contains("Assignment.Type." + obj)) {
+					obj.baseReward = AssignmentFile.getData().getInt("Assignment.Type." + obj + ".baseReward");
+				} else {
+					AssignmentFile.getData().set("Assignment.Type." + obj + ".baseReward", obj.baseReward);
+					AssignmentFile.saveData();
+				}
 			}
 		}
 	}
@@ -39,3 +48,4 @@ public enum AssignmentType {
 	}
 
 }
+
