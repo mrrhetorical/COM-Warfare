@@ -4,12 +4,10 @@ import com.rhetorical.cod.ComWarfare;
 import com.rhetorical.cod.files.KillstreaksFile;
 import com.rhetorical.cod.game.GameManager;
 import com.rhetorical.cod.lang.Lang;
+import com.rhetorical.cod.sql.SQLDriver;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 
 public class KillStreakManager {
@@ -85,17 +83,31 @@ public class KillStreakManager {
 	}
 
 	public void loadStreaks(Player p) {
-		if (!KillstreaksFile.getData().contains("Killstreaks." + p.getName())) {
-			KillStreak[] killStreaks = new KillStreak[3];
-			killStreaks[0] = (KillStreak.UAV);
-			killStreaks[1] = (KillStreak.COUNTER_UAV);
-			killStreaks[2] = (KillStreak.AIRSTRIKE);
-			playerKillstreaks.put(p, killStreaks);
-			saveStreaks(p);
-			return;
+		String playerName = ComWarfare.setName(p);
+		List<String> streaks;
+		if (ComWarfare.MySQL) {
+			if (SQLDriver.getInstance().getKillstreaks(p.getUniqueId()).isEmpty()) {
+				KillStreak[] killStreaks = new KillStreak[3];
+				killStreaks[0] = (KillStreak.UAV);
+				killStreaks[1] = (KillStreak.COUNTER_UAV);
+				killStreaks[2] = (KillStreak.AIRSTRIKE);
+				playerKillstreaks.put(p, killStreaks);
+				saveStreaks(p);
+				return;
+			}
+			streaks = SQLDriver.getInstance().getKillstreaks(p.getUniqueId());
+		} else {
+			if (!KillstreaksFile.getData().contains("Killstreaks." + playerName)) {
+				KillStreak[] killStreaks = new KillStreak[3];
+				killStreaks[0] = (KillStreak.UAV);
+				killStreaks[1] = (KillStreak.COUNTER_UAV);
+				killStreaks[2] = (KillStreak.AIRSTRIKE);
+				playerKillstreaks.put(p, killStreaks);
+				saveStreaks(p);
+				return;
+			}
+			streaks = KillstreaksFile.getData().getStringList("Killstreaks." + playerName + ".streaks");
 		}
-
-		List<String> streaks = KillstreaksFile.getData().getStringList("Killstreaks." + p.getName() + ".streaks");
 
 		KillStreak[] killStreaks = new KillStreak[3];
 		int i = -1;
@@ -118,9 +130,14 @@ public class KillStreakManager {
 	private void saveStreaks(Player p) {
 		if (!playerKillstreaks.containsKey(p)) {
 			String[] streaks = { "UAV", "COUNTER_UAV", "DOGS" };
-			KillstreaksFile.getData().set("Killstreaks." + p.getName() + ".streaks", streaks);
-			KillstreaksFile.saveData();
-			KillstreaksFile.reloadData();
+			if (ComWarfare.MySQL) {
+				SQLDriver.getInstance().setKillstreaks(p.getUniqueId(), Arrays.asList(streaks));
+			} else {
+				String playerName = ComWarfare.setName(p);
+				KillstreaksFile.getData().set("Killstreaks." + playerName + ".streaks", streaks);
+				KillstreaksFile.saveData();
+				KillstreaksFile.reloadData();
+			}
 			return;
 		}
 
@@ -131,8 +148,13 @@ public class KillStreakManager {
 			killStreakStrings.add(s);
 		}
 
-		KillstreaksFile.getData().set("Killstreaks." + p.getName() + ".streaks", killStreakStrings);
-		KillstreaksFile.saveData();
-		KillstreaksFile.reloadData();
+		if (ComWarfare.MySQL) {
+			SQLDriver.getInstance().setKillstreaks(p.getUniqueId(), killStreakStrings);
+		} else {
+			String playerName = ComWarfare.setName(p);
+			KillstreaksFile.getData().set("Killstreaks." + playerName + ".streaks", killStreakStrings);
+			KillstreaksFile.saveData();
+			KillstreaksFile.reloadData();
+		}
 	}
 }

@@ -3,6 +3,7 @@ package com.rhetorical.cod.progression;
 import com.rhetorical.cod.ComWarfare;
 import com.rhetorical.cod.files.CreditsFile;
 import com.rhetorical.cod.lang.Lang;
+import com.rhetorical.cod.sql.SQLDriver;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -21,32 +22,33 @@ public class CreditManager {
 	}
 
 	public static void loadCredits(Player p) {
-		for (int k = 0; CreditsFile.getData().contains("Credits.players." + k); k++) {
-			if (p.getName().equals(CreditsFile.getData().get("Credits.players." + k + ".player"))) {
+		if (ComWarfare.MySQL) {
+			getInstance().creditMap.put(p, SQLDriver.getInstance().getCredits(p.getUniqueId()));
+		} else {
+			String playerName = ComWarfare.setName(p);
 
-				int credits = CreditsFile.getData().getInt("Credits.players." + k + ".amount");
-
-				getInstance().creditMap.put(p, credits);
-				return;
-			}
+			int credits = CreditsFile.getData().getInt("Credits.Players." + playerName + ".Amount");
+			getInstance().creditMap.put(p, credits);
 		}
 	}
 
 	private static void saveCredits(Player p) {
-		int k;
-		for (k = 0; CreditsFile.getData().contains("Credits.players." + k); k++) {
-			if (p.getName().equals(CreditsFile.getData().get("Credits.players." + k + ".player"))) {
-				CreditsFile.getData().set("Credits.players." + k + ".amount", getCredits(p));
-				CreditsFile.saveData();
-				CreditsFile.reloadData();
-				return;
-			}
-		}
+		if (ComWarfare.MySQL) {
+			SQLDriver.getInstance().setCredits(p.getUniqueId(), getCredits(p));
+		} else {
+			// Use name or uuid depending on settings
+			String playerName = ComWarfare.setName(p);
 
-		CreditsFile.getData().set("Credits.players." + k + ".player", p.getName());
-		CreditsFile.getData().set("Credits.players." + k + ".amount", getCredits(p));
-		CreditsFile.saveData();
-		CreditsFile.reloadData();
+			// Loop through all names/uuids until a match is found
+			for (String name : CreditsFile.getData().getConfigurationSection("Credits.Players").getKeys(false)) {
+				if (!name.equals(playerName)) return;
+				// Set credits when a match is founds
+				CreditsFile.getData().set(name + ".Amount", getCredits(p));
+			}
+			// Save & reload
+			CreditsFile.saveData();
+			CreditsFile.reloadData();
+		}
 
 	}
 
@@ -58,13 +60,13 @@ public class CreditManager {
 			return getInstance().creditMap.get(p);
 		}
 	}
-	
+
 	public static int getCredits(String name) {
-		
+
 		if (Bukkit.getPlayer(name) == null) {
 			return -1;
 		}
-		
+
 		Player p = Bukkit.getPlayer(name);
 
 		if (!getInstance().creditMap.containsKey(p)) {
@@ -80,14 +82,15 @@ public class CreditManager {
 		getInstance().creditMap.put(p, amt);
 		saveCredits(p);
 	}
-	
+
 	public static void setCredits(String name, int amt) {
-		if (Bukkit.getPlayer(name) == null) {
+		Player player = Bukkit.getPlayer(name);
+		if (player == null) {
 			return;
 		}
-		
-		getInstance().creditMap.put(Bukkit.getPlayer(name), amt);
-		saveCredits(Bukkit.getPlayer(name));
+
+		getInstance().creditMap.put(player, amt);
+		saveCredits(player);
 	}
 	
 
