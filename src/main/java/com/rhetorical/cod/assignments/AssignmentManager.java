@@ -93,7 +93,7 @@ public class AssignmentManager {
 	public void save(Player p) {
 		List<Assignment> assignments = playerAssignments.get(p);
 		if (ComWarfare.MySQL) {
-			for (int i = 1; i < assignments.size(); i++) {
+			for (int i = 1; i <= 3; i++) {
 				JsonObject jo = new JsonObject();
 				Assignment assignment = assignments.get(i);
 				jo.addProperty("assignmentType", assignment.getRequirement().getAssignmentType().toString());
@@ -202,4 +202,3 @@ public class AssignmentManager {
 	}
 
 }
-
