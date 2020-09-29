@@ -1,6 +1,8 @@
 package com.rhetorical.cod.progression;
 
+import com.rhetorical.cod.ComWarfare;
 import com.rhetorical.cod.files.StatsFile;
+import com.rhetorical.cod.sql.SQLDriver;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -12,100 +14,135 @@ import java.util.ArrayList;
 public class StatHandler {
 
 	public static void addKill(Player p) {
-		if (!StatsFile.getData().contains(p.getName() + ".kills")) {
-			StatsFile.getData().set(p.getName() + ".kills", 0);
+		if (ComWarfare.MySQL) {
+			int i = SQLDriver.getInstance().getKills(p.getUniqueId()) + 1;
+			SQLDriver.getInstance().setKills(p.getUniqueId(), i);
+		} else {
+			String playerName = ComWarfare.setName(p);
+			if (!StatsFile.getData().contains(playerName + ".kills")) {
+				StatsFile.getData().set(playerName + ".kills", 0);
+			}
+
+			int kills = StatsFile.getData().getInt(playerName + ".kills") + 1;
+
+			StatsFile.getData().set(playerName + ".kills", kills);
+			StatHandler.addPlayerToLeaderboardList(playerName);
 		}
-		int kills = StatsFile.getData().getInt(p.getName() + ".kills");
-
-		kills++;
-
-		StatsFile.getData().set(p.getName() + ".kills", kills);
-		StatHandler.addPlayerToLeaderboardList(p.getName());
 	}
 
 	public static void addDeath(Player p) {
-		if (!StatsFile.getData().contains(p.getName() + ".deaths")) {
-			StatsFile.getData().set(p.getName() + ".deaths", 0);
+		if (ComWarfare.MySQL) {
+			int i = SQLDriver.getInstance().getDeaths(p.getUniqueId()) + 1;
+			SQLDriver.getInstance().setDeaths(p.getUniqueId(), i);
+		} else {
+			String playerName = ComWarfare.setName(p);
+			if (!StatsFile.getData().contains(playerName + ".deaths")) {
+				StatsFile.getData().set(playerName + ".deaths", 0);
+			}
+
+			int deaths = StatsFile.getData().getInt(playerName + ".deaths");
+
+			deaths++;
+			StatsFile.getData().set(playerName + ".deaths", deaths);
+			StatHandler.addPlayerToLeaderboardList(playerName);
 		}
-
-		int deaths = StatsFile.getData().getInt(p.getName() + ".deaths");
-
-		deaths++;
-		StatsFile.getData().set(p.getName() + ".deaths", deaths);
-		StatHandler.addPlayerToLeaderboardList(p.getName());
 	}
 
 	static void addExperience(Player p, double experience) {
-		if (!StatsFile.getData().contains(p.getName() + ".experience")) {
-			StatsFile.getData().set(p.getName() + ".experience", 0D);
+		if (ComWarfare.MySQL) {
+			double d = SQLDriver.getInstance().getExperience(p.getUniqueId()) + experience;
+			SQLDriver.getInstance().setExperience(p.getUniqueId(), d);
+		} else {
+			String playerName = ComWarfare.setName(p);
+			if (!StatsFile.getData().contains(playerName + ".experience")) {
+				StatsFile.getData().set(playerName + ".experience", 0D);
+			}
+
+			double totalExperience = StatsFile.getData().getDouble(playerName + ".experience");
+
+			totalExperience += experience;
+
+			StatsFile.getData().set(playerName + ".experience", totalExperience);
+			StatHandler.addPlayerToLeaderboardList(playerName);
 		}
-
-		double totalExperience = StatsFile.getData().getDouble(p.getName() + ".experience");
-
-		totalExperience += experience;
-
-		StatsFile.getData().set(p.getName() + ".experience", totalExperience);
-		StatHandler.addPlayerToLeaderboardList(p.getName());
 	}
 
 	public static void removeExperience(Player p, double experience) {
-		if (!StatsFile.getData().contains(p.getName() + ".experience")) {
-			StatsFile.getData().set(p.getName() + ".experience", 0D);
-			return;
-		}
-		double totalExperience = StatsFile.getData().getDouble(p.getName() + ".experience");
+		if (ComWarfare.MySQL) {
+			double d = SQLDriver.getInstance().getExperience(p.getUniqueId()) - experience;
+			SQLDriver.getInstance().setExperience(p.getUniqueId(), d);
+		} else {
+			String playerName = ComWarfare.setName(p);
+			if (!StatsFile.getData().contains(playerName + ".experience")) {
+				StatsFile.getData().set(playerName + ".experience", 0D);
+				return;
+			}
+			double totalExperience = StatsFile.getData().getDouble(p.getName() + ".experience");
 
-		totalExperience -= experience;
-		StatsFile.getData().set(p.getName() + ".experience", totalExperience);
-		StatHandler.addPlayerToLeaderboardList(p.getName());
+			totalExperience -= experience;
+			StatsFile.getData().set(playerName + ".experience", totalExperience);
+			StatHandler.addPlayerToLeaderboardList(playerName);
+		}
 	}
 
 	public static void removeKill(Player p) {
-		if (!StatsFile.getData().contains(p.getName() + ".kills")) {
-			StatsFile.getData().set(p.getName() + ".kills", 0);
-			return;
+		if (ComWarfare.MySQL) {
+			int i = SQLDriver.getInstance().getKills(p.getUniqueId()) - 1;
+			SQLDriver.getInstance().setKills(p.getUniqueId(), i);
+		} else {
+			String playerName = ComWarfare.setName(p);
+			if (!StatsFile.getData().contains(playerName + ".kills")) {
+				StatsFile.getData().set(playerName + ".kills", 0);
+				return;
+			}
+
+			int kills = StatsFile.getData().getInt(playerName + ".kills");
+
+			if (kills == 0)
+				return;
+
+			kills--;
+
+			StatsFile.getData().set(playerName + ".kills", kills);
+			StatHandler.addPlayerToLeaderboardList(playerName);
 		}
 
-		int kills = StatsFile.getData().getInt(p.getName() + ".kills");
-
-		if (kills == 0)
-			return;
-
-		kills--;
-
-		StatsFile.getData().set(p.getName() + ".kills", kills);
-		StatHandler.addPlayerToLeaderboardList(p.getName());
 	}
 
 	public static void removeDeath(Player p) {
-		if (!StatsFile.getData().contains(p.getName() + ".deaths")) {
-			StatsFile.getData().set(p.getName() + ".deaths", 0);
-			return;
+		if (ComWarfare.MySQL) {
+			int i = SQLDriver.getInstance().getDeaths(p.getUniqueId()) - 1;
+			SQLDriver.getInstance().setDeaths(p.getUniqueId(), i);
+		} else {
+			String playerName = ComWarfare.setName(p);
+			if (!StatsFile.getData().contains(playerName + ".deaths")) {
+				StatsFile.getData().set(playerName + ".deaths", 0);
+				return;
+			}
+
+			int deaths = StatsFile.getData().getInt(playerName + ".deaths");
+
+			if (deaths == 0)
+				return;
+
+			deaths--;
+
+			StatsFile.getData().set(playerName + ".deaths", deaths);
+			StatHandler.addPlayerToLeaderboardList(playerName);
 		}
-
-		int deaths = StatsFile.getData().getInt(p.getName() + ".deaths");
-
-		if (deaths == 0)
-			return;
-
-		deaths--;
-
-		StatsFile.getData().set(p.getName() + ".deaths", deaths);
-		StatHandler.addPlayerToLeaderboardList(p.getName());
 	}
 
 	private static void addPlayerToLeaderboardList(String pName) {
-
+		String playerName = ComWarfare.setName(Bukkit.getPlayer(pName));
 		int k = 0;
-
 		while (StatsFile.getData().contains("Leaderboard." + k)) {
-			if (StatsFile.getData().getString("Leaderboard." + k + ".name").equals(pName))
+			if (StatsFile.getData().getString("Leaderboard." + k + ".name").equals(playerName))
 				return;
 
 			k++;
 		}
 
-		StatsFile.getData().set("Leaderboard." + k + ".name", pName);
+		StatsFile.getData().set("Leaderboard." + k + ".name", playerName);
 		StatsFile.saveData();
 		StatsFile.reloadData();
 	}
@@ -130,29 +167,50 @@ public class StatHandler {
 		return leaderboard;
 	}
 
-	public static int getKills(String pName) {
-		if (!StatsFile.getData().contains(pName + ".kills"))
-			return 0;
-
-		return StatsFile.getData().getInt(pName + ".kills");
+	public static int getKills(String playerName) {
+		int kills;
+		if (ComWarfare.MySQL) {
+			kills = SQLDriver.getInstance().getKills(Bukkit.getPlayer(playerName).getUniqueId());
+		} else {
+			if (ComWarfare.useUuidForYml) playerName = Bukkit.getPlayer(playerName).getUniqueId().toString();
+			if (!StatsFile.getData().contains(playerName + ".kills"))
+				return 0;
+			kills = StatsFile.getData().getInt(playerName + ".kills");
+		}
+		return kills;
 	}
 
-	public static double getExperience(String pName) {
-		if (!StatsFile.getData().contains(pName + ".experience"))
-			return 0D;
+	public static double getExperience(String playerName) {
+		double experience;
+		if (ComWarfare.MySQL) {
+			experience = SQLDriver.getInstance().getExperience(Bukkit.getPlayer(playerName).getUniqueId());
+		} else {
+			if (ComWarfare.useUuidForYml) playerName = Bukkit.getPlayer(playerName).getUniqueId().toString();
+			if (!StatsFile.getData().contains(playerName + ".experience"))
+				return 0D;
+			experience = StatsFile.getData().getDouble(playerName + ".experience");
+		}
 
-		return StatsFile.getData().getDouble(pName + ".experience");
+		return experience;
 	}
 
-	public static int getDeaths(String pName) {
-		if (!StatsFile.getData().contains(pName + ".deaths"))
-			return 0;
-
-		return StatsFile.getData().getInt(pName + ".deaths");
+	public static int getDeaths(String playerName) {
+		int deaths;
+		if (ComWarfare.MySQL) {
+			deaths = SQLDriver.getInstance().getDeaths(Bukkit.getPlayer(playerName).getUniqueId());
+		} else {
+			if (ComWarfare.useUuidForYml) playerName = Bukkit.getPlayer(playerName).getUniqueId().toString();
+			if (!StatsFile.getData().contains(playerName + ".deaths"))
+				return 0;
+			deaths = StatsFile.getData().getInt(playerName + ".deaths");
+		}
+		return deaths;
 	}
 
-	public static void saveStatData() {
-		StatsFile.saveData();
-		StatsFile.reloadData();
+	public synchronized static void saveStatData() {
+		if (!ComWarfare.MySQL) {
+			StatsFile.saveData();
+			StatsFile.reloadData();
+		}
 	}
 }

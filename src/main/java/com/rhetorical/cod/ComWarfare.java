@@ -1,5 +1,6 @@
 package com.rhetorical.cod;
 
+import com.google.gson.JsonObject;
 import com.rhetorical.cod.assignments.AssignmentManager;
 import com.rhetorical.cod.files.*;
 import com.rhetorical.cod.game.*;
@@ -14,6 +15,7 @@ import com.rhetorical.cod.progression.CreditManager;
 import com.rhetorical.cod.progression.ProgressionManager;
 import com.rhetorical.cod.progression.RankPerks;
 import com.rhetorical.cod.sounds.SoundManager;
+import com.rhetorical.cod.sql.SQLDriver;
 import com.rhetorical.cod.streaks.KillStreakManager;
 import com.rhetorical.cod.util.LegacyActionBar;
 import com.rhetorical.cod.util.LegacyTitle;
@@ -35,10 +37,7 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 /**
  *  COM-Warfare is a plugin that completely changes Minecraft servers to give its players an experience similar to that of Call of Duty!
@@ -120,6 +119,9 @@ public class ComWarfare extends JavaPlugin {
 	final String rid = "%%__RESOURCE__%%";
 	final String nonce = "%%__NONCE__%%";
 
+    public static boolean MySQL = false;
+    public static boolean useUuidForYml = true;
+
 	/**
 	 * Sets up the plugin and loads various information handlers such as the killstreak manager, loadout manager, etc.
 	 * */
@@ -139,6 +141,8 @@ public class ComWarfare extends JavaPlugin {
 
 		getPlugin().saveDefaultConfig();
 		getPlugin().reloadConfig();
+
+        useUuidForYml = getPlugin().getConfig().getBoolean("Use-UUIDs-For-YML-Storage");
 
 		if (ComVersion.getPurchased()) {
 			codPrefix = getPlugin().getConfig().getString("prefix").replace("&", "\u00A7") + " ";
@@ -211,16 +215,26 @@ public class ComWarfare extends JavaPlugin {
 		LangFile.setup(getPlugin());
 		Lang.load();
 
-		ProgressionFile.setup(getPlugin());
-		ArenasFile.setup(getPlugin());
-		CreditsFile.setup(getPlugin());
-		GunsFile.setup(getPlugin());
-		ShopFile.setup(getPlugin());
-		LoadoutsFile.setup(getPlugin());
-		StatsFile.setup(getPlugin());
-		KillstreaksFile.setup(getPlugin());
-		AssignmentFile.setup(getPlugin());
-		SoundFile.setup(getPlugin());
+
+        if (MySQL == false) {
+            ShopFile.setup(getPlugin());
+            LoadoutsFile.setup(getPlugin());
+            KillstreaksFile.setup(getPlugin());
+            ProgressionFile.setup(getPlugin());
+            CreditsFile.setup(getPlugin());
+            ProgressionManager.getInstance();
+            StatsFile.setup(getPlugin());
+        }
+        GunsFile.setup(getPlugin());
+        AssignmentFile.setup(getPlugin());
+        PerkManager.getInstance();
+        LoadoutManager.getInstance();
+        ShopManager.getInstance();
+        PerkListener.getInstance();
+        KillStreakManager.getInstance();
+        InventoryManager.getInstance();
+        AssignmentManager.getInstance();
+        SoundManager.getInstance();
 
 		if (hasQualityArms())
 			QualityGun.setup();
@@ -332,6 +346,10 @@ public class ComWarfare extends JavaPlugin {
 
 			bootPlayers();
 		}
+
+        if (MySQL) {
+            new Thread(() -> SQLDriver.getInstance().disconnect()).start();
+        }
 	}
 
 	/**
@@ -1210,7 +1228,122 @@ public class ComWarfare extends JavaPlugin {
 				sendMessage(sender, Lang.MAP_RELOADED.getMessage());
 
 				return true;
-			} else {
+            } else if (args[0].equalsIgnoreCase("convertdata")) {
+                if (!hasPerm(sender, "com.convertdata"))
+                    return true;
+
+                if (args.length == 1) {
+                    sendMessage(sender, "You must specify what you want to convert!");
+                    return true;
+                }
+
+                if (args.length >= 2) {
+                    if (args[0].equalsIgnoreCase("YAML->MySQL")) {
+                        sendMessage(sender, "Starting data conversion...");
+                        if (!MySQL) {
+                            sendMessage(sender, "Please enable MySQL and fill out the details; then restart your server before converting data to MySQL..");
+                            return true;
+                        }
+                        if (!useUuidForYml) {
+                            sendMessage(sender, "Please enable \"Use-UUIDs-For-YML-Storage\"; then restart your server before converting data to MySQL.");
+                            return true;
+                        }
+
+                        // Stats
+                        if (StatsFile.getData().getConfigurationSection("") != null) {
+                            for (String key : StatsFile.getData().getConfigurationSection("").getKeys(false)) {
+                                if (!key.equals("Leaderboard")) {
+                                    SQLDriver.getInstance().setKills(UUID.fromString(key), StatsFile.getData().getInt(key + ".kills"));
+                                    SQLDriver.getInstance().setDeaths(UUID.fromString(key), StatsFile.getData().getInt(key + ".deaths"));
+                                    //SQLDriver.getInstance().setExperience(UUID.fromString(key), StatsFile.getData().getDouble(key + ".experience"));
+                                }
+                            }
+                        }
+
+                        // Credits
+                        if (CreditsFile.getData().getConfigurationSection("Credits.Players") != null) {
+                            for (String key : StatsFile.getData().getConfigurationSection("Credits.Players").getKeys(false)) {
+                                SQLDriver.getInstance().setCredits(UUID.fromString("Credits.Players." + key), StatsFile.getData().getInt("Credits.Players" + key + ".Amount"));
+                            }
+                        }
+
+                        // Player level, prestige level, and experience.
+                        if (ProgressionFile.getData().getConfigurationSection("Players") != null) {
+                            for (String key : StatsFile.getData().getConfigurationSection("Players").getKeys(false)) {
+                                String uuid = ProgressionFile.getData().getString("Players." + key);
+                                SQLDriver.getInstance().setCredits(UUID.fromString(uuid), ProgressionFile.getData().getInt("Players" + key + ".Level"));
+                                SQLDriver.getInstance().setPrestige(UUID.fromString(uuid), ProgressionFile.getData().getInt("Players" + key + ".PrestigeLevel"));
+                                SQLDriver.getInstance().setExperience(UUID.fromString(uuid), ProgressionFile.getData().getDouble("Players" + key + ".Experience"));
+                            }
+                        }
+
+                        // Purchased items
+                        if (ShopFile.getData().getConfigurationSection("Purchased") != null) {
+                            for (String key : ShopFile.getData().getConfigurationSection("Purchased.Perks").getKeys(false)) {
+                                SQLDriver.getInstance().setPurchasedPerks(UUID.fromString(ShopFile.getData().getString("Purchased.Perks" + key)), ShopFile.getData().getStringList("Purchased.Perks." + key));
+                            }
+
+                            for (String key : ShopFile.getData().getConfigurationSection("Purchased.Guns").getKeys(false)) {
+                                SQLDriver.getInstance().setPurchasedGuns(UUID.fromString(ShopFile.getData().getString("Purchased.Guns" + key)), ShopFile.getData().getStringList("Purchased.Guns." + key));
+                            }
+
+                            for (String key : ShopFile.getData().getConfigurationSection("Purchased.Weapons").getKeys(false)) {
+                                SQLDriver.getInstance().setPurchasedWeapons(UUID.fromString(ShopFile.getData().getString("Purchased.Weapons" + key)), ShopFile.getData().getStringList("Purchased.Weapons." + key));
+                            }
+                        }
+
+                        // Killstreaks
+                        if (KillstreaksFile.getData().getConfigurationSection("Killstreaks") != null) {
+                            for (String key : StatsFile.getData().getConfigurationSection("Killstreaks").getKeys(false)) {
+                                SQLDriver.getInstance().setKillstreaks(UUID.fromString(ProgressionFile.getData().getString("Killstreaks." + key)), KillstreaksFile.getData().getStringList("Killstreaks." + key + ".streaks"));
+                            }
+                        }
+
+                        // Killstreaks
+                        if (LoadoutsFile.getData().getConfigurationSection("Loadouts") != null) {
+                            for (String key : StatsFile.getData().getConfigurationSection("Loadouts").getKeys(false)) {
+                                String uuid = LoadoutsFile.getData().getString("Loadouts." + key);
+                                JsonObject jo = new JsonObject();
+                                int k = 0;
+                                while (LoadoutsFile.getData().contains("Loadouts." + key + k)) {
+                                    jo.addProperty(k + "::Name", LoadoutsFile.getData().getString(uuid + k + ".Name"));
+                                    jo.addProperty(k + "::Primary", LoadoutsFile.getData().getString(uuid + k + ".Primary"));
+                                    jo.addProperty(k + "::Secondary", LoadoutsFile.getData().getString(uuid + k + ".Secondary"));
+                                    jo.addProperty(k + "::Lethal", LoadoutsFile.getData().getString(uuid + k + ".Lethal"));
+                                    jo.addProperty(k + "::Tactical", LoadoutsFile.getData().getString(uuid + k + ".Tactical"));
+                                    jo.addProperty(k + "::Perk1", LoadoutsFile.getData().getString(uuid + k + ".Perk1"));
+                                    jo.addProperty(k + "::Perk2", LoadoutsFile.getData().getString(uuid + k + ".Perk2"));
+                                    jo.addProperty(k + "::Perk3", LoadoutsFile.getData().getString(uuid + k + ".Perk3"));
+                                    k++;
+                                }
+                                SQLDriver.getInstance().setLoadouts(UUID.fromString(uuid), jo);
+                            }
+                        }
+
+                        // Killstreaks
+                        if (GunsFile.getData().getConfigurationSection("Loadouts") != null) {
+                            for (String key : StatsFile.getData().getConfigurationSection("Loadouts").getKeys(false)) {
+                                String uuid = GunsFile.getData().getString("Loadouts." + key);
+                                JsonObject jo = new JsonObject();
+                                int k = 0;
+                                while (LoadoutsFile.getData().contains("Loadouts." + key + k)) {
+                                    jo.addProperty(k + "::Name", GunsFile.getData().getString(uuid + k + ".Name"));
+                                    jo.addProperty(k + "::Primary", GunsFile.getData().getString(uuid + k + ".Primary"));
+                                    jo.addProperty(k + "::Secondary", GunsFile.getData().getString(uuid + k + ".Secondary"));
+                                    jo.addProperty(k + "::Lethal", GunsFile.getData().getString(uuid + k + ".Lethal"));
+                                    jo.addProperty(k + "::Tactical", GunsFile.getData().getString(uuid + k + ".Tactical"));
+                                    jo.addProperty(k + "::Perk1", GunsFile.getData().getString(uuid + k + ".Perk1"));
+                                    jo.addProperty(k + "::Perk2", GunsFile.getData().getString(uuid + k + ".Perk2"));
+                                    jo.addProperty(k + "::Perk3", GunsFile.getData().getString(uuid + k + ".Perk3"));
+                                    k++;
+                                }
+                                SQLDriver.getInstance().setLoadouts(UUID.fromString(uuid), jo);
+                            }
+                        }
+                    }
+                }
+
+            } else {
 				sender.sendMessage(ComWarfare.getPrefix() + Lang.UNKNOWN_COMMAND.getMessage());
 				return true;
 			}
@@ -1726,4 +1859,12 @@ public class ComWarfare extends JavaPlugin {
 	public static int getSpawnProtectionDuration() {
 		return spawnProtectionDuration;
 	}
+
+    // Set name to players name or UUID
+    public static String setName(Player player) {
+        // Use name or uuid depending on settings
+        String playerName = player.getName();
+        if (ComWarfare.useUuidForYml) playerName = Bukkit.getPlayer(playerName).getUniqueId().toString();
+        return playerName;
+    }
 }

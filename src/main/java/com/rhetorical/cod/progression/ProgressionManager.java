@@ -8,6 +8,7 @@ import com.rhetorical.cod.lang.Lang;
 import com.rhetorical.cod.loadouts.LoadoutManager;
 import com.rhetorical.cod.sounds.events.PlayerLevelUpSoundEvent;
 import com.rhetorical.cod.sounds.events.PlayerPrestigeSoundEvent;
+import com.rhetorical.cod.sql.SQLDriver;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -206,46 +207,54 @@ public class ProgressionManager {
 	}
 
 	public void loadData(Player p) {
-		int k = 0;
-		while (ProgressionFile.getData().contains("Players." + k)) {
+		if (ComWarfare.MySQL) {
+			int playerLevel = SQLDriver.getInstance().getLevel(p.getUniqueId());
+			double playerExperience = SQLDriver.getInstance().getExperience(p.getUniqueId());
+			int playerPrestigeLevel = SQLDriver.getInstance().getPrestige(p.getUniqueId());
+			level.put(p, playerLevel);
+			experience.put(p, playerExperience);
+			prestigeLevel.put(p, playerPrestigeLevel);
+		} else {
+			String playerName = ComWarfare.setName(p);
+			int k = 0;
+			while (ProgressionFile.getData().contains("Players." + k)) {
+				if (playerName.equalsIgnoreCase(ProgressionFile.getData().getString("Players." + k + ".name"))) {
+					int playerLevel = ProgressionFile.getData().getInt("Players." + k + ".level");
+					double playerExperience = ProgressionFile.getData().getDouble("Players." + k + ".experience");
+					int playerPrestigeLevel = ProgressionFile.getData().getInt("Players." + k + ".prestigeLevel");
 
-			if (p.getName().equalsIgnoreCase(ProgressionFile.getData().getString("Players." + k + ".name"))) {
-				int playerLevel = ProgressionFile.getData().getInt("Players." + k + ".level");
-				double playerExperience = ProgressionFile.getData().getDouble("Players." + k + ".experience");
-				int playerPrestigeLevel = ProgressionFile.getData().getInt("Players." + k + ".prestigeLevel");
+					level.put(p, playerLevel);
+					experience.put(p, playerExperience);
+					prestigeLevel.put(p, playerPrestigeLevel);
 
-				this.level.put(p, playerLevel);
-				this.experience.put(p, playerExperience);
-				this.prestigeLevel.put(p, playerPrestigeLevel);
+					return;
+				}
 
-				return;
+				k++;
 			}
-
-			k++;
 		}
-
 	}
 
 	public void saveData(Player p) {
-
-		int k;
-		for (k = 0; ProgressionFile.getData().contains("Players." + k); k++) {
-			if (Bukkit.getPlayer(ProgressionFile.getData().getString("Players." + k + ".name")) == p) {
-				ProgressionFile.getData().set("Players." + k + ".level", getLevel(p));
-				ProgressionFile.getData().set("Players." + k + ".experience", getExperience(p));
-				ProgressionFile.getData().set("Players." + k + ".prestigeLevel", getPrestigeLevel(p));
-				ProgressionFile.saveData();
-				ProgressionFile.reloadData();
-				return;
+		if (ComWarfare.MySQL) {
+			SQLDriver.getInstance().setLevel(p.getUniqueId(), getLevel(p));
+			SQLDriver.getInstance().setExperience(p.getUniqueId(), getExperience(p));
+			SQLDriver.getInstance().setPrestige(p.getUniqueId(), getPrestigeLevel(p));
+		} else {
+			String playerName = ComWarfare.setName(p);
+			for (String key : ProgressionFile.getData().getConfigurationSection("Players").getKeys(false)) {
+				if (playerName.equals(key)) {
+					ProgressionFile.getData().set("Players." + key + ".Level", getLevel(p));
+					ProgressionFile.getData().set("Players." + key + ".Experience", getExperience(p));
+					ProgressionFile.getData().set("Players." + key + ".PrestigeLevel", getPrestigeLevel(p));
+					ProgressionFile.saveData();
+					ProgressionFile.reloadData();
+					return;
+				}
 			}
+			ProgressionFile.saveData();
+			ProgressionFile.reloadData();
 		}
-
-		ProgressionFile.getData().set("Players." + k + ".name", p.getName());
-		ProgressionFile.getData().set("Players." + k + ".level", getLevel(p));
-		ProgressionFile.getData().set("Players." + k + ".experience", getExperience(p));
-		ProgressionFile.getData().set("Players." + k + ".prestigeLevel", getPrestigeLevel(p));
-		ProgressionFile.saveData();
-		ProgressionFile.reloadData();
 	}
 
 	public ArrayList<Player> getPlayerRankings() {

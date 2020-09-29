@@ -1,5 +1,8 @@
 package com.rhetorical.cod.files;
 
+import com.rhetorical.cod.ComWarfare;
+import com.rhetorical.cod.util.NameFetcher;
+import com.rhetorical.cod.util.UUIDFetcher;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -12,6 +15,8 @@ import java.io.IOException;
 
 public class LoadoutsFile {
 	private static LoadoutsFile instance = new LoadoutsFile();
+	private static final int nameToUuid = 0;
+	private static final int uuidToName = 1;
 	private static Plugin p;
 	private static FileConfiguration loadouts;
 	private static File lfile;
@@ -32,7 +37,12 @@ public class LoadoutsFile {
 				Bukkit.getServer().getLogger().severe(ChatColor.RED + "Could not create loadouts.yml!");
 			}
 		}
-		loadouts = YamlConfiguration.loadConfiguration(lfile);
+		reloadData();
+
+		if (ComWarfare.useUuidForYml)
+			replaceNamesAndUUIDs(nameToUuid);
+		else
+			replaceNamesAndUUIDs(uuidToName);
 	}
 
 	public static FileConfiguration getData() {
@@ -53,5 +63,37 @@ public class LoadoutsFile {
 
 	public static PluginDescriptionFile getDesc() {
 		return p.getDescription();
+	}
+
+	public static void replaceNamesAndUUIDs(int type) {
+		if (getData().getConfigurationSection("Loadouts") == null) return;
+		for (String key : getData().getConfigurationSection("Loadouts").getKeys(false)) {
+			String replacement;
+			if (type == nameToUuid) {
+				if (key.length() < 36) {
+					try {
+						replacement = UUIDFetcher.getUUID(key);
+						getData().set("Loadouts." + replacement, getData().get("Loadouts." + key));
+						getData().set("Loadouts." + key, null);
+						ComWarfare.sendMessage(ComWarfare.getConsole(), ChatColor.GREEN + "Replaced player name " + ChatColor.DARK_GREEN + key + ChatColor.GREEN + " with UUID " + ChatColor.DARK_GREEN + replacement + ChatColor.GREEN + " in loadouts.yml.");
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+			} else if (type == uuidToName) {
+				if (key.length() > 16) {
+					try {
+						replacement = NameFetcher.getName(key);
+						getData().set("Loadouts." + replacement, getData().get("Loadouts." + key));
+						getData().set("Loadouts." + key, null);
+						ComWarfare.sendMessage(ComWarfare.getConsole(), ChatColor.GREEN + "Replaced player UUID " + ChatColor.DARK_GREEN + key + ChatColor.GREEN + " with name " + ChatColor.DARK_GREEN + replacement + ChatColor.GREEN + " in loadouts.yml.");
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		}
+		saveData();
+		reloadData();
 	}
 }
