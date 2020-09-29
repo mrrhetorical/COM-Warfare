@@ -1836,7 +1836,7 @@ public class GameInstance implements Listener {
 
         if (getGamemode() == Gamemode.OITC) {
             if (ffaPlayerScores.get(p) == 0) {
-                p.sendMessage(Lang.OITC_RAN_OUT_OF_LIVES.getMessage());
+                ComWarfare.sendMessage(p, Lang.OITC_RAN_OUT_OF_LIVES.getMessage());
                 p.setGameMode(GameMode.SPECTATOR);
                 p.getInventory().clear();
                 return;
@@ -2537,15 +2537,15 @@ public class GameInstance implements Listener {
                     spawnCodPlayer(tagOwner, getMap().getRedSpawn());
                 }
             } else if (getGamemode() == Gamemode.KC) {
-                p.sendMessage(Lang.KILL_DENIED.getMessage());
+                ComWarfare.sendMessage(p, Lang.KILL_DENIED.getMessage());
                 ComWarfare.sendActionBar(p, ChatColor.YELLOW + "+" + (ComWarfare.getRank(p).getKillExperience() / 2) + "xp!");
                 ProgressionManager.getInstance().addExperience(p, ComWarfare.getRank(p).getKillExperience() / 2);
             }
         } else {
             if (getGamemode() == Gamemode.RESCUE) {
-                p.sendMessage(Lang.SPAWN_DENIED.getMessage().replace("{player}", tagOwner.getName()));
+                ComWarfare.sendMessage(p, Lang.SPAWN_DENIED.getMessage().replace("{player}", tagOwner.getName()));
             } else if (getGamemode() == Gamemode.KC) {
-                p.sendMessage(Lang.KILL_CONFIRMED.getMessage());
+                ComWarfare.sendMessage(p, Lang.KILL_CONFIRMED.getMessage());
                 ComWarfare.sendActionBar(p, ChatColor.YELLOW + "+" + ComWarfare.getRank(p).getKillExperience() + "xp!");
                 ProgressionManager.getInstance().addExperience(p, ComWarfare.getRank(p).getKillExperience());
                 if (isOnRedTeam(p)) {
@@ -2685,7 +2685,7 @@ public class GameInstance implements Listener {
         }
 
         for (Player p : getPlayers()) {
-            p.sendMessage(Lang.HARDPOINT_FLAG_SPAWNED.getMessage());
+           ComWarfare.sendMessage(p, Lang.HARDPOINT_FLAG_SPAWNED.getMessage());
         }
 
         hardpointController = -1;
@@ -3102,7 +3102,7 @@ public class GameInstance implements Listener {
         KillStreakManager.getInstance().useStreak(owner, KillStreak.AIRSTRIKE);
 
         for (Player p : getPlayers())
-            p.sendMessage(Lang.AIRSTRIKE_INCOMING.getMessage());
+            ComWarfare.sendMessage(p, Lang.AIRSTRIKE_INCOMING.getMessage());
 
         ArrayList<Player> targets;
         ArrayList<Player> team;
@@ -3407,7 +3407,7 @@ public class GameInstance implements Listener {
                 for (Player p : getPlayers()) {
                     if (p.equals(victim) || p.equals(killer))
                         continue;
-                    p.sendMessage("" + kTeam + ChatColor.BOLD + killer.getName() + ChatColor.RESET + ChatColor.WHITE + Lang.KILLED_TEXT.getMessage() + ChatColor.RESET + vTeam + ChatColor.BOLD + victim.getName());
+                    ComWarfare.sendMessage(p, "" + kTeam + ChatColor.BOLD + killer.getName() + ChatColor.RESET + ChatColor.WHITE + Lang.KILLED_TEXT.getMessage() + ChatColor.RESET + vTeam + ChatColor.BOLD + victim.getName());
                 }
             }
         } else {

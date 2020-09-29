@@ -16,7 +16,7 @@ public class KillStreakManager {
 
 	private static KillStreakManager instance;
 
-	private HashMap<Player, KillStreak[]> playerKillstreaks = new HashMap<>();
+	public HashMap<Player, KillStreak[]> playerKillstreaks = new HashMap<>();
 	private HashMap<Player, ArrayList<KillStreak>> availableKillstreaks = new HashMap<>();
 
 	private KillStreakManager() {
@@ -117,7 +117,7 @@ public class KillStreakManager {
 			try {
 				ks = KillStreak.valueOf(s);
 			} catch (Exception e) {
-				ComWarfare.getConsole().sendMessage(ComWarfare.getPrefix() + Lang.ERROR_COULD_NOT_LOAD_KILL_STREAKS.getMessage().replace("{player}", p.getName()));
+				ComWarfare.sendMessage(ComWarfare.getConsole(), ComWarfare.getPrefix() + Lang.ERROR_COULD_NOT_LOAD_KILL_STREAKS.getMessage().replace("{player}", p.getName()));
 				continue;
 			}
 
