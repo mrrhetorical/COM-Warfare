@@ -6,6 +6,7 @@ import com.rhetorical.cod.ComWarfare;
 import net.md_5.bungee.api.ChatColor;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
@@ -134,6 +135,40 @@ public class SQLDriver {
                 "loadouts LONGTEXT,\n" +
                 "PRIMARY KEY(uuid));")
                 .executeUpdate();
+
+        getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS assignments (" +
+                "uuid VARCHAR(36),\n" +
+                "assignment1 LONGTEXT,\n" +
+                "assignment2 LONGTEXT,\n" +
+                "assignment3 LONGTEXT,\n" +
+                "PRIMARY KEY(uuid));")
+                .executeUpdate();
+
+        getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS assignmentTypes (" +
+                "type VARCHAR(100),\n" +
+                "baseReward BIGINT,\n" +
+                "PRIMARY KEY(type));")
+                .executeUpdate();
+
+       setDefaults();
+
+    }
+
+    public void setDefaults() throws SQLException {
+        PreparedStatement ps = getConnection().prepareStatement("INSERT IGNORE assignmentTypes (type,baseReward) VALUES(?,?)");
+        ps.setString(1, "KILLS");
+        ps.setInt(2, 1);
+        ps.executeUpdate();
+        ps.setString(1, "PLAY_MODE");
+        ps.setInt(2, 20);
+        ps.executeUpdate();
+        ps.setString(1, "WIN_GAME");
+        ps.setInt(2, 50);
+        ps.executeUpdate();
+        ps.setString(1, "WIN_GAME_MODE");
+        ps.setInt(2, 75);
+        ps.executeUpdate();
+
     }
 
 
@@ -141,23 +176,23 @@ public class SQLDriver {
 
 
     public int getKills(UUID uuid) {
-        return getInt(uuid, "stats", "kills");
+        return getInt(uuid.toString(), "stats", "kills", "uuid");
     }
 
     public int getDeaths(UUID uuid) {
-        return getInt(uuid, "stats", "deaths");
+        return getInt(uuid.toString(), "stats", "deaths", "uuid");
     }
 
     public int getLevel(UUID uuid) {
-        return getInt(uuid, "stats", "level");
+        return getInt(uuid.toString(), "stats", "level", "uuid");
     }
 
     public int getPrestige(UUID uuid) {
-        return getInt(uuid, "stats", "prestige");
+        return getInt(uuid.toString(), "stats", "prestige", "uuid");
     }
 
     public int getCredits(UUID uuid) {
-        return getInt(uuid, "stats", "credits");
+        return getInt(uuid.toString(), "stats", "credits", "uuid");
     }
 
     public double getExperience(UUID uuid) {
@@ -181,7 +216,15 @@ public class SQLDriver {
     }
 
     public JsonObject getLoadout(UUID uuid) {
-        return getJsonObject(uuid, "loadouts", "loadouts", "uuid", uuid.toString());
+        return getJsonObject(uuid, "loadouts", "loadouts", "uuid");
+    }
+
+    public JsonObject getAssignments(UUID uuid, int assignment) {
+        return getJsonObject(uuid, "assignments", "assignment" + assignment, "uuid");
+    }
+
+    public int getAssignmentTypes(String type) {
+        return getInt(type, "assignmentTypes","baseReward", "type");
     }
 
 
@@ -232,16 +275,20 @@ public class SQLDriver {
         setJsonObject(uuid, "loadouts", jsonObject, "loadouts", "uuid");
     }
 
+    public void setAssignments(UUID uuid, JsonObject jsonObject, int assignment) {
+        setJsonObject(uuid, "assignments", jsonObject, "assignment" + assignment, "uuid");
+    }
+
 
 //------------------------------------------------------------ Getter Methods ------------------------------------------------------------\\
 
     // To get integers
-    public int getInt(UUID uuid, String table, String dataType) {
+    public int getInt(String primaryKeyValue, String table, String dataType, String primaryKey) {
         int[] number = new int[1];
         Thread thread = new Thread(() -> {
             try {
-                PreparedStatement ps = getConnection().prepareStatement("SELECT " + dataType + " FROM " + table + " WHERE uuid=?");
-                ps.setString(1, uuid.toString());
+                PreparedStatement ps = getConnection().prepareStatement("SELECT " + dataType + " FROM " + table + " WHERE " + primaryKey + "=?");
+                ps.setString(1, primaryKeyValue);
                 ResultSet rs = ps.executeQuery();
                 if (!rs.next() || rs.getString(dataType) == null) {
                     number[0] = 0;
@@ -310,7 +357,11 @@ public class SQLDriver {
                     return;
                 }
                 // set list to the result of the dataType
-                list.set(Collections.singletonList(rs.getString(dataType)));
+                List<String> tempList = new ArrayList<>();
+                for (String str : rs.getString(dataType).split("::")){
+                    tempList.add(str);
+                }
+                list.set(tempList);
                 // Close Result Set to free up its resources and prevent memory leakage
                 rs.close();
                 // Close Prepared Statement to free up its resources and prevent memory leakage
@@ -330,12 +381,12 @@ public class SQLDriver {
     }
 
     // To get JSON objects
-    public JsonObject getJsonObject(UUID uuid, String table, String dataType, String primaryKey, String primaryKeyValue) {
+    public JsonObject getJsonObject(UUID uuid, String table, String dataType, String primaryKey) {
         AtomicReference<JsonObject> jsonObject = new AtomicReference<>(new JsonObject());
         Thread thread = new Thread(() -> {
             try {
                 PreparedStatement ps = getConnection().prepareStatement("SELECT " + dataType + " FROM " + table + " WHERE " + primaryKey + "=?;");
-                ps.setString(1, primaryKeyValue);
+                ps.setString(1, uuid.toString());
                                 /*
                 Hello :)
                 - Insprill
@@ -433,6 +484,7 @@ public class SQLDriver {
             Thread.currentThread().setName("COM-Warfare SQL - Set JsonObject");
             try {
                 PreparedStatement ps = getConnection().prepareStatement("INSERT INTO " + table + " (" + primaryKey + "," + dataType + ") VALUES(?,?) ON DUPLICATE KEY UPDATE " + dataType + "=?");
+                System.out.println("INSERT INTO " + table + " (" + primaryKey + "," + dataType + ") VALUES(?,?) ON DUPLICATE KEY UPDATE " + dataType + "=?");
                 ps.setString(1, uuid.toString());
                 ps.setString(2, jsonObject.toString());
                 ps.setString(3, jsonObject.toString());
