@@ -19,6 +19,7 @@ import com.rhetorical.cod.sql.SQLDriver;
 import com.rhetorical.cod.streaks.KillStreakManager;
 import com.rhetorical.cod.util.LegacyActionBar;
 import com.rhetorical.cod.util.LegacyTitle;
+import com.rhetorical.cod.util.Tabcomplete;
 import com.rhetorical.cod.util.UpdateChecker;
 import com.rhetorical.cod.weapons.*;
 import com.rhetorical.tpp.api.McTranslate;
@@ -166,6 +167,8 @@ public class ComWarfare extends JavaPlugin {
 			ComWarfare.getConsole().sendMessage(ComWarfare.getPrefix() + "You are not on the most recent version of Spigot/Bukkit, so COM-Warfare will have some features limited. To ensure the plugin will work as intended, please use version 1.9+!");
 			legacy = true;
 		}
+
+		getCommand("cod").setTabCompleter(new Tabcomplete());
 
 		DependencyManager dm = new DependencyManager();
 		if (!dm.checkDependencies()) {
@@ -382,7 +385,7 @@ public class ComWarfare extends JavaPlugin {
 	 * @see ComWarfare#hasPerm(CommandSender, String, boolean)
 	 * @return Returns true if the given command sender has the permission node, the permission node "com.*", or if they're a server operator and aren't in game.
 	 * */
-	static boolean hasPerm(CommandSender p, String s) {
+	public static boolean hasPerm(CommandSender p, String s) {
 		return hasPerm(p, s, false);
 	}
 
