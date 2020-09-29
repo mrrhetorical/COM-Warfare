@@ -3,6 +3,7 @@ package com.rhetorical.cod.weapons;
 import com.rhetorical.cod.ComWarfare;
 import com.rhetorical.cod.files.GunsFile;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 public class CodGun extends CodWeapon {
@@ -13,9 +14,8 @@ public class CodGun extends CodWeapon {
 	private UnlockType unlockType;
 	private int ammo;
 	private final ItemStack gunItem;
-	private final ItemStack menuItem;
 	private ItemStack ammoItem;
-	
+
 	private GunType gunType;
 
 	private int levelUnlock;
@@ -38,7 +38,6 @@ public class CodGun extends CodWeapon {
 		this.ammoItem = ammoI;
 
 		gunItem = setupWeaponItem(gunI);
-		menuItem = setupMenuItem(gunI);
 	}
 
 	/**
@@ -58,7 +57,6 @@ public class CodGun extends CodWeapon {
 		this.ammoItem = ammoI;
 
 		gunItem = setupWeaponItem(gunI);
-		menuItem = setupMenuItem(gunI);
 	}
 
 	/**
@@ -78,17 +76,15 @@ public class CodGun extends CodWeapon {
 
 		if (!isBlank) {
 			gunItem = setupWeaponItem(gunI);
-			menuItem = setupMenuItem(gunI);
 		} else {
 			gunItem = gunI;
-			menuItem = gunI;
 		}
 	}
 
 	public void save() {
-		
+
 		GunsFile.reloadData();
-		
+
 		if (this.levelUnlock <= 1 & creditUnlock <= 0 && !GunsFile.getData().contains("Guns." + gunType.toString() + ".default.name")) {
 			GunsFile.getData().set("Guns." + gunType.toString() + ".default.name", name);
 			GunsFile.getData().set("Guns." + gunType.toString() + ".default.ammoName", ammoName);
@@ -105,16 +101,16 @@ public class CodGun extends CodWeapon {
 			GunsFile.reloadData();
 			return;
 		}
-		
+
 		int k = 0;
 		while (GunsFile.getData().contains("Guns." + gunType.toString() + "." + k)) {
 			if (GunsFile.getData().getString("Guns." + gunType.toString() + "." + k + ".name").equals(name)) {
 				break;
 			}
-			
+
 			k++;
 		}
-		
+
 		GunsFile.getData().set("Guns." + gunType.toString() + "." + k + ".name", name);
 		GunsFile.getData().set("Guns." + gunType.toString() + "." + k + ".ammoCount", ammo);
 		GunsFile.getData().set("Guns." + gunType.toString() + "." + k + ".ammoName", ammoName);
@@ -143,10 +139,6 @@ public class CodGun extends CodWeapon {
 	}
 
 	public ItemStack getGunItem() {
-		return gunItem.clone();
-	}
-
-	public ItemStack getMenuItem() {
 		return gunItem.clone();
 	}
 

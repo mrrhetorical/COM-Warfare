@@ -4,7 +4,7 @@
 	<groupId>com.rhetorical</groupId>
 	<artifactId>com-warfare</artifactId>
 	<packaging>jar</packaging>
-	<version>2.14.2.${buildNumber}</version>
+	<version>2.15.0.${buildNumber}</version>
 	<name>COM-Warfare</name>
 	<properties>
 		<buildNumber>${env.BUILD_NUMBER}</buildNumber>

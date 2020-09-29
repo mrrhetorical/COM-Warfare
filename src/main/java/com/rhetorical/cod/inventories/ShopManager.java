@@ -8,6 +8,7 @@ import com.rhetorical.cod.loadouts.LoadoutManager;
 import com.rhetorical.cod.perks.CodPerk;
 import com.rhetorical.cod.perks.PerkManager;
 import com.rhetorical.cod.progression.ProgressionManager;
+import com.rhetorical.cod.sql.SQLDriver;
 import com.rhetorical.cod.weapons.*;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -259,11 +260,19 @@ public class ShopManager {
 			perks.add(PerkManager.getInstance().getDefaultTwo().getPerk().getName());
 			perks.add(PerkManager.getInstance().getDefaultThree().getPerk().getName());
 		}
-		
-		ShopFile.getData().set("Purchased.Perks." + p.getName(), perks);
 
-		ShopFile.saveData();
-		ShopFile.reloadData();
+		if (ComWarfare.MySQL) {
+			if (!guns.isEmpty()) SQLDriver.getInstance().setPurchasedGuns(p.getUniqueId(), guns);
+			if (!weapons.isEmpty()) SQLDriver.getInstance().setPurchasedPerks(p.getUniqueId(), weapons);
+			if (!perks.isEmpty()) SQLDriver.getInstance().setPurchasedWeapons(p.getUniqueId(), perks);
+		} else {
+			String playerName = ComWarfare.setName(p.getName());
+			ShopFile.getData().set("Purchased.Perks." + playerName, perks);
+			ShopFile.getData().set("Purchased.Weapons." + playerName, weapons);
+			ShopFile.getData().set("Purchased.Guns." + playerName, guns);
+			ShopFile.saveData();
+			ShopFile.reloadData();
+		}
 	}
 
 	@SuppressWarnings("unchecked")
@@ -273,7 +282,12 @@ public class ShopManager {
 		ArrayList<CodWeapon> grenades = new ArrayList<>();
 		ArrayList<CodPerk> perks = new ArrayList<>();
 
-		ArrayList<String> gunList = (ArrayList<String>) ShopFile.getData().get("Purchased.Guns." + p.getName());
+		List<String> gunList;
+		if (ComWarfare.MySQL) {
+			gunList = SQLDriver.getInstance().getPurchasedGuns(p.getUniqueId());
+		} else {
+			gunList = ShopFile.getData().getStringList("Purchased.Guns." + ComWarfare.setName(p.getName()));
+		}
 
 		if (gunList != null) {
 
@@ -303,7 +317,12 @@ public class ShopManager {
 			guns.add(LoadoutManager.getInstance().getDefaultSecondary());
 		}
 
-		ArrayList<String> weaponList = (ArrayList<String>) ShopFile.getData().get("Purchased.Weapons." + p.getName());
+		List<String> weaponList;
+		if (ComWarfare.MySQL) {
+			weaponList = SQLDriver.getInstance().getPurchasedWeapons(p.getUniqueId());
+		} else {
+			weaponList = ShopFile.getData().getStringList("Purchased.Weapons." + ComWarfare.setName(p.getName()));
+		}
 
 		if (weaponList != null) {
 			for (String s : weaponList) {
@@ -331,7 +350,13 @@ public class ShopManager {
 			grenades.add(LoadoutManager.getInstance().getDefaultTactical());
 		}
 
-		ArrayList<String> perkList = (ArrayList<String>) ShopFile.getData().get("Purchased.Perks." + p.getName());
+		List<String> perkList;
+		if (ComWarfare.MySQL) {
+			perkList = SQLDriver.getInstance().getPurchasedPerks(p.getUniqueId());
+		} else {
+			perkList = ShopFile.getData().getStringList("Purchased.Perks." + ComWarfare.setName(p.getName()));
+		}
+
 		if (perkList != null) {
 			outsidePerks: for (String s : perkList) {
 				for (CodPerk perk : PerkManager.getInstance().getAvailablePerks()) {

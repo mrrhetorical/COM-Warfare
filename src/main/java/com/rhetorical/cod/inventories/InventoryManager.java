@@ -342,7 +342,7 @@ public class InventoryManager implements Listener {
 				header.setItemMeta(headerMeta);
 			}
 
-			ItemStack primary = loadout.getPrimary().getMenuItem();
+			ItemStack primary = loadout.getPrimary().getMenuItem(p);
 			ItemMeta primaryMeta = primary.getItemMeta();
 			if (primaryMeta != null) {
 				primaryMeta.setDisplayName(Lang.INVENTORY_PRIMARY_WEAPON_NAME.getMessage().replace("{gun}", loadout.getPrimary().getName()));
@@ -352,7 +352,7 @@ public class InventoryManager implements Listener {
 				primary.setItemMeta(primaryMeta);
 			}
 
-			ItemStack secondary = loadout.getSecondary().getMenuItem();
+			ItemStack secondary = loadout.getSecondary().getMenuItem(p);
 			ItemMeta secondaryMeta = secondary.getItemMeta();
 			if (secondaryMeta != null) {
 				secondaryMeta.setDisplayName(Lang.INVENTORY_SECONDARY_WEAPON_NAME.getMessage().replace("{gun}", loadout.getSecondary().getName()));
@@ -362,7 +362,7 @@ public class InventoryManager implements Listener {
 				secondary.setItemMeta(secondaryMeta);
 			}
 
-			ItemStack lethal = loadout.getLethal().getMenuItem();
+			ItemStack lethal = loadout.getLethal().getMenuItem(p);
 			ItemMeta lethalMeta = lethal.getItemMeta();
 			if (lethalMeta != null) {
 				lethalMeta.setDisplayName(Lang.INVENTORY_LETHAL_WEAPON_NAME.getMessage().replace("{gun}", loadout.getLethal().getName()));
@@ -372,7 +372,7 @@ public class InventoryManager implements Listener {
 				lethal.setItemMeta(lethalMeta);
 			}
 
-			ItemStack tactical = loadout.getTactical().getMenuItem();
+			ItemStack tactical = loadout.getTactical().getMenuItem(p);
 			ItemMeta tacticalMeta = tactical.getItemMeta();
 			if (tacticalMeta != null) {
 				tacticalMeta.setDisplayName(Lang.INVENTORY_TACTICAL_WEAPON_NAME.getMessage().replace("{gun}", loadout.getTactical().getName()));
@@ -476,7 +476,7 @@ public class InventoryManager implements Listener {
 
 				for (int i = 0; i < 27 && !purchasedPrimaries.isEmpty(); i++) {
 					CodGun gun = purchasedPrimaries.remove(0);
-					inv.addItem(gun.getMenuItem());
+					inv.addItem(gun.getMenuItem(p));
 				}
 
 				if (page != 0)
@@ -506,7 +506,7 @@ public class InventoryManager implements Listener {
 
 				for (int i = 0; i < 27 && !purchasedSecondaries.isEmpty(); i++) {
 					CodGun gun = purchasedSecondaries.remove(0);
-					inv.addItem(gun.getMenuItem());
+					inv.addItem(gun.getMenuItem(p));
 				}
 
 				if (page != 0)
@@ -536,7 +536,7 @@ public class InventoryManager implements Listener {
 
 				for (int i = 0; i < 27 && !purchasedLethals.isEmpty(); i++) {
 					CodWeapon gun = purchasedLethals.remove(0);
-					inv.addItem(gun.getMenuItem());
+					inv.addItem(gun.getMenuItem(p));
 				}
 
 				if (page != 0)
@@ -566,7 +566,7 @@ public class InventoryManager implements Listener {
 
 				for (int i = 0; i < 27 && !purchasedTacticals.isEmpty(); i++) {
 					CodWeapon gun = purchasedTacticals.remove(0);
-					inv.addItem(gun.getMenuItem());
+					inv.addItem(gun.getMenuItem(p));
 				}
 
 				if (page != 0)
@@ -703,7 +703,7 @@ public class InventoryManager implements Listener {
 						if (!gun.isShowInShop())
 							continue;
 
-						ItemStack item = gun.getMenuItem();
+						ItemStack item = gun.getMenuItem(p);
 
 						ItemMeta gunMeta = item.getItemMeta();
 
@@ -759,7 +759,7 @@ public class InventoryManager implements Listener {
 						if (!grenade.isShowInShop())
 							continue;
 
-						ItemStack item = grenade.getMenuItem();
+						ItemStack item = grenade.getMenuItem(p);
 
 						ItemMeta gunMeta = item.getItemMeta();
 
@@ -853,7 +853,7 @@ public class InventoryManager implements Listener {
 				}
 			}
 
-			ItemStack item = loadout.getPrimary().getMenuItem();
+			ItemStack item = loadout.getPrimary().getMenuItem(p);
 
 			ItemMeta meta = item.getItemMeta();
 			meta.setDisplayName(loadout.getName());
@@ -949,44 +949,57 @@ public class InventoryManager implements Listener {
 		return true;
 	}
 
+	/**
+	 * Leaderboards list is stored as UUIDs.
+	 * */
 	private void setupLeaderBoard() {
-		//todo: rewrite leaderboard
-		leaderboardInventory.setItem(35, backInv);
+		leaderboardInventory = Bukkit.createInventory(new COMInventoryHolder(true),54);
 		ArrayList<String> pls = StatHandler.getLeaderboardList();
 
-		TreeMap<Double, String> expMap = new TreeMap<>();
+		class LeaderboardEntry {
+			private String name;
+			private double experience;
+			private int kills;
+			private int deaths;
 
-		HashMap<String, ItemStack> leaderboardOrder = new HashMap<>();
-
-		for (String name : pls) {
-			ItemStack player;
-			try {
-				player = new ItemStack(Material.valueOf("SKELETON_SKULL"));
-			} catch(Exception e) {
-				player = new ItemStack(Material.ANVIL);
+			double getExperience() {
+				return experience;
 			}
-			ItemMeta playerMeta = player.getItemMeta();
-			playerMeta.setDisplayName(Lang.LEADERBOARD_PLAYER_ENTRY.getMessage().replace("{name}", name));
-
-			double experience = StatHandler.getExperience(name);
-
-			player.setItemMeta(playerMeta);
-
-			leaderboardOrder.put(name, player);
-
-			expMap.put(experience, name);
 		}
 
-		for (int i = 0; i < expMap.size(); i++) {
-			String id = expMap.get(expMap.descendingKeySet().toArray()[i]);
-			ItemStack item = leaderboardOrder.get(id);
-			ItemMeta itemMeta = item.getItemMeta();
-			float kills = (float) StatHandler.getKills(id);
-			float deaths = (float) StatHandler.getDeaths(id);
+		List<LeaderboardEntry> leaderboard = new ArrayList<>();
 
-			double experience = StatHandler.getExperience(id);
+		for (String s : pls) {
+			LeaderboardEntry entry = new LeaderboardEntry();
+			entry.name = Bukkit.getOfflinePlayer(UUID.fromString(s)).getName();
+			entry.experience = StatHandler.getExperience(s);
+			entry.kills = StatHandler.getKills(s);
+			entry.deaths = StatHandler.getDeaths(s);
+			leaderboard.add(entry);
+		}
+
+		leaderboard.sort(Comparator.comparingDouble(LeaderboardEntry::getExperience));
+
+		ItemStack player;
+		try {
+			player = new ItemStack(Material.valueOf("SKELETON_SKULL"));
+		} catch(Exception e) {
+			player = new ItemStack(Material.ANVIL);
+		}
+
+		for (int i = 0; i < leaderboard.size() && i < 44; i++) {
+			ItemStack item = player.clone();
+			ItemMeta itemMeta = item.getItemMeta();
+
+			itemMeta.setDisplayName(Lang.LEADERBOARD_PLAYER_ENTRY.getMessage().replace("{name}", leaderboard.get(i).name));
+
+			float kills = leaderboard.get(i).kills;
+			float deaths = leaderboard.get(i).deaths;
+
+			double experience = leaderboard.get(i).experience;
 
 			float kdr = kills / deaths;
+			kdr = Math.round(kdr * 100f) / 100f;
 
 			ArrayList<String> lore = new ArrayList<>();
 
@@ -999,16 +1012,15 @@ public class InventoryManager implements Listener {
 			} else {
 				lore.add(Lang.LEADERBOARD_KD.getMessage().replace("{score}", (int) kills + ""));
 			}
-
 			itemMeta.setLore(lore);
 
 			item.setItemMeta(itemMeta);
 
 			leaderboardInventory.setItem(i, item);
-
 		}
 
-		System.gc();
+
+		leaderboardInventory.setItem(53, backInv);
 	}
 
 	private void setupPersonalStatsBoardMenu(Player p) {
@@ -1463,7 +1475,7 @@ public class InventoryManager implements Listener {
 						}
 
 						for (CodGun gun : ShopManager.getInstance().getPurchasedGuns().get(p)) {
-							if (gun.getMenuItem().equals(item)) {
+							if (gun.getMenuItem(p).equals(item)) {
 								loadout.setPrimary(gun);
 								InventoryManager.getInstance().setupCreateClassInventory(p);
 								p.openInventory(InventoryManager.getInstance().createClassInventory.get(p));
@@ -1471,7 +1483,7 @@ public class InventoryManager implements Listener {
 							}
 						}
 
-						if (LoadoutManager.getInstance().getDefaultPrimary().getMenuItem().equals(item)) {
+						if (LoadoutManager.getInstance().getDefaultPrimary().getMenuItem(p).equals(item)) {
 							loadout.setPrimary(LoadoutManager.getInstance().getDefaultPrimary());
 							InventoryManager.getInstance().setupCreateClassInventory(p);
 							p.openInventory(InventoryManager.getInstance().createClassInventory.get(p));
@@ -1500,7 +1512,7 @@ public class InventoryManager implements Listener {
 						}
 
 						for (CodGun gun : ShopManager.getInstance().getPurchasedGuns().get(p)) {
-							if (gun.getMenuItem().equals(item)) {
+							if (gun.getMenuItem(p).equals(item)) {
 								loadout.setSecondary(gun);
 								InventoryManager.getInstance().setupCreateClassInventory(p);
 								p.openInventory(InventoryManager.getInstance().createClassInventory.get(p));
@@ -1508,7 +1520,7 @@ public class InventoryManager implements Listener {
 							}
 						}
 
-						if (LoadoutManager.getInstance().getDefaultSecondary().getMenuItem().equals(item)) {
+						if (LoadoutManager.getInstance().getDefaultSecondary().getMenuItem(p).equals(item)) {
 							loadout.setSecondary(LoadoutManager.getInstance().getDefaultSecondary());
 							InventoryManager.getInstance().setupCreateClassInventory(p);
 							p.openInventory(InventoryManager.getInstance().createClassInventory.get(p));
@@ -1537,7 +1549,7 @@ public class InventoryManager implements Listener {
 						}
 
 						for (CodWeapon grenade : ShopManager.getInstance().getPurchasedWeapons().get(p)) {
-							if (grenade.getMenuItem().equals(item)) {
+							if (grenade.getMenuItem(p).equals(item)) {
 								loadout.setLethal(grenade);
 								InventoryManager.getInstance().setupCreateClassInventory(p);
 								p.openInventory(InventoryManager.getInstance().createClassInventory.get(p));
@@ -1545,7 +1557,7 @@ public class InventoryManager implements Listener {
 							}
 						}
 
-						if (LoadoutManager.getInstance().getDefaultLethal().getMenuItem().equals(item)) {
+						if (LoadoutManager.getInstance().getDefaultLethal().getMenuItem(p).equals(item)) {
 
 							loadout.setLethal(LoadoutManager.getInstance().getDefaultLethal());
 							InventoryManager.getInstance().setupCreateClassInventory(p);
@@ -1575,7 +1587,7 @@ public class InventoryManager implements Listener {
 						}
 
 						for (CodWeapon grenade : ShopManager.getInstance().getPurchasedWeapons().get(p)) {
-							if (grenade.getMenuItem().equals(item)) {
+							if (grenade.getMenuItem(p).equals(item)) {
 								loadout.setTactical(grenade);
 								InventoryManager.getInstance().setupCreateClassInventory(p);
 								p.openInventory(InventoryManager.getInstance().createClassInventory.get(p));
@@ -1583,7 +1595,7 @@ public class InventoryManager implements Listener {
 							}
 						}
 
-						if (LoadoutManager.getInstance().getDefaultTactical().getMenuItem().equals(item)) {
+						if (LoadoutManager.getInstance().getDefaultTactical().getMenuItem(p).equals(item)) {
 							loadout.setTactical(LoadoutManager.getInstance().getDefaultTactical());
 							InventoryManager.getInstance().setupCreateClassInventory(p);
 							p.openInventory(InventoryManager.getInstance().createClassInventory.get(p));

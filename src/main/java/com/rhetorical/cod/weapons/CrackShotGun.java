@@ -50,7 +50,7 @@ public class CrackShotGun implements Listener {
 			item = ((com.shampaggon.crackshot.CSUtility) instance).generateWeapon(name);
 		} catch(Error|Exception ignored) {}
 
-		return item == null ? new ItemStack(Material.AIR) : item;
+		return item == null ? new ItemStack(Material.AIR) : item.clone();
 	}
 
 	/**
@@ -60,12 +60,12 @@ public class CrackShotGun implements Listener {
 		try {
 			if(Bukkit.getPluginManager().getPlugin("CrackShotPlus") != null) {
 				if (player == null)
-					return me.DeeCaaD.CrackShotPlus.CSPapi.updateItemStackFeaturesNonPlayer(name, item);
+					return item.clone();
 				else
-					return me.DeeCaaD.CrackShotPlus.CSPapi.updateItemStackFeatures(name, item, player);
+					return me.DeeCaaD.CrackShotPlus.CSPapi.updateItemStackFeatures(name, item.clone(), player);
 			}
 		} catch (Error|Exception ignored) {}
-		return item;
+		return item.clone();
 	}
 
 	/**

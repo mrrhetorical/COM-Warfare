@@ -1,5 +1,6 @@
 package com.rhetorical.cod;
 
+import com.google.gson.JsonObject;
 import com.rhetorical.cod.assignments.AssignmentManager;
 import com.rhetorical.cod.files.*;
 import com.rhetorical.cod.game.*;
@@ -14,9 +15,11 @@ import com.rhetorical.cod.progression.CreditManager;
 import com.rhetorical.cod.progression.ProgressionManager;
 import com.rhetorical.cod.progression.RankPerks;
 import com.rhetorical.cod.sounds.SoundManager;
+import com.rhetorical.cod.sql.SQLDriver;
 import com.rhetorical.cod.streaks.KillStreakManager;
 import com.rhetorical.cod.util.LegacyActionBar;
 import com.rhetorical.cod.util.LegacyTitle;
+import com.rhetorical.cod.util.Tabcomplete;
 import com.rhetorical.cod.util.UpdateChecker;
 import com.rhetorical.cod.weapons.*;
 import com.rhetorical.tpp.api.McTranslate;
@@ -35,16 +38,13 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 /**
  *  COM-Warfare is a plugin that completely changes Minecraft servers to give its players an experience similar to that of Call of Duty!
  *
  * @author Caleb Brock
- * @version 2.12.15
+ * @version 2.15.0
  * */
 
 public class ComWarfare extends JavaPlugin {
@@ -120,6 +120,9 @@ public class ComWarfare extends JavaPlugin {
 	final String rid = "%%__RESOURCE__%%";
 	final String nonce = "%%__NONCE__%%";
 
+    public static boolean MySQL = false;
+    public static boolean useUuidForYml = true;
+
 	/**
 	 * Sets up the plugin and loads various information handlers such as the killstreak manager, loadout manager, etc.
 	 * */
@@ -140,10 +143,12 @@ public class ComWarfare extends JavaPlugin {
 		getPlugin().saveDefaultConfig();
 		getPlugin().reloadConfig();
 
+        useUuidForYml = getPlugin().getConfig().getBoolean("Use-UUIDs-For-YML-Storage");
+
 		if (ComVersion.getPurchased()) {
 			codPrefix = getPlugin().getConfig().getString("prefix").replace("&", "\u00A7") + " ";
 
-			if (codPrefix.equalsIgnoreCase("")) {
+			if (ComWarfare.getPrefix().equalsIgnoreCase("")) {
 				codPrefix = "[COD] ";
 			}
 		}
@@ -162,6 +167,8 @@ public class ComWarfare extends JavaPlugin {
 			ComWarfare.getConsole().sendMessage(ComWarfare.getPrefix() + "You are not on the most recent version of Spigot/Bukkit, so COM-Warfare will have some features limited. To ensure the plugin will work as intended, please use version 1.9+!");
 			legacy = true;
 		}
+
+		getCommand("cod").setTabCompleter(new Tabcomplete());
 
 		DependencyManager dm = new DependencyManager();
 		if (!dm.checkDependencies()) {
@@ -197,7 +204,7 @@ public class ComWarfare extends JavaPlugin {
 					connectToTranslationService();
 				} catch (Exception e) {
 					lang = com.rhetorical.tpp.McLang.EN;
-					cs.sendMessage(codPrefix + ChatColor.RED + "Could not get the language from the config! Make sure you're using the right two letter abbreviation!");
+					cs.sendMessage(ComWarfare.getPrefix() + ChatColor.RED + "Could not get the language from the config! Make sure you're using the right two letter abbreviation!");
 				}
 
 				if (lang != com.rhetorical.tpp.McLang.EN)
@@ -211,16 +218,31 @@ public class ComWarfare extends JavaPlugin {
 		LangFile.setup(getPlugin());
 		Lang.load();
 
-		ProgressionFile.setup(getPlugin());
+
+		if (getConfig().getBoolean("MySQL.Enabled", false))
+			SQLDriver.getInstance();
+
+        if (!MySQL) {
+            ShopFile.setup(getPlugin());
+            LoadoutsFile.setup(getPlugin());
+            KillstreaksFile.setup(getPlugin());
+            ProgressionFile.setup(getPlugin());
+            CreditsFile.setup(getPlugin());
+            ProgressionManager.getInstance();
+            StatsFile.setup(getPlugin());
+        }
 		ArenasFile.setup(getPlugin());
-		CreditsFile.setup(getPlugin());
-		GunsFile.setup(getPlugin());
-		ShopFile.setup(getPlugin());
-		LoadoutsFile.setup(getPlugin());
-		StatsFile.setup(getPlugin());
-		KillstreaksFile.setup(getPlugin());
-		AssignmentFile.setup(getPlugin());
-		SoundFile.setup(getPlugin());
+        GunsFile.setup(getPlugin());
+        AssignmentFile.setup(getPlugin());
+        PerkManager.getInstance();
+        LoadoutManager.getInstance();
+        ShopManager.getInstance();
+        PerkListener.getInstance();
+        KillStreakManager.getInstance();
+        InventoryManager.getInstance();
+        AssignmentManager.getInstance();
+        SoundFile.setup(getPlugin());
+        SoundManager.getInstance();
 
 		if (hasQualityArms())
 			QualityGun.setup();
@@ -229,13 +251,6 @@ public class ComWarfare extends JavaPlugin {
 			CrackShotGun.setup();
 
 		ProgressionManager.getInstance();
-		PerkManager.getInstance();
-		LoadoutManager.getInstance();
-		ShopManager.getInstance();
-		PerkListener.getInstance();
-		KillStreakManager.getInstance();
-		InventoryManager.getInstance();
-		AssignmentManager.getInstance();
 		SoundManager.getInstance();
 
 		GameManager.setupOITC();
@@ -332,6 +347,10 @@ public class ComWarfare extends JavaPlugin {
 
 			bootPlayers();
 		}
+
+        if (MySQL) {
+            new Thread(() -> SQLDriver.getInstance().disconnect()).start();
+        }
 	}
 
 	/**
@@ -362,7 +381,7 @@ public class ComWarfare extends JavaPlugin {
 	 * @see ComWarfare#hasPerm(CommandSender, String, boolean)
 	 * @return Returns true if the given command sender has the permission node, the permission node "com.*", or if they're a server operator and aren't in game.
 	 * */
-	static boolean hasPerm(CommandSender p, String s) {
+	public static boolean hasPerm(CommandSender p, String s) {
 		return hasPerm(p, s, false);
 	}
 
@@ -455,7 +474,8 @@ public class ComWarfare extends JavaPlugin {
 						case 5:
 							sendMessage(sender, cColor + "/cod blacklist (map) (mode) | " + dColor + "Prevents a mode from being played on the map.");
 							sendMessage(sender, cColor + "/cod version | " + dColor + "Displays the running version of COM-Warfare.");
-							sendMessage(sender, cColor + "/cod removeSpawns (map name) | " + dColor + "Shows spawn points so they may be removed.");
+							sendMessage(sender, cColor + "/cod removeSpawns (map) | " + dColor + "Shows spawn points so they may be removed.");
+							sendMessage(sender, cColor + "/cod reload (map) | " + dColor + "Reloads a map's data and enables it if able to.");
 							break;
 						default:
 							break;
@@ -834,7 +854,7 @@ public class ComWarfare extends JavaPlugin {
 
 				Player p = (Player) sender;
 				int credits = CreditManager.getCredits(p);
-				sendMessage(p, codPrefix + Lang.BALANCE_COMMAND.getMessage().replace("{credits}", credits + ""), lang);
+				sendMessage(p, Lang.BALANCE_COMMAND.getMessage().replace("{credits}", credits + ""), lang);
 			} else if (args[0].equalsIgnoreCase("credits")) {
 				if (args.length < 3) {
 					if (hasPerm(sender, "com.credits.give"))
@@ -919,7 +939,7 @@ public class ComWarfare extends JavaPlugin {
 							if (game != null) {
 								game.forceStart(true);
 							} else {
-								p.sendMessage(codPrefix + Lang.FORCE_START_FAIL.getMessage());
+								p.sendMessage(Lang.FORCE_START_FAIL.getMessage());
 							}
 						}
 					} catch(Exception e) {
@@ -1019,12 +1039,12 @@ public class ComWarfare extends JavaPlugin {
 				Player p = (Player) sender;
 
 				if (args.length < 2) {
-					sendMessage(p, codPrefix + Lang.INCORRECT_USAGE.getMessage().replace("{command}", "/cod changeMap (name)"));
+					sendMessage(p, ComWarfare.getPrefix() + Lang.INCORRECT_USAGE.getMessage().replace("{command}", "/cod changeMap (name)"));
 					return true;
 				}
 
 				if (!GameManager.isInMatch(p)) {
-					sendMessage(p, codPrefix + Lang.MUST_BE_IN_GAME.getMessage());
+					sendMessage(p, Lang.MUST_BE_IN_GAME.getMessage());
 					return true;
 				}
 
@@ -1033,7 +1053,7 @@ public class ComWarfare extends JavaPlugin {
 					return true;
 
 				if (game.getState() != GameState.WAITING && game.getState() != GameState.STARTING) {
-					sendMessage(p, codPrefix + Lang.MUST_NOT_BE_IN_GAME.getMessage());
+					sendMessage(p, Lang.MUST_NOT_BE_IN_GAME.getMessage());
 					return true;
 				}
 
@@ -1041,12 +1061,12 @@ public class ComWarfare extends JavaPlugin {
 				CodMap map = GameManager.getMapForName(args[1]);
 
 				if (map == null) {
-					sendMessage(p, codPrefix + Lang.MAP_NOT_EXISTS_WITH_NAME.getMessage());
+					sendMessage(p, Lang.MAP_NOT_EXISTS_WITH_NAME.getMessage());
 					return true;
 				}
 
 				GameManager.changeMap(game, map);
-				sendMessage(p, codPrefix + Lang.MAP_CHANGE_SUCCESS.getMessage().replace("{map-name}", map.getName()));
+				sendMessage(p, Lang.MAP_CHANGE_SUCCESS.getMessage().replace("{map-name}", map.getName()));
 				return true;
 			} else if (args[0].equalsIgnoreCase("changeMode")) {
 				if (!(sender instanceof Player)) {
@@ -1059,12 +1079,12 @@ public class ComWarfare extends JavaPlugin {
 
 				Player p = (Player) sender;
 				if (args.length < 2) {
-					sendMessage(p, codPrefix + Lang.INCORRECT_USAGE.getMessage().replace("{command}", "/cod changeMode (name)"));
+					sendMessage(p, ComWarfare.getPrefix() + Lang.INCORRECT_USAGE.getMessage().replace("{command}", "/cod changeMode (name)"));
 					return true;
 				}
 
 				if (!GameManager.isInMatch(p)) {
-					sendMessage(p, codPrefix + Lang.MUST_BE_IN_GAME.getMessage());
+					sendMessage(p, Lang.MUST_BE_IN_GAME.getMessage());
 					return true;
 				}
 
@@ -1073,7 +1093,7 @@ public class ComWarfare extends JavaPlugin {
 					return true;
 
 				if (game.getState() != GameState.WAITING && game.getState() != GameState.STARTING) {
-					sendMessage(p, codPrefix + Lang.MUST_NOT_BE_IN_GAME.getMessage());
+					sendMessage(p, Lang.MUST_NOT_BE_IN_GAME.getMessage());
 					return true;
 				}
 
@@ -1082,17 +1102,17 @@ public class ComWarfare extends JavaPlugin {
 				try {
 					mode = Gamemode.valueOf(args[1].toUpperCase());
 				} catch(Exception e) {
-					sendMessage(p, codPrefix + Lang.GAME_MODE_NOT_EXISTS_WITH_NAME.getMessage());
+					sendMessage(p, Lang.GAME_MODE_NOT_EXISTS_WITH_NAME.getMessage());
 					return true;
 				}
 
 				if (!game.getMap().getAvailableGamemodes().contains(mode)) {
-					sendMessage(p, codPrefix + Lang.GAME_MODE_NOT_SET_UP_ON_MAP.getMessage());
+					sendMessage(p, Lang.GAME_MODE_NOT_SET_UP_ON_MAP.getMessage());
 					return true;
 				}
 
 				Objects.requireNonNull(GameManager.getMatchWhichContains(p)).changeGamemode(mode);
-				sendMessage(p, codPrefix + Lang.GAME_MODE_CHANGE_SUCCESS.getMessage().replace("{game-mode}", mode.toString()));
+				sendMessage(p, Lang.GAME_MODE_CHANGE_SUCCESS.getMessage().replace("{game-mode}", mode.toString()));
 				return true;
 			} else if (args[0].equalsIgnoreCase("blacklist")) {
 
@@ -1100,7 +1120,7 @@ public class ComWarfare extends JavaPlugin {
 					return true;
 
 				if (args.length	< 3) {
-					sendMessage(sender, codPrefix + Lang.INCORRECT_USAGE.getMessage().replace("{command}", "/cod blacklist (map) (mode)"));
+					sendMessage(sender, ComWarfare.getPrefix() + Lang.INCORRECT_USAGE.getMessage().replace("{command}", "/cod blacklist (map) (mode)"));
 					return true;
 				}
 
@@ -1109,20 +1129,20 @@ public class ComWarfare extends JavaPlugin {
 				try {
 					mode = Gamemode.valueOf(args[2].toUpperCase());
 				} catch(Exception e) {
-					sendMessage(sender, codPrefix + Lang.GAME_MODE_NOT_EXISTS_WITH_NAME.getMessage());
+					sendMessage(sender, Lang.GAME_MODE_NOT_EXISTS_WITH_NAME.getMessage());
 					return true;
 				}
 
 				CodMap map = GameManager.getMapForName(args[1]);
 
 				if (map == null) {
-					sendMessage(sender, codPrefix + Lang.MAP_NOT_EXISTS_WITH_NAME.getMessage());
+					sendMessage(sender, Lang.MAP_NOT_EXISTS_WITH_NAME.getMessage());
 					return true;
 				}
 
 				map.addToBlacklist(mode);
 
-				sendMessage(sender, ComWarfare.getPrefix() + Lang.BLACKLIST_SUCCESS.getMessage().replace("{mode}", mode.toString()).replace("{map-name}", map.getName()));
+				sendMessage(sender, Lang.BLACKLIST_SUCCESS.getMessage().replace("{mode}", mode.toString()).replace("{map-name}", map.getName()));
 				return true;
 			} else if (args[0].equalsIgnoreCase("setLevel")) {
 
@@ -1130,7 +1150,7 @@ public class ComWarfare extends JavaPlugin {
 					return true;
 
 				if (args.length < 3) {
-					sendMessage(sender, codPrefix + Lang.INCORRECT_USAGE.getMessage().replace("{command}", "/cod setLevel (player) (level)"));
+					sendMessage(sender, ComWarfare.getPrefix() + Lang.INCORRECT_USAGE.getMessage().replace("{command}", "/cod setLevel (player) (level)"));
 					return true;
 				}
 
@@ -1138,7 +1158,7 @@ public class ComWarfare extends JavaPlugin {
 				Player player = Bukkit.getPlayer(args[1]);
 
 				if(player == null) {
-					sendMessage(sender, codPrefix + Lang.ERROR_PLAYER_NOT_EXISTS.getMessage());
+					sendMessage(sender, Lang.ERROR_PLAYER_NOT_EXISTS.getMessage());
 					return true;
 				}
 
@@ -1147,7 +1167,7 @@ public class ComWarfare extends JavaPlugin {
 					if (level > ProgressionManager.getInstance().maxLevel)
 						throw new NumberFormatException();
 				} catch(NumberFormatException e) {
-					sendMessage(sender, codPrefix + Lang.INCORRECT_USAGE.getMessage().replace("{command}", "/cod setLevel (player) (level)"));
+					sendMessage(sender, ComWarfare.getPrefix() + Lang.INCORRECT_USAGE.getMessage().replace("{command}", "/cod setLevel (player) (level)"));
 					return true;
 				}
 
@@ -1160,7 +1180,7 @@ public class ComWarfare extends JavaPlugin {
 					return true;
 
 				if (args.length < 2) {
-					sendMessage(sender, codPrefix + Lang.INCORRECT_USAGE.getMessage().replace("{command}", "/cod removeSpawns (map name)"));
+					sendMessage(sender, ComWarfare.getPrefix() + Lang.INCORRECT_USAGE.getMessage().replace("{command}", "/cod removeSpawns (map)"));
 					return true;
 				}
 
@@ -1168,22 +1188,158 @@ public class ComWarfare extends JavaPlugin {
 				CodMap map = GameManager.getMapForName(mapName);
 
 				if (map == null) {
-					sendMessage(sender, codPrefix + Lang.MAP_NOT_EXISTS_WITH_NAME.getMessage());
+					sendMessage(sender, Lang.MAP_NOT_EXISTS_WITH_NAME.getMessage());
 					return true;
 				}
 
 				if (SpawnRemover.isShowingSpawns(map)) {
 					SpawnRemover.clearSpawns(map);
-					sendMessage(sender, codPrefix + Lang.SPAWN_REMOVER_DEACTIVATED.getMessage());
+					sendMessage(sender, Lang.SPAWN_REMOVER_DEACTIVATED.getMessage());
 				} else {
 					if (SpawnRemover.showSpawns(map))
-						sendMessage(sender, codPrefix + Lang.SPAWN_REMOVER_ACTIVATED.getMessage());
+						sendMessage(sender, Lang.SPAWN_REMOVER_ACTIVATED.getMessage());
 					else
-						sendMessage(sender, codPrefix + Lang.MAP_IN_USE.getMessage());
+						sendMessage(sender, Lang.MAP_IN_USE.getMessage());
 				}
 
 				return true;
-			} else {
+			} else if (args[0].equalsIgnoreCase("reload")) {
+				if (!hasPerm(sender, "com.map.modify"))
+					return true;
+
+				if (args.length < 2) {
+					sendMessage(sender, ComWarfare.getPrefix() + Lang.INCORRECT_USAGE.getMessage().replace("{command}", "/cod reload (map)"));
+					return true;
+				}
+
+				CodMap map = GameManager.getMapForName(args[1]);
+
+				if (map == null) {
+					sendMessage(sender, Lang.MAP_NOT_EXISTS_WITH_NAME.getMessage());
+					return true;
+				}
+
+				if (GameManager.usedMaps.contains(map)) {
+					sendMessage(sender, Lang.MAP_IN_USE.getMessage());
+					return true;
+				}
+
+				map.setEnable();
+
+				sendMessage(sender, Lang.MAP_RELOADED.getMessage());
+
+				return true;
+            } else if (args[0].equalsIgnoreCase("convertdata")) {
+                if (!hasPerm(sender, "com.convertdata"))
+                    return true;
+
+                if (args.length == 1) {
+                    sendMessage(sender, "You must specify what you want to convert!");
+                    return true;
+                }
+
+                if (args.length >= 2) {
+                    if (args[0].equalsIgnoreCase("YAML->MySQL")) {
+                        sendMessage(sender, "Starting data conversion...");
+                        if (!MySQL) {
+                            sendMessage(sender, "Please enable MySQL and fill out the details; then restart your server before converting data to MySQL..");
+                            return true;
+                        }
+                        if (!useUuidForYml) {
+                            sendMessage(sender, "Please enable \"Use-UUIDs-For-YML-Storage\"; then restart your server before converting data to MySQL.");
+                            return true;
+                        }
+
+                        // Stats
+                        if (StatsFile.getData().getConfigurationSection("") != null) {
+                            for (String key : StatsFile.getData().getConfigurationSection("").getKeys(false)) {
+                                if (!key.equals("Leaderboard")) {
+                                    SQLDriver.getInstance().setKills(UUID.fromString(key), StatsFile.getData().getInt(key + ".kills"));
+                                    SQLDriver.getInstance().setDeaths(UUID.fromString(key), StatsFile.getData().getInt(key + ".deaths"));
+                                }
+                            }
+                        }
+
+                        // Credits
+                        if (CreditsFile.getData().getConfigurationSection("Credits.Players") != null) {
+                            for (String key : CreditsFile.getData().getConfigurationSection("Credits.Players").getKeys(false)) {
+                                SQLDriver.getInstance().setCredits(UUID.fromString("Credits.Players." + key), CreditsFile.getData().getInt("Credits.Players" + key + ".Amount"));
+                            }
+                        }
+
+                        // Player level, prestige level, and experience.
+                        if (ProgressionFile.getData().getConfigurationSection("Players") != null) {
+                            for (String key : ProgressionFile.getData().getConfigurationSection("Players").getKeys(false)) {
+                                String uuid = ProgressionFile.getData().getString("Players." + key);
+                                SQLDriver.getInstance().setCredits(UUID.fromString(uuid), ProgressionFile.getData().getInt("Players" + key + ".Level"));
+                                SQLDriver.getInstance().setPrestige(UUID.fromString(uuid), ProgressionFile.getData().getInt("Players" + key + ".PrestigeLevel"));
+                                SQLDriver.getInstance().setExperience(UUID.fromString(uuid), ProgressionFile.getData().getDouble("Players" + key + ".Experience"));
+                            }
+                        }
+
+                        // Purchased items
+                        if (ShopFile.getData().getConfigurationSection("Purchased") != null) {
+                            for (String key : ShopFile.getData().getConfigurationSection("Purchased.Perks").getKeys(false)) {
+                                SQLDriver.getInstance().setPurchasedPerks(UUID.fromString(ShopFile.getData().getString("Purchased.Perks" + key)), ShopFile.getData().getStringList("Purchased.Perks." + key));
+                            }
+
+                            for (String key : ShopFile.getData().getConfigurationSection("Purchased.Guns").getKeys(false)) {
+                                SQLDriver.getInstance().setPurchasedGuns(UUID.fromString(ShopFile.getData().getString("Purchased.Guns" + key)), ShopFile.getData().getStringList("Purchased.Guns." + key));
+                            }
+
+                            for (String key : ShopFile.getData().getConfigurationSection("Purchased.Weapons").getKeys(false)) {
+                                SQLDriver.getInstance().setPurchasedWeapons(UUID.fromString(ShopFile.getData().getString("Purchased.Weapons" + key)), ShopFile.getData().getStringList("Purchased.Weapons." + key));
+                            }
+                        }
+
+                        // Killstreaks
+                        if (KillstreaksFile.getData().getConfigurationSection("Killstreaks") != null) {
+                            for (String key : KillstreaksFile.getData().getConfigurationSection("Killstreaks").getKeys(false)) {
+                                SQLDriver.getInstance().setKillstreaks(UUID.fromString(ProgressionFile.getData().getString("Killstreaks." + key)), KillstreaksFile.getData().getStringList("Killstreaks." + key + ".streaks"));
+                            }
+                        }
+
+                        // Loadouts
+                        if (LoadoutsFile.getData().getConfigurationSection("Loadouts") != null) {
+                            for (String key : LoadoutsFile.getData().getConfigurationSection("Loadouts").getKeys(false)) {
+                                String uuid = LoadoutsFile.getData().getString("Loadouts." + key);
+                                JsonObject jo = new JsonObject();
+                                int k = 0;
+                                while (LoadoutsFile.getData().contains("Loadouts." + key + k)) {
+                                    jo.addProperty(k + "::Name", LoadoutsFile.getData().getString(uuid + k + ".Name"));
+                                    jo.addProperty(k + "::Primary", LoadoutsFile.getData().getString(uuid + k + ".Primary"));
+                                    jo.addProperty(k + "::Secondary", LoadoutsFile.getData().getString(uuid + k + ".Secondary"));
+                                    jo.addProperty(k + "::Lethal", LoadoutsFile.getData().getString(uuid + k + ".Lethal"));
+                                    jo.addProperty(k + "::Tactical", LoadoutsFile.getData().getString(uuid + k + ".Tactical"));
+                                    jo.addProperty(k + "::Perk1", LoadoutsFile.getData().getString(uuid + k + ".Perk1"));
+                                    jo.addProperty(k + "::Perk2", LoadoutsFile.getData().getString(uuid + k + ".Perk2"));
+                                    jo.addProperty(k + "::Perk3", LoadoutsFile.getData().getString(uuid + k + ".Perk3"));
+                                    k++;
+                                }
+                                SQLDriver.getInstance().setLoadouts(UUID.fromString(uuid), jo);
+                            }
+                        }
+
+                        // Assignments
+                        if (AssignmentFile.getData().getConfigurationSection("Players") != null) {
+                            for (String key : AssignmentFile.getData().getConfigurationSection("Players").getKeys(false)) {
+                                String base = AssignmentFile.getData().getString("Players." + key + ".Assignments.");
+                                JsonObject jo = new JsonObject();
+                                int k = 0;
+                                while (AssignmentFile.getData().contains("Players." + key + "Assignments" + k)) {
+                                    jo.addProperty("assignmentType", AssignmentFile.getData().getString(base + k + ".assignmentType"));
+                                    jo.addProperty("requiredMode", AssignmentFile.getData().getString(base + k + ".requiredMode"));
+                                    jo.addProperty("amount", AssignmentFile.getData().getInt(base + k + ".amount"));
+                                    jo.addProperty("progress", AssignmentFile.getData().getInt(base + k + ".progress"));
+									SQLDriver.getInstance().setAssignments(UUID.fromString(AssignmentFile.getData().getString("Players." + key)), jo, k);
+                                    k++;
+                                }
+                            }
+                        }
+                    }
+                }
+
+            } else {
 				sender.sendMessage(ComWarfare.getPrefix() + Lang.UNKNOWN_COMMAND.getMessage());
 				return true;
 			}
@@ -1311,7 +1467,7 @@ public class ComWarfare extends JavaPlugin {
 
 			grenadeWeapon.save();
 
-			sendMessage(p, codPrefix + Lang.WEAPON_CREATED_SUCCESS.getMessage().replace("{weapon-name}", name).replace("{weapon-type}", grenadeType.toString()), lang);
+			sendMessage(p, Lang.WEAPON_CREATED_SUCCESS.getMessage().replace("{weapon-name}", name).replace("{weapon-type}", grenadeType.toString()), lang);
 
 			ShopManager sm = ShopManager.getInstance();
 
@@ -1429,7 +1585,7 @@ public class ComWarfare extends JavaPlugin {
 
 			gun.save();
 
-			sendMessage(p, codPrefix + Lang.GUN_CREATED_SUCCESS.getMessage().replace("{gun-name}", name).replace("{gun-type}", gunType.toString()), lang);
+			sendMessage(p, Lang.GUN_CREATED_SUCCESS.getMessage().replace("{gun-name}", name).replace("{gun-type}", gunType.toString()), lang);
 
 			ShopManager sm = ShopManager.getInstance();
 
@@ -1699,4 +1855,27 @@ public class ComWarfare extends JavaPlugin {
 	public static int getSpawnProtectionDuration() {
 		return spawnProtectionDuration;
 	}
+
+    // Set name to players name or UUID
+    public static String setName(String playerName) {
+        // Use name or uuid depending on settings
+        if (ComWarfare.useUuidForYml) {
+        	UUID id = null;
+
+        	try {
+        		id = UUID.fromString(playerName);
+			} catch (Exception ignored) {}
+
+        	if (id != null)
+        		return playerName;
+
+			OfflinePlayer op = Bukkit.getOfflinePlayer(playerName);
+			if (!op.hasPlayedBefore()) {
+				Bukkit.getLogger().severe("COM-Warfare save files are corrupted. Please delete them and create new ones.");
+				return null;
+			}
+        	playerName = op.getUniqueId().toString();
+		}
+        return playerName;
+    }
 }

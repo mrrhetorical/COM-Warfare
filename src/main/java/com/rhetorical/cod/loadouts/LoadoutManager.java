@@ -1,5 +1,6 @@
 package com.rhetorical.cod.loadouts;
 
+import com.google.gson.JsonObject;
 import com.rhetorical.cod.ComWarfare;
 import com.rhetorical.cod.files.GunsFile;
 import com.rhetorical.cod.files.LoadoutsFile;
@@ -10,6 +11,7 @@ import com.rhetorical.cod.perks.Perk;
 import com.rhetorical.cod.perks.PerkManager;
 import com.rhetorical.cod.perks.PerkSlot;
 import com.rhetorical.cod.progression.ProgressionManager;
+import com.rhetorical.cod.sql.SQLDriver;
 import com.rhetorical.cod.weapons.*;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -121,18 +123,36 @@ public class LoadoutManager {
 
 		while (getAllowedClasses(p) < currentLoadouts.size()) {
 			PerkManager pm = PerkManager.getInstance();
-			Loadout defaultLoadout = new Loadout(p, Lang.CLASS_PREFIX + " " + Integer.toString(currentLoadouts.size() + 1),
+			Loadout defaultLoadout = new Loadout(p, Lang.CLASS_PREFIX + " " + (currentLoadouts.size() + 1),
 					getDefaultPrimary(), getDefaultSecondary(), getDefaultLethal(), getDefaultTactical(),
 					pm.getDefaultPerk(PerkSlot.ONE), pm.getDefaultPerk(PerkSlot.TWO),
 					pm.getDefaultPerk(PerkSlot.THREE));
 			currentLoadouts.add(defaultLoadout);
+			String playerName = ComWarfare.setName(p.getName());
 			int next = 0;
-			while (LoadoutsFile.getData().contains("Loadouts." + p.getUniqueId() + "." + next)) {
-				next++;
+			if (ComWarfare.MySQL) {
+				JsonObject jo = SQLDriver.getInstance().getLoadout(p.getUniqueId());
+				for (Loadout l : getLoadouts(p)) {
+					jo.addProperty(next + ".Name", l.getName());
+					jo.addProperty(next + ".Primary", l.getName());
+					jo.addProperty(next + ".Secondary", l.getName());
+					jo.addProperty(next + ".Lethal", l.getName());
+					jo.addProperty(next + ".Tactical", l.getName());
+					jo.addProperty(next + ".Perk1", l.getName());
+					jo.addProperty(next + ".Perk2", l.getName());
+					jo.addProperty(next + ".Perk3", l.getName());
+					next++;
+				}
+				SQLDriver.getInstance().setLoadouts(p.getUniqueId(), jo);
+
+			} else {
+				while (LoadoutsFile.getData().contains("Loadouts." + playerName + "." + next)) {
+					next++;
+				}
+				LoadoutsFile.getData().set("Loadouts." + playerName + "." + next, defaultLoadout);
+				LoadoutsFile.saveData();
+				LoadoutsFile.reloadData();
 			}
-			LoadoutsFile.getData().set("Loadouts." + p.getUniqueId() + "." + next, defaultLoadout);
-			LoadoutsFile.saveData();
-			LoadoutsFile.reloadData();
 		}
 
 		this.playerLoadouts.put(p, currentLoadouts);
@@ -190,15 +210,9 @@ public class LoadoutManager {
 		for (int i = 1; i <= ProgressionManager.getInstance().getPrestigeLevel(p); i++) {
 			switch (i) {
 				case 1:
-					classes++;
-					break;
-				case 5:
-					classes++;
-					break;
-				case 7:
-					classes++;
-					break;
 				case 9:
+				case 7:
+				case 5:
 					classes++;
 					break;
 				default:
@@ -211,139 +225,143 @@ public class LoadoutManager {
 
 	public CodGun getDefaultPrimary() {
 
-		if (!GunsFile.getData().contains("Guns.Primary.default")) {
 
-			return blankPrimary;
-		}
 
-		if (defaultPrimary == null) {
-
-			String gunName = GunsFile.getData().getString("Guns.Primary.default.name");
-			int ammoAmount = GunsFile.getData().getInt("Guns.Primary.default.ammoCount");
-			Material ammoMat = Material.valueOf(GunsFile.getData().getString("Guns.Primary.default.ammoItem"));
-			short ammoData = (short) GunsFile.getData().getInt("Guns.Primary.default.ammoData");
-			ItemStack ammoItem = new ItemStack(ammoMat, 1, ammoData);
-
-			Material gunMat = Material.valueOf(GunsFile.getData().getString("Guns.Primary.default.gunItem"));
-			short gunData = (short) GunsFile.getData().getInt("Guns.Primary.default.gunData");
-			ItemStack gunItem = new ItemStack(gunMat, 1, gunData);
-
-			String ammoName = GunsFile.getData().getString("Guns.Primary.default.ammoName");
-			boolean shop = GunsFile.getData().getBoolean("Guns.Primary.default.showInShop");
-			CodGun gun;
-			if (ammoName == null) {
-				gun = new CodGun(gunName, GunType.Primary, null, ammoAmount, ammoItem, gunItem, 0, shop);
-			} else {
-				gun = new CodGun(gunName, ammoName, GunType.Primary, null, ammoAmount, ammoItem, gunItem, 0, shop);
+			if (!GunsFile.getData().contains("Guns.Primary.default")) {
+				return blankPrimary;
 			}
-			gun.setCreditUnlock(0);
 
-			defaultPrimary = gun;
+			if (defaultPrimary == null) {
 
-		}
+				String gunName = GunsFile.getData().getString("Guns.Primary.default.name");
+				int ammoAmount = GunsFile.getData().getInt("Guns.Primary.default.ammoCount");
+				Material ammoMat = Material.valueOf(GunsFile.getData().getString("Guns.Primary.default.ammoItem"));
+				short ammoData = (short) GunsFile.getData().getInt("Guns.Primary.default.ammoData");
+				ItemStack ammoItem = new ItemStack(ammoMat, 1, ammoData);
+
+				Material gunMat = Material.valueOf(GunsFile.getData().getString("Guns.Primary.default.gunItem"));
+				short gunData = (short) GunsFile.getData().getInt("Guns.Primary.default.gunData");
+				ItemStack gunItem = new ItemStack(gunMat, 1, gunData);
+
+				String ammoName = GunsFile.getData().getString("Guns.Primary.default.ammoName");
+				boolean shop = GunsFile.getData().getBoolean("Guns.Primary.default.showInShop");
+				CodGun gun;
+				if (ammoName == null) {
+					gun = new CodGun(gunName, GunType.Primary, null, ammoAmount, ammoItem, gunItem, 0, shop);
+				} else {
+					gun = new CodGun(gunName, ammoName, GunType.Primary, null, ammoAmount, ammoItem, gunItem, 0, shop);
+				}
+				gun.setCreditUnlock(0);
+
+				defaultPrimary = gun;
+			}
 
 		return defaultPrimary;
 	}
 
 	public CodGun getDefaultSecondary() {
 
-		if (!GunsFile.getData().contains("Guns.Secondary.default")) {
+			if (!GunsFile.getData().contains("Guns.Secondary.default")) {
 
-			return blankSecondary;
-		}
-
-		if (defaultSecondary == null) {
-
-			String gunName = GunsFile.getData().getString("Guns.Secondary.default.name");
-			int ammoAmount = GunsFile.getData().getInt("Guns.Secondary.default.ammoCount");
-			Material ammoMat = Material.valueOf(GunsFile.getData().getString("Guns.Secondary.default.ammoItem"));
-			short ammoData = (short) GunsFile.getData().getInt("Guns.Secondary.default.ammoData");
-			ItemStack ammoItem = new ItemStack(ammoMat, 1, ammoData);
-
-			Material gunMat = Material.valueOf(GunsFile.getData().getString("Guns.Secondary.default.gunItem"));
-			short gunData = (short) GunsFile.getData().getInt("Guns.Secondary.default.gunData");
-			ItemStack gunItem = new ItemStack(gunMat, 1, gunData);
-
-			String ammoName = GunsFile.getData().getString("Guns.Secondary.default.ammoName");
-			boolean shop = GunsFile.getData().getBoolean("Guns.Secondary.default.showInShop");
-			CodGun gun;
-			if (ammoName == null) {
-				gun = new CodGun(gunName, GunType.Secondary, null, ammoAmount, ammoItem, gunItem, 0, shop);
-			} else {
-				gun = new CodGun(gunName, ammoName, GunType.Secondary, null, ammoAmount, ammoItem, gunItem, 0, shop);
+				return blankSecondary;
 			}
 
-			gun.setCreditUnlock(0);
+			if (defaultSecondary == null) {
 
-			defaultSecondary = gun;
+				String gunName = GunsFile.getData().getString("Guns.Secondary.default.name");
+				int ammoAmount = GunsFile.getData().getInt("Guns.Secondary.default.ammoCount");
+				Material ammoMat = Material.valueOf(GunsFile.getData().getString("Guns.Secondary.default.ammoItem"));
+				short ammoData = (short) GunsFile.getData().getInt("Guns.Secondary.default.ammoData");
+				ItemStack ammoItem = new ItemStack(ammoMat, 1, ammoData);
 
-		}
+				Material gunMat = Material.valueOf(GunsFile.getData().getString("Guns.Secondary.default.gunItem"));
+				short gunData = (short) GunsFile.getData().getInt("Guns.Secondary.default.gunData");
+				ItemStack gunItem = new ItemStack(gunMat, 1, gunData);
+
+				String ammoName = GunsFile.getData().getString("Guns.Secondary.default.ammoName");
+				boolean shop = GunsFile.getData().getBoolean("Guns.Secondary.default.showInShop");
+				CodGun gun;
+				if (ammoName == null) {
+					gun = new CodGun(gunName, GunType.Secondary, null, ammoAmount, ammoItem, gunItem, 0, shop);
+				} else {
+					gun = new CodGun(gunName, ammoName, GunType.Secondary, null, ammoAmount, ammoItem, gunItem, 0, shop);
+				}
+
+				gun.setCreditUnlock(0);
+
+				defaultSecondary = gun;
+
+			}
+
 
 		return defaultSecondary;
+
 	}
 
 	public CodWeapon getDefaultLethal() {
 
-		if (!GunsFile.getData().contains("Weapons.LETHAL.default")) {
+			if (!GunsFile.getData().contains("Weapons.LETHAL.default")) {
 
-			return blankLethal;
-		}
-
-		if (defaultLethal == null) {
-
-			String weaponName = GunsFile.getData().getString("Weapons.LETHAL.default.name");
-			UnlockType type = UnlockType.valueOf(GunsFile.getData().getString("Weapons.LETHAL.default.unlockType"));
-			int amount = GunsFile.getData().getInt("Weapons.LETHAL.default.amount");
-			Material weaponMaterial;
-			String weaponMat = GunsFile.getData().getString("Weapons.LETHAL.default.item");
-			try {
-				weaponMaterial = Material.valueOf(weaponMat);
-			} catch (Exception e) {
-				ComWarfare.sendMessage(ComWarfare.getConsole(), ComWarfare.getPrefix() + ChatColor.RED + "Could not load lethal " + weaponName + " because no material exits with name " + weaponMat + "!", ComWarfare.getLang());
 				return blankLethal;
 			}
-			short weaponData = (short) GunsFile.getData().getInt("Weapons.LETHAL.default.data");
 
-			boolean shop = GunsFile.getData().getBoolean("Weapons.LETHAL.default.showInShop");
+			if (defaultLethal == null) {
 
-			ItemStack weapon = new ItemStack(weaponMaterial, amount, weaponData);
+				String weaponName = GunsFile.getData().getString("Weapons.LETHAL.default.name");
+				UnlockType type = UnlockType.valueOf(GunsFile.getData().getString("Weapons.LETHAL.default.unlockType"));
+				int amount = GunsFile.getData().getInt("Weapons.LETHAL.default.amount");
+				Material weaponMaterial;
+				String weaponMat = GunsFile.getData().getString("Weapons.LETHAL.default.item");
+				try {
+					weaponMaterial = Material.valueOf(weaponMat);
+				} catch (Exception e) {
+					ComWarfare.sendMessage(ComWarfare.getConsole(), ComWarfare.getPrefix() + ChatColor.RED + "Could not load lethal " + weaponName + " because no material exits with name " + weaponMat + "!", ComWarfare.getLang());
+					return blankLethal;
+				}
+				short weaponData = (short) GunsFile.getData().getInt("Weapons.LETHAL.default.data");
 
-			defaultLethal = new CodWeapon(weaponName, WeaponType.LETHAL, type, weapon, 0, shop);
-		}
+				boolean shop = GunsFile.getData().getBoolean("Weapons.LETHAL.default.showInShop");
+
+				ItemStack weapon = new ItemStack(weaponMaterial, amount, weaponData);
+
+				defaultLethal = new CodWeapon(weaponName, WeaponType.LETHAL, type, weapon, 0, shop);
+			}
 
 		return defaultLethal;
 	}
 
 	public CodWeapon getDefaultTactical() {
 
-		if (!GunsFile.getData().contains("Weapons.TACTICAL.default")) {
 
-			return blankTactical;
-		}
+			if (!GunsFile.getData().contains("Weapons.TACTICAL.default")) {
 
-		if (defaultTactical == null) {
-
-			String weaponName = GunsFile.getData().getString("Weapons.TACTICAL.default.name");
-			UnlockType type = UnlockType.valueOf(GunsFile.getData().getString("Weapons.TACTICAL.default.unlockType"));
-			int amount = GunsFile.getData().getInt("Weapons.TACTICAL.default.amount");
-			Material weaponMaterial;
-			String weaponMat = GunsFile.getData().getString("Weapons.TACTICAL.default.item");
-			try {
-				weaponMaterial = Material.valueOf(weaponMat);
-			} catch (Exception e) {
-				ComWarfare.sendMessage(ComWarfare.getConsole(), ComWarfare.getPrefix() + ChatColor.RED + "Could not load tactical " + weaponName + " because no material exits with name " + weaponMat + "!", ComWarfare.getLang());
 				return blankTactical;
 			}
-			short weaponData = (short) GunsFile.getData().getInt("Weapons.TACTICAL.default.data");
 
-			ItemStack weapon = new ItemStack(weaponMaterial, amount, weaponData);
+			if (defaultTactical == null) {
 
-			boolean shop = GunsFile.getData().getBoolean("Weapons.TACTICAL.default.showInShop");
+				String weaponName = GunsFile.getData().getString("Weapons.TACTICAL.default.name");
+				UnlockType type = UnlockType.valueOf(GunsFile.getData().getString("Weapons.TACTICAL.default.unlockType"));
+				int amount = GunsFile.getData().getInt("Weapons.TACTICAL.default.amount");
+				Material weaponMaterial;
+				String weaponMat = GunsFile.getData().getString("Weapons.TACTICAL.default.item");
+				try {
+					weaponMaterial = Material.valueOf(weaponMat);
+				} catch (Exception e) {
+					ComWarfare.sendMessage(ComWarfare.getConsole(), ComWarfare.getPrefix() + ChatColor.RED + "Could not load tactical " + weaponName + " because no material exits with name " + weaponMat + "!", ComWarfare.getLang());
+					return blankTactical;
+				}
+				short weaponData = (short) GunsFile.getData().getInt("Weapons.TACTICAL.default.data");
 
-			defaultTactical = new CodWeapon(weaponName, WeaponType.TACTICAL, type, weapon, 0, shop);
+				ItemStack weapon = new ItemStack(weaponMaterial, amount, weaponData);
+
+				boolean shop = GunsFile.getData().getBoolean("Weapons.TACTICAL.default.showInShop");
+
+				defaultTactical = new CodWeapon(weaponName, WeaponType.TACTICAL, type, weapon, 0, shop);
+
 		}
-
 		return defaultTactical;
+
 	}
 
 	public void prestigePlayer(Player p) {
@@ -362,116 +380,202 @@ public class LoadoutManager {
 	public boolean load(Player p) {
 
 		ArrayList<Loadout> l = new ArrayList<>();
+		String playerName = ComWarfare.setName(p.getName());
+
+		String name = null;
+		Loadout loadout;
+		CodGun primary = null;
+		CodGun secondary = null;
+		CodWeapon lethal = null;
+		CodWeapon tactical = null;
+		CodPerk perkOne = null;
+		CodPerk perkTwo = null;
+		CodPerk perkThree = null;
 
 		int k = 0;
-		while (LoadoutsFile.getData().contains("Loadouts." + p.getName() + "." + k)) {
+		if (ComWarfare.MySQL) {
+			JsonObject jsonObject = SQLDriver.getInstance().getLoadout(p.getUniqueId());
+			while (true) {
+				if (jsonObject.get(k + ".Name") == null) break;
 
-			Loadout loadout;
+				name = jsonObject.get(k + ".Name").getAsString();
 
-			String name = LoadoutsFile.getData().getString("Loadouts." + p.getName() + "." + k + ".Name");
-			CodGun primary = null;
-
-			for (CodGun gun : ShopManager.getInstance().getPrimaryGuns()) {
-				if (gun.getName().equals(LoadoutsFile.getData().getString("Loadouts." + p.getName() + "." + k + ".Primary"))) {
-					primary = gun;
-				}
-			}
-
-			CodGun secondary = null;
-
-			for (CodGun gun : ShopManager.getInstance().getSecondaryGuns()) {
-				if (gun.getName().equals(LoadoutsFile.getData().getString("Loadouts." + p.getName() + "." + k + ".Secondary"))) {
-					secondary = gun;
-				}
-			}
-
-			CodWeapon lethal = null;
-
-			for (CodWeapon grenade : ShopManager.getInstance().getLethalWeapons()) {
-				if (grenade.getName().equals(LoadoutsFile.getData().getString("Loadouts." + p.getName() + "." + k + ".Lethal"))) {
-					lethal = grenade;
-				}
-			}
-
-			CodWeapon tactical = null;
-
-			for (CodWeapon grenade : ShopManager.getInstance().getTacticalWeapons()) {
-				if (grenade.getName().equals(LoadoutsFile.getData().getString("Loadouts." + p.getName() + "." + k + ".Tactical"))) {
-					tactical = grenade;
-				}
-			}
-
-			CodPerk perkOne = null;
-			CodPerk perkTwo = null;
-			CodPerk perkThree = null;
-
-			for (CodPerk perk : PerkManager.getInstance().getAvailablePerks()) {
-				if (perk.getSlot() == PerkSlot.ONE) {
-					if (perk.getPerk().getName().equals(LoadoutsFile.getData().getString("Loadouts." + p.getName() + "." + k + ".Perk1"))) {
-						perkOne = perk;
-					}
-				} else if (perk.getSlot() == PerkSlot.TWO) {
-					if (perk.getPerk().getName().equals(LoadoutsFile.getData().getString("Loadouts." + p.getName() + "." + k + ".Perk2"))) {
-						perkTwo = perk;
-					}
-				} else if (perk.getSlot() == PerkSlot.THREE) {
-					if (perk.getPerk().getName().equals(LoadoutsFile.getData().getString("Loadouts." + p.getName() + "." + k + ".Perk3"))) {
-						perkThree = perk;
+				for (CodGun gun : ShopManager.getInstance().getPrimaryGuns()) {
+					if (gun.getName().equals(SQLDriver.getInstance().getLoadout(p.getUniqueId()).get(k + ".Primary"))) {
+						primary = gun;
 					}
 				}
+
+				for (CodGun gun : ShopManager.getInstance().getSecondaryGuns()) {
+					if (gun.getName().equals(SQLDriver.getInstance().getLoadout(p.getUniqueId()).get(k + ".Secondary"))) {
+						secondary = gun;
+					}
+				}
+
+				for (CodWeapon grenade : ShopManager.getInstance().getLethalWeapons()) {
+					if (grenade.getName().equals(SQLDriver.getInstance().getLoadout(p.getUniqueId()).get(k + ".Lethal"))) {
+						lethal = grenade;
+					}
+				}
+
+				for (CodWeapon grenade : ShopManager.getInstance().getTacticalWeapons()) {
+					if (grenade.getName().equals(SQLDriver.getInstance().getLoadout(p.getUniqueId()).get(k + ".Tactical"))) {
+						tactical = grenade;
+					}
+				}
+
+				for (CodPerk perk : PerkManager.getInstance().getAvailablePerks()) {
+					if (perk.getSlot() == PerkSlot.ONE) {
+						if (perk.getPerk().getName().equals(SQLDriver.getInstance().getLoadout(p.getUniqueId()).get(k + ".Perk1"))) {
+							perkOne = perk;
+						}
+					} else if (perk.getSlot() == PerkSlot.TWO) {
+						if (perk.getPerk().getName().equals(SQLDriver.getInstance().getLoadout(p.getUniqueId()).get(k + ".Perk2"))) {
+							perkOne = perk;
+						}
+					} else if (perk.getSlot() == PerkSlot.THREE) {
+						if (perk.getPerk().getName().equals(SQLDriver.getInstance().getLoadout(p.getUniqueId()).get(k + ".Perk3"))) {
+							perkOne = perk;
+						}
+					}
+				}
+
+				if (primary == null) {
+					primary = LoadoutManager.getInstance().getDefaultPrimary();
+				}
+
+				if (secondary == null) {
+					secondary = LoadoutManager.getInstance().getDefaultSecondary();
+				}
+
+				if (lethal == null) {
+					lethal = LoadoutManager.getInstance().getDefaultLethal();
+				}
+
+				if (tactical == null) {
+					tactical = LoadoutManager.getInstance().getDefaultTactical();
+				}
+
+				if (perkOne == null) {
+					perkOne = PerkManager.getInstance().getDefaultPerk(PerkSlot.ONE);
+				}
+
+				if (perkTwo == null) {
+					perkTwo = PerkManager.getInstance().getDefaultPerk(PerkSlot.TWO);
+				}
+
+				if (perkThree == null) {
+					perkThree = PerkManager.getInstance().getDefaultPerk(PerkSlot.THREE);
+				}
+
+				try {
+					loadout = new Loadout(p, name, primary, secondary, lethal, tactical, perkOne, perkTwo, perkThree);
+					l.add(loadout);
+				} catch (Exception e) {
+					ComWarfare.sendMessage(ComWarfare.getConsole(), ComWarfare.getPrefix() + Lang.ERROR_READING_PLAYER_LOADOUT.getMessage(), ComWarfare.getLang());
+				}
+
+
+				k++;
 			}
 
 
-			if (primary == null) {
-				primary = LoadoutManager.getInstance().getDefaultPrimary();
+		} else {
+			while (LoadoutsFile.getData().contains("Loadouts." + playerName + "." + k)) {
+
+				name = LoadoutsFile.getData().getString("Loadouts." + playerName + "." + k + ".Name");
+
+				for (CodGun gun : ShopManager.getInstance().getPrimaryGuns()) {
+					if (gun.getName().equals(LoadoutsFile.getData().getString("Loadouts." + playerName + "." + k + ".Primary"))) {
+						primary = gun;
+					}
+				}
+
+				for (CodGun gun : ShopManager.getInstance().getSecondaryGuns()) {
+					if (gun.getName().equals(LoadoutsFile.getData().getString("Loadouts." + playerName + "." + k + ".Secondary"))) {
+						secondary = gun;
+					}
+				}
+
+				for (CodWeapon grenade : ShopManager.getInstance().getLethalWeapons()) {
+					if (grenade.getName().equals(LoadoutsFile.getData().getString("Loadouts." + playerName + "." + k + ".Lethal"))) {
+						lethal = grenade;
+					}
+				}
+
+				for (CodWeapon grenade : ShopManager.getInstance().getTacticalWeapons()) {
+					if (grenade.getName().equals(LoadoutsFile.getData().getString("Loadouts." + playerName + "." + k + ".Tactical"))) {
+						tactical = grenade;
+					}
+				}
+
+				for (CodPerk perk : PerkManager.getInstance().getAvailablePerks()) {
+					if (perk.getSlot() == PerkSlot.ONE) {
+						if (perk.getPerk().getName().equals(LoadoutsFile.getData().getString("Loadouts." + playerName + "." + k + ".Perk1"))) {
+							perkOne = perk;
+						}
+					} else if (perk.getSlot() == PerkSlot.TWO) {
+						if (perk.getPerk().getName().equals(LoadoutsFile.getData().getString("Loadouts." + playerName + "." + k + ".Perk2"))) {
+							perkTwo = perk;
+						}
+					} else if (perk.getSlot() == PerkSlot.THREE) {
+						if (perk.getPerk().getName().equals(LoadoutsFile.getData().getString("Loadouts." + playerName + "." + k + ".Perk3"))) {
+							perkThree = perk;
+						}
+					}
+				}
+
+				if (primary == null) {
+					primary = LoadoutManager.getInstance().getDefaultPrimary();
+				}
+
+				if (secondary == null) {
+					secondary = LoadoutManager.getInstance().getDefaultSecondary();
+				}
+
+				if (lethal == null) {
+					lethal = LoadoutManager.getInstance().getDefaultLethal();
+				}
+
+				if (tactical == null) {
+					tactical = LoadoutManager.getInstance().getDefaultTactical();
+				}
+
+				if (perkOne == null) {
+					perkOne = PerkManager.getInstance().getDefaultPerk(PerkSlot.ONE);
+				}
+
+				if (perkTwo == null) {
+					perkTwo = PerkManager.getInstance().getDefaultPerk(PerkSlot.TWO);
+				}
+
+				if (perkThree == null) {
+					perkThree = PerkManager.getInstance().getDefaultPerk(PerkSlot.THREE);
+				}
+
+				try {
+					loadout = new Loadout(p, name, primary, secondary, lethal, tactical, perkOne, perkTwo, perkThree);
+					l.add(loadout);
+				} catch (Exception e) {
+					ComWarfare.sendMessage(ComWarfare.getConsole(), ComWarfare.getPrefix() + Lang.ERROR_READING_PLAYER_LOADOUT.getMessage(), ComWarfare.getLang());
+				}
+
+				k++;
 			}
-
-			if (secondary == null) {
-				secondary = LoadoutManager.getInstance().getDefaultSecondary();
-			}
-
-			if (lethal == null) {
-				lethal = LoadoutManager.getInstance().getDefaultLethal();
-			}
-
-			if (tactical == null) {
-				tactical = LoadoutManager.getInstance().getDefaultTactical();
-			}
-
-			if (perkOne == null) {
-				perkOne = PerkManager.getInstance().getDefaultPerk(PerkSlot.ONE);
-			}
-
-			if (perkTwo == null) {
-				perkTwo = PerkManager.getInstance().getDefaultPerk(PerkSlot.TWO);
-			}
-
-			if (perkThree == null) {
-				perkThree = PerkManager.getInstance().getDefaultPerk(PerkSlot.THREE);
-			}
-
-			try {
-
-				loadout = new Loadout(p, name, primary, secondary, lethal, tactical, perkOne, perkTwo, perkThree);
-				l.add(loadout);
-			} catch (Exception e) {
-				ComWarfare.sendMessage(ComWarfare.getConsole(),  ComWarfare.getPrefix() + Lang.ERROR_READING_PLAYER_LOADOUT.getMessage(), ComWarfare.getLang());
-			}
-
-			k++;
 		}
+
 
 		if (k < getAllowedClasses(p)) {
 			for (int i = k; i < getAllowedClasses(p); i++) {
-				Loadout loadout = getDefaultLoadout(p, i);
-				l.add(loadout);
+				Loadout loadout2 = getDefaultLoadout(p, i);
+				l.add(loadout2);
 			}
 		}
 
 		if (l.isEmpty()) {
 			for (int i = 0; i < getAllowedClasses(p); i++) {
-				Loadout loadout = getDefaultLoadout(p, i);
-				l.add(loadout);
+				Loadout loadout2 = getDefaultLoadout(p, i);
+				l.add(loadout2);
 			}
 		}
 
@@ -493,20 +597,40 @@ public class LoadoutManager {
 		if (getLoadouts(p) == null) {
 			return;
 		}
+		if (ComWarfare.MySQL) {
+			JsonObject jo = new JsonObject();
+			int i = 0;
+			for (Loadout l : getLoadouts(p)) {
+				jo.addProperty(i + ".Name", l.getName());
+				jo.addProperty(i + ".Primary", l.getPrimary().getName());
+				jo.addProperty(i + ".Secondary", l.getSecondary().getName());
+				jo.addProperty(i + ".Lethal", l.getLethal().getName());
+				jo.addProperty(i + ".Tactical", l.getTactical().getName());
+				jo.addProperty(i + ".Perk1", l.getPerk1().getPerk().getName());
+				jo.addProperty(i + ".Perk2", l.getPerk2().getPerk().getName());
+				jo.addProperty(i + ".Perk3", l.getPerk3().getPerk().getName());
+				i++;
+			}
+			SQLDriver.getInstance().setLoadouts(p.getUniqueId(), jo);
 
-		int i = 0;
-		for (Loadout l : getLoadouts(p)) {
-			LoadoutsFile.getData().set("Loadouts." + p.getName() + "." + i + ".Name", l.getName());
-			LoadoutsFile.getData().set("Loadouts." + p.getName() + "." + i + ".Primary", l.getPrimary().getName());
-			LoadoutsFile.getData().set("Loadouts." + p.getName() + "." + i + ".Secondary", l.getSecondary().getName());
-			LoadoutsFile.getData().set("Loadouts." + p.getName() + "." + i + ".Lethal", l.getLethal().getName());
-			LoadoutsFile.getData().set("Loadouts." + p.getName() + "." + i + ".Tactical", l.getTactical().getName());
-			LoadoutsFile.getData().set("Loadouts." + p.getName() + "." + i + ".Perk1", l.getPerk1().getPerk().getName());
-			LoadoutsFile.getData().set("Loadouts." + p.getName() + "." + i + ".Perk2", l.getPerk2().getPerk().getName());
-			LoadoutsFile.getData().set("Loadouts." + p.getName() + "." + i + ".Perk3", l.getPerk3().getPerk().getName());
-			LoadoutsFile.saveData();
-			LoadoutsFile.reloadData();
-			i++;
+		} else {
+
+			String playerName = ComWarfare.setName(p.getName());
+
+			int i = 0;
+			for (Loadout l : getLoadouts(p)) {
+				LoadoutsFile.getData().set("Loadouts." + playerName + "." + i + ".Name", l.getName());
+				LoadoutsFile.getData().set("Loadouts." + playerName + "." + i + ".Primary", l.getPrimary().getName());
+				LoadoutsFile.getData().set("Loadouts." + playerName + "." + i + ".Secondary", l.getSecondary().getName());
+				LoadoutsFile.getData().set("Loadouts." + playerName + "." + i + ".Lethal", l.getLethal().getName());
+				LoadoutsFile.getData().set("Loadouts." + playerName + "." + i + ".Tactical", l.getTactical().getName());
+				LoadoutsFile.getData().set("Loadouts." + playerName + "." + i + ".Perk1", l.getPerk1().getPerk().getName());
+				LoadoutsFile.getData().set("Loadouts." + playerName + "." + i + ".Perk2", l.getPerk2().getPerk().getName());
+				LoadoutsFile.getData().set("Loadouts." + playerName + "." + i + ".Perk3", l.getPerk3().getPerk().getName());
+				LoadoutsFile.saveData();
+				LoadoutsFile.reloadData();
+				i++;
+			}
 		}
 	}
 

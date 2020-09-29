@@ -4,6 +4,7 @@ import com.rhetorical.cod.ComWarfare;
 import com.rhetorical.cod.files.GunsFile;
 import com.rhetorical.cod.loadouts.LoadoutManager;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -14,8 +15,7 @@ public class CodWeapon {
 	
 	private UnlockType unlockType;
 	private final ItemStack weaponItem;
-	private final ItemStack menuItem;
-	
+
 	private WeaponType weaponType;
 	
 	private int levelUnlock;
@@ -35,7 +35,6 @@ public class CodWeapon {
 		setName(n);
 
 		weaponItem = setupWeaponItem(weaponI);
-		menuItem = setupMenuItem(weaponI);
 	}
 
 	public CodWeapon(String n, WeaponType wt, UnlockType t, ItemStack weaponI, int levelUnlock, boolean isBlank, boolean shop) {
@@ -49,10 +48,8 @@ public class CodWeapon {
 		setName(n);
 		if (!isBlank) {
 			weaponItem = setupWeaponItem(weaponI);
-			menuItem = setupMenuItem(weaponI);
 		} else {
 			weaponItem = weaponI;
-			menuItem = weaponI;
 		}
 	}
 	public void save() {
@@ -117,6 +114,7 @@ public class CodWeapon {
 		}
 
 		if (ComWarfare.hasCrackShot()) {
+			System.out.println(String.format("Setting up weapon %s with crackshot.", getName()));
 			if (!this.equals(LoadoutManager.getInstance().blankLethal) && !this.equals(LoadoutManager.getInstance().blankTactical)) {
 				ItemStack gun = CrackShotGun.generateWeapon(getName());
 
@@ -138,28 +136,8 @@ public class CodWeapon {
 		return weaponItem;
 	}
 
-	/**
-	 * Gets the menu item for the gun. Slightly different from Weapon item.
-	 * @deprecated Use CodWeapon#setupWeaponItem(ItemStack) instead.
-	 * @see CodWeapon#setupWeaponItem(ItemStack)
-	 * */
-	@Deprecated
-	protected ItemStack setupMenuItem(ItemStack gunItem) {
-		ItemStack gun = getWeaponItem();
-
-		ItemMeta meta = gun.getItemMeta();
-		if (meta != null) {
-			meta.setDisplayName(getName());
-			meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-		}
-
-		gun.setItemMeta(meta);
-
-		return gun;
-	}
-
-	public ItemStack getMenuItem() {
-		return menuItem.clone();
+	public ItemStack getMenuItem(Player p) {
+		return CrackShotGun.updateItem(getName(), getWeaponItem(), p);
 	}
 
 	public ItemStack getWeaponItem() {
