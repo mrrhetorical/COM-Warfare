@@ -32,6 +32,15 @@ spawnProtection:
   #Duration (in seconds)
   duration: 3
 
+#Item Bridge: Should this plugin attempt to grab weapons and ammo using item bridge?
+itemBridge:
+  enabled: false
+  #Prefixes to use for each weapon. For each weapon listed under a prefix, it will use the given prefix to grab from item bridge.
+  prefix:
+    qa:
+      - M4A1
+      - AK-47
+
 #Game time: The amount of time (in seconds) players should spend inside of a match, separated by gamemode.
 gameTime:
   TDM: 600
