@@ -16,7 +16,7 @@ import java.util.Collections;
 import java.util.List;
 
 
-public class Tabcomplete implements TabCompleter {
+public class CodTabCompleter implements TabCompleter {
 
 
     @Override
