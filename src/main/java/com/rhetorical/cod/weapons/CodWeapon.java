@@ -5,6 +5,7 @@ import com.rhetorical.cod.files.GunsFile;
 import com.rhetorical.cod.loadouts.LoadoutManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -36,7 +37,7 @@ public class CodWeapon {
 		setName(n);
 
 		weaponItem = setupWeaponItem(weaponI);
-		Bukkit.getServer().getScheduler().runTaskLater(ComWarfare.getInstance(), () -> menuItem = setupMenuItem(), 1L);
+		menuItem = setupMenuItem();
 	}
 
 	public CodWeapon(String n, WeaponType wt, UnlockType t, ItemStack weaponI, int levelUnlock, boolean isBlank, boolean shop) {
@@ -50,10 +51,10 @@ public class CodWeapon {
 		setName(n);
 		if (!isBlank) {
 			weaponItem = setupWeaponItem(weaponI);
-			Bukkit.getServer().getScheduler().runTaskLater(ComWarfare.getInstance(), () -> menuItem = setupMenuItem(), 1L);
+			menuItem = setupMenuItem();
 		} else {
 			weaponItem = weaponI;
-			Bukkit.getServer().getScheduler().runTaskLater(ComWarfare.getInstance(), () -> menuItem = setupMenuItem(), 1L);
+			menuItem = setupMenuItem();
 		}
 	}
 	public void save() {
@@ -141,13 +142,15 @@ public class CodWeapon {
 
 		gun = clearAttributesAndSetName(gun);
 
-
-
 		return gun;
 	}
 
 	public ItemStack getMenuItem() {
-		return menuItem.clone();
+		return getMenuItem(null);
+	}
+
+	public ItemStack getMenuItem(Player p) {
+		return CrackShotGun.updateItem(getName(), menuItem.clone(), p);
 	}
 
 	public ItemStack getWeaponItem() {

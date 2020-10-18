@@ -37,7 +37,8 @@ public class CodGun extends CodWeapon {
 		this.ammoItem = ammoI;
 
 		weaponItem = setupWeaponItem(gunI);
-		Bukkit.getServer().getScheduler().runTaskLater(ComWarfare.getInstance(), () -> menuItem = setupMenuItem(), 1L);	}
+		menuItem = setupMenuItem();
+	}
 
 	/**
 	 * Creates a gun with the given parameters including the name of the ammo (for QualityArmory)
@@ -56,7 +57,8 @@ public class CodGun extends CodWeapon {
 		this.ammoItem = ammoI;
 
 		weaponItem = setupWeaponItem(gunI);
-		Bukkit.getServer().getScheduler().runTaskLater(ComWarfare.getInstance(), () -> menuItem = setupMenuItem(), 1L);	}
+		menuItem = setupMenuItem();
+	}
 
 	/**
 	 * Intended to be used for generating blank guns.
@@ -75,10 +77,10 @@ public class CodGun extends CodWeapon {
 
 		if (!isBlank) {
 			weaponItem = setupWeaponItem(gunI);
-			Bukkit.getServer().getScheduler().runTaskLater(ComWarfare.getInstance(), () -> menuItem = setupMenuItem(), 1L);
+			menuItem = setupMenuItem();
 		} else {
 			weaponItem = gunI;
-			Bukkit.getServer().getScheduler().runTaskLater(ComWarfare.getInstance(), () -> menuItem = setupMenuItem(), 1L);
+			menuItem = setupMenuItem();
 		}
 	}
 
