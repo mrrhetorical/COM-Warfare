@@ -4,6 +4,7 @@ import com.rhetorical.cod.ComWarfare;
 import com.rhetorical.cod.lang.Lang;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
 
@@ -45,6 +46,9 @@ public class PerkManager {
 
 			String slot = ComWarfare.getPlugin().getConfig().getString("Perks." + i + ".slot");
 
+			int customModelData = ComWarfare.getPlugin().getConfig().getInt("Perks." + i + ".customModelData", 0);
+
+
 			PerkSlot perkSlot;
 
 			switch (slot) {
@@ -63,6 +67,12 @@ public class PerkManager {
 			}
 
 			ItemStack item = new ItemStack(Material.valueOf(ComWarfare.getPlugin().getConfig().getString("Perks." + i + ".material")));
+
+			if (ComWarfare.canUseCustomModelData()) {
+				ItemMeta meta = item.getItemMeta();
+				meta.setCustomModelData(customModelData);
+				item.setItemMeta(meta);
+			}
 
 			ArrayList<String> lore = (ArrayList<String>) ComWarfare.getPlugin().getConfig().getStringList("Perks." + i + ".lore");
 
