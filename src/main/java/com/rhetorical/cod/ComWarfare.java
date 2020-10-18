@@ -18,9 +18,11 @@ import com.rhetorical.cod.streaks.KillStreakManager;
 import com.rhetorical.cod.util.ItemBridgePrefix;
 import com.rhetorical.cod.util.LegacyActionBar;
 import com.rhetorical.cod.util.LegacyTitle;
+import com.rhetorical.cod.util.PAPI;
 import com.rhetorical.cod.util.UpdateChecker;
 import com.rhetorical.cod.weapons.*;
 import com.rhetorical.tpp.api.McTranslate;
+import me.clip.placeholderapi.PlaceholderAPI;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bstats.bukkit.Metrics;
@@ -93,7 +95,8 @@ public class ComWarfare extends JavaPlugin {
 	private boolean hasQA = false;
 	private boolean hasCS = false;
 	private boolean hasProtocol = false;
-	private boolean hasItemBridge = false;
+	private static boolean hasPAPI = false;
+	private static boolean hasItemBridge = false;
 
 	private String reward_highestKD =  "";
 	private String reward_highestScore = "";
@@ -140,6 +143,7 @@ public class ComWarfare extends JavaPlugin {
 		hasQA = Bukkit.getServer().getPluginManager().getPlugin("QualityArmory") != null;
 		hasCS = Bukkit.getServer().getPluginManager().getPlugin("CrackShot") != null;
 		hasProtocol = Bukkit.getServer().getPluginManager().getPlugin("ProtocolLib") != null;
+		hasPAPI = Bukkit.getServer().getPluginManager().getPlugin("PlaceholderAPI") != null;
 		hasItemBridge = Bukkit.getServer().getPluginManager().getPlugin("ItemBridgeUtil") != null;
 
 		ComVersion.setup(true);
@@ -329,6 +333,8 @@ public class ComWarfare extends JavaPlugin {
 				GameManager.findMatch(p);
 			}
 		}
+		
+		if (hasPAPI) new PAPI(this).register();
 	}
 
 	/**
@@ -386,7 +392,7 @@ public class ComWarfare extends JavaPlugin {
 	public static boolean isUsingQA() {
 		return Bukkit.getServer().getPluginManager().getPlugin("QualityArmory") != null;
 	}
-
+  
 	/**
 	 * Attempts to load McTranslate++'s API.
 	 * */
@@ -671,6 +677,9 @@ public class ComWarfare extends JavaPlugin {
 	 * Sends a message to the target without translation.
 	 * */
 	public static void sendMessage(CommandSender target, String message) {
+		if (target instanceof Player && hasPAPI) {
+			message = PlaceholderAPI.setPlaceholders((Player) target, message);
+		}
 		target.sendMessage(message);
 	}
 
@@ -749,7 +758,7 @@ public class ComWarfare extends JavaPlugin {
 		} catch (NoSuchMethodError|Exception e) {
 			if (e instanceof NoSuchMethodError) {
 				LegacyActionBar.sendActionBarMessage(p, message);
-//				p.sendMessage(message);
+//				ComWarfare.sendMessage(p, message);
 			} else {
 				Bukkit.getLogger().severe("Error when attempting to send action bar in COM-Warfare:");
 				e.printStackTrace();
