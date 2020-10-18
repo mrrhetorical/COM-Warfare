@@ -35,7 +35,7 @@ spawnProtection:
 #Item Bridge: Should this plugin attempt to grab weapons and ammo using item bridge?
 itemBridge:
   enabled: false
-  #Prefixes to use for each weapon. For each weapon listed under a prefix, it will use the given prefix to grab from item bridge.
+  #Prefixes to use for each weapon. For each weapon listed under a prefix, it will use the given prefix to grab from item bridge. CaSe SeNSiTiVe.
   prefix:
     qa:
       - M4A1
@@ -148,17 +148,6 @@ killfeed:
   showForAll: true
   # Use Boss Bar: Use the boss bar for showing kill feed.
   useBossBar: true
-
-# MySQL Database stuff
-mySql:
-  enabled: false
-  # The ip of the mysql server
-  ip: none
-  # Username ('none' for blank)
-  user: none
-  # Password ('none' for blank)
-  pass: none
-
 
 #Rank Tiers: The tiers at which players can receive different rewards. All players can get the default one. The permission for each tier are 'com.[tier]' Default: default rank {PREMIUM-ONLY}
 RankTiers:
