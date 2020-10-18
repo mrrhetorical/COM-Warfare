@@ -3,6 +3,7 @@ package com.rhetorical.cod.weapons;
 import com.rhetorical.cod.ComWarfare;
 import com.rhetorical.cod.files.GunsFile;
 import com.rhetorical.cod.loadouts.LoadoutManager;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -13,8 +14,8 @@ public class CodWeapon {
 	private String name;
 	
 	private UnlockType unlockType;
-	private final ItemStack weaponItem;
-	private final ItemStack menuItem;
+	protected ItemStack weaponItem;
+	protected ItemStack menuItem;
 	
 	private WeaponType weaponType;
 	
@@ -35,7 +36,7 @@ public class CodWeapon {
 		setName(n);
 
 		weaponItem = setupWeaponItem(weaponI);
-		menuItem = setupMenuItem(weaponI);
+		Bukkit.getServer().getScheduler().runTaskLater(ComWarfare.getInstance(), () -> menuItem = setupMenuItem(), 1L);
 	}
 
 	public CodWeapon(String n, WeaponType wt, UnlockType t, ItemStack weaponI, int levelUnlock, boolean isBlank, boolean shop) {
@@ -49,10 +50,10 @@ public class CodWeapon {
 		setName(n);
 		if (!isBlank) {
 			weaponItem = setupWeaponItem(weaponI);
-			menuItem = setupMenuItem(weaponI);
+			Bukkit.getServer().getScheduler().runTaskLater(ComWarfare.getInstance(), () -> menuItem = setupMenuItem(), 1L);
 		} else {
 			weaponItem = weaponI;
-			menuItem = weaponI;
+			Bukkit.getServer().getScheduler().runTaskLater(ComWarfare.getInstance(), () -> menuItem = setupMenuItem(), 1L);
 		}
 	}
 	public void save() {
@@ -120,40 +121,27 @@ public class CodWeapon {
 			if (!this.equals(LoadoutManager.getInstance().blankLethal) && !this.equals(LoadoutManager.getInstance().blankTactical)) {
 				ItemStack gun = CrackShotGun.generateWeapon(getName());
 
-				if (gun != null && gun.getType() != Material.AIR)
+				if (gun != null && gun.getType() != Material.AIR) {
+					gun = CrackShotGun.updateItem(getName(), gun, null);
 					return gun;
+				}
 			}
 		}
-		ItemMeta meta = weaponItem.getItemMeta();
 
-		if (meta != null) {
-			meta.setDisplayName(getName());
-			meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-		}
-		
-		weaponItem.setItemMeta(meta);
-
-		weaponItem = CrackShotGun.updateItem(getName(), weaponItem, null);
+		weaponItem = clearAttributesAndSetName(weaponItem);
 
 		return weaponItem;
 	}
 
 	/**
 	 * Gets the menu item for the gun. Slightly different from Weapon item.
-	 * @deprecated Use CodWeapon#setupWeaponItem(ItemStack) instead.
-	 * @see CodWeapon#setupWeaponItem(ItemStack)
 	 * */
-	@Deprecated
-	protected ItemStack setupMenuItem(ItemStack gunItem) {
+	protected ItemStack setupMenuItem() {
 		ItemStack gun = getWeaponItem();
 
-		ItemMeta meta = gun.getItemMeta();
-		if (meta != null) {
-			meta.setDisplayName(getName());
-			meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-		}
+		gun = clearAttributesAndSetName(gun);
 
-		gun.setItemMeta(meta);
+
 
 		return gun;
 	}
@@ -225,4 +213,17 @@ public class CodWeapon {
 	public void setShowInShop(boolean value) {
 		showInShop = value;
 	}
+
+	private ItemStack clearAttributesAndSetName(ItemStack item) {
+		item = item.clone();
+		ItemMeta meta = item.getItemMeta();
+		if (meta != null) {
+			meta.setDisplayName(getName());
+			meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+		}
+
+		item.setItemMeta(meta);
+		return item;
+	}
+
 }

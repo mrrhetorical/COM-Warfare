@@ -34,6 +34,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -92,6 +93,7 @@ public class ComWarfare extends JavaPlugin {
 	private boolean hasQA = false;
 	private boolean hasCS = false;
 	private boolean hasProtocol = false;
+	private boolean hasItemBridge = false;
 
 	private String reward_highestKD =  "";
 	private String reward_highestScore = "";
@@ -136,6 +138,7 @@ public class ComWarfare extends JavaPlugin {
 		hasQA = Bukkit.getServer().getPluginManager().getPlugin("QualityArmory") != null;
 		hasCS = Bukkit.getServer().getPluginManager().getPlugin("CrackShot") != null;
 		hasProtocol = Bukkit.getServer().getPluginManager().getPlugin("ProtocolLib") != null;
+		hasItemBridge = Bukkit.getServer().getPluginManager().getPlugin("ItemBridgeUtil") != null;
 
 		ComVersion.setup(true);
 
@@ -1628,6 +1631,13 @@ public class ComWarfare extends JavaPlugin {
 	 * */
 	public static boolean hasCrackShot() {
 		return getInstance().hasCS;
+	}
+
+	/**
+	 * @return Returns if the server has ItemBridge installed.
+	 * */
+	public static boolean hasItemBridge() {
+		return getInstance().hasItemBridge;
 	}
 
 	/**
