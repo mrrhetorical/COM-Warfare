@@ -2,9 +2,10 @@ package com.rhetorical.cod;
 
 import com.rhetorical.cod.assignments.AssignmentManager;
 import com.rhetorical.cod.files.*;
-import com.rhetorical.cod.game.*;
+import com.rhetorical.cod.game.CodMap;
+import com.rhetorical.cod.game.GameInstance;
+import com.rhetorical.cod.game.GameManager;
 import com.rhetorical.cod.inventories.InventoryManager;
-import com.rhetorical.cod.inventories.MatchBrowser;
 import com.rhetorical.cod.inventories.ShopManager;
 import com.rhetorical.cod.lang.Lang;
 import com.rhetorical.cod.loadouts.LoadoutManager;
@@ -25,8 +26,6 @@ import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.*;
-import org.bukkit.block.Block;
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.ConfigurationSection;
@@ -34,12 +33,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitRunnable;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -108,6 +104,7 @@ public class ComWarfare extends JavaPlugin {
 	private static boolean disabling = false;
 
 	private static boolean legacy = false;
+	private static boolean canUseCustomModelData = false;
 
 	private static boolean debug = true;
 
@@ -166,8 +163,12 @@ public class ComWarfare extends JavaPlugin {
 		} catch(Exception ignored) {}
 
 		if (v <= 8) {
-			ComWarfare.getConsole().sendMessage(ComWarfare.getPrefix() + "You are not on the most recent version of Spigot/Bukkit, so COM-Warfare will have some features limited. To ensure the plugin will work as intended, please use version 1.9+!");
+			ComWarfare.getConsole().sendMessage(ComWarfare.getPrefix() + "You are not on the most recent version of Spigot/Bukkit, so COM-Warfare will have a limited set of features. To ensure the plugin will work as intended, please use the latest version of Spigot!");
 			legacy = true;
+		}
+
+		if (v >= 14) {
+			canUseCustomModelData = true;
 		}
 
 		DependencyManager dm = new DependencyManager();
@@ -773,7 +774,16 @@ public class ComWarfare extends JavaPlugin {
 	/**
 	 * @return If the server is running on Bukkit 1.8.X or earlier builds.
 	 * */
-	public static boolean isLegacy() { return legacy; }
+	public static boolean isLegacy() {
+		return legacy;
+	}
+
+	/**
+	 * @return If the server is running on Bukkit 1.14.X or later builds.
+	 * */
+	public static boolean canUseCustomModelData() {
+		return canUseCustomModelData;
+	}
 
 	/**
 	 * @return Returns if the server has QualityArmory installed.
