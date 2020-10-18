@@ -17,6 +17,7 @@ import com.rhetorical.cod.sounds.SoundManager;
 import com.rhetorical.cod.streaks.KillStreakManager;
 import com.rhetorical.cod.util.LegacyActionBar;
 import com.rhetorical.cod.util.LegacyTitle;
+import com.rhetorical.cod.util.Tabcomplete;
 import com.rhetorical.cod.util.UpdateChecker;
 import com.rhetorical.cod.weapons.*;
 import com.rhetorical.tpp.api.McTranslate;
@@ -315,6 +316,7 @@ public class ComWarfare extends JavaPlugin {
 				GameManager.findMatch(p);
 			}
 		}
+		getCommand("cod").setTabCompleter(new Tabcomplete());
 	}
 
 	/**
@@ -362,7 +364,7 @@ public class ComWarfare extends JavaPlugin {
 	 * @see ComWarfare#hasPerm(CommandSender, String, boolean)
 	 * @return Returns true if the given command sender has the permission node, the permission node "com.*", or if they're a server operator and aren't in game.
 	 * */
-	static boolean hasPerm(CommandSender p, String s) {
+	public static boolean hasPerm(CommandSender p, String s) {
 		return hasPerm(p, s, false);
 	}
 
