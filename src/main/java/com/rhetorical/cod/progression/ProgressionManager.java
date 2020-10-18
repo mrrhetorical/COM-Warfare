@@ -76,7 +76,7 @@ public class ProgressionManager {
 			this.level.put(p, level);
 		}
 		if (showMessage) {
-			p.sendMessage(ComWarfare.getPrefix() + Lang.RANK_UP_MESSAGE.getMessage().replace("{level}", getLevel(p) + ""));
+			ComWarfare.sendMessage(p, ComWarfare.getPrefix() + Lang.RANK_UP_MESSAGE.getMessage().replace("{level}", getLevel(p) + ""));
 		}
 
 	}
@@ -88,14 +88,14 @@ public class ProgressionManager {
 		}
 
 		this.level.put(p, this.level.get(p) + 1);
-		p.sendMessage(ComWarfare.getPrefix() + Lang.RANK_UP_MESSAGE.getMessage().replace("{level}", getLevel(p) + ""));
+		ComWarfare.sendMessage(p, ComWarfare.getPrefix() + Lang.RANK_UP_MESSAGE.getMessage().replace("{level}", getLevel(p) + ""));
 
 		CreditManager.setCredits(p, CreditManager.getCredits(p) + ComWarfare.getRank(p).getLevelCredits());
 
 		Bukkit.getServer().getPluginManager().callEvent(new PlayerLevelUpSoundEvent(p)); //testing event
 
 		if (this.getLevel(p) == this.maxLevel) {
-			p.sendMessage(ComWarfare.getPrefix() + Lang.RANK_UP_READY_TO_PRESTIGE.getMessage());
+			ComWarfare.sendMessage(p, ComWarfare.getPrefix() + Lang.RANK_UP_READY_TO_PRESTIGE.getMessage());
 		}
 
 		ShopManager.getInstance().checkForNewGuns(p, true);
@@ -113,7 +113,7 @@ public class ProgressionManager {
 		this.prestigeLevel.put(p, level);
 
 		if (showMessage) {
-			p.sendMessage(ComWarfare.getPrefix() + Lang.RANK_UP_PRESTIGE_MESSAGE.getMessage().replace("{level}", getPrestigeLevel(p) + ""));
+			ComWarfare.sendMessage(p, ComWarfare.getPrefix() + Lang.RANK_UP_PRESTIGE_MESSAGE.getMessage().replace("{level}", getPrestigeLevel(p) + ""));
 		}
 
 	}
@@ -136,8 +136,8 @@ public class ProgressionManager {
 		LoadoutManager.getInstance().prestigePlayer(p);
 
 		Bukkit.getPluginManager().callEvent(new PlayerPrestigeSoundEvent(p));
-		p.sendMessage(ComWarfare.getPrefix() + Lang.RANK_UP_PRESTIGE_MESSAGE.getMessage().replace("{level}", getPrestigeLevel(p) + ""));
-		p.sendMessage(ComWarfare.getPrefix() + Lang.RANK_RESET_MESSAGE.getMessage());
+		ComWarfare.sendMessage(p, ComWarfare.getPrefix() + Lang.RANK_UP_PRESTIGE_MESSAGE.getMessage().replace("{level}", getPrestigeLevel(p) + ""));
+		ComWarfare.sendMessage(p, ComWarfare.getPrefix() + Lang.RANK_RESET_MESSAGE.getMessage());
 		return true;
 	}
 
