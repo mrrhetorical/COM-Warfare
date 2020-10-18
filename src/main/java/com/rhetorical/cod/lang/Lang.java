@@ -1,6 +1,7 @@
 package com.rhetorical.cod.lang;
 
 import com.rhetorical.cod.files.LangFile;
+import com.rhetorical.cod.util.TextFormat;
 
 /**
  * Enum containing all lang.yml messages.
@@ -275,8 +276,7 @@ public enum Lang {
 	}
 
 	public String getMessage() {
-		// \u00A7 is section symbol.
-		return message.replace("&", "\u00A7");
+		return TextFormat.format(message);
 	}
 
 }

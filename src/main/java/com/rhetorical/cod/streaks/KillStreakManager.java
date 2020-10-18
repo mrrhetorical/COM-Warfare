@@ -105,7 +105,7 @@ public class KillStreakManager {
 			try {
 				ks = KillStreak.valueOf(s);
 			} catch (Exception e) {
-				ComWarfare.getConsole().sendMessage(ComWarfare.getPrefix() + Lang.ERROR_COULD_NOT_LOAD_KILL_STREAKS.getMessage().replace("{player}", p.getName()));
+				ComWarfare.sendMessage(ComWarfare.getConsole(), ComWarfare.getPrefix() + Lang.ERROR_COULD_NOT_LOAD_KILL_STREAKS.getMessage().replace("{player}", p.getName()));
 				continue;
 			}
 

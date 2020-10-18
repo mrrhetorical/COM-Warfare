@@ -3,7 +3,10 @@ package com.rhetorical.cod.weapons;
 import com.rhetorical.cod.ComWarfare;
 import com.rhetorical.cod.files.GunsFile;
 import com.rhetorical.cod.loadouts.LoadoutManager;
+import com.rhetorical.cod.util.ItemBridgeUtil;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -13,8 +16,8 @@ public class CodWeapon {
 	private String name;
 	
 	private UnlockType unlockType;
-	private final ItemStack weaponItem;
-	private final ItemStack menuItem;
+	protected ItemStack weaponItem;
+	protected ItemStack menuItem;
 	
 	private WeaponType weaponType;
 	
@@ -35,7 +38,7 @@ public class CodWeapon {
 		setName(n);
 
 		weaponItem = setupWeaponItem(weaponI);
-		menuItem = setupMenuItem(weaponI);
+		menuItem = setupMenuItem();
 	}
 
 	public CodWeapon(String n, WeaponType wt, UnlockType t, ItemStack weaponI, int levelUnlock, boolean isBlank, boolean shop) {
@@ -49,10 +52,10 @@ public class CodWeapon {
 		setName(n);
 		if (!isBlank) {
 			weaponItem = setupWeaponItem(weaponI);
-			menuItem = setupMenuItem(weaponI);
+			menuItem = setupMenuItem();
 		} else {
 			weaponItem = weaponI;
-			menuItem = weaponI;
+			menuItem = setupMenuItem();
 		}
 	}
 	public void save() {
@@ -106,8 +109,26 @@ public class CodWeapon {
 	 * @return The weapon item as set up by gun plugins. If the weapon doesn't exist in either QA or CrackShot, it is given a basic treatment by this plugin.
 	 * */
 	protected ItemStack setupWeaponItem(ItemStack weaponItem) {
+		if (ComWarfare.hasItemBridge()) {
+			if (!this.equals(LoadoutManager.getInstance().blankLethal)
+					&& !this.equals(LoadoutManager.getInstance().blankTactical)
+					&& !this.equals(LoadoutManager.getInstance().blankPrimary)
+					&& !this.equals(LoadoutManager.getInstance().blankSecondary)) {
+
+				ItemStack gun = ItemBridgeUtil.getItemBridgeItem(getName(), null);
+
+				if (gun != null && gun.getType() != Material.AIR) {
+					return gun;
+				}
+			}
+		}
+
 		if (ComWarfare.hasQualityArms()) {
-			if (!this.equals(LoadoutManager.getInstance().blankLethal) && !this.equals(LoadoutManager.getInstance().blankTactical)) {
+			if (!this.equals(LoadoutManager.getInstance().blankLethal)
+					&& !this.equals(LoadoutManager.getInstance().blankTactical)
+					&& !this.equals(LoadoutManager.getInstance().blankPrimary)
+					&& !this.equals(LoadoutManager.getInstance().blankSecondary)) {
+
 				ItemStack gun = QualityGun.getGunForName(getName());
 
 				if (gun != null && gun.getType() != Material.AIR) {
@@ -117,49 +138,42 @@ public class CodWeapon {
 		}
 
 		if (ComWarfare.hasCrackShot()) {
-			if (!this.equals(LoadoutManager.getInstance().blankLethal) && !this.equals(LoadoutManager.getInstance().blankTactical)) {
+			if (!this.equals(LoadoutManager.getInstance().blankLethal)
+					&& !this.equals(LoadoutManager.getInstance().blankTactical)
+					&& !this.equals(LoadoutManager.getInstance().blankPrimary)
+					&& !this.equals(LoadoutManager.getInstance().blankSecondary)) {
+
 				ItemStack gun = CrackShotGun.generateWeapon(getName());
 
-				if (gun != null && gun.getType() != Material.AIR)
+				if (gun != null && gun.getType() != Material.AIR) {
+					gun = CrackShotGun.updateItem(getName(), gun, null);
 					return gun;
+				}
 			}
 		}
-		ItemMeta meta = weaponItem.getItemMeta();
 
-		if (meta != null) {
-			meta.setDisplayName(getName());
-			meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-		}
-		
-		weaponItem.setItemMeta(meta);
-
-		weaponItem = CrackShotGun.updateItem(getName(), weaponItem, null);
+		weaponItem = clearAttributesAndSetName(weaponItem);
 
 		return weaponItem;
 	}
 
 	/**
 	 * Gets the menu item for the gun. Slightly different from Weapon item.
-	 * @deprecated Use CodWeapon#setupWeaponItem(ItemStack) instead.
-	 * @see CodWeapon#setupWeaponItem(ItemStack)
 	 * */
-	@Deprecated
-	protected ItemStack setupMenuItem(ItemStack gunItem) {
+	protected ItemStack setupMenuItem() {
 		ItemStack gun = getWeaponItem();
 
-		ItemMeta meta = gun.getItemMeta();
-		if (meta != null) {
-			meta.setDisplayName(getName());
-			meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-		}
-
-		gun.setItemMeta(meta);
+		gun = clearAttributesAndSetName(gun);
 
 		return gun;
 	}
 
 	public ItemStack getMenuItem() {
-		return menuItem.clone();
+		return getMenuItem(null);
+	}
+
+	public ItemStack getMenuItem(Player p) {
+		return CrackShotGun.updateItem(getName(), menuItem.clone(), p);
 	}
 
 	public ItemStack getWeaponItem() {
@@ -225,4 +239,17 @@ public class CodWeapon {
 	public void setShowInShop(boolean value) {
 		showInShop = value;
 	}
+
+	private ItemStack clearAttributesAndSetName(ItemStack item) {
+		item = item.clone();
+		ItemMeta meta = item.getItemMeta();
+		if (meta != null) {
+			meta.setDisplayName(getName());
+			meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+		}
+
+		item.setItemMeta(meta);
+		return item;
+	}
+
 }
