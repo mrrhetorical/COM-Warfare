@@ -17,7 +17,7 @@ import com.rhetorical.cod.sounds.SoundManager;
 import com.rhetorical.cod.streaks.KillStreakManager;
 import com.rhetorical.cod.util.LegacyActionBar;
 import com.rhetorical.cod.util.LegacyTitle;
-import com.rhetorical.cod.util.Tabcomplete;
+import com.rhetorical.cod.util.CodTabCompleter;
 import com.rhetorical.cod.util.UpdateChecker;
 import com.rhetorical.cod.weapons.*;
 import com.rhetorical.tpp.api.McTranslate;
@@ -316,7 +316,7 @@ public class ComWarfare extends JavaPlugin {
 				GameManager.findMatch(p);
 			}
 		}
-		getCommand("cod").setTabCompleter(new Tabcomplete());
+		getCommand("cod").setTabCompleter(new CodTabCompleter());
 	}
 
 	/**
