@@ -9,15 +9,15 @@ public class ItemBridgeUtil {
 		return com.jojodmo.itembridge.ItemBridge.getItemStack(namespace, key);
 	}
 
-	public static ItemStack getItemBridgeItem(String name) {
+	public static ItemStack getItemBridgeItem(String name, ItemStack itemStack) {
 		if (!ComWarfare.hasItemBridge())
-			return null;
-		
+			return itemStack;
+
 		for (ItemBridgePrefix prefix : ComWarfare.getItemBridgePrefixes()) {
 			if (prefix.getWeapons().contains(name))
 				return getItem(prefix.getPrefix(), name);
 		}
-		return null;
+		return itemStack;
 	}
 
 }

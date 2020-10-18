@@ -3,6 +3,7 @@ package com.rhetorical.cod.weapons;
 import com.rhetorical.cod.ComWarfare;
 import com.rhetorical.cod.files.GunsFile;
 import com.rhetorical.cod.loadouts.LoadoutManager;
+import com.rhetorical.cod.util.ItemBridgeUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -108,8 +109,26 @@ public class CodWeapon {
 	 * @return The weapon item as set up by gun plugins. If the weapon doesn't exist in either QA or CrackShot, it is given a basic treatment by this plugin.
 	 * */
 	protected ItemStack setupWeaponItem(ItemStack weaponItem) {
+		if (ComWarfare.hasItemBridge()) {
+			if (!this.equals(LoadoutManager.getInstance().blankLethal)
+					&& !this.equals(LoadoutManager.getInstance().blankTactical)
+					&& !this.equals(LoadoutManager.getInstance().blankPrimary)
+					&& !this.equals(LoadoutManager.getInstance().blankSecondary)) {
+
+				ItemStack gun = ItemBridgeUtil.getItemBridgeItem(getName(), null);
+
+				if (gun != null && gun.getType() != Material.AIR) {
+					return gun;
+				}
+			}
+		}
+
 		if (ComWarfare.hasQualityArms()) {
-			if (!this.equals(LoadoutManager.getInstance().blankLethal) && !this.equals(LoadoutManager.getInstance().blankTactical)) {
+			if (!this.equals(LoadoutManager.getInstance().blankLethal)
+					&& !this.equals(LoadoutManager.getInstance().blankTactical)
+					&& !this.equals(LoadoutManager.getInstance().blankPrimary)
+					&& !this.equals(LoadoutManager.getInstance().blankSecondary)) {
+
 				ItemStack gun = QualityGun.getGunForName(getName());
 
 				if (gun != null && gun.getType() != Material.AIR) {
@@ -119,7 +138,11 @@ public class CodWeapon {
 		}
 
 		if (ComWarfare.hasCrackShot()) {
-			if (!this.equals(LoadoutManager.getInstance().blankLethal) && !this.equals(LoadoutManager.getInstance().blankTactical)) {
+			if (!this.equals(LoadoutManager.getInstance().blankLethal)
+					&& !this.equals(LoadoutManager.getInstance().blankTactical)
+					&& !this.equals(LoadoutManager.getInstance().blankPrimary)
+					&& !this.equals(LoadoutManager.getInstance().blankSecondary)) {
+
 				ItemStack gun = CrackShotGun.generateWeapon(getName());
 
 				if (gun != null && gun.getType() != Material.AIR) {
