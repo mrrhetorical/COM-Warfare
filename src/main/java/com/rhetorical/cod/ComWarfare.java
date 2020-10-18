@@ -319,6 +319,7 @@ public class ComWarfare extends JavaPlugin {
 				GameManager.findMatch(p);
 			}
 		}
+		
 		if (hasPAPI) new PAPI(this).register();
 	}
 
