@@ -106,6 +106,7 @@ public class CodWeapon {
 	}
 
 	/**
+	 * @param weaponItem The base ItemStack for the weapon item.
 	 * @return The weapon item as set up by gun plugins. If the weapon doesn't exist in either QA or CrackShot, it is given a basic treatment by this plugin.
 	 * */
 	protected ItemStack setupWeaponItem(ItemStack weaponItem) {
@@ -159,6 +160,7 @@ public class CodWeapon {
 
 	/**
 	 * Gets the menu item for the gun. Slightly different from Weapon item.
+	 * @return The menu item
 	 * */
 	protected ItemStack setupMenuItem() {
 		ItemStack gun = getWeaponItem();

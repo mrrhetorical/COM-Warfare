@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Handles sprinting & hunger for each player in COM-Warfare.
+ * Handles sprinting &amp; hunger for each player in COM-Warfare.
  * */
 
 public class HungerManager {
