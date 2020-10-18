@@ -7,7 +7,7 @@ website: https://www.spigotmc.org/resources/21895/
 main: com.rhetorical.cod.ComWarfare
 api-version: 1.13
 
-softdepend: [Multiverse-Core, CrackShot, QualityArmory, ProtocolLib, ItemBridgeUtil, PlaceholderAPI]
+softdepend: [Multiverse-Core, CrackShot, QualityArmory, ProtocolLib, ItemBridge, PlaceholderAPI]
 
 
 commands:

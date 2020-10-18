@@ -141,7 +141,7 @@ public class ComWarfare extends JavaPlugin {
 		hasCS = Bukkit.getServer().getPluginManager().getPlugin("CrackShot") != null;
 		hasProtocol = Bukkit.getServer().getPluginManager().getPlugin("ProtocolLib") != null;
 		hasPAPI = Bukkit.getServer().getPluginManager().getPlugin("PlaceholderAPI") != null;
-		hasItemBridge = Bukkit.getServer().getPluginManager().getPlugin("ItemBridgeUtil") != null;
+		hasItemBridge = Bukkit.getServer().getPluginManager().getPlugin("ItemBridge") != null;
 
 		ComVersion.setup(true);
 
