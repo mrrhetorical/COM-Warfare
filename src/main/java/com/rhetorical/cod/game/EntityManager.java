@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Class to handle spawning & despawning entities within a match.
+ * Class to handle spawning &amp; despawning entities within a match.
  * */
 
 class EntityManager {

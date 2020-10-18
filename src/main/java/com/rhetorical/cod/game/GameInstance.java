@@ -1730,7 +1730,7 @@ public class GameInstance implements Listener {
 	}
 
 	/**
-	 * @param time = Time in seconds.
+	 * @param time Time in seconds.
 	 * @return Formatted time in minutes and seconds.
 	 * */
 	private String getFancyTime(int time) {
@@ -1790,8 +1790,8 @@ public class GameInstance implements Listener {
 	/**
 	 * Kills the target player within the modified health system.
 	 *
-	 * @param p = The player to kill
-	 * @param killer = The player who killed the player
+	 * @param p The player to kill
+	 * @param killer The player who killed the player
 	 * */
 	public void kill(Player p, Player killer) {
 
@@ -2411,8 +2411,8 @@ public class GameInstance implements Listener {
 	}
 
 	/**
-	 * @param a = The damager
-	 * @param b = The victim
+	 * @param a The damager
+	 * @param b The victim
 	 * @return Returns if person a can damage person b.
 	 * */
 	public boolean canDamage(Player a, Player b) {

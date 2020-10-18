@@ -3,11 +3,15 @@ com.rhetorical.cod.api
 com.rhetorical.cod.assignments
 com.rhetorical.cod.files
 com.rhetorical.cod.game
+com.rhetorical.cod.game.events
 com.rhetorical.cod.inventories
 com.rhetorical.cod.lang
 com.rhetorical.cod.loadouts
 com.rhetorical.cod.perks
 com.rhetorical.cod.progression
+com.rhetorical.cod.sounds
+com.rhetorical.cod.sounds.events
+com.rhetorical.cod.sql
 com.rhetorical.cod.streaks
 com.rhetorical.cod.util
 com.rhetorical.cod.weapons

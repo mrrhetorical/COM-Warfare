@@ -22,6 +22,7 @@ public class CodGun extends CodWeapon {
 
 	/**
 	 * Creates a gun with the given parameters.
+	 *
 	 * */
 	public CodGun(String name, GunType gunT, UnlockType t, int a, ItemStack ammoI, ItemStack gunI, int levelUnlock, boolean shop) {
 
