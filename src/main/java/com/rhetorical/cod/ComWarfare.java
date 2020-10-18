@@ -15,6 +15,7 @@ import com.rhetorical.cod.progression.ProgressionManager;
 import com.rhetorical.cod.progression.RankPerks;
 import com.rhetorical.cod.sounds.SoundManager;
 import com.rhetorical.cod.streaks.KillStreakManager;
+import com.rhetorical.cod.util.ItemBridgePrefix;
 import com.rhetorical.cod.util.LegacyActionBar;
 import com.rhetorical.cod.util.LegacyTitle;
 import com.rhetorical.cod.util.UpdateChecker;
@@ -33,6 +34,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -81,7 +83,8 @@ public class ComWarfare extends JavaPlugin {
 
 	private double defaultHealth = 20D;
 
-	private ArrayList<RankPerks> serverRanks = new ArrayList<>();
+	private List<RankPerks> serverRanks = new ArrayList<>();
+	private List<ItemBridgePrefix> itemBridgePrefixes = new ArrayList<>();
 
 	private Location lobbyLoc;
 
@@ -90,6 +93,7 @@ public class ComWarfare extends JavaPlugin {
 	private boolean hasQA = false;
 	private boolean hasCS = false;
 	private boolean hasProtocol = false;
+	private boolean hasItemBridge = false;
 
 	private String reward_highestKD =  "";
 	private String reward_highestScore = "";
@@ -134,6 +138,7 @@ public class ComWarfare extends JavaPlugin {
 		hasQA = Bukkit.getServer().getPluginManager().getPlugin("QualityArmory") != null;
 		hasCS = Bukkit.getServer().getPluginManager().getPlugin("CrackShot") != null;
 		hasProtocol = Bukkit.getServer().getPluginManager().getPlugin("ProtocolLib") != null;
+		hasItemBridge = Bukkit.getServer().getPluginManager().getPlugin("ItemBridgeUtil") != null;
 
 		ComVersion.setup(true);
 
@@ -274,6 +279,12 @@ public class ComWarfare extends JavaPlugin {
 				knifeDamage = 1;
 			else if (knifeDamage > 100)
 				knifeDamage = 100;
+			ConfigurationSection prefixSection = getConfig().getConfigurationSection("itemBridge.prefix");
+			if (prefixSection != null)
+				for (String key : prefixSection.getKeys(false)) {
+					ItemBridgePrefix prefix = new ItemBridgePrefix(key);
+					getItemBridgePrefixes().add(prefix);
+				}
 		}
 
 		spawnProtectionDuration = spawnProtectionDuration >= 1 ? spawnProtectionDuration : 1;
@@ -1623,6 +1634,13 @@ public class ComWarfare extends JavaPlugin {
 	}
 
 	/**
+	 * @return Returns if the server has ItemBridge installed.
+	 * */
+	public static boolean hasItemBridge() {
+		return getInstance().hasItemBridge;
+	}
+
+	/**
 	 * @return Returns if the server has ProtocolLib installed.
 	 * */
 	public static boolean hasProtocolLib() {
@@ -1725,5 +1743,16 @@ public class ComWarfare extends JavaPlugin {
 
 	public static int getSpawnProtectionDuration() {
 		return spawnProtectionDuration;
+	}
+
+	public static List<ItemBridgePrefix> getItemBridgePrefixes() {
+		return getInstance().itemBridgePrefixes;
+	}
+
+	public ItemBridgePrefix getItemBridgePrefix(CodWeapon weapon) {
+		for (ItemBridgePrefix p : getItemBridgePrefixes())
+			if (p.getWeapons().contains(weapon.getName()))
+				return p;
+		return null;
 	}
 }
