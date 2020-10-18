@@ -17,9 +17,11 @@ import com.rhetorical.cod.sounds.SoundManager;
 import com.rhetorical.cod.streaks.KillStreakManager;
 import com.rhetorical.cod.util.LegacyActionBar;
 import com.rhetorical.cod.util.LegacyTitle;
+import com.rhetorical.cod.util.PAPI;
 import com.rhetorical.cod.util.UpdateChecker;
 import com.rhetorical.cod.weapons.*;
 import com.rhetorical.tpp.api.McTranslate;
+import me.clip.placeholderapi.PlaceholderAPI;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bstats.bukkit.Metrics;
@@ -90,6 +92,7 @@ public class ComWarfare extends JavaPlugin {
 	private boolean hasQA = false;
 	private boolean hasCS = false;
 	private boolean hasProtocol = false;
+	private static boolean hasPAPI = false;
 
 	private String reward_highestKD =  "";
 	private String reward_highestScore = "";
@@ -134,6 +137,7 @@ public class ComWarfare extends JavaPlugin {
 		hasQA = Bukkit.getServer().getPluginManager().getPlugin("QualityArmory") != null;
 		hasCS = Bukkit.getServer().getPluginManager().getPlugin("CrackShot") != null;
 		hasProtocol = Bukkit.getServer().getPluginManager().getPlugin("ProtocolLib") != null;
+		hasPAPI = Bukkit.getServer().getPluginManager().getPlugin("PlaceholderAPI") != null;
 
 		ComVersion.setup(true);
 
@@ -315,6 +319,7 @@ public class ComWarfare extends JavaPlugin {
 				GameManager.findMatch(p);
 			}
 		}
+		if (hasPAPI) new PAPI(this).register();
 	}
 
 	/**
@@ -920,7 +925,7 @@ public class ComWarfare extends JavaPlugin {
 							if (game != null) {
 								game.forceStart(true);
 							} else {
-								p.sendMessage(Lang.FORCE_START_FAIL.getMessage());
+								ComWarfare.sendMessage(p, Lang.FORCE_START_FAIL.getMessage());
 							}
 						}
 					} catch(Exception e) {
@@ -964,9 +969,9 @@ public class ComWarfare extends JavaPlugin {
 
 				boolean result = bootPlayers();
 				if (result) {
-					sender.sendMessage(ComWarfare.getPrefix() + Lang.PLAYERS_BOOTED_SUCCESS.getMessage());
+					ComWarfare.sendMessage(sender, ComWarfare.getPrefix() + Lang.PLAYERS_BOOTED_SUCCESS.getMessage());
 				} else {
-					sender.sendMessage(ComWarfare.getPrefix() + Lang.PLAYER_BOOTED_FAILURE.getMessage());
+					ComWarfare.sendMessage(sender, ComWarfare.getPrefix() + Lang.PLAYER_BOOTED_FAILURE.getMessage());
 				}
 			} else if (args[0].equalsIgnoreCase("add")) {
 
@@ -1211,7 +1216,7 @@ public class ComWarfare extends JavaPlugin {
 
 				return true;
 			} else {
-				sender.sendMessage(ComWarfare.getPrefix() + Lang.UNKNOWN_COMMAND.getMessage());
+				ComWarfare.sendMessage(sender, ComWarfare.getPrefix() + Lang.UNKNOWN_COMMAND.getMessage());
 				return true;
 			}
 		}
@@ -1504,6 +1509,9 @@ public class ComWarfare extends JavaPlugin {
 	 * Sends a message to the target without translation.
 	 * */
 	public static void sendMessage(CommandSender target, String message) {
+		if (target instanceof Player && hasPAPI) {
+			message = PlaceholderAPI.setPlaceholders((Player) target, message);
+		}
 		target.sendMessage(message);
 	}
 
@@ -1582,7 +1590,7 @@ public class ComWarfare extends JavaPlugin {
 		} catch (NoSuchMethodError|Exception e) {
 			if (e instanceof NoSuchMethodError) {
 				LegacyActionBar.sendActionBarMessage(p, message);
-//				p.sendMessage(message);
+//				ComWarfare.sendMessage(p, message);
 			} else {
 				Bukkit.getLogger().severe("Error when attempting to send action bar in COM-Warfare:");
 				e.printStackTrace();

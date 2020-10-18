@@ -160,7 +160,7 @@ class DomFlag {
 				updateFlag(-1);
 				for (Player p : game.getPlayers()) {
 					if (secondsSinceLastNeutralized >= getSecondsToNextNeutralizedMessage()) {
-						p.sendMessage(Lang.FLAG_NEUTRALIZED.getMessage().replace("{flag}", flag));
+						ComWarfare.sendMessage(p, Lang.FLAG_NEUTRALIZED.getMessage().replace("{flag}", flag));
 						secondsSinceLastNeutralized = 0;
 					}
 				}
@@ -168,7 +168,7 @@ class DomFlag {
 
 			if (team != null) {
 				for (Player p : game.getPlayers()) {
-					p.sendMessage(msg.replace("{team}", team).replace("{team-color}", "" + color).replace("{flag}", flag));
+					ComWarfare.sendMessage(p, msg.replace("{team}", team).replace("{team-color}", "" + color).replace("{flag}", flag));
 				}
 			}
 		}
