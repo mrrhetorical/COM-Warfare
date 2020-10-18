@@ -2,6 +2,7 @@ package com.rhetorical.cod.weapons;
 
 import com.rhetorical.cod.ComWarfare;
 import com.rhetorical.cod.files.GunsFile;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
@@ -12,10 +13,8 @@ public class CodGun extends CodWeapon {
 
 	private UnlockType unlockType;
 	private int ammo;
-	private final ItemStack gunItem;
-	private final ItemStack menuItem;
 	private ItemStack ammoItem;
-	
+
 	private GunType gunType;
 
 	private int levelUnlock;
@@ -37,8 +36,8 @@ public class CodGun extends CodWeapon {
 		this.ammo = a;
 		this.ammoItem = ammoI;
 
-		gunItem = setupWeaponItem(gunI);
-		menuItem = setupMenuItem(gunI);
+		weaponItem = setupWeaponItem(gunI);
+		menuItem = setupMenuItem();
 	}
 
 	/**
@@ -57,8 +56,8 @@ public class CodGun extends CodWeapon {
 		this.ammo = a;
 		this.ammoItem = ammoI;
 
-		gunItem = setupWeaponItem(gunI);
-		menuItem = setupMenuItem(gunI);
+		weaponItem = setupWeaponItem(gunI);
+		menuItem = setupMenuItem();
 	}
 
 	/**
@@ -77,11 +76,11 @@ public class CodGun extends CodWeapon {
 		this.ammoItem = ammoI;
 
 		if (!isBlank) {
-			gunItem = setupWeaponItem(gunI);
-			menuItem = setupMenuItem(gunI);
+			weaponItem = setupWeaponItem(gunI);
+			menuItem = setupMenuItem();
 		} else {
-			gunItem = gunI;
-			menuItem = gunI;
+			weaponItem = gunI;
+			menuItem = setupMenuItem();
 		}
 	}
 
@@ -95,8 +94,8 @@ public class CodGun extends CodWeapon {
 			GunsFile.getData().set("Guns." + gunType.toString() + ".default.ammoCount", ammo);
 			GunsFile.getData().set("Guns." + gunType.toString() + ".default.ammoItem", ammoItem.getType().toString());
 			GunsFile.getData().set("Guns." + gunType.toString() + ".default.ammoData", ammoItem.getDurability());
-			GunsFile.getData().set("Guns." + gunType.toString() + ".default.gunItem", gunItem.getType().toString());
-			GunsFile.getData().set("Guns." + gunType.toString() + ".default.gunData", gunItem.getDurability());
+			GunsFile.getData().set("Guns." + gunType.toString() + ".default.gunItem", weaponItem.getType().toString());
+			GunsFile.getData().set("Guns." + gunType.toString() + ".default.gunData", weaponItem.getDurability());
 			GunsFile.getData().set("Guns." + gunType.toString() + ".default.unlockType", unlockType.toString());
 			GunsFile.getData().set("Guns." + gunType.toString() + ".default.levelUnlock", levelUnlock);
 			GunsFile.getData().set("Guns." + gunType.toString() + ".default.creditUnlock", creditUnlock);
@@ -120,8 +119,8 @@ public class CodGun extends CodWeapon {
 		GunsFile.getData().set("Guns." + gunType.toString() + "." + k + ".ammoName", ammoName);
 		GunsFile.getData().set("Guns." + gunType.toString() + "." + k + ".ammoItem", ammoItem.getType().toString());
 		GunsFile.getData().set("Guns." + gunType.toString() + "." + k + ".ammoData", ammoItem.getDurability());
-		GunsFile.getData().set("Guns." + gunType.toString() + "." + k + ".gunItem", gunItem.getType().toString());
-		GunsFile.getData().set("Guns." + gunType.toString() + "." + k + ".gunData", gunItem.getDurability());
+		GunsFile.getData().set("Guns." + gunType.toString() + "." + k + ".gunItem", weaponItem.getType().toString());
+		GunsFile.getData().set("Guns." + gunType.toString() + "." + k + ".gunData", weaponItem.getDurability());
 		GunsFile.getData().set("Guns." + gunType.toString() + "." + k + ".unlockType", unlockType.toString());
 		GunsFile.getData().set("Guns." + gunType.toString() + "." + k + ".levelUnlock", levelUnlock);
 		GunsFile.getData().set("Guns." + gunType.toString() + "." + k + ".creditUnlock", creditUnlock);
@@ -143,11 +142,11 @@ public class CodGun extends CodWeapon {
 	}
 
 	public ItemStack getGunItem() {
-		return gunItem.clone();
+		return weaponItem.clone();
 	}
 
 	public ItemStack getMenuItem() {
-		return gunItem.clone();
+		return menuItem.clone();
 	}
 
 	public int getLevelUnlock() {

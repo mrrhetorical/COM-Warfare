@@ -22,18 +22,26 @@ public class UpdateChecker {
 
 	private static final String updateURL = "https://api.github.com/repos/mrrhetorical/COM-Warfare/releases/latest";
 
+	private volatile UpdateResponse result = null;
+
 	public UpdateChecker() {
-		final UpdateResponse[] result = {null};
 		new Thread(() -> {
 
-			result[0] = checkForUpdates();
+			result = checkForUpdates();
 
-			try { Thread.sleep(10000); } catch (Exception ignored) {}
+			int tries = 0;
 
-			if (result[0].newVersion) {
+			while(result == null && tries < 10) {
+				tries++;
+				try { Thread.sleep(3000); } catch (Exception ignored) {}
+			}
+
+			if (result == null) {
+				ComWarfare.getConsole().sendMessage(ComWarfare.getPrefix() + "Could not check most recent version of COM-Warfare!");
+			} else if (result.newVersion) {
 				ComWarfare.getConsole().sendMessage(ComWarfare.getPrefix() + "Your version of COM-Warfare is not up to date! Please update this plugin for the intended experience!");
 				ComWarfare.getConsole().sendMessage(ComWarfare.getPrefix() + String.format("Your version of COM-Warfare: %s", ComWarfare.getPlugin().getDescription().getVersion()));
-				ComWarfare.getConsole().sendMessage(ComWarfare.getPrefix() + String.format("Most recent of COM-Warfare: %s", result[0].versionNumber));
+				ComWarfare.getConsole().sendMessage(ComWarfare.getPrefix() + String.format("Most recent of COM-Warfare: %s", result.versionNumber));
 			} else {
 				ComWarfare.getConsole().sendMessage(ComWarfare.getPrefix() + "Your version of COM-Warfare is up to date!");
 			}
@@ -42,7 +50,7 @@ public class UpdateChecker {
 
 	public UpdateResponse checkForUpdates() {
 
-		final UpdateResponse[] res = {new UpdateResponse()};
+		final UpdateResponse res = new UpdateResponse();
 
 		new Thread(() -> {
 
@@ -52,6 +60,7 @@ public class UpdateChecker {
 				Scanner scanner = new Scanner(connection.getInputStream());
 
 				String response = scanner.useDelimiter("\\A").next();
+				scanner.close();
 				if (response != null) {
 					Gson g = new Gson();
 					JsonObject object = g.fromJson(response, JsonObject.class);
@@ -72,15 +81,19 @@ public class UpdateChecker {
 							return;
 						}
 
+						// If remote is newer than current, then the current version is old.
+						// Otherwise, if the current is newer than the remote, this is up to date as an indev version.
 						if (r > c) {
 							old = true;
+							break;
+						} else if (c > r) {
 							break;
 						}
 					}
 
 					if (old) {
-						res[0].newVersion = true;
-						res[0].versionNumber = latest;
+						res.newVersion = true;
+						res.versionNumber = latest;
 					}
 
 				}
@@ -90,7 +103,7 @@ public class UpdateChecker {
 			}
 		}).start();
 
-		return res[0];
+		return res;
 	}
 
 }
