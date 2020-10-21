@@ -135,9 +135,11 @@ public class ComWarfare extends JavaPlugin {
 			return;
 
 		instance = this;
+		
+		getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
 
 		getCommand("cod").setExecutor(new CodCommand());
-    getCommand("cod").setTabCompleter(new CodTabCompleter());
+		getCommand("cod").setTabCompleter(new CodTabCompleter());
 
 		hasQA = Bukkit.getServer().getPluginManager().getPlugin("QualityArmory") != null;
 		hasCS = Bukkit.getServer().getPluginManager().getPlugin("CrackShot") != null;
