@@ -6,6 +6,7 @@ import com.rhetorical.cod.game.CodMap;
 import com.rhetorical.cod.game.GameManager;
 import com.rhetorical.cod.game.Gamemode;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
@@ -24,6 +25,8 @@ public class CodTabCompleter implements TabCompleter {
         ArrayList<String> Args = new ArrayList<>();
         if (!label.equalsIgnoreCase("cod") && !label.equalsIgnoreCase("comr") && !label.equalsIgnoreCase("war") && !label.equalsIgnoreCase("com"))
             return Collections.emptyList();
+
+
         if (args.length == 1) {
             if (ComWarfare.hasPerm(sender, "com.help")) {
                 Args.add("help");
@@ -127,6 +130,7 @@ public class CodTabCompleter implements TabCompleter {
 
             return matchingArgs(Args, args[0]);
 
+
         } else if (args.length == 2) {
             switch (args[0]) {
                 case "help":
@@ -179,6 +183,7 @@ public class CodTabCompleter implements TabCompleter {
 
             return matchingArgs(Args, args[1]);
 
+
         } else if (args.length == 3) {
             if (args[0].equalsIgnoreCase("credits") && args[1].equalsIgnoreCase("give") || args[1].equalsIgnoreCase("set")) {
                 for (Player p : Bukkit.getOnlinePlayers())
@@ -187,8 +192,53 @@ public class CodTabCompleter implements TabCompleter {
                 for (Gamemode gm : Gamemode.values()) {
                     Args.add(gm.toString());
                 }
+            } else if (args[0].equalsIgnoreCase("set") && args[1].equalsIgnoreCase("spawn") || args[1].equalsIgnoreCase("flag")) {
+                for (CodMap map : GameManager.getAddedMaps()) {
+                    Args.add(map.getName());
+                }
+            } else if (args[0].equalsIgnoreCase("createGun")) {
+                Args.add("Primary");
+                Args.add("Secondary");
+            } else if (args[0].equalsIgnoreCase("createWeapons") || args[0].equalsIgnoreCase("createGrenade")) {
+                Args.add("Lethal");
+                Args.add("Tactical");
             }
             return matchingArgs(Args, args[2]);
+
+
+        } else if (args.length == 4) {
+            if (args[0].equalsIgnoreCase("set") && args[1].equalsIgnoreCase("spawn")) {
+                Args.add("red");
+                Args.add("blue");
+            } else if (args[0].equalsIgnoreCase("set") && args[1].equalsIgnoreCase("flag")) {
+                Args.add("red");
+                Args.add("blue");
+                Args.add("hardpoint");
+                Args.add("a");
+                Args.add("b");
+                Args.add("c");
+            } else if (args[0].equalsIgnoreCase("createGun") || args[0].equalsIgnoreCase("createWeapons") || args[0].equalsIgnoreCase("createGrenade")) {
+                Args.add("level");
+                Args.add("credits");
+                Args.add("both");
+            }
+            return matchingArgs(Args, args[3]);
+
+
+        } else if (args.length == 5) {
+            if (args[0].equalsIgnoreCase("createGun") || args[0].equalsIgnoreCase("createWeapons") || args[0].equalsIgnoreCase("createGrenade")) {
+                for (Material material : Material.values())
+                    Args.add(material.name());
+            }
+
+
+        } else if (args.length == 6 || args.length == 7) {
+            if (args[0].equalsIgnoreCase("createGun")) {
+                for (Material material : Material.values())
+                    Args.add(material.name());
+
+            }
+            return matchingArgs(Args, args[5]);
         }
         return Args;
     }
