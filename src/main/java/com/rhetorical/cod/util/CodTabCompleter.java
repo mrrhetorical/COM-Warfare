@@ -28,7 +28,7 @@ public class CodTabCompleter implements TabCompleter {
 
 
         if (args.length == 1) {
-    if (ComWarfare.hasPerm(sender, "com.help", true)) {
+            if (ComWarfare.hasPerm(sender, "com.help", true)) {
                 Args.add("help");
             }
 
@@ -230,7 +230,7 @@ public class CodTabCompleter implements TabCompleter {
                 for (Material material : Material.values())
                     Args.add(material.name());
             }
-
+            return matchingArgs(Args, args[4]);
 
         } else if (args.length == 6 || args.length == 7) {
             if (args[0].equalsIgnoreCase("createGun")) {
@@ -238,7 +238,7 @@ public class CodTabCompleter implements TabCompleter {
                     Args.add(material.name());
 
             }
-            return matchingArgs(Args, args[5]);
+            return matchingArgs(Args, args[args.length - 1]);
         }
         return Args;
     }
