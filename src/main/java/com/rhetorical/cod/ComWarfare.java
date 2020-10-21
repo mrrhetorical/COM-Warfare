@@ -388,7 +388,7 @@ public class ComWarfare extends JavaPlugin {
 	 * @return Returns true if the given command sender has the permission node, the permission node "com.*", or if they're a server operator and aren't in game.
 	 * */
 	public static boolean hasPerm(CommandSender p, String s) {
-		return hasPerm(p, s, true);
+		return hasPerm(p, s, false);
 	}
 
 	/**
