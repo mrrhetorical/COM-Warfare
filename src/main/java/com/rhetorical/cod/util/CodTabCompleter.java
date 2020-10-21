@@ -28,99 +28,99 @@ public class CodTabCompleter implements TabCompleter {
 
 
         if (args.length == 1) {
-            if (ComWarfare.hasPerm(sender, "com.help")) {
+    if (ComWarfare.hasPerm(sender, "com.help", true)) {
                 Args.add("help");
             }
 
-            if (ComWarfare.hasPerm(sender, "com.join") && sender instanceof Player) {
+            if (ComWarfare.hasPerm(sender, "com.join", true) && sender instanceof Player) {
                 Args.add("menu");
                 Args.add("join");
                 Args.add("browser");
                 Args.add("balance");
             }
 
-            if (ComWarfare.hasPerm(sender, "com.leave") && sender instanceof Player) {
+            if (ComWarfare.hasPerm(sender, "com.leave", true) && sender instanceof Player) {
                 Args.add("leave");
             }
 
-            if (ComWarfare.hasPerm(sender, "com.lobby") && sender instanceof Player) {
+            if (ComWarfare.hasPerm(sender, "com.lobby", true) && sender instanceof Player) {
                 Args.add("lobby");
             }
 
-            if (ComWarfare.hasPerm(sender, "com.openShop") && sender instanceof Player) {
+            if (ComWarfare.hasPerm(sender, "com.openShop", true) && sender instanceof Player) {
                 Args.add("shop");
             }
 
-            if (ComWarfare.hasPerm(sender, "com.selectClass") && sender instanceof Player) {
+            if (ComWarfare.hasPerm(sender, "com.selectClass", true) && sender instanceof Player) {
                 Args.add("class");
             }
 
-            if (ComWarfare.hasPerm(sender, "com.map.list")) {
+            if (ComWarfare.hasPerm(sender, "com.map.list", true)) {
                 Args.add("listMaps");
             }
 
-            if (ComWarfare.hasPerm(sender, "com.forceStart") && sender instanceof Player) {
+            if (ComWarfare.hasPerm(sender, "com.forceStart", true) && sender instanceof Player) {
                 Args.add("start");
             }
 
-            if (ComWarfare.hasPerm(sender, "com.bootAll")) {
+            if (ComWarfare.hasPerm(sender, "com.bootAll", true)) {
                 Args.add("boot");
             }
 
-            if (ComWarfare.hasPerm(sender, "com.changeMap") && sender instanceof Player) {
+            if (ComWarfare.hasPerm(sender, "com.changeMap", true) && sender instanceof Player) {
                 Args.add("changeMap");
             }
 
-            if (ComWarfare.hasPerm(sender, "com.modifyLevel")) {
+            if (ComWarfare.hasPerm(sender, "com.modifyLevel", true)) {
                 Args.add("setLevel");
             }
 
-            if (ComWarfare.hasPerm(sender, "com.credits.give")) {
+            if (ComWarfare.hasPerm(sender, "com.credits.give", true)) {
                 Args.add("credits");
             }
 
-            if (ComWarfare.hasPerm(sender, "com.createGun")) {
+            if (ComWarfare.hasPerm(sender, "com.createGun", true)) {
                 Args.add("createGun");
             }
 
-            if (ComWarfare.hasPerm(sender, "com.createWeapon")) {
+            if (ComWarfare.hasPerm(sender, "com.createWeapon", true)) {
                 Args.add("createWeapon");
                 Args.add("createGrenade");
             }
 
-            if (ComWarfare.hasPerm(sender, "com.map.create")) {
+            if (ComWarfare.hasPerm(sender, "com.map.create", true)) {
                 Args.add("createMap");
             }
 
-            if (ComWarfare.hasPerm(sender, "com.map.remove")) {
+            if (ComWarfare.hasPerm(sender, "com.map.remove", true)) {
                 Args.add("removeMap");
             }
 
-            if (ComWarfare.hasPerm(sender, "com.map.modify") && sender instanceof Player) {
+            if (ComWarfare.hasPerm(sender, "com.map.modify", true) && sender instanceof Player) {
                 Args.add("set");
             }
 
-            if (ComWarfare.hasPerm(sender, "com.map.modify")) {
+            if (ComWarfare.hasPerm(sender, "com.map.modify", true)) {
                 Args.add("reload");
             }
 
-            if (ComWarfare.hasPerm(sender, "com.add")) {
+            if (ComWarfare.hasPerm(sender, "com.add", true)) {
                 Args.add("add");
             }
 
-            if (ComWarfare.hasPerm(sender, "com.blacklist")) {
+            if (ComWarfare.hasPerm(sender, "com.blacklist", true)) {
                 Args.add("blacklist");
             }
 
-            if (ComWarfare.hasPerm(sender, "com.version")) {
+            if (ComWarfare.hasPerm(sender, "com.version", true)) {
                 Args.add("version");
             }
 
-            if (ComWarfare.hasPerm(sender, "com.removeSpawns")) {
+            if (ComWarfare.hasPerm(sender, "com.removeSpawns", true)) {
                 Args.add("removeSpawns");
             }
 
-            if (ComWarfare.hasPerm(sender, "com.changeMode") && sender instanceof Player) {
+            if (ComWarfare.hasPerm(sender, "com.changeMode", true) && sender instanceof Player) {
                 Args.add("changeMode");
             }
 
@@ -146,14 +146,14 @@ public class CodTabCompleter implements TabCompleter {
                     break;
 
                 case "credits":
-                    if (ComWarfare.hasPerm(sender, "com.credits.give"))
+                    if (ComWarfare.hasPerm(sender, "com.credits.give", true))
                         Args.add("give");
-                    if (ComWarfare.hasPerm(sender, "com.credits.set"))
+                    if (ComWarfare.hasPerm(sender, "com.credits.set", true))
                         Args.add("set");
                     break;
 
                 case "set":
-                    if (ComWarfare.hasPerm(sender, "com.map.modify")) {
+                    if (ComWarfare.hasPerm(sender, "com.map.modify", true)) {
                         Args.add("flag");
                         Args.add("lobby");
                         Args.add("spawn");
