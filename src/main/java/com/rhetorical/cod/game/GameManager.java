@@ -182,6 +182,11 @@ public class GameManager {
 			ComWarfare.sendMessage(p, Lang.COULD_NOT_FIND_MATCH.getMessage(), ComWarfare.getLang());
 			ComWarfare.sendMessage(p, Lang.CREATING_MATCH.getMessage(), ComWarfare.getLang());
 
+			if (map != null && isInUse(map)) {
+				ComWarfare.sendMessage(p, Lang.MAP_IN_USE.getMessage());
+				return false;
+			}
+
 			map = map != null ? map : pickRandomMap();
 			if (map == null) {
 				ComWarfare.sendMessage(p, Lang.COULD_NOT_CREATE_MATCH_BECAUSE_NO_MAPS.getMessage(), ComWarfare.getLang());
@@ -305,6 +310,10 @@ public class GameManager {
 		}
 		
 		return null;
+	}
+
+	public static boolean isInUse(CodMap map) {
+		return usedMaps.contains(map);
 	}
 
 	public static CodMap pickRandomMap() {
