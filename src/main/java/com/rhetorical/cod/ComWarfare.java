@@ -81,6 +81,8 @@ public class ComWarfare extends JavaPlugin {
 	private boolean serverMode = false;
 	private boolean kickAfterMatch = false;
 
+	private boolean mapVoting = true;
+
 
 	private double defaultHealth = 20D;
 
@@ -278,6 +280,7 @@ public class ComWarfare extends JavaPlugin {
 			maxPlayers = getPlugin().getConfig().getInt("players.max", 12);
 			serverMode = getPlugin().getConfig().getBoolean("serverMode", false);
 			kickAfterMatch = getPlugin().getConfig().getBoolean("autoKickOnMatchEnd", false);
+			mapVoting = getPlugin().getConfig().getBoolean("mapVoting", true);
 			defaultHealth = getPlugin().getConfig().getDouble("defaultHealth", 20d);
 			translate_api_key = getPlugin().getConfig().getString("translate.api_key", "none");
 			reward_highestKD = getPlugin().getConfig().getString("Rewards.Highest_KD", "");
@@ -901,6 +904,10 @@ public class ComWarfare extends JavaPlugin {
 
 	public static boolean isKickAfterMatch() {
 		return getInstance().kickAfterMatch;
+	}
+
+	public static boolean isMapVoting() {
+		return getInstance().mapVoting;
 	}
 
 	public static boolean isDebug() {

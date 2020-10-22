@@ -29,6 +29,9 @@ players:
 #Auto kick on match end: Should matches kick players out of the lobby when a game ends or not?
 autoKickOnMatchEnd: false
 
+#Map voting: Should map voting be allowed?
+mapVoting: true
+
 #Spawn Protection: Should the player be temporarily invulnerable on spawning?
 spawnProtection:
   enabled: true

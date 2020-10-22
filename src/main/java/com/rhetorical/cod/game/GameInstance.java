@@ -1031,8 +1031,7 @@ public class GameInstance implements Listener {
 		setState(GameState.STARTING);
 
 		forceStarted = false;
-		canVote = true;
-
+		canVote = ComWarfare.isMapVoting();
 
 		try {
 			scoreBar.getClass().getMethod("removeAll").invoke(scoreBar);
@@ -1052,13 +1051,15 @@ public class GameInstance implements Listener {
 
 		GameInstance game = this;
 
-		setupNextMaps();
+		if (ComWarfare.isMapVoting())
+			setupNextMaps();
 
 		for (Player p : players) {
 			setTeamArmor(p);
 		}
 
-//		changeMap(nextMaps[0], nextModes[0]);
+		if (ComWarfare.isMapVoting())
+			changeMap(nextMaps[0], nextModes[0]);
 
 
 		BukkitRunnable br = new BukkitRunnable() {
