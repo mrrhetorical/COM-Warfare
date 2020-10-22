@@ -936,7 +936,7 @@ public class GameInstance implements Listener {
 					return;
 
 				if (t <= 0) {
-					if (!getPlayers().isEmpty()) {
+					if (!getPlayers().isEmpty() && !ComWarfare.isKickAfterMatch()) {
 						game.reset();
 						cancel();
 						getRunnables().remove(this);
