@@ -16,12 +16,7 @@ import com.rhetorical.cod.progression.ProgressionManager;
 import com.rhetorical.cod.progression.RankPerks;
 import com.rhetorical.cod.sounds.SoundManager;
 import com.rhetorical.cod.streaks.KillStreakManager;
-import com.rhetorical.cod.util.ItemBridgePrefix;
-import com.rhetorical.cod.util.LegacyActionBar;
-import com.rhetorical.cod.util.LegacyTitle;
-import com.rhetorical.cod.util.CodTabCompleter;
-import com.rhetorical.cod.util.PAPI;
-import com.rhetorical.cod.util.UpdateChecker;
+import com.rhetorical.cod.util.*;
 import com.rhetorical.cod.weapons.*;
 import com.rhetorical.tpp.api.McTranslate;
 import me.clip.placeholderapi.PlaceholderAPI;
@@ -298,6 +293,23 @@ public class ComWarfare extends JavaPlugin {
 				knifeDamage = 1;
 			else if (knifeDamage > 100)
 				knifeDamage = 100;
+
+			InventoryPositions.primary = getPlugin().getConfig().getInt("inventory.inGame.primary", 1);
+			InventoryPositions.secondary = getPlugin().getConfig().getInt("inventory.inGame.secondary", 2);
+			InventoryPositions.knife = getPlugin().getConfig().getInt("inventory.inGame.knife", 0);
+			InventoryPositions.lethal = getPlugin().getConfig().getInt("inventory.inGame.lethal", 3);
+			InventoryPositions.tactical = getPlugin().getConfig().getInt("inventory.inGame.tactical", 4);
+			InventoryPositions.primaryAmmo = getPlugin().getConfig().getInt("inventory.inGame.primaryAmmo", 28);
+			InventoryPositions.secondaryAmmo = getPlugin().getConfig().getInt("inventory.inGame.secondaryAmmo", 29);
+			InventoryPositions.compass = getPlugin().getConfig().getInt("inventory.inGame.compass", 8);
+			InventoryPositions.selectClass = getPlugin().getConfig().getInt("inventory.inGame.selectClass", 32);
+			InventoryPositions.leaveGame = getPlugin().getConfig().getInt("inventory.inGame.leaveGame", 35);
+			InventoryPositions.gunGameAmmo = getPlugin().getConfig().getInt("inventory.inGame.gunGameAmmo", 8);
+
+			InventoryPositions.menu = getPlugin().getConfig().getInt("inventory.lobby.menu", 0);
+			InventoryPositions.leaveLobby = getPlugin().getConfig().getInt("inventory.lobby.leaveLobby", 8);
+
+
 			if (getPlugin().getConfig().getBoolean("itemBridge.enabled", false)) {
 				ConfigurationSection prefixSection = getConfig().getConfigurationSection("itemBridge.prefix");
 				if (prefixSection != null)

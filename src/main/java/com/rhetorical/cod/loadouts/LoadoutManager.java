@@ -10,6 +10,7 @@ import com.rhetorical.cod.perks.Perk;
 import com.rhetorical.cod.perks.PerkManager;
 import com.rhetorical.cod.perks.PerkSlot;
 import com.rhetorical.cod.progression.ProgressionManager;
+import com.rhetorical.cod.util.InventoryPositions;
 import com.rhetorical.cod.weapons.*;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -147,39 +148,46 @@ public class LoadoutManager {
 		CodWeapon tactical = loadout.getTactical();
 
 		// Knife
-		p.getInventory().setItem(0, knife);
+		if (InventoryPositions.isValid(InventoryPositions.knife))
+			p.getInventory().setItem(InventoryPositions.knife, knife);
 
 		// Primary & Ammo
 
 		if (!primary.equals(LoadoutManager.getInstance().blankPrimary)) {
 			ItemStack primaryGun = CrackShotGun.updateItem(primary.getName(), primary.getGunItem(), p);
-			p.getInventory().setItem(1, primaryGun);
+			if (InventoryPositions.isValid(InventoryPositions.primary))
+				p.getInventory().setItem(InventoryPositions.primary, primaryGun);
 
 			ItemStack primaryAmmo = primary.getAmmo();
 			primaryAmmo.setAmount(primary.getAmmoCount());
-			p.getInventory().setItem(28, primaryAmmo);
+			if (InventoryPositions.isValid(InventoryPositions.primaryAmmo))
+				p.getInventory().setItem(InventoryPositions.primaryAmmo, primaryAmmo);
 		}
 
 		// Secondary & Ammo
 
 		if (!secondary.equals(LoadoutManager.getInstance().blankSecondary)) {
 			ItemStack secondaryGun = CrackShotGun.updateItem(secondary.getName(), secondary.getGunItem(), p);
-			p.getInventory().setItem(2, secondaryGun);
+			if (InventoryPositions.isValid(InventoryPositions.secondary))
+				p.getInventory().setItem(InventoryPositions.secondary, secondaryGun);
 			if (!loadout.hasPerk(Perk.ONE_MAN_ARMY)) {
 				ItemStack secondaryAmmo = secondary.getAmmo();
 				secondaryAmmo.setAmount(secondary.getAmmoCount());
-				p.getInventory().setItem(29, secondaryAmmo);
+				if (InventoryPositions.isValid(InventoryPositions.secondaryAmmo))
+					p.getInventory().setItem(InventoryPositions.secondaryAmmo, secondaryAmmo);
 			}
 		}
 
 		// Grenades
 
 		if (!lethal.equals(LoadoutManager.getInstance().blankLethal)) {
-			p.getInventory().setItem(3, lethal.getWeaponItem());
+			if (InventoryPositions.isValid(InventoryPositions.lethal))
+				p.getInventory().setItem(InventoryPositions.lethal, lethal.getWeaponItem());
 		}
 
 		if (!tactical.equals(LoadoutManager.getInstance().blankTactical)) {
-			p.getInventory().setItem(4, tactical.getWeaponItem());
+			if (InventoryPositions.isValid(InventoryPositions.tactical))
+				p.getInventory().setItem(InventoryPositions.tactical, tactical.getWeaponItem());
 		}
 	}
 
