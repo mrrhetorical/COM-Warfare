@@ -138,6 +138,11 @@ public class GameManager {
 	 * @return Returns if the player was able to join a match.
 	 * */
 	public static boolean findMatch(Player p) {
+		return findMatch(p, null);
+	}
+
+
+	public static boolean findMatch(Player p, CodMap map) {
 
 		loadPlayerData(p);
 		
@@ -161,11 +166,11 @@ public class GameManager {
 
 		ComWarfare.sendMessage(p, Lang.SEARCHING_FOR_MATCH.getMessage(), ComWarfare.getLang());
 		for (GameInstance i : runningGames) {
-			if (i.getPlayers().size() < 12) {
+			if (i.getPlayers().size() < ComWarfare.getMaxPlayers()) {
 				if (i.getPlayers().size() == 0) {
 					removeInstance(i);
 					continue;
-				} else {
+				} else if (map == null || i.getMap().getName().equals(map.getName())) {
 					possibleMatches.put(i.getPlayers().size(), i);
 				}
 				break;
@@ -177,7 +182,16 @@ public class GameManager {
 			ComWarfare.sendMessage(p, Lang.COULD_NOT_FIND_MATCH.getMessage(), ComWarfare.getLang());
 			ComWarfare.sendMessage(p, Lang.CREATING_MATCH.getMessage(), ComWarfare.getLang());
 
-			CodMap map = pickRandomMap();
+			if (map != null && isInUse(map)) {
+				ComWarfare.sendMessage(p, Lang.MAP_IN_USE.getMessage());
+				return false;
+			}
+
+			if (map == null)
+				map = pickRandomMap();
+			else
+				usedMaps.add(map);
+
 			if (map == null) {
 				ComWarfare.sendMessage(p, Lang.COULD_NOT_CREATE_MATCH_BECAUSE_NO_MAPS.getMessage(), ComWarfare.getLang());
 				return false;
@@ -267,7 +281,7 @@ public class GameManager {
 				out.writeUTF(ComWarfare.getInstance().getLobbyServer());
 				p.sendPluginMessage(ComWarfare.getInstance(), "BungeeCord", out.toByteArray());
 			} catch (Exception e) {
-				p.kickPlayer("");
+				p.kickPlayer("Could not connect to the fallback server!");
 			}
 		}
 	}
@@ -300,6 +314,10 @@ public class GameManager {
 		}
 		
 		return null;
+	}
+
+	public static boolean isInUse(CodMap map) {
+		return usedMaps.contains(map);
 	}
 
 	public static CodMap pickRandomMap() {
@@ -341,9 +359,8 @@ public class GameManager {
 	}
 
 	public static void removeInstance(GameInstance i) {
-
-		for (Player p : i.getPlayers()) {
-			ComWarfare.sendMessage(p, Lang.CURRENT_GAME_REMOVED.getMessage(), ComWarfare.getLang());
+		for (Player p : new ArrayList<>(i.getPlayers())) {
+			leaveMatch(p);
 		}
 
 		i.destroy();

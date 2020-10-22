@@ -16,12 +16,7 @@ import com.rhetorical.cod.progression.ProgressionManager;
 import com.rhetorical.cod.progression.RankPerks;
 import com.rhetorical.cod.sounds.SoundManager;
 import com.rhetorical.cod.streaks.KillStreakManager;
-import com.rhetorical.cod.util.ItemBridgePrefix;
-import com.rhetorical.cod.util.LegacyActionBar;
-import com.rhetorical.cod.util.LegacyTitle;
-import com.rhetorical.cod.util.CodTabCompleter;
-import com.rhetorical.cod.util.PAPI;
-import com.rhetorical.cod.util.UpdateChecker;
+import com.rhetorical.cod.util.*;
 import com.rhetorical.cod.weapons.*;
 import com.rhetorical.tpp.api.McTranslate;
 import me.clip.placeholderapi.PlaceholderAPI;
@@ -79,6 +74,10 @@ public class ComWarfare extends JavaPlugin {
 	private int maxPlayers = 12;
 
 	private boolean serverMode = false;
+	private boolean kickAfterMatch = false;
+
+	private boolean mapVoting = true;
+
 
 	private double defaultHealth = 20D;
 
@@ -94,6 +93,7 @@ public class ComWarfare extends JavaPlugin {
 	private boolean hasProtocol = false;
 	private static boolean hasPAPI = false;
 	private static boolean hasItemBridge = false;
+	private static boolean hasTranslate = false;
 
 	private String reward_highestKD =  "";
 	private String reward_highestScore = "";
@@ -146,6 +146,7 @@ public class ComWarfare extends JavaPlugin {
 		hasProtocol = Bukkit.getServer().getPluginManager().getPlugin("ProtocolLib") != null;
 		hasPAPI = Bukkit.getServer().getPluginManager().getPlugin("PlaceholderAPI") != null;
 		hasItemBridge = Bukkit.getServer().getPluginManager().getPlugin("ItemBridge") != null;
+		hasTranslate = Bukkit.getServer().getPluginManager().getPlugin("McTranslate++") != null;
 
 		ComVersion.setup(true);
 
@@ -204,22 +205,24 @@ public class ComWarfare extends JavaPlugin {
 
 
 		//check if McTranslate++ is installed and language is set
-		try {
-			if (getPlugin().getConfig().getString("lang").equalsIgnoreCase("none")) {
-				lang = com.rhetorical.tpp.McLang.EN;
-			} else {
-				try {
-					lang = com.rhetorical.tpp.McLang.valueOf(getPlugin().getConfig().getString("lang"));
-					connectToTranslationService();
-				} catch (Exception e) {
+		if (hasTranslate) {
+			try {
+				if (getPlugin().getConfig().getString("lang", "none").equalsIgnoreCase("none")) {
 					lang = com.rhetorical.tpp.McLang.EN;
-					cs.sendMessage(ComWarfare.getPrefix() + ChatColor.RED + "Could not get the language from the config! Make sure you're using the right two letter abbreviation!");
-				}
+				} else {
+					try {
+						lang = com.rhetorical.tpp.McLang.valueOf(getPlugin().getConfig().getString("lang"));
+						connectToTranslationService();
+					} catch (Exception e) {
+						lang = com.rhetorical.tpp.McLang.EN;
+						cs.sendMessage(ComWarfare.getPrefix() + ChatColor.RED + "Could not get the language from the config! Make sure you're using the right two letter abbreviation!");
+					}
 
-				if (lang != com.rhetorical.tpp.McLang.EN)
-					lang = com.rhetorical.tpp.McLang.EN;
-			}
-		} catch(Exception|Error ignored) {}
+					if (lang != com.rhetorical.tpp.McLang.EN)
+						lang = com.rhetorical.tpp.McLang.EN;
+				}
+			} catch (Exception | Error ignored) {}
+		}
 
 		String version = getPlugin().getDescription().getVersion();
 
@@ -269,27 +272,46 @@ public class ComWarfare extends JavaPlugin {
 		lobbyLoc = (Location) getPlugin().getConfig().get("com.lobby");
 
 		if (ComVersion.getPurchased()) {
-			header = getPlugin().getConfig().getString("Scoreboard.Header");
-			minPlayers = getPlugin().getConfig().getInt("players.min");
-			maxPlayers = getPlugin().getConfig().getInt("players.max");
-			serverMode = getPlugin().getConfig().getBoolean("serverMode");
-			defaultHealth = getPlugin().getConfig().getDouble("defaultHealth");
-			translate_api_key = getPlugin().getConfig().getString("translate.api_key");
-			reward_highestKD = getPlugin().getConfig().getString("Rewards.Highest_KD");
-			reward_highestScore = getPlugin().getConfig().getString("Rewards.Highest_Score");
-			reward_maxLevel = getPlugin().getConfig().getString("Rewards.Max_Level");
-			reward_maxPrestige = getPlugin().getConfig().getString("Rewards.Max_Prestige");
-			reward_maxPrestigeMaxLevel = getPlugin().getConfig().getString("Rewards.Max_Prestige_Max_Level");
-			knifeDamage = getPlugin().getConfig().getDouble("knifeDamage");
-			lobbyServer = getPlugin().getConfig().getString("lobbyServer");
-			spawnProtection = getPlugin().getConfig().getBoolean("spawnProtection.enabled");
-			spawnProtectionDuration = getPlugin().getConfig().getInt("spawnProtection.duration");
-			killFeedShowAll = getPlugin().getConfig().getBoolean("killfeed.showForAll");
-			killFeedUseBossBar = getPlugin().getConfig().getBoolean("killfeed.useBossBar");
+			header = getPlugin().getConfig().getString("Scoreboard.Header", "[COM-Warfare]");
+			minPlayers = getPlugin().getConfig().getInt("players.min", 2);
+			maxPlayers = getPlugin().getConfig().getInt("players.max", 12);
+			serverMode = getPlugin().getConfig().getBoolean("serverMode", false);
+			kickAfterMatch = getPlugin().getConfig().getBoolean("autoKickOnMatchEnd", false);
+			mapVoting = getPlugin().getConfig().getBoolean("mapVoting", true);
+			defaultHealth = getPlugin().getConfig().getDouble("defaultHealth", 20d);
+			translate_api_key = getPlugin().getConfig().getString("translate.api_key", "none");
+			reward_highestKD = getPlugin().getConfig().getString("Rewards.Highest_KD", "");
+			reward_highestScore = getPlugin().getConfig().getString("Rewards.Highest_Score", "");
+			reward_maxLevel = getPlugin().getConfig().getString("Rewards.Max_Level", "");
+			reward_maxPrestige = getPlugin().getConfig().getString("Rewards.Max_Prestige", "");
+			reward_maxPrestigeMaxLevel = getPlugin().getConfig().getString("Rewards.Max_Prestige_Max_Level", "");
+			knifeDamage = getPlugin().getConfig().getDouble("knifeDamage", 100d);
+			lobbyServer = getPlugin().getConfig().getString("lobbyServer", "none");
+			spawnProtection = getPlugin().getConfig().getBoolean("spawnProtection.enabled",  false);
+			spawnProtectionDuration = getPlugin().getConfig().getInt("spawnProtection.duration", 3);
+			killFeedShowAll = getPlugin().getConfig().getBoolean("killfeed.showForAll", true);
+			killFeedUseBossBar = getPlugin().getConfig().getBoolean("killfeed.useBossBar", true);
 			if (knifeDamage < 1)
 				knifeDamage = 1;
 			else if (knifeDamage > 100)
 				knifeDamage = 100;
+
+			InventoryPositions.primary = getPlugin().getConfig().getInt("inventory.inGame.primary", 1);
+			InventoryPositions.secondary = getPlugin().getConfig().getInt("inventory.inGame.secondary", 2);
+			InventoryPositions.knife = getPlugin().getConfig().getInt("inventory.inGame.knife", 0);
+			InventoryPositions.lethal = getPlugin().getConfig().getInt("inventory.inGame.lethal", 3);
+			InventoryPositions.tactical = getPlugin().getConfig().getInt("inventory.inGame.tactical", 4);
+			InventoryPositions.primaryAmmo = getPlugin().getConfig().getInt("inventory.inGame.primaryAmmo", 28);
+			InventoryPositions.secondaryAmmo = getPlugin().getConfig().getInt("inventory.inGame.secondaryAmmo", 29);
+			InventoryPositions.compass = getPlugin().getConfig().getInt("inventory.inGame.compass", 8);
+			InventoryPositions.selectClass = getPlugin().getConfig().getInt("inventory.inGame.selectClass", 32);
+			InventoryPositions.leaveGame = getPlugin().getConfig().getInt("inventory.inGame.leaveGame", 35);
+			InventoryPositions.gunGameAmmo = getPlugin().getConfig().getInt("inventory.inGame.gunGameAmmo", 8);
+
+			InventoryPositions.menu = getPlugin().getConfig().getInt("inventory.lobby.menu", 0);
+			InventoryPositions.leaveLobby = getPlugin().getConfig().getInt("inventory.lobby.leaveLobby", 8);
+
+
 			if (getPlugin().getConfig().getBoolean("itemBridge.enabled", false)) {
 				ConfigurationSection prefixSection = getConfig().getConfigurationSection("itemBridge.prefix");
 				if (prefixSection != null)
@@ -302,7 +324,7 @@ public class ComWarfare extends JavaPlugin {
 
 		spawnProtectionDuration = spawnProtectionDuration >= 1 ? spawnProtectionDuration : 1;
 
-		debug = getPlugin().getConfig().getBoolean("debug");
+		debug = getPlugin().getConfig().getBoolean("debug", false);
 
 
 		RankPerks defaultRank = new RankPerks("default", 1, 100, 0);
@@ -313,9 +335,9 @@ public class ComWarfare extends JavaPlugin {
 				Set<String> keySet = section.getKeys(false);
 
 				for (String key : keySet) {
-					int killCredits = getPlugin().getConfig().getInt("RankTiers." + key + ".kill.credits");
-					double killExperience = getPlugin().getConfig().getDouble("RankTiers." + key + ".kill.xp");
-					int levelCredits = getPlugin().getConfig().getInt("RankTiers." + key + ".levelCredits");
+					int killCredits = getPlugin().getConfig().getInt("RankTiers." + key + ".kill.credits", 0);
+					double killExperience = getPlugin().getConfig().getDouble("RankTiers." + key + ".kill.xp", 0);
+					int levelCredits = getPlugin().getConfig().getInt("RankTiers." + key + ".levelCredits", 0);
 
 					if (!key.equalsIgnoreCase("default")) {
 						RankPerks rank = new RankPerks(key, killCredits, killExperience, levelCredits);
@@ -360,8 +382,8 @@ public class ComWarfare extends JavaPlugin {
 	}
 
 	/**
-	 * @param s = The permission node to check
-	 * @param inGame = Whether not the command can be used in game
+	 * @param s The permission node to check
+	 * @param inGame Whether not the command can be used in game
 	 * @return Returns true if the given command sender has the permission node, the permission node "com.*", or if they're a server operator.
 	 * */
 	public static boolean hasPerm(CommandSender p, String s, boolean inGame) {
@@ -421,17 +443,7 @@ public class ComWarfare extends JavaPlugin {
 		}
 
 		for (GameInstance i : runningGames) {
-			if (i != null) {
-				Player[] pls = new Player[i.getPlayers().size()];
-				for (int k = 0; k < pls.length; k ++) {
-					pls[k] = i.getPlayers().get(k);
-				}
-
-				for (Player p : pls) {
-					i.removePlayer(p);
-					ComWarfare.sendMessage(p, ComWarfare.getPrefix() + Lang.PLAYER_LEAVE_GAME.getMessage(), ComWarfare.getLang());
-				}
-			}
+			GameManager.removeInstance(i);
 		}
 		return true;
 	}
@@ -902,6 +914,14 @@ public class ComWarfare extends JavaPlugin {
 
 	public static boolean isServerMode() {
 		return getInstance().serverMode;
+	}
+
+	public static boolean isKickAfterMatch() {
+		return getInstance().kickAfterMatch;
+	}
+
+	public static boolean isMapVoting() {
+		return getInstance().mapVoting;
 	}
 
 	public static boolean isDebug() {

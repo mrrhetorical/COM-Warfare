@@ -18,6 +18,7 @@ import com.rhetorical.cod.progression.StatHandler;
 import com.rhetorical.cod.sounds.events.*;
 import com.rhetorical.cod.streaks.KillStreak;
 import com.rhetorical.cod.streaks.KillStreakManager;
+import com.rhetorical.cod.util.InventoryPositions;
 import com.rhetorical.cod.weapons.CodGun;
 import com.rhetorical.cod.weapons.CodWeapon;
 import com.rhetorical.cod.weapons.CrackShotGun;
@@ -137,6 +138,7 @@ public class GameInstance implements Listener {
 
 		players = pls;
 		currentMap = map;
+		currentMap.setGamemode(currentMap.getRandomGameMode());
 		ComWarfare.getPlugin().reloadConfig();
 
 		updateTimeLeft();
@@ -259,8 +261,10 @@ public class GameInstance implements Listener {
 			setTeamArmor(p);
 
 			InventoryManager inv = InventoryManager.getInstance();
-			p.getInventory().setItem(0, inv.codItem);
-			p.getInventory().setItem(8, inv.leaveItem);
+			if (InventoryPositions.isValid(InventoryPositions.menu))
+				p.getInventory().setItem(InventoryPositions.menu, inv.codItem);
+			if (InventoryPositions.isValid(InventoryPositions.leaveLobby))
+				p.getInventory().setItem(InventoryPositions.leaveLobby, inv.leaveItem);
 
 			try {
 				scoreBar.getClass().getMethod("setTitle", String.class).invoke(scoreBar, ChatColor.GOLD + getMap().getName() + " " + ChatColor.GRAY + "«" + ChatColor.WHITE + getFancyTime(lobbyTime) + ChatColor.RESET + "" + ChatColor.GRAY + "» " + ChatColor.GOLD + getMap().getGamemode().toString());
@@ -425,8 +429,10 @@ public class GameInstance implements Listener {
 			}
 		} else {
 			setTeamArmor(p);
-			p.getInventory().setItem(0, InventoryManager.getInstance().codItem);
-			p.getInventory().setItem(8, InventoryManager.getInstance().leaveItem);
+			if (InventoryPositions.isValid(InventoryPositions.menu))
+				p.getInventory().setItem(InventoryPositions.menu, InventoryManager.getInstance().codItem);
+			if (InventoryPositions.isValid(InventoryPositions.leaveLobby))
+				p.getInventory().setItem(InventoryPositions.leaveLobby, InventoryManager.getInstance().leaveItem);
 
 			getScoreboardManager().setupLobbyBoard(p, getFancyTime(lobbyTime));
 		}
@@ -649,23 +655,30 @@ public class GameInstance implements Listener {
 			secondaryAmmo.setAmount(secondary.getAmmoCount());
 
 
-			p.getInventory().setItem(0, LoadoutManager.getInstance().knife);
+			if (InventoryPositions.isValid(InventoryPositions.knife))
+				p.getInventory().setItem(InventoryPositions.knife, LoadoutManager.getInstance().knife);
 			if (!primary.equals(LoadoutManager.getInstance().blankPrimary)) {
-				p.getInventory().setItem(1, CrackShotGun.updateItem(primary.getName(), primary.getGunItem(), p));
-				p.getInventory().setItem(28, primaryAmmo);
+				if (InventoryPositions.isValid(InventoryPositions.primary))
+					p.getInventory().setItem(InventoryPositions.primary, CrackShotGun.updateItem(primary.getName(), primary.getGunItem(), p));
+				if (InventoryPositions.isValid(InventoryPositions.primaryAmmo))
+					p.getInventory().setItem(InventoryPositions.primaryAmmo, primaryAmmo);
 			}
 
 			if (!secondary.equals(LoadoutManager.getInstance().blankSecondary)) {
-				p.getInventory().setItem(2, CrackShotGun.updateItem(secondary.getName(), secondary.getGunItem(), p));
-				p.getInventory().setItem(29, secondaryAmmo);
+				if (InventoryPositions.isValid(InventoryPositions.secondary))
+					p.getInventory().setItem(InventoryPositions.secondary, CrackShotGun.updateItem(secondary.getName(), secondary.getGunItem(), p));
+				if (InventoryPositions.isValid(InventoryPositions.secondaryAmmo))
+					p.getInventory().setItem(InventoryPositions.secondaryAmmo, secondaryAmmo);
 			}
 
-			if (Math.random() > 0.5 && !lethal.equals(LoadoutManager.getInstance().blankLethal)) {
-				p.getInventory().setItem(3, lethal.getWeaponItem());
+			if (Math.random() > 0.7 && !lethal.equals(LoadoutManager.getInstance().blankLethal)) {
+				if (InventoryPositions.isValid(InventoryPositions.lethal))
+					p.getInventory().setItem(InventoryPositions.lethal, lethal.getWeaponItem());
 			}
 
-			if (Math.random() > 0.5 && !tactical.equals(LoadoutManager.getInstance().blankTactical)) {
-				p.getInventory().setItem(4, tactical.getWeaponItem());
+			if (Math.random() > 0.7 && !tactical.equals(LoadoutManager.getInstance().blankTactical)) {
+				if (InventoryPositions.isValid(InventoryPositions.tactical))
+					p.getInventory().setItem(InventoryPositions.tactical, tactical.getWeaponItem());
 			}
 
 		} else if (getGamemode() == Gamemode.DOM
@@ -678,7 +691,8 @@ public class GameInstance implements Listener {
 				|| getGamemode() == Gamemode.HARDPOINT
 				|| getGamemode() == Gamemode.GUNFIGHT) {
 
-			p.getInventory().setItem(0, LoadoutManager.getInstance().knife);
+			if (InventoryPositions.isValid(InventoryPositions.knife))
+				p.getInventory().setItem(InventoryPositions.knife, LoadoutManager.getInstance().knife);
 
 			if (getGamemode() != Gamemode.INFECT || (getGamemode() == Gamemode.INFECT && blueTeam.contains(p))) {
 				LoadoutManager.getInstance().giveLoadout(p, loadout);
@@ -692,32 +706,40 @@ public class GameInstance implements Listener {
 				isAlive.put(p, true);
 
 		} else if (getGamemode() == Gamemode.OITC) {
-			p.getInventory().setItem(0, LoadoutManager.getInstance().knife);
-			p.getInventory().setItem(1, GameManager.oitcGun.getGunItem());
+			if (InventoryPositions.isValid(InventoryPositions.knife))
+				p.getInventory().setItem(InventoryPositions.knife, LoadoutManager.getInstance().knife);
+			if (InventoryPositions.isValid(InventoryPositions.primary))
+				p.getInventory().setItem(InventoryPositions.primary, GameManager.oitcGun.getGunItem());
 			ItemStack ammo = GameManager.oitcGun.getAmmo();
 			ammo.setAmount(1);
-			p.getInventory().setItem(8, ammo);
+			if (InventoryPositions.isValid(InventoryPositions.gunGameAmmo))
+				p.getInventory().setItem(InventoryPositions.gunGameAmmo, ammo);
 		} else if (getGamemode() == Gamemode.GUN) {
 			if(!ffaPlayerScores.containsKey(p)) {
 				ffaPlayerScores.put(p, 0);
 			}
-			p.getInventory().setItem(0, LoadoutManager.getInstance().knife);
+			if (InventoryPositions.isValid(InventoryPositions.knife))
+				p.getInventory().setItem(InventoryPositions.knife, LoadoutManager.getInstance().knife);
 			if (getState() != GameState.STOPPING) {
 				CodGun gun = GameManager.gunGameGuns.get(ffaPlayerScores.get(p));
 
 				ItemStack ammo = gun.getAmmo();
 				ammo.setAmount(gun.getAmmoCount());
 
-				p.getInventory().setItem(1, CrackShotGun.updateItem(gun.getName(), gun.getGunItem(), p));
-				p.getInventory().setItem(28, ammo);
+				if (InventoryPositions.isValid(InventoryPositions.primary))
+					p.getInventory().setItem(InventoryPositions.primary, CrackShotGun.updateItem(gun.getName(), gun.getGunItem(), p));
+				if (InventoryPositions.isValid(InventoryPositions.gunGameAmmo))
+					p.getInventory().setItem(InventoryPositions.gunGameAmmo, ammo);
 			}
 		}
 
 		if (ComWarfare.isSpawnProtection())
 			p.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, ComWarfare.getSpawnProtectionDuration() * 20, 1));
 
-		p.getInventory().setItem(32, InventoryManager.getInstance().selectClass);
-		p.getInventory().setItem(35, InventoryManager.getInstance().leaveItem);
+		if (InventoryPositions.isValid(InventoryPositions.selectClass))
+			p.getInventory().setItem(InventoryPositions.selectClass, InventoryManager.getInstance().selectClass);
+		if (InventoryPositions.isValid(InventoryPositions.leaveGame))
+			p.getInventory().setItem(InventoryPositions.leaveGame, InventoryManager.getInstance().leaveItem);
 
 		p.updateInventory();
 
@@ -936,7 +958,7 @@ public class GameInstance implements Listener {
 					return;
 
 				if (t <= 0) {
-					if (!getPlayers().isEmpty()) {
+					if (!getPlayers().isEmpty() && !ComWarfare.isKickAfterMatch()) {
 						game.reset();
 						cancel();
 						getRunnables().remove(this);
@@ -1030,8 +1052,7 @@ public class GameInstance implements Listener {
 		setState(GameState.STARTING);
 
 		forceStarted = false;
-		canVote = true;
-
+		canVote = ComWarfare.isMapVoting();
 
 		try {
 			scoreBar.getClass().getMethod("removeAll").invoke(scoreBar);
@@ -1042,8 +1063,10 @@ public class GameInstance implements Listener {
 			try {
 				scoreBar.getClass().getMethod("addPlayer", Player.class).invoke(scoreBar, p);
 			} catch(Exception ignored) {}
-			p.getInventory().setItem(0, InventoryManager.getInstance().codItem);
-			p.getInventory().setItem(8, InventoryManager.getInstance().leaveItem);
+			if (InventoryPositions.isValid(InventoryPositions.menu))
+				p.getInventory().setItem(InventoryPositions.menu, InventoryManager.getInstance().codItem);
+			if (InventoryPositions.isValid(InventoryPositions.leaveLobby))
+				p.getInventory().setItem(InventoryPositions.leaveLobby, InventoryManager.getInstance().leaveItem);
 
 			getScoreboardManager().clearScoreboards(p);
 			getScoreboardManager().setupLobbyBoard(p, getFancyTime(lobbyTime));
@@ -1051,13 +1074,15 @@ public class GameInstance implements Listener {
 
 		GameInstance game = this;
 
-		setupNextMaps();
+		if (ComWarfare.isMapVoting())
+			setupNextMaps();
 
 		for (Player p : players) {
 			setTeamArmor(p);
 		}
 
-		changeMap(nextMaps[0], nextModes[0]);
+		if (ComWarfare.isMapVoting())
+			changeMap(nextMaps[0], nextModes[0]);
 
 
 		BukkitRunnable br = new BukkitRunnable() {
@@ -1205,7 +1230,9 @@ public class GameInstance implements Listener {
 						if (closestObjective != null) {
 							p.setCompassTarget(closestObjective);
 							int distance = (int) p.getLocation().distance(closestObjective);
-							ItemStack stack = p.getInventory().getItem(8);
+							ItemStack stack = null;
+							if (InventoryPositions.isValid(InventoryPositions.compass))
+								stack = p.getInventory().getItem(InventoryPositions.compass);
 							boolean exists = true;
 							if (stack == null || stack.getType() == Material.AIR) {
 								stack = new ItemStack(Material.COMPASS, 1);
@@ -1215,8 +1242,8 @@ public class GameInstance implements Listener {
 							if (meta != null)
 								meta.setDisplayName(Lang.CLOSEST_OBJECTIVE.getMessage().replace("{distance}", distance <= 100 ? Integer.toString(distance) : ">100"));
 							stack.setItemMeta(meta);
-							if (!exists)
-								p.getInventory().setItem(8, stack);
+							if (!exists && InventoryPositions.isValid(InventoryPositions.compass))
+								p.getInventory().setItem(InventoryPositions.compass, stack);
 						}
 					}
 				}
@@ -2133,10 +2160,11 @@ public class GameInstance implements Listener {
 				removePointForPlayer(victim);
 				ItemStack ammo = GameManager.oitcGun.getAmmo();
 				ammo.setAmount(1);
-				if (killer.getInventory().getItem(8) != null && killer.getInventory().getItem(8).getType() == ammo.getType()) {
+				if (killer.getInventory().getItem(InventoryPositions.gunGameAmmo) != null && killer.getInventory().getItem(InventoryPositions.gunGameAmmo).getType() == ammo.getType()) {
 					killer.getInventory().addItem(ammo);
 				} else {
-					killer.getInventory().setItem(8, ammo);
+					if (InventoryPositions.isValid(InventoryPositions.gunGameAmmo))
+						killer.getInventory().setItem(InventoryPositions.gunGameAmmo, ammo);
 				}
 			} else {
 				addPointForPlayer(killer);
@@ -2162,11 +2190,14 @@ public class GameInstance implements Listener {
 
 				killer.getInventory().clear();
 				setTeamArmor(killer);
-				killer.getInventory().setItem(32, InventoryManager.getInstance().selectClass);
-				killer.getInventory().setItem(35, InventoryManager.getInstance().leaveItem);
+				if (InventoryPositions.isValid(InventoryPositions.selectClass))
+					killer.getInventory().setItem(InventoryPositions.selectClass, InventoryManager.getInstance().selectClass);
+				if (InventoryPositions.isValid(InventoryPositions.leaveGame))
+					killer.getInventory().setItem(InventoryPositions.leaveGame, InventoryManager.getInstance().leaveItem);
 
 				KillStreakManager.getInstance().streaksAfterDeath(killer);
-				killer.getInventory().setItem(0, LoadoutManager.getInstance().knife);
+				if (InventoryPositions.isValid(InventoryPositions.knife))
+					killer.getInventory().setItem(InventoryPositions.knife, LoadoutManager.getInstance().knife);
 				CodGun gun;
 				try {
 					gun = GameManager.gunGameGuns.get(ffaPlayerScores.get(killer));
@@ -2174,8 +2205,10 @@ public class GameInstance implements Listener {
 					ItemStack ammo = gun.getAmmo();
 					ammo.setAmount(gun.getAmmoCount());
 
-					killer.getInventory().setItem(1, gunItem);
-					killer.getInventory().setItem(19, ammo);
+					if (InventoryPositions.isValid(InventoryPositions.primary))
+						killer.getInventory().setItem(InventoryPositions.primary, gunItem);
+					if (InventoryPositions.isValid(InventoryPositions.primaryAmmo))
+						killer.getInventory().setItem(InventoryPositions.primaryAmmo, ammo);
 					killer.updateInventory();
 				} catch(Exception ignored) {
 					killer.getInventory().clear();

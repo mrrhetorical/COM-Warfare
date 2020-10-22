@@ -211,7 +211,7 @@ public class CodGun extends CodWeapon {
 				return ammo;
 			}
 		}
-		return this.ammoItem;
+		return this.ammoItem.clone();
 	}
 
 	public void setAmmoCount(int amount) {
