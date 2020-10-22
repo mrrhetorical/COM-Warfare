@@ -16,7 +16,7 @@ serverMode: false
 #Scoreboard: The different things you can change in the scoreboard.
 Scoreboard:
   #Header of the tab list. Leave blank for default.
-  Header: 'COM-Warfare'
+  Header: '[COM-Warfare]'
 #Lobby Time: The amount of time players should wait in the lobby before the match starts.
 lobbyTime: 70
 #LobbyServer: The name of the bungee lobby server to connect to when/if 'serverMode' is enabled. If disabled, use 'none'
@@ -25,6 +25,9 @@ lobbyServer: 'none'
 players:
   min: 2
   max: 12
+
+#Auto kick on match end: Should matches kick players out of the lobby when a game ends or not?
+autoKickOnMatchEnd: false
 
 #Spawn Protection: Should the player be temporarily invulnerable on spawning?
 spawnProtection:
