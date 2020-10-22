@@ -189,13 +189,9 @@ public class CodTabCompleter implements TabCompleter {
             if (args[0].equalsIgnoreCase("credits") && args[1].equalsIgnoreCase("give") || args[1].equalsIgnoreCase("set")) {
                 Bukkit.getOnlinePlayers().forEach(p -> Args.add(p.getName()));
             } else if (args[0].equalsIgnoreCase("blacklist")) {
-                for (Gamemode gm : Gamemode.values()) {
-                    Args.add(gm.toString());
-                }
+                Arrays.asList(Gamemode.values()).forEach(gm -> Args.add(gm.toString()));
             } else if (args[0].equalsIgnoreCase("set") && args[1].equalsIgnoreCase("spawn") || args[1].equalsIgnoreCase("flag")) {
-                for (CodMap map : GameManager.getAddedMaps()) {
-                    Args.add(map.getName());
-                }
+                GameManager.getAddedMaps().forEach(map -> Args.add(map.getName()));
             } else if (args[0].equalsIgnoreCase("createGun")) {
                 Args.add("Primary");
                 Args.add("Secondary");
@@ -227,15 +223,13 @@ public class CodTabCompleter implements TabCompleter {
 
         } else if (args.length == 5) {
             if (args[0].equalsIgnoreCase("createGun") || args[0].equalsIgnoreCase("createWeapons") || args[0].equalsIgnoreCase("createGrenade")) {
-                for (Material material : Material.values())
-                    Args.add(material.name());
+                Arrays.asList(Material.values()).forEach(mat -> Args.add(mat.toString()));
             }
             return matchingArgs(Args, args[4]);
 
         } else if (args.length == 6 || args.length == 7) {
             if (args[0].equalsIgnoreCase("createGun")) {
-                for (Material material : Material.values())
-                    Args.add(material.name());
+                Arrays.asList(Material.values()).forEach(mat -> Args.add(mat.toString()));
 
             }
             return matchingArgs(Args, args[args.length - 1]);
