@@ -92,6 +92,7 @@ public class PerkManager {
 				PerkSlot slot = PerkSlot.random();
 				ComWarfare.getPlugin().getConfig().set("Perks." + i + ".name", perk.toString());
 				ComWarfare.getPlugin().getConfig().set("Perks." + i + ".material", Material.APPLE.toString());
+				ComWarfare.getPlugin().getConfig().set("Perks." + i + ".customModelData", 0);
 				ComWarfare.getPlugin().getConfig().set("Perks." + i + ".cost", 0);
 				ComWarfare.getPlugin().getConfig().set("Perks." + i + ".slot", slot.toString());
 				ComWarfare.getPlugin().getConfig().set("Perks." + i + ".lore", perk.getLore());
@@ -141,6 +142,12 @@ public class PerkManager {
 
 			Perk name = Perk.valueOf(ComWarfare.getPlugin().getConfig().getString("Perks.default." + s + ".name"));
 			ItemStack perkItem = new ItemStack(Material.valueOf(ComWarfare.getPlugin().getConfig().getString("Perks.default." + s + ".material")));
+			int customModelData =ComWarfare.getInstance().getConfig().getInt("Perks.default." + s + ".customModelData", 0);
+			if (ComWarfare.canUseCustomModelData()) {
+				ItemMeta m = perkItem.getItemMeta();
+				m.setCustomModelData(customModelData);
+				perkItem.setItemMeta(m);
+			}
 			int cost = ComWarfare.getPlugin().getConfig().getInt("Perks.default." + s + ".cost");
 			ArrayList<String> lore = (ArrayList<String>) ComWarfare.getPlugin().getConfig().getStringList("Perks.default." + s + ".lore");
 
@@ -148,6 +155,7 @@ public class PerkManager {
 		} else {
 			ComWarfare.getPlugin().getConfig().set("Perks.default." + s + ".name", Perk.values()[s - 1].toString());
 			ComWarfare.getPlugin().getConfig().set("Perks.default." + s + ".material", Material.APPLE.toString());
+			ComWarfare.getPlugin().getConfig().set("Perks.default." + s + ".customModelData", 0);
 			ComWarfare.getPlugin().getConfig().set("Perks.default." + s + ".slot", slot.toString());
 			ComWarfare.getPlugin().getConfig().set("Perks.default." + s + ".lore", Perk.values()[s - 1].getLore());
 
