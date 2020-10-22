@@ -137,6 +137,7 @@ public class GameInstance implements Listener {
 
 		players = pls;
 		currentMap = map;
+		currentMap.setGamemode(currentMap.getRandomGameMode());
 		ComWarfare.getPlugin().reloadConfig();
 
 		updateTimeLeft();
@@ -1057,7 +1058,7 @@ public class GameInstance implements Listener {
 			setTeamArmor(p);
 		}
 
-		changeMap(nextMaps[0], nextModes[0]);
+//		changeMap(nextMaps[0], nextModes[0]);
 
 
 		BukkitRunnable br = new BukkitRunnable() {
