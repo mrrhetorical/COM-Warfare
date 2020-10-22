@@ -6,12 +6,14 @@ import com.rhetorical.cod.game.CodMap;
 import com.rhetorical.cod.game.GameManager;
 import com.rhetorical.cod.game.Gamemode;
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -136,6 +138,9 @@ public class CodTabCompleter implements TabCompleter {
                     Args.add("4");
                     Args.add("5");
                     break;
+                case "join":
+                    GameManager.getAddedMaps().forEach(map -> Args.add(map.getName()));
+                    break;
 
                 case "convertdata":
                     Args.add("YAML->MySQL");
@@ -157,8 +162,7 @@ public class CodTabCompleter implements TabCompleter {
                     break;
 
                 case "setLevel":
-                    for (Player p : Bukkit.getOnlinePlayers())
-                        Args.add(p.getName());
+                    Bukkit.getOnlinePlayers().forEach(p -> Args.add(p.getName()));
                     break;
 
                 case "add":
@@ -170,9 +174,7 @@ public class CodTabCompleter implements TabCompleter {
                 case "removeMap":
                 case "blacklist":
                 case "reload":
-                    for (CodMap map : GameManager.getAddedMaps()) {
-                        Args.add(map.getName());
-                    }
+                    GameManager.getAddedMaps().forEach(map -> Args.add(map.getName()));
                     break;
 
             }
@@ -181,12 +183,9 @@ public class CodTabCompleter implements TabCompleter {
 
         } else if (args.length == 3) {
             if (args[0].equalsIgnoreCase("credits") && args[1].equalsIgnoreCase("give") || args[1].equalsIgnoreCase("set")) {
-                for (Player p : Bukkit.getOnlinePlayers())
-                    Args.add(p.getName());
+                Bukkit.getOnlinePlayers().forEach(p -> Args.add(p.getName()));
             } else if (args[0].equalsIgnoreCase("blacklist")) {
-                for (Gamemode gm : Gamemode.values()) {
-                    Args.add(gm.toString());
-                }
+                Arrays.asList(Gamemode.values()).forEach(gm -> Args.add(gm.toString()));
             }
             return matchingArgs(Args, args[2]);
         }

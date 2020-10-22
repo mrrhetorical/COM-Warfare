@@ -28,6 +28,7 @@ import java.util.Objects;
 
 public class CodCommand implements CommandExecutor {
 
+	@SuppressWarnings("Duplicates")
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		String cColor = "" + ChatColor.YELLOW;
@@ -69,7 +70,7 @@ public class CodCommand implements CommandExecutor {
 					case 1:
 						ComWarfare.sendMessage(sender, cColor + "/cod help [page number] | " + dColor + "Opens a help page.");
 						ComWarfare.sendMessage(sender, cColor + "/cod menu | " + dColor + "Opens the cod menu.");
-						ComWarfare.sendMessage(sender, cColor + "/cod join | " + dColor + "Joins a match via matchmaker.");
+						ComWarfare.sendMessage(sender, cColor + "/cod join (map) | " + dColor + "Joins a match via matchmaker, optional map parameter.");
 						ComWarfare.sendMessage(sender, cColor + "/cod browser | " + dColor + "Opens the match browser.");
 						ComWarfare.sendMessage(sender, cColor + "/cod leave | " + dColor + "Leaves the current game.");
 						ComWarfare.sendMessage(sender, cColor + "/cod lobby | " + dColor + "Teleports you to the lobby.");
@@ -117,8 +118,20 @@ public class CodCommand implements CommandExecutor {
 
 				Player p = (Player) sender;
 
-				boolean b = GameManager.findMatch(p);
-				if (b) {
+				boolean success;
+				if (args.length == 1) {
+					success = GameManager.findMatch(p);
+				} else {
+					String mapName = args[1];
+					CodMap map = GameManager.getMapForName(mapName);
+					if (map == null) {
+						ComWarfare.sendMessage(p, Lang.MAP_NOT_EXISTS_WITH_NAME.getMessage());
+						return true;
+					}
+					success = GameManager.findMatch(p, map);
+				}
+
+				if (success) {
 					LoadoutManager.getInstance().load(p);
 					ProgressionManager.getInstance().update(p);
 				}

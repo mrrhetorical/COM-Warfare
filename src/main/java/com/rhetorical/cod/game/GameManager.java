@@ -142,7 +142,7 @@ public class GameManager {
 	}
 
 
-	public static boolean findMatch(Player p, String mapName) {
+	public static boolean findMatch(Player p, CodMap map) {
 
 		loadPlayerData(p);
 		
@@ -170,7 +170,7 @@ public class GameManager {
 				if (i.getPlayers().size() == 0) {
 					removeInstance(i);
 					continue;
-				} else if (mapName == null || i.getMap().getName().equalsIgnoreCase(mapName)) {
+				} else if (map == null || i.getMap().getName().equals(map.getName())) {
 					possibleMatches.put(i.getPlayers().size(), i);
 				}
 				break;
@@ -182,8 +182,7 @@ public class GameManager {
 			ComWarfare.sendMessage(p, Lang.COULD_NOT_FIND_MATCH.getMessage(), ComWarfare.getLang());
 			ComWarfare.sendMessage(p, Lang.CREATING_MATCH.getMessage(), ComWarfare.getLang());
 
-			CodMap selectedMap = getMapForName(mapName);
-			CodMap map = selectedMap != null ? selectedMap : pickRandomMap();
+			map = map != null ? map : pickRandomMap();
 			if (map == null) {
 				ComWarfare.sendMessage(p, Lang.COULD_NOT_CREATE_MATCH_BECAUSE_NO_MAPS.getMessage(), ComWarfare.getLang());
 				return false;
