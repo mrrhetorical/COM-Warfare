@@ -490,8 +490,7 @@ public class GameInstance implements Listener {
 				scoreBar.getClass().getMethod("removePlayer", Player.class).invoke(scoreBar, p);
 			}
 		} catch(NoClassDefFoundError ignored) {
-		}catch(Exception ignored) {
-		}
+		}catch(Exception ignored) {}
 
 		if (freeForAllBar.containsKey(p)) {
 			if (freeForAllBar.get(p) == null) {
@@ -514,6 +513,8 @@ public class GameInstance implements Listener {
 		playerScores.remove(p);
 
 		players.remove(p);
+		blueTeam.remove(p);
+		redTeam.remove(p);
 		hungerManager.removePlayer(p);
 		ffaPlayerScores.remove(p);
 
