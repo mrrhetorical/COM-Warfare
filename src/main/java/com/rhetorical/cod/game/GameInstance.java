@@ -3,6 +3,7 @@ package com.rhetorical.cod.game;
 import com.rhetorical.cod.ComVersion;
 import com.rhetorical.cod.ComWarfare;
 import com.rhetorical.cod.assignments.AssignmentManager;
+import com.rhetorical.cod.files.StatsFile;
 import com.rhetorical.cod.game.events.KillFeedEvent;
 import com.rhetorical.cod.inventories.InventoryManager;
 import com.rhetorical.cod.lang.Lang;
@@ -802,6 +803,79 @@ public class GameInstance implements Listener {
 		}
 	}
 
+	
+	public static boolean isACE(Player p) {
+
+		// Get player stats
+		int kills = 0;
+		int deaths = 0;
+		if (StatsFile.getData().contains(p.getName() + ".kills") && StatsFile.getData().contains(p.getName() + ".deaths")){
+			kills = StatsFile.getData().getInt(p.getName() + ".kills");
+			deaths = StatsFile.getData().getInt(p.getName() + ".deaths");
+		}
+
+		// if deaths is 0 make deaths 1
+		if ( deaths <= 0 ) {
+			deaths = 1;
+		}
+
+		// calculate KD
+		double kd = (double) kills / (double) deaths;
+
+		// calculate
+		if ( kills < 1000 ) {
+			return false;
+		}
+
+		// If you have more than 100 kills and have a KD of 1.2 or higher you are a "good" player
+		return kd >= 1.2 || kills >= 100;
+	}
+
+	public static int getPlayerPowerLevel(Player p) {
+
+		int kills = 0;
+		int deaths = 0;
+		if (StatsFile.getData().contains(p.getName() + ".kills") && StatsFile.getData().contains(p.getName() + ".deaths")){
+			kills = StatsFile.getData().getInt(p.getName() + ".kills");
+			deaths = StatsFile.getData().getInt(p.getName() + ".deaths");
+		}
+
+		// if deaths is 0 make deaths 1
+		if ( deaths <= 0 ) {
+			deaths = 1;
+		}
+
+		// calculate KD
+		double kd = (double) kills / (double) deaths;
+		if ( kills < 100 ) {
+			kd = 0.8;
+		}
+
+		// Calculate power level
+		int powerLevel = (int) (kd * 1000);
+		if(kills <= 5000){
+			powerLevel += kills / 10;
+		}else{
+			powerLevel += 500 + (kills - 5000)/100;
+		}
+
+		return powerLevel;
+	}
+
+	private void addToBlue(Player p){
+		blueTeam.add(p);
+		ChatColor tColor = ChatColor.BLUE;
+		String team = "blue";
+		ComWarfare.sendMessage(p, Lang.ASSIGNED_TO_TEAM.getMessage().replace("{team-color}", tColor + "").replace("{team}", team), ComWarfare.getLang());
+	}
+
+	private void addToRed(Player p){
+		redTeam.add(p);
+		ChatColor tColor = ChatColor.RED;
+		String team = "red";
+		ComWarfare.sendMessage(p, Lang.ASSIGNED_TO_TEAM.getMessage().replace("{team-color}", tColor + "").replace("{team}", team), ComWarfare.getLang());
+	}
+	
 	/**
 	 * Assigns player to teams randomly.
 	 * */
