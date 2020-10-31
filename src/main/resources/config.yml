@@ -190,3 +190,7 @@ RankTiers:
       xp: 200
       credits: 5
     levelCredits: 10
+
+#Skill based matchmaking: In a team based gamemode, joining players will be put on the team that has a lower "power level".
+#"power level" is calculated using the K/D and number of kills by the players on each team.
+SkillBasedMatchMaking: false
