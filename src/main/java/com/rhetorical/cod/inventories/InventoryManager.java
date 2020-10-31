@@ -1675,9 +1675,16 @@ public class InventoryManager implements Listener {
 
 			if (item.equals(codItem) || altItem.equals(codItem)) {
 				e.setCancelled(true);
-				if (e.getPlayer().getOpenInventory().getType().equals(InventoryType.CRAFTING))
+				if (e.getPlayer().getOpenInventory().getType().equals(InventoryType.CRAFTING)) {
 					ComWarfare.openMainMenu(e.getPlayer());
-				//				return;
+					return;
+				}
+			}
+
+			if (item.equals(selectClass) || altItem.equals(selectClass)) {
+				e.setCancelled(true);
+				openSelectClassInventory(e.getPlayer());
+				return;
 			}
 
 			if (voteItemA != null && (item.getItemMeta() != null && item.getItemMeta().getDisplayName().equals(voteItemA.getItemMeta().getDisplayName()))

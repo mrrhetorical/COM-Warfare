@@ -27,6 +27,8 @@ public class UpdateChecker {
 	public UpdateChecker() {
 		new Thread(() -> {
 
+			Thread.currentThread().setName("COM:W Updater");
+
 			result = checkForUpdates();
 
 			int tries = 0;
