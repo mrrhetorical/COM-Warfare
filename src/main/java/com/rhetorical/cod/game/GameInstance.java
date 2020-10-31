@@ -2701,6 +2701,10 @@ public class GameInstance implements Listener {
 					PerkListener.getInstance().getIsInLastStand().remove(victim);
 					victim.setSneaking(false);
 					victim.setWalkSpeed(0.2f);
+					if (damagers.length < 1) {
+//					ComWarfare.sendMessage(victim, "" + ChatColor.GREEN + ChatColor.BOLD + "YOU " + ChatColor.RESET + "" + ChatColor.WHITE + "[" + Lang.KILLED_TEXT.getMessage() + "] " + ChatColor.RESET + ChatColor.GREEN + ChatColor.BOLD + "YOURSELF", ComWarfare.getLang());
+						kill(victim, victim);
+					}
 					handleDeath(damagers[0], victim);
 				}
 			}
