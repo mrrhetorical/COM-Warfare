@@ -880,26 +880,99 @@ public class GameInstance implements Listener {
 	 * Assigns player to teams randomly.
 	 * */
 	private void assignTeams() {
+		
+		Boolean sbmm = false;
+		sbmm = ComWarfare.getPlugin().getConfig().getBoolean("SkillBasedMatchMaking");
 
 		if (getGamemode() != Gamemode.FFA && getGamemode() != Gamemode.OITC && getGamemode() != Gamemode.GUN && getGamemode() != Gamemode.INFECT) {
-			for (Player p : players) {
-				if (blueTeam.contains(p) || redTeam.contains(p))
-					continue;
+			if(sbmm == true){ // assign teams using skill based matchmaking
+				for (Player p : players)
+				{
+					if (blueTeam.contains(p) || redTeam.contains(p))
+						continue;
 
-				ChatColor tColor;
-				String team;
+					// PLS means Power Level Sum
+					double redPLS = 0;
+					double bluePLS = 0;
+					double redAcePLS = 0;
+					double blueAcePLS = 0;
+					double playerPowerLevel = getPlayerPowerLevel(p);
 
-				if (redTeam.size() >= blueTeam.size()) {
-					blueTeam.add(p);
-					tColor = ChatColor.BLUE;
-					team = "blue";
-				} else {
-					redTeam.add(p);
-					tColor = ChatColor.RED;
-					team = "red";
+
+					for(Player player : redTeam){
+						if(isACE(player)){
+							redAcePLS += getPlayerPowerLevel(player);
+						}
+						redPLS += getPlayerPowerLevel(player);
+					}
+
+					for(Player player : blueTeam){
+						if(isACE(player)){
+							blueAcePLS += getPlayerPowerLevel(player);
+						}
+						bluePLS += getPlayerPowerLevel(player);
+					}
+
+
+					//For debugging purposes.
+					/*
+					ComWarfare.sendMessage(p,"blue Power Level Sum: " + bluePLS + "  red Power Level Sum: " + redPLS);
+					ComWarfare.sendMessage(p,"your Power Level: " + playerPowerLevel);
+					*/
+
+					if(isACE(p)) { // is ace
+						if(redAcePLS == blueAcePLS){
+							if(bluePLS  == redPLS){
+								if(blueTeam.size() <= redTeam.size()){
+									addToBlue(p);
+								}else {
+									addToRed(p);
+								}
+							} else if (redPLS > bluePLS) {
+								addToBlue(p);
+							} else {
+								addToRed(p);
+							}
+						}else if(redAcePLS < blueAcePLS){
+							addToRed(p);
+						}else{
+							addToBlue(p);
+						}
+					}else { // not ace
+						if(bluePLS  == redPLS){
+							if(blueTeam.size() <= redTeam.size()){
+								addToBlue(p);
+							}else {
+								addToBlue(p);
+							}
+						}
+						else if (redPLS > bluePLS) {
+							addToBlue(p);
+						} else {
+							addToRed(p);
+						}
+					}
 				}
+			}else{
+				for (Player p : players) { // assign team based on default matchmaking
+					if (blueTeam.contains(p) || redTeam.contains(p))
+						continue;
 
-				ComWarfare.sendMessage(p, Lang.ASSIGNED_TO_TEAM.getMessage().replace("{team-color}", tColor + "").replace("{team}", team), ComWarfare.getLang());
+					ChatColor tColor;
+					String team;
+
+					if (redTeam.size() >= blueTeam.size()) {
+						blueTeam.add(p);
+						tColor = ChatColor.BLUE;
+						team = "blue";
+					} else {
+						redTeam.add(p);
+						tColor = ChatColor.RED;
+						team = "red";
+					}
+
+					ComWarfare.sendMessage(p, Lang.ASSIGNED_TO_TEAM.getMessage().replace("{team-color}", tColor + "").replace("{team}", team), ComWarfare.getLang());
+				}
 			}
 		} else if (getGamemode() == Gamemode.INFECT) {
 			List<Player> pls = new ArrayList<>(getPlayers());
