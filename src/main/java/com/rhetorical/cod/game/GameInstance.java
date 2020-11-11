@@ -885,7 +885,7 @@ public class GameInstance implements Listener {
 		sbmm = ComWarfare.getPlugin().getConfig().getBoolean("SkillBasedMatchMaking");
 
 		if (getGamemode() != Gamemode.FFA && getGamemode() != Gamemode.OITC && getGamemode() != Gamemode.GUN && getGamemode() != Gamemode.INFECT) {
-			if(sbmm == true){ // assign teams using skill based matchmaking
+			if(sbmm){ // assign teams using skill based matchmaking
 				for (Player p : players)
 				{
 					if (blueTeam.contains(p) || redTeam.contains(p))
