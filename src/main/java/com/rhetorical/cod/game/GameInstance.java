@@ -3,6 +3,7 @@ package com.rhetorical.cod.game;
 import com.rhetorical.cod.ComVersion;
 import com.rhetorical.cod.ComWarfare;
 import com.rhetorical.cod.assignments.AssignmentManager;
+import com.rhetorical.cod.files.StatsFile;
 import com.rhetorical.cod.game.events.KillFeedEvent;
 import com.rhetorical.cod.inventories.InventoryManager;
 import com.rhetorical.cod.lang.Lang;
@@ -802,30 +803,176 @@ public class GameInstance implements Listener {
 		}
 	}
 
+	
+	public static boolean isACE(Player p) {
+
+		// Get player stats
+		int kills = 0;
+		int deaths = 0;
+		if (StatsFile.getData().contains(p.getName() + ".kills") && StatsFile.getData().contains(p.getName() + ".deaths")){
+			kills = StatsFile.getData().getInt(p.getName() + ".kills");
+			deaths = StatsFile.getData().getInt(p.getName() + ".deaths");
+		}
+
+		// if deaths is 0 make deaths 1
+		if ( deaths <= 0 ) {
+			deaths = 1;
+		}
+
+		// calculate KD
+		double kd = (double) kills / (double) deaths;
+
+		// calculate
+		if ( kills < 1000 ) {
+			return false;
+		}
+
+		// If you have more than 100 kills and have a KD of 1.2 or higher you are a "good" player
+		return kd >= 1.2 || kills >= 100;
+	}
+
+	public static int getPlayerPowerLevel(Player p) {
+
+		int kills = 0;
+		int deaths = 0;
+		if (StatsFile.getData().contains(p.getName() + ".kills") && StatsFile.getData().contains(p.getName() + ".deaths")){
+			kills = StatsFile.getData().getInt(p.getName() + ".kills");
+			deaths = StatsFile.getData().getInt(p.getName() + ".deaths");
+		}
+
+		// if deaths is 0 make deaths 1
+		if ( deaths <= 0 ) {
+			deaths = 1;
+		}
+
+		// calculate KD
+		double kd = (double) kills / (double) deaths;
+		if ( kills < 100 ) {
+			kd = 0.8;
+		}
+
+		// Calculate power level
+		int powerLevel = (int) (kd * 1000);
+		if(kills <= 5000){
+			powerLevel += kills / 10;
+		}else{
+			powerLevel += 500 + (kills - 5000)/100;
+		}
+
+		return powerLevel;
+	}
+
+	private void addToBlue(Player p){
+		blueTeam.add(p);
+		ChatColor tColor = ChatColor.BLUE;
+		String team = "blue";
+		ComWarfare.sendMessage(p, Lang.ASSIGNED_TO_TEAM.getMessage().replace("{team-color}", tColor + "").replace("{team}", team), ComWarfare.getLang());
+	}
+
+	private void addToRed(Player p){
+		redTeam.add(p);
+		ChatColor tColor = ChatColor.RED;
+		String team = "red";
+		ComWarfare.sendMessage(p, Lang.ASSIGNED_TO_TEAM.getMessage().replace("{team-color}", tColor + "").replace("{team}", team), ComWarfare.getLang());
+	}
+	
 	/**
 	 * Assigns player to teams randomly.
 	 * */
 	private void assignTeams() {
+		
+		Boolean sbmm = false;
+		sbmm = ComWarfare.getPlugin().getConfig().getBoolean("SkillBasedMatchMaking");
 
 		if (getGamemode() != Gamemode.FFA && getGamemode() != Gamemode.OITC && getGamemode() != Gamemode.GUN && getGamemode() != Gamemode.INFECT) {
-			for (Player p : players) {
-				if (blueTeam.contains(p) || redTeam.contains(p))
-					continue;
+			if(sbmm){ // assign teams using skill based matchmaking
+				for (Player p : players)
+				{
+					if (blueTeam.contains(p) || redTeam.contains(p))
+						continue;
 
-				ChatColor tColor;
-				String team;
+					// PLS means Power Level Sum
+					double redPLS = 0;
+					double bluePLS = 0;
+					double redAcePLS = 0;
+					double blueAcePLS = 0;
+					double playerPowerLevel = getPlayerPowerLevel(p);
 
-				if (redTeam.size() >= blueTeam.size()) {
-					blueTeam.add(p);
-					tColor = ChatColor.BLUE;
-					team = "blue";
-				} else {
-					redTeam.add(p);
-					tColor = ChatColor.RED;
-					team = "red";
+
+					for(Player player : redTeam){
+						if(isACE(player)){
+							redAcePLS += getPlayerPowerLevel(player);
+						}
+						redPLS += getPlayerPowerLevel(player);
+					}
+
+					for(Player player : blueTeam){
+						if(isACE(player)){
+							blueAcePLS += getPlayerPowerLevel(player);
+						}
+						bluePLS += getPlayerPowerLevel(player);
+					}
+
+
+					//For debugging purposes.
+					/*
+					ComWarfare.sendMessage(p,"blue Power Level Sum: " + bluePLS + "  red Power Level Sum: " + redPLS);
+					ComWarfare.sendMessage(p,"your Power Level: " + playerPowerLevel);
+					*/
+
+					if(isACE(p)) { // is ace
+						if(redAcePLS == blueAcePLS){
+							if(bluePLS  == redPLS){
+								if(blueTeam.size() <= redTeam.size()){
+									addToBlue(p);
+								}else {
+									addToRed(p);
+								}
+							} else if (redPLS > bluePLS) {
+								addToBlue(p);
+							} else {
+								addToRed(p);
+							}
+						}else if(redAcePLS < blueAcePLS){
+							addToRed(p);
+						}else{
+							addToBlue(p);
+						}
+					}else { // not ace
+						if(bluePLS  == redPLS){
+							if(blueTeam.size() <= redTeam.size()){
+								addToBlue(p);
+							}else {
+								addToBlue(p);
+							}
+						}
+						else if (redPLS > bluePLS) {
+							addToBlue(p);
+						} else {
+							addToRed(p);
+						}
+					}
 				}
+			}else{
+				for (Player p : players) { // assign team based on default matchmaking
+					if (blueTeam.contains(p) || redTeam.contains(p))
+						continue;
 
-				ComWarfare.sendMessage(p, Lang.ASSIGNED_TO_TEAM.getMessage().replace("{team-color}", tColor + "").replace("{team}", team), ComWarfare.getLang());
+					ChatColor tColor;
+					String team;
+
+					if (redTeam.size() >= blueTeam.size()) {
+						blueTeam.add(p);
+						tColor = ChatColor.BLUE;
+						team = "blue";
+					} else {
+						redTeam.add(p);
+						tColor = ChatColor.RED;
+						team = "red";
+					}
+
+					ComWarfare.sendMessage(p, Lang.ASSIGNED_TO_TEAM.getMessage().replace("{team-color}", tColor + "").replace("{team}", team), ComWarfare.getLang());
+				}
 			}
 		} else if (getGamemode() == Gamemode.INFECT) {
 			List<Player> pls = new ArrayList<>(getPlayers());
@@ -1363,10 +1510,16 @@ public class GameInstance implements Listener {
 							if (getGamemode() == Gamemode.RESCUE) {
 								if (!(blueTeamScore >= maxScore_RESCUE))
 									startNewRound(7, blueTeam);
+								else{
+									stopGame();
+								}
 							}
 							else if (getGamemode() == Gamemode.GUNFIGHT) {
 								if (!(blueTeamScore >= maxScore_GUNFIGHT))
 									startNewRound(7, blueTeam);
+								else{
+									stopGame();
+								}
 							}
 
 							for (Player pp : players) {
@@ -1382,9 +1535,15 @@ public class GameInstance implements Listener {
 							if (getGamemode() == Gamemode.RESCUE) {
 								if (!(redTeamScore >= maxScore_RESCUE))
 									startNewRound(7, redTeam);
+								else{
+									stopGame();
+								}
 							} else if (getGamemode() == Gamemode.GUNFIGHT) {
 								if (!(redTeamScore >= maxScore_GUNFIGHT))
 									startNewRound(7, redTeam);
+								else{
+									stopGame();
+								}
 							}
 
 							for (Player pp : players) {
@@ -2542,6 +2701,10 @@ public class GameInstance implements Listener {
 					PerkListener.getInstance().getIsInLastStand().remove(victim);
 					victim.setSneaking(false);
 					victim.setWalkSpeed(0.2f);
+					if (damagers.length < 1) {
+//					ComWarfare.sendMessage(victim, "" + ChatColor.GREEN + ChatColor.BOLD + "YOU " + ChatColor.RESET + "" + ChatColor.WHITE + "[" + Lang.KILLED_TEXT.getMessage() + "] " + ChatColor.RESET + ChatColor.GREEN + ChatColor.BOLD + "YOURSELF", ComWarfare.getLang());
+						kill(victim, victim);
+					}
 					handleDeath(damagers[0], victim);
 				}
 			}
