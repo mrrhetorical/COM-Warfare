@@ -182,6 +182,10 @@ public class Listeners implements Listener {
 			return;
 		}
 
+		if(cause == DamageCause.LAVA || cause == DamageCause.FIRE || cause == DamageCause.FIRE_TICK){
+			p.setFireTicks(0);
+		}
+
 		if (cause != DamageCause.ENTITY_ATTACK && cause != DamageCause.ENTITY_EXPLOSION && cause != DamageCause.PROJECTILE) {
 			boolean exists = true;
 			DamageCause damageCause = null;

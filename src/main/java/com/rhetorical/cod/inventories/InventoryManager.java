@@ -977,7 +977,7 @@ public class InventoryManager implements Listener {
 			expMap.put(experience, name);
 		}
 
-		for (int i = 0; i < expMap.size(); i++) {
+		for (int i = 0; i < expMap.size() && i < 27; i++) {
 			String id = expMap.get(expMap.descendingKeySet().toArray()[i]);
 			ItemStack item = leaderboardOrder.get(id);
 			ItemMeta itemMeta = item.getItemMeta();
