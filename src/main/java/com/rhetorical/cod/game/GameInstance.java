@@ -1977,59 +1977,75 @@ public class GameInstance implements Listener {
 	/**
 	 * Kills the target player within the modified health system.
 	 *
-	 * @param p The player to kill
+	 * @param victim The player to kill
 	 * @param killer The player who killed the player
 	 * */
-	public void kill(Player p, Player killer) {
+	public void kill(Player victim, Player killer) {
 
-		Bukkit.getPluginManager().callEvent(new PlayerDieSoundEvent(p));
+		Bukkit.getPluginManager().callEvent(new PlayerDieSoundEvent(victim));
 
-		AssignmentManager.getInstance().updateAssignments(p, 1, getGamemode());
+		AssignmentManager.getInstance().updateAssignments(victim, 1, getGamemode());
 
-		if (getGamemode() == Gamemode.RESCUE || getGamemode() == Gamemode.GUNFIGHT) {
-			p.setGameMode(GameMode.SPECTATOR);
-			p.getInventory().clear();
-			isAlive.put(p, false);
+		CodScore victimScore = playerScores.get(victim);
 
-			if (getGamemode() == Gamemode.RESCUE) {
-				if (isOnBlueTeam(p) && getAlivePlayers(blueTeam) > 0) {
-					ComWarfare.sendTitle(p, Lang.RESPAWN_IF_DOG_TAG_PICKED_UP.getMessage(), "");
-					dropDogTag(p);
-				} else if (isOnRedTeam(p) && getAlivePlayers(redTeam) > 0) {
-					ComWarfare.sendTitle(p, Lang.RESPAWN_IF_DOG_TAG_PICKED_UP.getMessage(), "");
-					dropDogTag(p);
+		victimScore.setDeaths(victimScore.getDeaths() + 1);
+		StatHandler.addDeath(victim);
+
+		victimScore.resetKillstreak();
+
+		playerScores.put(victim, victimScore);
+
+		switch (getGamemode()) {
+			case RESCUE:
+			case GUNFIGHT:
+				victim.setGameMode(GameMode.SPECTATOR);
+				victim.getInventory().clear();
+				isAlive.put(victim, false);
+
+				if (getGamemode() == Gamemode.RESCUE) {
+					if (isOnBlueTeam(victim) && getAlivePlayers(blueTeam) > 0) {
+						ComWarfare.sendTitle(victim, Lang.RESPAWN_IF_DOG_TAG_PICKED_UP.getMessage(), "");
+						dropDogTag(victim);
+					} else if (isOnRedTeam(victim) && getAlivePlayers(redTeam) > 0) {
+						ComWarfare.sendTitle(victim, Lang.RESPAWN_IF_DOG_TAG_PICKED_UP.getMessage(), "");
+						dropDogTag(victim);
+					}
+				} else {
+					ComWarfare.sendTitle(victim, Lang.RESPAWN_NEXT_ROUND.getMessage(), "");
 				}
-			} else {
-				ComWarfare.sendTitle(p, Lang.RESPAWN_NEXT_ROUND.getMessage(), "");
-			}
 
-			return;
-		}
+				return;
 
+			case KC:
+				dropDogTag(victim);
+				break;
 
-		if (getGamemode() == Gamemode.KC) {
-			dropDogTag(p);
-		}
-
-		if (getGamemode() == Gamemode.INFECT && redTeam.contains(killer)) {
-			blueTeam.remove(p);
-
-			redTeam.add(p);
-
-			if (getGamemode().equals(Gamemode.INFECT)) {
+			case INFECT:
+				if (killer != null && !redTeam.contains(killer)) break;
+				blueTeam.remove(victim);
+				redTeam.add(victim);
 				blueTeamScore = blueTeam.size();
 				redTeamScore = redTeam.size();
-			}
+				break;
+
+			case OITC:
+				if (ffaPlayerScores.get(victim) != 0) break;
+				ComWarfare.sendMessage(victim, Lang.OITC_RAN_OUT_OF_LIVES.getMessage());
+				victim.setGameMode(GameMode.SPECTATOR);
+				victim.getInventory().clear();
+				removePointForPlayer(victim);
+				break;
+
+			case CTF:
+				if (victim.equals(redFlag.getFlagHolder()))
+					redFlag.drop(victim);
+				 else if (victim.equals(blueFlag.getFlagHolder()))
+					blueFlag.drop(victim);
+				break;
+
 		}
 
-		if (getGamemode() == Gamemode.OITC) {
-			if (ffaPlayerScores.get(p) == 0) {
-				ComWarfare.sendMessage(p, Lang.OITC_RAN_OUT_OF_LIVES.getMessage());
-				p.setGameMode(GameMode.SPECTATOR);
-				p.getInventory().clear();
-				return;
-			}
-		}
+
 
 		BukkitRunnable br = new BukkitRunnable() {
 			int t = 3;
@@ -2038,46 +2054,41 @@ public class GameInstance implements Listener {
 				if (cancelIfNotActive(this))
 					return;
 
-				p.getInventory().clear();
-				p.removePotionEffect(PotionEffectType.SPEED);
+				victim.getInventory().clear();
+				victim.removePotionEffect(PotionEffectType.SPEED);
 
 				if (t > 0) {
 
-					p.getInventory().clear();
-					p.setGameMode(GameMode.SPECTATOR);
-					p.setSpectatorTarget(killer);
+					victim.getInventory().clear();
+					victim.setGameMode(GameMode.SPECTATOR);
+					if (killer != null)
+						victim.setSpectatorTarget(killer);
 
 					if (t == 3)
-						ComWarfare.sendTitle(p, Lang.YOU_WILL_RESPAWN.getMessage().replace("{time}", t + ""), "");
+						ComWarfare.sendTitle(victim, Lang.YOU_WILL_RESPAWN.getMessage().replace("{time}", t + ""), "");
 				} else {
 					if (getState() == GameState.IN_GAME) {
 						if (getGamemode() != Gamemode.FFA && getGamemode() != Gamemode.OITC && getGamemode() != Gamemode.GUN) {
-							if (blueTeam.contains(p)) {
-								spawnCodPlayer(p, getMap().getBlueSpawn());
-							} else if (redTeam.contains(p)) {
-								spawnCodPlayer(p, getMap().getRedSpawn());
+							if (blueTeam.contains(victim)) {
+								spawnCodPlayer(victim, getMap().getBlueSpawn());
+							} else if (redTeam.contains(victim)) {
+								spawnCodPlayer(victim, getMap().getRedSpawn());
 							} else {
 								assignTeams();
 							}
 
-							getRunnables().remove(this);
-							cancel();
-							return;
 						} else {
-							spawnCodPlayer(p, getMap().getPinkSpawn());
-							getRunnables().remove(this);
-							cancel();
-							return;
+							spawnCodPlayer(victim, getMap().getPinkSpawn());
 						}
 					} else {
-						p.setGameMode(GameMode.ADVENTURE);
-						p.teleport(ComWarfare.getLobbyLocation());
-						p.setHealth(20D);
-						p.setFoodLevel(20);
-						getRunnables().remove(this);
-						cancel();
-						return;
+						victim.setGameMode(GameMode.ADVENTURE);
+						victim.teleport(ComWarfare.getLobbyLocation());
+						victim.setHealth(20D);
+						victim.setFoodLevel(20);
 					}
+					getRunnables().remove(this);
+					cancel();
+					return;
 				}
 
 				t--;
@@ -2086,6 +2097,15 @@ public class GameInstance implements Listener {
 
 		getRunnables().add(br);
 		br.runTaskTimer(ComWarfare.getPlugin(), 0L, 20L);
+	}
+
+	/**
+	 * Don't allow the player to move if they are dead/ in spectator mode.
+	 */
+	@EventHandler
+	public void moveEvent(PlayerMoveEvent e) {
+		if (e.getPlayer().getGameMode() == GameMode.SPECTATOR)
+			e.setCancelled(true);
 	}
 
 	private void updateTabList() {
@@ -2302,14 +2322,6 @@ public class GameInstance implements Listener {
 				updateScores(victim, killer, rank);
 			}
 
-			if (getGamemode() == Gamemode.CTF) {
-				if (victim.equals(redFlag.getFlagHolder())) {
-					redFlag.drop(victim);
-				} else if (victim.equals(blueFlag.getFlagHolder())) {
-					blueFlag.drop(victim);
-				}
-			}
-
 		} else if (getGamemode().equals(Gamemode.FFA) || getGamemode().equals(Gamemode.GUN) || getGamemode().equals(Gamemode.OITC)) {
 //			ComWarfare.sendMessage(killer, "" + ChatColor.GREEN + ChatColor.BOLD + "YOU " + ChatColor.RESET + ChatColor.WHITE + "[" + Lang.KILLED_TEXT.getMessage() + "] " + ChatColor.RESET	 + ChatColor.GOLD + ChatColor.BOLD + victim.getDisplayName(), ComWarfare.getLang());
 			ComWarfare.sendActionBar(killer, ChatColor.YELLOW + "+" + rank.getKillExperience() + "xp");
@@ -2317,7 +2329,6 @@ public class GameInstance implements Listener {
 			CreditManager.setCredits(killer, CreditManager.getCredits(killer) + rank.getKillCredits());
 			kill(victim, killer);
 			if (getGamemode() == Gamemode.OITC) {
-				removePointForPlayer(victim);
 				ItemStack ammo = GameManager.oitcGun.getAmmo();
 				ammo.setAmount(1);
 				if (killer.getInventory().getItem(InventoryPositions.gunGameAmmo) != null && killer.getInventory().getItem(InventoryPositions.gunGameAmmo).getType() == ammo.getType()) {
@@ -2338,8 +2349,6 @@ public class GameInstance implements Listener {
 
 				try {
 					held = (ItemStack) killer.getInventory().getClass().getMethod("getItemInMainHand").invoke(killer.getInventory());
-				} catch(NoSuchMethodException e) {
-					held = killer.getInventory().getItemInHand();
 				} catch(Exception e) {
 					held = killer.getInventory().getItemInHand();
 				}
@@ -2400,14 +2409,6 @@ public class GameInstance implements Listener {
 			}
 		}
 
-		CodScore victimScore = playerScores.get(victim);
-
-		victimScore.setDeaths(victimScore.getDeaths() + 1);
-		StatHandler.addDeath(victim);
-
-		victimScore.resetKillstreak();
-
-		playerScores.put(victim, victimScore);
 	}
 
 	/* Gamemode Listeners */
@@ -2482,6 +2483,20 @@ public class GameInstance implements Listener {
 		if (damage != 0)
 			damagePlayer(victim, damage, attacker);
 	}
+
+	/**
+	 * Handle non player kill deaths.
+	 */
+//	@EventHandler
+//	public void onPlayerDeath(EntityDeathEvent e) {
+//		if (!(e.getEntity() instanceof Player)) return;
+//			Player player = (Player) e.getEntity();
+//			EntityDamageEvent.DamageCause deathCause = player.getLastDamageCause().getCause();
+//			System.out.println(deathCause);
+//			if (deathCause != EntityDamageEvent.DamageCause.ENTITY_ATTACK || deathCause != EntityDamageEvent.DamageCause.ENTITY_SWEEP_ATTACK) {
+//				kill(player, null);
+//			}
+//	}
 
 	public void onPlayerInteractWithWolf(PlayerInteractEntityEvent e) {
 		if (!(e.getRightClicked() instanceof Wolf))
