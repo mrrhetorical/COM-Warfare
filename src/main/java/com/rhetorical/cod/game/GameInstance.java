@@ -2484,19 +2484,6 @@ public class GameInstance implements Listener {
 			damagePlayer(victim, damage, attacker);
 	}
 
-	/**
-	 * Handle non player kill deaths.
-	 */
-//	@EventHandler
-//	public void onPlayerDeath(EntityDeathEvent e) {
-//		if (!(e.getEntity() instanceof Player)) return;
-//			Player player = (Player) e.getEntity();
-//			EntityDamageEvent.DamageCause deathCause = player.getLastDamageCause().getCause();
-//			System.out.println(deathCause);
-//			if (deathCause != EntityDamageEvent.DamageCause.ENTITY_ATTACK || deathCause != EntityDamageEvent.DamageCause.ENTITY_SWEEP_ATTACK) {
-//				kill(player, null);
-//			}
-//	}
 
 	public void onPlayerInteractWithWolf(PlayerInteractEntityEvent e) {
 		if (!(e.getRightClicked() instanceof Wolf))
