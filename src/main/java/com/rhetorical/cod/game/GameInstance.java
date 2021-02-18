@@ -1984,6 +1984,8 @@ public class GameInstance implements Listener {
 
 		Bukkit.getPluginManager().callEvent(new PlayerDieSoundEvent(victim));
 
+		isAlive.put(victim, false);
+
 		AssignmentManager.getInstance().updateAssignments(victim, 1, getGamemode());
 
 		CodScore victimScore = playerScores.get(victim);
@@ -2000,7 +2002,6 @@ public class GameInstance implements Listener {
 			case GUNFIGHT:
 				victim.setGameMode(GameMode.SPECTATOR);
 				victim.getInventory().clear();
-				isAlive.put(victim, false);
 
 				if (getGamemode() == Gamemode.RESCUE) {
 					if (isOnBlueTeam(victim) && getAlivePlayers(blueTeam) > 0) {
@@ -2104,7 +2105,7 @@ public class GameInstance implements Listener {
 	 */
 	@EventHandler
 	public void moveEvent(PlayerMoveEvent e) {
-		if (e.getPlayer().getGameMode() == GameMode.SPECTATOR)
+		if (isAlive.containsKey(e.getPlayer()) && !isAlive.get(e.getPlayer()))
 			e.setCancelled(true);
 	}
 
