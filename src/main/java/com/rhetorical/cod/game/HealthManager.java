@@ -52,8 +52,10 @@ public class HealthManager {
 	}
 	
 	public void damage(Player p, double damage) {
-		
-		if (p.getGameMode() != GameMode.SURVIVAL && p.getGameMode() != GameMode.ADVENTURE) return;
+
+		GameMode gamemodePre = GameMode.valueOf(ComWarfare.getInstance().getConfig().getString("Gamemodes.Game").toUpperCase());
+		GameMode gamemode = (gamemodePre == null) ? GameMode.ADVENTURE : gamemodePre;
+		if (p.getGameMode() != gamemode && p.getGameMode() != gamemode) return;
 		
 		if (p.hasPotionEffect(PotionEffectType.DAMAGE_RESISTANCE)) return;
 
@@ -70,7 +72,9 @@ public class HealthManager {
 	}
 
 	void setHealth(Player p, double health) {
-		if (p.getGameMode() != GameMode.SURVIVAL && p.getGameMode() != GameMode.ADVENTURE) return;
+		GameMode gamemodePre = GameMode.valueOf(ComWarfare.getInstance().getConfig().getString("Gamemodes.Game").toUpperCase());
+		GameMode gamemode = (gamemodePre == null) ? GameMode.ADVENTURE : gamemodePre;
+		if (p.getGameMode() != gamemode && p.getGameMode() != gamemode) return;
 
 		if (health > defaultHealth) {
 			if (inJuggernaut.contains(p)) {
@@ -86,7 +90,9 @@ public class HealthManager {
 	}
 
 	void heal(Player p, double healing) {
-		if (p.getGameMode() != GameMode.SURVIVAL && p.getGameMode() != GameMode.ADVENTURE) return;
+		GameMode gamemodePre = GameMode.valueOf(ComWarfare.getInstance().getConfig().getString("Gamemodes.Game").toUpperCase());
+		GameMode gamemode = (gamemodePre == null) ? GameMode.ADVENTURE : gamemodePre;
+		if (p.getGameMode() != gamemode && p.getGameMode() != gamemode) return;
 
 		if (inJuggernaut.contains(p))
 			healing /= 5;

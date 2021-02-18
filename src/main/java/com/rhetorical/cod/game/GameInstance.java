@@ -362,7 +362,9 @@ public class GameInstance implements Listener {
 
 		KillStreakManager.getInstance().loadStreaks(p);
 
-		p.setGameMode(GameMode.SURVIVAL);
+		GameMode gamemodePre = GameMode.valueOf(ComWarfare.getInstance().getConfig().getString("Gamemodes.Lobby").toUpperCase());
+		GameMode gamemode = (gamemodePre == null) ? GameMode.ADVENTURE : gamemodePre;
+		p.setGameMode(gamemode);
 		p.setHealth(20D);
 		p.setFoodLevel(20);
 		ProgressionManager.getInstance().update(p);
@@ -634,7 +636,9 @@ public class GameInstance implements Listener {
 	private void spawnCodPlayer(Player p, Location L, Loadout loadout) {
 		p.teleport(L);
 		p.getInventory().clear();
-		p.setGameMode(GameMode.ADVENTURE);
+		GameMode gamemodePre = GameMode.valueOf(ComWarfare.getInstance().getConfig().getString("Gamemodes.Game").toUpperCase());
+		GameMode gamemode = (gamemodePre == null) ? GameMode.ADVENTURE : gamemodePre;
+		p.setGameMode(gamemode);
 		p.setHealth(20d);
 		p.setFoodLevel(20);
 		health.reset(p);
@@ -1027,7 +1031,9 @@ public class GameInstance implements Listener {
 				Location spawnPoint = isOnPinkTeam(p) ? currentMap.getPinkSpawn() : isOnBlueTeam(p) ? currentMap.getBlueSpawn() : currentMap.getRedSpawn();
 				spawnCodPlayer(p, spawnPoint);
 			}
-			p.setGameMode(GameMode.ADVENTURE);
+			GameMode gamemodePre = GameMode.valueOf(ComWarfare.getInstance().getConfig().getString("Gamemodes.Lobby").toUpperCase());
+			GameMode gamemode = (gamemodePre == null) ? GameMode.ADVENTURE : gamemodePre;
+			p.setGameMode(gamemode);
 		}
 
 		for (CodScore score : playerScores.values()) {
@@ -2070,7 +2076,9 @@ public class GameInstance implements Listener {
 							return;
 						}
 					} else {
-						p.setGameMode(GameMode.ADVENTURE);
+						GameMode gamemodePre = GameMode.valueOf(ComWarfare.getInstance().getConfig().getString("Gamemodes.Lobby").toUpperCase());
+						GameMode gamemode = (gamemodePre == null) ? GameMode.ADVENTURE : gamemodePre;
+						p.setGameMode(gamemode);
 						p.teleport(ComWarfare.getLobbyLocation());
 						p.setHealth(20D);
 						p.setFoodLevel(20);
