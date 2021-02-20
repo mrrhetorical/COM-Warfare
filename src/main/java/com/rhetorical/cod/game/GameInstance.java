@@ -803,10 +803,8 @@ public class GameInstance implements Listener {
 		}
 	}
 
-	
-	public static boolean isACE(Player p) {
 
-		// Get player stats
+	private static double[] getPlayerStats(Player p) {
 		int kills = 0;
 		int deaths = 0;
 		if (StatsFile.getData().contains(p.getName() + ".kills") && StatsFile.getData().contains(p.getName() + ".deaths")){
@@ -821,6 +819,18 @@ public class GameInstance implements Listener {
 
 		// calculate KD
 		double kd = (double) kills / (double) deaths;
+
+		return new double[]{(double) kills, (double) deaths, kd};
+	}
+
+	public static boolean isACE(Player p) {
+		// Get player stats
+		double[] playerStats = getPlayerStats(p);
+		int kills = (int) playerStats[0];
+		int deaths = (int) playerStats[1];
+		double kd = playerStats[2];
+
+		deaths = deaths < 0 ? 1 : deaths;
 
 		// calculate
 		if ( kills < 1000 ) {
@@ -828,25 +838,19 @@ public class GameInstance implements Listener {
 		}
 
 		// If you have more than 100 kills and have a KD of 1.2 or higher you are a "good" player
-		return kd >= 1.2 || kills >= 100;
+		return kd >= 1.2 && kills >= 100;
 	}
 
 	public static int getPlayerPowerLevel(Player p) {
+		// Get player stats
+		double[] playerStats = getPlayerStats(p);
 
-		int kills = 0;
-		int deaths = 0;
-		if (StatsFile.getData().contains(p.getName() + ".kills") && StatsFile.getData().contains(p.getName() + ".deaths")){
-			kills = StatsFile.getData().getInt(p.getName() + ".kills");
-			deaths = StatsFile.getData().getInt(p.getName() + ".deaths");
-		}
+		int kills = (int) playerStats[0];
+		int deaths = (int) playerStats[1];
+		double kd = playerStats[2];
 
-		// if deaths is 0 make deaths 1
-		if ( deaths <= 0 ) {
-			deaths = 1;
-		}
+		deaths = deaths < 0 ? 1 : deaths;
 
-		// calculate KD
-		double kd = (double) kills / (double) deaths;
 		if ( kills < 100 ) {
 			kd = 0.8;
 		}
