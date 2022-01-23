@@ -540,7 +540,7 @@ public class CodCommand implements CommandExecutor {
 				if (!ComWarfare.hasPerm(sender, "com.createWeapon"))
 					return true;
 
-				if (args.length >= 7) {
+				if (args.length == 8) {
 					ComWarfare.getInstance().createWeapon(sender, args);
 					return true;
 				} else {
