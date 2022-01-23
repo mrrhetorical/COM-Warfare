@@ -17,8 +17,8 @@ import java.util.List;
  * */
 
 public class HealthManager {
-	private HashMap<Player, Double> healthMap = new HashMap<Player, Double>();
-	
+	private HashMap<Player, Double> healthMap = new HashMap<>();
+
 	public double defaultHealth;
 	List<Player> inJuggernaut = new ArrayList<>();
 
@@ -53,10 +53,8 @@ public class HealthManager {
 	
 	public void damage(Player p, double damage) {
 
-		GameMode gamemodePre = GameMode.valueOf(ComWarfare.getInstance().getConfig().getString("Gamemodes.Game").toUpperCase());
-		GameMode gamemode = (gamemodePre == null) ? GameMode.ADVENTURE : gamemodePre;
-		if (p.getGameMode() != gamemode && p.getGameMode() != gamemode) return;
-		
+		if (p.getGameMode() != GameInstance.getPlayerGamemode("Game")) return;
+
 		if (p.hasPotionEffect(PotionEffectType.DAMAGE_RESISTANCE)) return;
 
 		if (inJuggernaut.contains(p))
@@ -72,9 +70,8 @@ public class HealthManager {
 	}
 
 	void setHealth(Player p, double health) {
-		GameMode gamemodePre = GameMode.valueOf(ComWarfare.getInstance().getConfig().getString("Gamemodes.Game").toUpperCase());
-		GameMode gamemode = (gamemodePre == null) ? GameMode.ADVENTURE : gamemodePre;
-		if (p.getGameMode() != gamemode && p.getGameMode() != gamemode) return;
+
+		if (p.getGameMode() != GameInstance.getPlayerGamemode("Game")) return;
 
 		if (health > defaultHealth) {
 			if (inJuggernaut.contains(p)) {
@@ -90,9 +87,8 @@ public class HealthManager {
 	}
 
 	void heal(Player p, double healing) {
-		GameMode gamemodePre = GameMode.valueOf(ComWarfare.getInstance().getConfig().getString("Gamemodes.Game").toUpperCase());
-		GameMode gamemode = (gamemodePre == null) ? GameMode.ADVENTURE : gamemodePre;
-		if (p.getGameMode() != gamemode && p.getGameMode() != gamemode) return;
+
+		if (p.getGameMode() != GameInstance.getPlayerGamemode("Game")) return;
 
 		if (inJuggernaut.contains(p))
 			healing /= 5;

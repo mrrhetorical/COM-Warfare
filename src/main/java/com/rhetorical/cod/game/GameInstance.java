@@ -3685,7 +3685,7 @@ public class GameInstance implements Listener {
 		return false;
 	}
 
-	private static GameMode getPlayerGamemode(String path) {
+	public static GameMode getPlayerGamemode(String path) {
 		GameMode gamemode = GameMode.ADVENTURE;
 		try {
 			gamemode = GameMode.valueOf(ComWarfare.getInstance().getConfig().getString("Gamemodes." + path).toUpperCase(Locale.FRENCH));
