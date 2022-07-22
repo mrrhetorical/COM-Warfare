@@ -362,7 +362,7 @@ public class GameInstance implements Listener {
 
 		KillStreakManager.getInstance().loadStreaks(p);
 
-		p.setGameMode(GameMode.SURVIVAL);
+		p.setGameMode(getPlayerGamemode("Lobby"));
 		p.setHealth(20D);
 		p.setFoodLevel(20);
 		ProgressionManager.getInstance().update(p);
@@ -634,7 +634,7 @@ public class GameInstance implements Listener {
 	private void spawnCodPlayer(Player p, Location L, Loadout loadout) {
 		p.teleport(L);
 		p.getInventory().clear();
-		p.setGameMode(GameMode.ADVENTURE);
+		p.setGameMode(getPlayerGamemode("Game"));
 		p.setHealth(20d);
 		p.setFoodLevel(20);
 		health.reset(p);
@@ -879,12 +879,12 @@ public class GameInstance implements Listener {
 		String team = "red";
 		ComWarfare.sendMessage(p, Lang.ASSIGNED_TO_TEAM.getMessage().replace("{team-color}", tColor + "").replace("{team}", team), ComWarfare.getLang());
 	}
-	
+
 	/**
 	 * Assigns player to teams randomly.
 	 * */
 	private void assignTeams() {
-		
+
 		Boolean sbmm = false;
 		sbmm = ComWarfare.getPlugin().getConfig().getBoolean("SkillBasedMatchMaking");
 
@@ -1031,7 +1031,7 @@ public class GameInstance implements Listener {
 				Location spawnPoint = isOnPinkTeam(p) ? currentMap.getPinkSpawn() : isOnBlueTeam(p) ? currentMap.getBlueSpawn() : currentMap.getRedSpawn();
 				spawnCodPlayer(p, spawnPoint);
 			}
-			p.setGameMode(GameMode.ADVENTURE);
+			p.setGameMode(getPlayerGamemode("Lobby"));
 		}
 
 		for (CodScore score : playerScores.values()) {
@@ -2086,14 +2086,11 @@ public class GameInstance implements Listener {
 							spawnCodPlayer(victim, getMap().getPinkSpawn());
 						}
 					} else {
-						victim.setGameMode(GameMode.ADVENTURE);
+						victim.setGameMode(getPlayerGamemode("Lobby"));
 						victim.teleport(ComWarfare.getLobbyLocation());
 						victim.setHealth(20D);
 						victim.setFoodLevel(20);
 					}
-					getRunnables().remove(this);
-					cancel();
-					return;
 				}
 
 				t--;
@@ -3687,4 +3684,14 @@ public class GameInstance implements Listener {
 		}
 		return false;
 	}
+
+	public static GameMode getPlayerGamemode(String path) {
+		GameMode gamemode = GameMode.ADVENTURE;
+		try {
+			gamemode = GameMode.valueOf(ComWarfare.getInstance().getConfig().getString("Gamemodes." + path).toUpperCase(Locale.FRENCH));
+		} catch (IllegalArgumentException ignored) {
+		}
+		return gamemode;
+	}
+
 }
