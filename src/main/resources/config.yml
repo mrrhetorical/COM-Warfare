@@ -191,6 +191,12 @@ RankTiers:
       credits: 5
     levelCredits: 10
 
+# The gamemode players to be set to in different situations.
+# Can be CREATIVE, SURVIVAL, or ADVENTURE.
+Gamemodes:
+  Lobby: ADVENTURE
+  Game: ADVENTURE
+
 #Skill based matchmaking: In a team based gamemode, joining players will be put on the team that has a lower "power level".
 #"power level" is calculated using the K/D and number of kills by the players on each team.
 SkillBasedMatchMaking: false
