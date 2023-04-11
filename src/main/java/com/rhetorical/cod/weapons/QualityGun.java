@@ -56,7 +56,7 @@ public class QualityGun implements Listener {
 		if (!(GameManager.isInMatch(victim) && GameManager.isInMatch(e.getPlayer())))
 			return;
 
-		e.setCanceled(true);
+		e.setCancelled(true);
 
 		GameInstance match = GameManager.getMatchWhichContains(victim);
 		if (match != null)

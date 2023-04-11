@@ -40,7 +40,7 @@ import java.util.Set;
  *  COM-Warfare is a plugin that completely changes Minecraft servers to give its players an experience similar to that of Call of Duty!
  *
  * @author Caleb Brock
- * @version 2.12.15
+ * @version 2.15.4
  * */
 
 public class ComWarfare extends JavaPlugin {
@@ -161,7 +161,7 @@ public class ComWarfare extends JavaPlugin {
 			}
 		}
 
-		bMetrics = new Metrics(this);
+		bMetrics = new Metrics(this, 3221);
 
 		String bukkitVersion = Bukkit.getServer().getBukkitVersion();
 
