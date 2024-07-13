@@ -219,7 +219,7 @@ class DomFlag {
 				if (world != null)
 					for (int angle = 0; angle < 60; angle++) {
 						Particle.DustOptions dustOptions = (((float) angle) / 60f) <= progress ? teamColor : grayDust;
-						world.spawnParticle(Particle.REDSTONE, getLocation().add(6f * Math.cos(MathUtil.degToRad(angle * 6f)), 0f, 6f * Math.sin(MathUtil.degToRad(angle * 6f))), 1, dustOptions);
+						world.spawnParticle(Particle.DUST, getLocation().add(6f * Math.cos(MathUtil.degToRad(angle * 6f)), 0f, 6f * Math.sin(MathUtil.degToRad(angle * 6f))), 1, dustOptions);
 					}
 			}
 		} catch (Exception|Error ignored) {} //unsupported version

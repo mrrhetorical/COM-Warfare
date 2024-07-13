@@ -440,7 +440,7 @@ public class InventoryManager implements Listener {
 					purchasedTacticals = new ArrayList<>();
 
 			for (CodGun gun : ShopManager.getInstance().getPurchasedGuns().get(p))
-				if (gun.getGunType() == GunType.Primary)
+				if (gun.getWeaponType() == WeaponType.Primary)
 					purchasedPrimaries.add(gun);
 				else
 					purchasedSecondaries.add(gun);

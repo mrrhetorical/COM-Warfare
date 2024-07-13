@@ -1,6 +1,7 @@
-package com.rhetorical.cod.util;
+package com.rhetorical.cod.weapons.support;
 
 import com.rhetorical.cod.ComWarfare;
+import com.rhetorical.cod.util.ItemBridgePrefix;
 import org.bukkit.inventory.ItemStack;
 
 public class ItemBridgeUtil {

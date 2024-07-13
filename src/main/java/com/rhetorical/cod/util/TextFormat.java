@@ -2,7 +2,6 @@ package com.rhetorical.cod.util;
 
 
 import net.md_5.bungee.api.ChatColor;
-import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 
 import java.util.regex.Matcher;
@@ -21,9 +20,8 @@ public class TextFormat {
             Matcher match = pattern.matcher(msg);
             while (match.find()) {
                 String hex = msg.substring(match.start(), match.end());
-                hex = StringUtils.replace(hex, "{", "");
-                hex = StringUtils.replace(hex, "}", "");
-                msg = StringUtils.replace(msg, hex, "" + ChatColor.of(hex));
+                hex = hex.substring(1, hex.length() - 1);
+                msg = msg.replace(hex, ChatColor.of(hex).toString());
                 match = pattern.matcher(msg);
             }
         }

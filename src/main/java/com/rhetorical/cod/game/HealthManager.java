@@ -55,7 +55,7 @@ public class HealthManager {
 
 		if (p.getGameMode() != GameInstance.getPlayerGamemode("Game")) return;
 
-		if (p.hasPotionEffect(PotionEffectType.DAMAGE_RESISTANCE)) return;
+		if (p.hasPotionEffect(PotionEffectType.RESISTANCE)) return;
 
 		if (inJuggernaut.contains(p))
 			damage /= 3;

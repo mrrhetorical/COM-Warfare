@@ -1,11 +1,11 @@
-package com.rhetorical.cod.weapons;
+package com.rhetorical.cod.weapons.support;
 
 import com.rhetorical.cod.ComWarfare;
 import com.rhetorical.cod.game.GameInstance;
 import com.rhetorical.cod.game.GameManager;
 import com.rhetorical.cod.inventories.ShopManager;
+import com.rhetorical.cod.weapons.CodWeapon;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -50,7 +50,7 @@ public class CrackShotGun implements Listener {
 			item = ((com.shampaggon.crackshot.CSUtility) instance).generateWeapon(name);
 		} catch(Error|Exception ignored) {}
 
-		return item == null ? new ItemStack(Material.AIR) : item;
+		return item;
 	}
 
 	/**

@@ -18,6 +18,8 @@ import com.rhetorical.cod.sounds.SoundManager;
 import com.rhetorical.cod.streaks.KillStreakManager;
 import com.rhetorical.cod.util.*;
 import com.rhetorical.cod.weapons.*;
+import com.rhetorical.cod.weapons.support.CrackShotGun;
+import com.rhetorical.cod.weapons.support.QualityGun;
 import com.rhetorical.tpp.api.McTranslate;
 import me.clip.placeholderapi.PlaceholderAPI;
 import net.md_5.bungee.api.ChatMessageType;
@@ -28,7 +30,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -88,6 +89,7 @@ public class ComWarfare extends JavaPlugin {
 
 	private String header = "[COM-Warfare]";
 
+	private boolean hasWeaponMechanics = false;
 	private boolean hasQA = false;
 	private boolean hasCS = false;
 	private boolean hasProtocol = false;
@@ -141,6 +143,7 @@ public class ComWarfare extends JavaPlugin {
 		getCommand("cod").setExecutor(new CodCommand());
 		getCommand("cod").setTabCompleter(new CodTabCompleter());
 
+		hasWeaponMechanics = Bukkit.getServer().getPluginManager().getPlugin("WeaponMechanics") != null;
 		hasQA = Bukkit.getServer().getPluginManager().getPlugin("QualityArmory") != null;
 		hasCS = Bukkit.getServer().getPluginManager().getPlugin("CrackShot") != null;
 		hasProtocol = Bukkit.getServer().getPluginManager().getPlugin("ProtocolLib") != null;
@@ -454,7 +457,7 @@ public class ComWarfare extends JavaPlugin {
 	 * */
 	void createWeapon(CommandSender p, String[] args) {
 
-		String command = "/cod createWeapon (name) (Lethal/Tactical) (Unlock Type: level/credits/both) (Grenade Material) (Level Unlock) (amount) (Cost)";
+		String command = "/cod createWeapon (name) (Lethal/Tactical) (Unlock Type: level/credits/both) (Grenade Code) (Level Unlock) (amount) (Cost)";
 		if (args.length == 8) {
 			String name = args[1];
 			WeaponType grenadeType;
@@ -472,21 +475,7 @@ public class ComWarfare extends JavaPlugin {
 				sendMessage(p, ComWarfare.getPrefix() + Lang.UNLOCK_TYPE_NOT_EXISTS.getMessage(), lang);
 				return;
 			}
-			ItemStack grenade;
-
-			try {
-				String[] wa = args[4].toUpperCase().split(":");
-
-				if (wa.length == 1) {
-					grenade = new ItemStack(Material.valueOf(args[4].toUpperCase()));
-				} else {
-					byte data = Byte.parseByte(wa[1]);
-					grenade = new ItemStack(Material.valueOf(wa[4]), 1, data);
-				}
-			} catch (Exception e) {
-				sendMessage(p, ComWarfare.getPrefix() + Lang.MATERIAL_NOT_EXISTS.getMessage().replace("{name}", args[4].toUpperCase()), lang);
-				return;
-			}
+			String grenadeCode = args[4];
 
 			int levelUnlock;
 
@@ -511,8 +500,6 @@ public class ComWarfare extends JavaPlugin {
 				return;
 			}
 
-			grenade.setAmount(amount);
-
 			int cost;
 
 			try {
@@ -522,7 +509,7 @@ public class ComWarfare extends JavaPlugin {
 				return;
 			}
 
-			CodWeapon grenadeWeapon = new CodWeapon(name, grenadeType, unlockType, grenade, levelUnlock, true);
+			CodWeapon grenadeWeapon = new CodWeapon(name, grenadeType, unlockType, grenadeCode, amount, levelUnlock, true);
 
 			grenadeWeapon.setCreditUnlock(cost);
 
@@ -557,21 +544,25 @@ public class ComWarfare extends JavaPlugin {
 	 * @param args = The arguments passed from the createGun command.
 	 * */
 	void createGun(CommandSender p, String[] args) {
-		String command = "/cod createGun (Gun name) (Primary/Secondary) (Unlock type: level/credits/both) (Ammo Amount) (Gun Material[:data]) (Ammo Material[:data]) (Level Unlock) (Cost)";
+		String command = "/cod createGun (Gun name) (Primary/Secondary) (Unlock type: level/credits/both) (Ammo Amount) (Gun Code) (Ammo Code) (Level Unlock) (Cost)";
 		if (args.length == 9) {
 			String name = args[1];
 
-			GunType gunType;
+			WeaponType gunType;
 
 			try {
 				String gt = args[2];
 				String first = gt.charAt(0) + "";
 				gt = gt.substring(1);
 				gt = first.toUpperCase() + gt.toLowerCase();
-				gunType = GunType.valueOf(gt);
+				gunType = WeaponType.valueOf(gt);
 			} catch (Exception e) {
 				sendMessage(p, ComWarfare.getPrefix() + Lang.GUN_TYPE_NOT_EXISTS.getMessage(), lang);
 				return;
+			}
+
+			if (gunType != WeaponType.Primary && gunType != WeaponType.Secondary) {
+				sendMessage(p, ComWarfare.getPrefix() + Lang.GUN_TYPE_NOT_EXISTS.getMessage(), lang);
 			}
 
 			UnlockType unlockType;
@@ -592,35 +583,8 @@ public class ComWarfare extends JavaPlugin {
 				return;
 			}
 
-			ItemStack gunItem;
-			ItemStack ammoItem;
-			try {
-				String[] ga = args[5].toUpperCase().split(":");
-
-				if (ga.length <= 1) {
-					gunItem = new ItemStack(Material.valueOf(args[5].toUpperCase()));
-				} else {
-					byte data = Byte.parseByte(ga[1]);
-					gunItem = new ItemStack(Material.valueOf(ga[0]), 1, data);
-				}
-			} catch (Exception e) {
-				sendMessage(p, ComWarfare.getPrefix() + Lang.MATERIAL_NOT_EXISTS.getMessage().replace("{name}", args[5].toUpperCase()), lang);
-				return;
-			}
-
-			try {
-				String[] aa = args[6].toUpperCase().split(":");
-
-				if (aa.length <= 1) {
-					ammoItem = new ItemStack(Material.valueOf(args[6].toUpperCase()));
-				} else {
-					byte data = Byte.parseByte(aa[1]);
-					ammoItem = new ItemStack(Material.valueOf(aa[0]), 1, data);
-				}
-			} catch (Exception e) {
-				sendMessage(p, ComWarfare.getPrefix() + Lang.MATERIAL_NOT_EXISTS.getMessage().replace("{name}", args[6].toUpperCase()), lang);
-				return;
-			}
+			String gunCode = args[5];
+			String ammoCode = args[6];
 
 			int levelUnlock;
 
@@ -640,7 +604,7 @@ public class ComWarfare extends JavaPlugin {
 				return;
 			}
 
-			CodGun gun = new CodGun(name, gunType, unlockType, ammoAmount, ammoItem, gunItem, levelUnlock, true);
+			CodGun gun = new CodGun(name, gunType, unlockType, ammoAmount, gunCode, ammoCode, levelUnlock, true);
 
 			gun.setCreditUnlock(cost);
 
@@ -811,6 +775,13 @@ public class ComWarfare extends JavaPlugin {
 	}
 
 	/**
+	 * @return Returns if the server has WeaponMechanics installed.
+	 * */
+	public static boolean hasWeaponMechanics() {
+		return getInstance().hasWeaponMechanics;
+	}
+
+	/**
 	 * @return Returns if the server has QualityArmory installed.
 	 * */
 	public static boolean hasQualityArms() {
@@ -952,6 +923,7 @@ public class ComWarfare extends JavaPlugin {
 		for (ItemBridgePrefix p : getItemBridgePrefixes())
 			if (p.getWeapons().contains(weapon.getName()))
 				return p;
+
 		return null;
 	}
 }
