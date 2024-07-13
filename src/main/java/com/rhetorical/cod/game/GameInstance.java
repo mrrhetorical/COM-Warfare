@@ -22,7 +22,7 @@ import com.rhetorical.cod.streaks.KillStreakManager;
 import com.rhetorical.cod.util.InventoryPositions;
 import com.rhetorical.cod.weapons.CodGun;
 import com.rhetorical.cod.weapons.CodWeapon;
-import com.rhetorical.cod.weapons.CrackShotGun;
+import com.rhetorical.cod.weapons.support.CrackShotGun;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.boss.BarColor;
@@ -736,7 +736,7 @@ public class GameInstance implements Listener {
 		}
 
 		if (ComWarfare.isSpawnProtection())
-			p.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, ComWarfare.getSpawnProtectionDuration() * 20, 1));
+			p.addPotionEffect(new PotionEffect(PotionEffectType.RESISTANCE, ComWarfare.getSpawnProtectionDuration() * 20, 1));
 
 		if (InventoryPositions.isValid(InventoryPositions.selectClass))
 			p.getInventory().setItem(InventoryPositions.selectClass, InventoryManager.getInstance().selectClass);
@@ -2628,7 +2628,7 @@ public class GameInstance implements Listener {
 	}
 
 	public boolean isInvulnerable(Player p) {
-		return p.hasPotionEffect(PotionEffectType.DAMAGE_RESISTANCE);
+		return p.hasPotionEffect(PotionEffectType.RESISTANCE);
 	}
 
 	/**

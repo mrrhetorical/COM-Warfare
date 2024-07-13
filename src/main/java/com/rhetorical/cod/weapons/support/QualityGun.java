@@ -1,4 +1,4 @@
-package com.rhetorical.cod.weapons;
+package com.rhetorical.cod.weapons.support;
 
 import com.rhetorical.cod.ComWarfare;
 import com.rhetorical.cod.game.GameInstance;
@@ -21,11 +21,11 @@ public class QualityGun implements Listener {
 		}
 	}
 
-    static ItemStack getGunForName(String name) {
+    public static ItemStack getGunForName(String name) {
         return getCustomItemByName(name);
     }
 
-    static ItemStack getAmmoForName(String name) {
+    public static ItemStack getAmmoForName(String name) {
         return getCustomItemByName(name);
     }
 

@@ -12,6 +12,7 @@ import com.rhetorical.cod.perks.PerkSlot;
 import com.rhetorical.cod.progression.ProgressionManager;
 import com.rhetorical.cod.util.InventoryPositions;
 import com.rhetorical.cod.weapons.*;
+import com.rhetorical.cod.weapons.support.CrackShotGun;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -73,10 +74,10 @@ public class LoadoutManager {
 		lethalMeta.setDisplayName(Lang.NO_LETHAL.getMessage());
 		tacticalMeta.setDisplayName(Lang.NO_TACTICAL.getMessage());
 
-		blankPrimary = new CodGun("No Primary", GunType.Primary, UnlockType.LEVEL, 0, new ItemStack(Material.AIR), emptyPrimary, 0, true);
-		blankSecondary = new CodGun("No Secondary", GunType.Secondary, UnlockType.LEVEL, 0, new ItemStack(Material.AIR), emptySecondary, 0, true);
-		blankLethal = new CodWeapon("No Lethal", WeaponType.LETHAL, UnlockType.LEVEL, emptyLethal, 0, true);
-		blankTactical = new CodWeapon("No Tactical", WeaponType.TACTICAL, UnlockType.LEVEL, emptyTactical, 0, true);
+		blankPrimary = new CodGun("No Primary", WeaponType.Primary, UnlockType.LEVEL, 0, "BARRIER", "AIR", 0, true);
+		blankSecondary = new CodGun("No Secondary", WeaponType.Secondary, UnlockType.LEVEL, 0,"BARRIER", "AIR", 0, true);
+		blankLethal = new CodWeapon("No Lethal", WeaponType.LETHAL, UnlockType.LEVEL, "BARRIER", 1, 0, true);
+		blankTactical = new CodWeapon("No Tactical", WeaponType.TACTICAL, UnlockType.LEVEL, "BARRIER", 1, 0, true);
 
 		emptyPrimary.setItemMeta(primaryMeta);
 		emptySecondary.setItemMeta(secondaryMeta);
@@ -219,31 +220,22 @@ public class LoadoutManager {
 
 	public CodGun getDefaultPrimary() {
 
-		if (!GunsFile.getData().contains("Guns.Primary.default")) {
+		if (!GunsFile.getData().contains("Weapons.Primary.default")) {
 
 			return blankPrimary;
 		}
 
 		if (defaultPrimary == null) {
 
-			String gunName = GunsFile.getData().getString("Guns.Primary.default.name");
-			int ammoAmount = GunsFile.getData().getInt("Guns.Primary.default.ammoCount");
-			Material ammoMat = Material.valueOf(GunsFile.getData().getString("Guns.Primary.default.ammoItem"));
-			short ammoData = (short) GunsFile.getData().getInt("Guns.Primary.default.ammoData");
-			ItemStack ammoItem = new ItemStack(ammoMat, 1, ammoData);
+			String gunName = GunsFile.getData().getString("Weapons.Primary.default.name");
+			int ammoAmount = GunsFile.getData().getInt("Weapons.Primary.default.ammoCount");
+			String ammoName = GunsFile.getData().getString("Weapons.Primary.default.ammoName");
 
-			Material gunMat = Material.valueOf(GunsFile.getData().getString("Guns.Primary.default.gunItem"));
-			short gunData = (short) GunsFile.getData().getInt("Guns.Primary.default.gunData");
-			ItemStack gunItem = new ItemStack(gunMat, 1, gunData);
+			String gunCode = GunsFile.getData().getString("Weapons.Primary.default.itemName");
 
-			String ammoName = GunsFile.getData().getString("Guns.Primary.default.ammoName");
-			boolean shop = GunsFile.getData().getBoolean("Guns.Primary.default.showInShop");
-			CodGun gun;
-			if (ammoName == null) {
-				gun = new CodGun(gunName, GunType.Primary, null, ammoAmount, ammoItem, gunItem, 0, shop);
-			} else {
-				gun = new CodGun(gunName, ammoName, GunType.Primary, null, ammoAmount, ammoItem, gunItem, 0, shop);
-			}
+			boolean shop = GunsFile.getData().getBoolean("Weapons.Primary.default.showInShop");
+			CodGun gun = new CodGun(gunName, WeaponType.Primary, null, ammoAmount, gunCode, ammoName, 0, shop);
+
 			gun.setCreditUnlock(0);
 
 			defaultPrimary = gun;
@@ -255,31 +247,21 @@ public class LoadoutManager {
 
 	public CodGun getDefaultSecondary() {
 
-		if (!GunsFile.getData().contains("Guns.Secondary.default")) {
+		if (!GunsFile.getData().contains("Weapons.Secondary.default")) {
 
 			return blankSecondary;
 		}
 
 		if (defaultSecondary == null) {
 
-			String gunName = GunsFile.getData().getString("Guns.Secondary.default.name");
-			int ammoAmount = GunsFile.getData().getInt("Guns.Secondary.default.ammoCount");
-			Material ammoMat = Material.valueOf(GunsFile.getData().getString("Guns.Secondary.default.ammoItem"));
-			short ammoData = (short) GunsFile.getData().getInt("Guns.Secondary.default.ammoData");
-			ItemStack ammoItem = new ItemStack(ammoMat, 1, ammoData);
+			String gunName = GunsFile.getData().getString("Weapons.Secondary.default.name");
+			int ammoAmount = GunsFile.getData().getInt("Weapons.Secondary.default.ammoCount");
 
-			Material gunMat = Material.valueOf(GunsFile.getData().getString("Guns.Secondary.default.gunItem"));
-			short gunData = (short) GunsFile.getData().getInt("Guns.Secondary.default.gunData");
-			ItemStack gunItem = new ItemStack(gunMat, 1, gunData);
+			String gunCode = GunsFile.getData().getString("Weapons.Secondary.default.itemName");
 
-			String ammoName = GunsFile.getData().getString("Guns.Secondary.default.ammoName");
-			boolean shop = GunsFile.getData().getBoolean("Guns.Secondary.default.showInShop");
-			CodGun gun;
-			if (ammoName == null) {
-				gun = new CodGun(gunName, GunType.Secondary, null, ammoAmount, ammoItem, gunItem, 0, shop);
-			} else {
-				gun = new CodGun(gunName, ammoName, GunType.Secondary, null, ammoAmount, ammoItem, gunItem, 0, shop);
-			}
+			String ammoName = GunsFile.getData().getString("Weapons.Secondary.default.ammoName");
+			boolean shop = GunsFile.getData().getBoolean("Weapons.Secondary.default.showInShop");
+			CodGun gun = new CodGun(gunName, WeaponType.Secondary, null, ammoAmount, gunCode, ammoName, 0, shop);
 
 			gun.setCreditUnlock(0);
 
@@ -302,21 +284,11 @@ public class LoadoutManager {
 			String weaponName = GunsFile.getData().getString("Weapons.LETHAL.default.name");
 			UnlockType type = UnlockType.valueOf(GunsFile.getData().getString("Weapons.LETHAL.default.unlockType"));
 			int amount = GunsFile.getData().getInt("Weapons.LETHAL.default.amount");
-			Material weaponMaterial;
-			String weaponMat = GunsFile.getData().getString("Weapons.LETHAL.default.item");
-			try {
-				weaponMaterial = Material.valueOf(weaponMat);
-			} catch (Exception e) {
-				ComWarfare.sendMessage(ComWarfare.getConsole(), ComWarfare.getPrefix() + ChatColor.RED + "Could not load lethal " + weaponName + " because no material exits with name " + weaponMat + "!", ComWarfare.getLang());
-				return blankLethal;
-			}
-			short weaponData = (short) GunsFile.getData().getInt("Weapons.LETHAL.default.data");
+			String weaponMat = GunsFile.getData().getString("Weapons.LETHAL.default.itemName");
 
 			boolean shop = GunsFile.getData().getBoolean("Weapons.LETHAL.default.showInShop");
 
-			ItemStack weapon = new ItemStack(weaponMaterial, amount, weaponData);
-
-			defaultLethal = new CodWeapon(weaponName, WeaponType.LETHAL, type, weapon, 0, shop);
+			defaultLethal = new CodWeapon(weaponName, WeaponType.LETHAL, type, weaponMat, amount, 0, shop);
 		}
 
 		return defaultLethal;
@@ -334,21 +306,10 @@ public class LoadoutManager {
 			String weaponName = GunsFile.getData().getString("Weapons.TACTICAL.default.name");
 			UnlockType type = UnlockType.valueOf(GunsFile.getData().getString("Weapons.TACTICAL.default.unlockType"));
 			int amount = GunsFile.getData().getInt("Weapons.TACTICAL.default.amount");
-			Material weaponMaterial;
 			String weaponMat = GunsFile.getData().getString("Weapons.TACTICAL.default.item");
-			try {
-				weaponMaterial = Material.valueOf(weaponMat);
-			} catch (Exception e) {
-				ComWarfare.sendMessage(ComWarfare.getConsole(), ComWarfare.getPrefix() + ChatColor.RED + "Could not load tactical " + weaponName + " because no material exits with name " + weaponMat + "!", ComWarfare.getLang());
-				return blankTactical;
-			}
-			short weaponData = (short) GunsFile.getData().getInt("Weapons.TACTICAL.default.data");
-
-			ItemStack weapon = new ItemStack(weaponMaterial, amount, weaponData);
-
 			boolean shop = GunsFile.getData().getBoolean("Weapons.TACTICAL.default.showInShop");
 
-			defaultTactical = new CodWeapon(weaponName, WeaponType.TACTICAL, type, weapon, 0, shop);
+			defaultTactical = new CodWeapon(weaponName, WeaponType.TACTICAL, type, weaponMat, amount, 0, shop);
 		}
 
 		return defaultTactical;

@@ -1,5 +1,5 @@
 package com.rhetorical.cod.weapons;
 
 public enum WeaponType {
-	LETHAL, TACTICAL
+	LETHAL, TACTICAL, Primary, Secondary
 }

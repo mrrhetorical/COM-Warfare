@@ -1,10 +1,8 @@
 package com.rhetorical.cod.weapons;
 
-import com.rhetorical.cod.ComWarfare;
 import com.rhetorical.cod.files.GunsFile;
 import com.rhetorical.cod.loadouts.LoadoutManager;
-import com.rhetorical.cod.util.ItemBridgeUtil;
-import org.bukkit.Bukkit;
+import com.rhetorical.cod.weapons.support.CrackShotGun;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
@@ -14,11 +12,12 @@ import org.bukkit.inventory.meta.ItemMeta;
 public class CodWeapon {
 
 	private String name;
+
+	private String itemName;
+
+	private int itemAmount;
 	
 	private UnlockType unlockType;
-	protected ItemStack weaponItem;
-	protected ItemStack menuItem;
-	
 	private WeaponType weaponType;
 	
 	private int levelUnlock;
@@ -26,47 +25,40 @@ public class CodWeapon {
 
 	private boolean showInShop;
 
-	public CodWeapon(String n, WeaponType wt, UnlockType t, ItemStack weaponI, int levelUnlock, boolean shop) {
+	public CodWeapon(String n, WeaponType wt, UnlockType unlockType, String itemName, int itemAmount, int levelUnlock, boolean shop) {
 
 		setShowInShop(shop);
 
 		setLevelUnlock(levelUnlock);
 		setWeaponType(wt);
 
-		setType(t);
+		setType(unlockType);
 	
 		setName(n);
 
-		weaponItem = setupWeaponItem(weaponI);
-		menuItem = setupMenuItem();
+		setItemName(itemName);
+		setItemAmount(itemAmount);
 	}
 
-	public CodWeapon(String n, WeaponType wt, UnlockType t, ItemStack weaponI, int levelUnlock, boolean isBlank, boolean shop) {
+	public CodWeapon(String n, WeaponType wt, UnlockType unlockType, String itemName, int itemAmount, int levelUnlock, boolean isBlank, boolean shop) {
 		setLevelUnlock(levelUnlock);
 
 		setShowInShop(shop);
 
 		setWeaponType(wt);
-		setType(t);
+		setType(unlockType);
 
 		setName(n);
-		if (!isBlank) {
-			weaponItem = setupWeaponItem(weaponI);
-			menuItem = setupMenuItem();
-		} else {
-			weaponItem = weaponI;
-			menuItem = setupMenuItem();
-		}
+		setItemName(itemName);
+		setItemAmount(itemAmount);
 	}
 	public void save() {
-		
 		GunsFile.reloadData();
 		
 		if (levelUnlock <= 1 & creditUnlock <= 0 && !GunsFile.getData().contains("Weapons." + weaponType.toString() + ".default.name")) {
-			GunsFile.getData().set("Weapons." + weaponType.toString() + ".default.name", name);
-			GunsFile.getData().set("Weapons." + weaponType.toString() + ".default.item", weaponItem.getType().toString());
-			GunsFile.getData().set("Weapons." + weaponType.toString() + ".default.amount", weaponItem.getAmount());
-			GunsFile.getData().set("Weapons." + weaponType.toString() + ".default.data", weaponItem.getDurability());
+			GunsFile.getData().set("Weapons." + weaponType.toString() + ".default.name", getName());
+			GunsFile.getData().set("Weapons." + weaponType.toString() + ".default.itemName", getItemName());
+			GunsFile.getData().set("Weapons." + weaponType.toString() + ".default.amount", getItemAmount());
 			GunsFile.getData().set("Weapons." + weaponType.toString() + ".default.unlockType", unlockType.toString());
 			GunsFile.getData().set("Weapons." + weaponType.toString() + ".default.levelUnlock", levelUnlock);
 			GunsFile.getData().set("Weapons." + weaponType.toString() + ".default.creditUnlock", creditUnlock);
@@ -85,10 +77,9 @@ public class CodWeapon {
 			k++;
 		}
 		
-		GunsFile.getData().set("Weapons." + weaponType.toString() + "." + k + ".name", name);
-		GunsFile.getData().set("Weapons." + weaponType.toString() + "." + k + ".item", weaponItem.getType().toString());
-		GunsFile.getData().set("Weapons." + weaponType.toString() + "." + k + ".amount", weaponItem.getAmount());
-		GunsFile.getData().set("Weapons." + weaponType.toString() + "." + k + ".data", weaponItem.getDurability());
+		GunsFile.getData().set("Weapons." + weaponType.toString() + "." + k + ".name", getName());
+		GunsFile.getData().set("Weapons." + weaponType.toString() + "." + k + ".itemName", getItemName());
+		GunsFile.getData().set("Weapons." + weaponType.toString() + "." + k + ".amount", getItemAmount());
 		GunsFile.getData().set("Weapons." + weaponType.toString() + "." + k + ".unlockType", unlockType.toString());
 		GunsFile.getData().set("Weapons." + weaponType.toString() + "." + k + ".levelUnlock", levelUnlock);
 		GunsFile.getData().set("Weapons." + weaponType.toString() + "." + k + ".creditUnlock", creditUnlock);
@@ -109,53 +100,19 @@ public class CodWeapon {
 	 * @param weaponItem The base ItemStack for the weapon item.
 	 * @return The weapon item as set up by gun plugins. If the weapon doesn't exist in either QA or CrackShot, it is given a basic treatment by this plugin.
 	 * */
-	protected ItemStack setupWeaponItem(ItemStack weaponItem) {
-		if (ComWarfare.hasItemBridge()) {
-			if (!this.equals(LoadoutManager.getInstance().blankLethal)
-					&& !this.equals(LoadoutManager.getInstance().blankTactical)
-					&& !this.equals(LoadoutManager.getInstance().blankPrimary)
-					&& !this.equals(LoadoutManager.getInstance().blankSecondary)) {
+	protected ItemStack getSetupItem(String weaponItem) {
+		if (this.equals(LoadoutManager.getInstance().blankLethal)
+				|| this.equals(LoadoutManager.getInstance().blankTactical)
+				|| this.equals(LoadoutManager.getInstance().blankPrimary)
+				|| this.equals(LoadoutManager.getInstance().blankSecondary)) {
 
-				ItemStack gun = ItemBridgeUtil.getItemBridgeItem(getName(), null);
-
-				if (gun != null && gun.getType() != Material.AIR) {
-					return gun;
-				}
-			}
+			ItemStack itemStack = new ItemStack(Material.valueOf(weaponItem.toUpperCase()), 1);
+			return clearAttributesAndSetName(itemStack);
 		}
 
-		if (ComWarfare.hasQualityArms()) {
-			if (!this.equals(LoadoutManager.getInstance().blankLethal)
-					&& !this.equals(LoadoutManager.getInstance().blankTactical)
-					&& !this.equals(LoadoutManager.getInstance().blankPrimary)
-					&& !this.equals(LoadoutManager.getInstance().blankSecondary)) {
+		GunResolver gunResolver = GunResolver.getInstance();
 
-				ItemStack gun = QualityGun.getGunForName(getName());
-
-				if (gun != null && gun.getType() != Material.AIR) {
-					return gun;
-				}
-			}
-		}
-
-		if (ComWarfare.hasCrackShot()) {
-			if (!this.equals(LoadoutManager.getInstance().blankLethal)
-					&& !this.equals(LoadoutManager.getInstance().blankTactical)
-					&& !this.equals(LoadoutManager.getInstance().blankPrimary)
-					&& !this.equals(LoadoutManager.getInstance().blankSecondary)) {
-
-				ItemStack gun = CrackShotGun.generateWeapon(getName());
-
-				if (gun != null && gun.getType() != Material.AIR) {
-					gun = CrackShotGun.updateItem(getName(), gun, null);
-					return gun;
-				}
-			}
-		}
-
-		weaponItem = clearAttributesAndSetName(weaponItem);
-
-		return weaponItem;
+		return gunResolver.getGunItem(weaponItem);
 	}
 
 	/**
@@ -175,11 +132,11 @@ public class CodWeapon {
 	}
 
 	public ItemStack getMenuItem(Player p) {
-		return CrackShotGun.updateItem(getName(), menuItem.clone(), p);
+		return CrackShotGun.updateItem(getName(), setupMenuItem().clone(), p);
 	}
 
 	public ItemStack getWeaponItem() {
-		return weaponItem.clone();
+		return getSetupItem(getItemName());
 	}
 
 	public int getLevelUnlock() {
@@ -254,4 +211,19 @@ public class CodWeapon {
 		return item;
 	}
 
+	public String getItemName() {
+		return itemName;
+	}
+
+	public void setItemName(String itemName) {
+		this.itemName = itemName;
+	}
+
+	public int getItemAmount() {
+		return itemAmount;
+	}
+
+	public void setItemAmount(int itemAmount) {
+		this.itemAmount = itemAmount;
+	}
 }

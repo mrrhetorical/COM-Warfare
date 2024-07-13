@@ -8,7 +8,7 @@ import com.rhetorical.cod.game.Gamemode;
 import com.rhetorical.cod.lang.Lang;
 import com.rhetorical.cod.loadouts.Loadout;
 import com.rhetorical.cod.loadouts.LoadoutManager;
-import com.rhetorical.cod.weapons.CrackShotGun;
+import com.rhetorical.cod.weapons.support.CrackShotGun;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
